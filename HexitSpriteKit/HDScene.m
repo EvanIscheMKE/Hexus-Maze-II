@@ -34,7 +34,7 @@
 {
     if (self = [super initWithSize:size]) {
         
-        self.gameLayer = [SKNode node];
+         self.gameLayer = [SKNode node];
         [self addChild:self.gameLayer];
         
         _selectedHexagons = [NSMutableArray array];
@@ -52,6 +52,7 @@
 {
     if (!self.contentCreated){
         [self setContentCreated:YES];
+   
     }
 }
 
@@ -171,6 +172,5 @@
     
     return NO;
 }
-
 
 @end

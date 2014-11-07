@@ -12,10 +12,10 @@
 
 + (void)blinkView:(UIView *)view duration:(NSTimeInterval)duration repeat:(NSInteger)count
 {
-    return [[self class] blinkView:view duration:duration repeat:count scale:.95f];
+    [self blinkView:view duration:duration repeat:count scale:.95f];
 }
 
-+ (void)blinkView:(UIView *)view duration:(NSTimeInterval)duration repeat:(NSInteger)count scale:(CGFloat)scale
+- (void)blinkView:(UIView *)view duration:(NSTimeInterval)duration repeat:(NSInteger)count scale:(CGFloat)scale
 {
     UIViewAnimationOptions options = UIViewAnimationOptionAutoreverse | UIViewAnimationCurveEaseInOut |
                                      UIViewAnimationOptionRepeat | UIViewAnimationOptionAllowUserInteraction;
@@ -36,7 +36,7 @@
 
 + (CGSize)sizeFromWidth:(CGFloat)width font:(UIFont *)font text:(NSString *)text
 {
-    NSDictionary *attributes = @{ NSForegroundColorAttributeName:[UIColor blackColor], NSFontAttributeName: font};
+    NSDictionary *attributes = @{ NSForegroundColorAttributeName:[UIColor blackColor], NSFontAttributeName: font };
     
     NSAttributedString *string = [[NSAttributedString alloc] initWithString:text attributes:attributes];
     

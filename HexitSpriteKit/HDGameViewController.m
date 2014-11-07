@@ -44,6 +44,7 @@
 {
     CGRect viewRect = [[UIScreen mainScreen] bounds];
     SKView *skView = [[SKView alloc] initWithFrame:viewRect];
+    [skView setAllowsTransparency:YES];
     [self setView:skView];
 }
 

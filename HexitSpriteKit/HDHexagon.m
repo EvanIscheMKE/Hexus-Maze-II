@@ -66,7 +66,7 @@
 - (void)recievedTouches
 {
     if (self.isSelected) return;
-    NSLog(@"recievedTouches");
+   
     _recievedTouchesCount++;
     
     switch (self.type) {
@@ -151,5 +151,7 @@
         }
     }
 }
+
+
 
 @end
