@@ -34,7 +34,7 @@
     
     CGRect startRect = CGRectMake(CGRectGetMidX(self.view.bounds) - 50.0f, 350.0f, 100.0f, 30.0f);
     UIButton *start = [UIButton buttonWithType:UIButtonTypeCustom];
-    [start addTarget:ADelegate action:@selector(openLevelViewController) forControlEvents:UIControlEventTouchDown];
+    [start addTarget:ADelegate action:@selector(presentLevelViewController) forControlEvents:UIControlEventTouchUpInside];
     [start setFrame:startRect];
     [start setBackgroundColor:[UIColor flatEmeraldColor]];
     [[start titleLabel] setTextAlignment:NSTextAlignmentCenter];

@@ -9,6 +9,7 @@
 #import <UIKit/UIKit.h>
 
 @interface HDGameViewController : UIViewController
+@property (nonatomic, readonly) NSInteger level;
 - (instancetype)initWithLevel:(NSInteger)level;
 
 @end

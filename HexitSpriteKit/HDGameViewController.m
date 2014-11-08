@@ -84,6 +84,11 @@
     [self.scene layoutNodesWithGrid:[_levels hexagons]];
 }
 
+- (NSInteger)level
+{
+    return _level;
+}
+
 - (void)didReceiveMemoryWarning
 {
     [super didReceiveMemoryWarning];

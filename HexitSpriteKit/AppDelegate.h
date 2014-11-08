@@ -10,10 +10,9 @@
 
 @interface AppDelegate : UIResponder <UIApplicationDelegate>
 
-@property (nonatomic, strong) UINavigationController *controller;
 @property (strong, nonatomic) UIWindow *window;
 
-- (void)openLevelViewController;
+- (void)presentLevelViewController;
 - (void)openLevel:(NSInteger)level animated:(BOOL)animated;
 
 @end

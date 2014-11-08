@@ -8,14 +8,13 @@
 
 #import <UIKit/UIKit.h>
 
-typedef void(^CompletionBlock)(NSArray *list);
-
 @interface UIViewController (HDMenuViewController)
-- (void)bounceGameView:(id)sender;
+- (void)setFrontViewController:(UIViewController *)controller animated:(BOOL)animated;
+- (void)bounceFrontViewController:(id)sender;
 @end
 
 @interface HDMenuViewController : UIViewController
 @property (nonatomic, readonly) UIViewController *rootViewController;
-- (instancetype)initWithRootViewController:(UIViewController *)controller handler:(CompletionBlock)block NS_DESIGNATED_INITIALIZER;
+- (instancetype)initWithRootViewController:(UIViewController *)controller NS_DESIGNATED_INITIALIZER;
 @end
 

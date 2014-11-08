@@ -7,6 +7,8 @@
 //
 
 #import "HDMenuViewController.h"
+#import "HDGameViewController.h"
+#import "HDLevelViewController.h"
 #import "UIColor+FlatColors.h"
 #import "HDHexagon.h"
 #import "HDConstants.h"
@@ -15,9 +17,7 @@ static CGFloat const kAnimationOffsetX = 180.0f;
 
 @interface HDMenuViewController ()<UIGestureRecognizerDelegate>
 
-@property (nonatomic) NSArray *buttonList;
-
-@property (nonatomic, copy)   CompletionBlock completion;
+@property (nonatomic, strong) NSArray *buttonList;
 @property (nonatomic, strong) UIViewController *rootViewController;
 
 @property (nonatomic, strong) UIScreenEdgePanGestureRecognizer *leftGestureRecognizer;
@@ -37,12 +37,11 @@ static CGFloat const kAnimationOffsetX = 180.0f;
 }
 
 @synthesize isExpanded = _isExpanded;
-- (instancetype)initWithRootViewController:(UIViewController *)controller handler:(CompletionBlock)block
+- (instancetype)initWithRootViewController:(UIViewController *)controller
 {
     NSParameterAssert(controller);
     if (self = [super init]) {
         [self setRootViewController:controller];
-        [self setCompletion:block];
     }
     return self;
 }
@@ -83,9 +82,29 @@ static CGFloat const kAnimationOffsetX = 180.0f;
 #pragma mark -
 #pragma mark - Private
 
+- (void)_setFrontViewController:(UIViewController *)controller animated:(BOOL)animated
+{
+    [(UINavigationController *)self.rootViewController setViewControllers:@[controller] animated:animated];
+}
+
+- (void)_restartPreviousLevelOnGameController
+{
+    HDGameViewController *controller = (HDGameViewController *)self.rootViewController.childViewControllers.lastObject;
+    [self _setFrontViewController:[[HDGameViewController alloc] initWithLevel:controller.level] animated:NO];
+}
+
+- (void)_presentLevelViewController
+{
+    NSArray *children = self.rootViewController.childViewControllers;
+    if (![[children lastObject] isKindOfClass:[HDLevelViewController class]]) {
+        HDLevelViewController *controller = [[HDLevelViewController alloc] init];
+        [self _setFrontViewController:controller animated:YES];
+    }
+}
+
 - (void)_bounceHDSideMenuController
 {
-    [self.pushBehavior setPushDirection:CGVectorMake(45.0f, 0.0f)];
+    [self.pushBehavior setPushDirection:CGVectorMake(!self.isExpanded ? 45.0f : -45.0f , 0.0f)];
     [self.pushBehavior setActive:YES];
 }
 
@@ -111,16 +130,16 @@ static CGFloat const kAnimationOffsetX = 180.0f;
         
         CGPoint velocity = [gestureRecognizer velocityInView:self.view];
         
-        NSInteger kVectorX = 0;
+        NSInteger gravityVectorX = 0;
         if (velocity.x > 0) {
-            kVectorX = 1;
+            gravityVectorX = 1;
             [self setExpanded:YES];
         } else {
-            kVectorX = -1;
+            gravityVectorX = -1;
             [self setExpanded:NO];
         }
         
-        [self.gravityBehavior setGravityDirection:CGVectorMake(kVectorX, 0)];
+        [self.gravityBehavior setGravityDirection:CGVectorMake(gravityVectorX, 0)];
         [self.animator addBehavior:self.gravityBehavior];
         
         [self.pushBehavior setPushDirection:CGVectorMake(velocity.x / 20.0f, 0)];
@@ -170,22 +189,19 @@ static CGFloat const kAnimationOffsetX = 180.0f;
                 [hexagon setTitle:@"Retry" forState:UIControlStateNormal];
                 [hexagon setBackgroundColor:[UIColor flatTurquoiseColor]];
                 [hexagon setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
+                [hexagon addTarget:self action:@selector(_restartPreviousLevelOnGameController) forControlEvents:UIControlEventTouchUpInside];
                 break;
             case 1:
                 [hexagon setTitle:@"Map" forState:UIControlStateNormal];
                 [hexagon setBackgroundColor:[UIColor flatEmeraldColor]];
                 [hexagon setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
+                [hexagon addTarget:self action:@selector(_presentLevelViewController) forControlEvents:UIControlEventTouchUpInside];
                 break;
         }
-        
         previousRect = hexagon.frame;
     }
     
     self.buttonList = buttons;
-    
-    if (_completion) {
-        _completion(self.buttonList);
-    }
 }
 
 - (void)_initalizeGestureRecognizers
@@ -227,7 +243,18 @@ static CGFloat const kAnimationOffsetX = 180.0f;
 
 @implementation UIViewController (HDMenuViewController)
 
-- (void)bounceGameView:(id)sender
+- (void)setFrontViewController:(UIViewController *)controller animated:(BOOL)animated
+{
+    UIResponder *nextResponder = self.nextResponder;
+    while ((nextResponder = nextResponder.nextResponder)) {
+        if ([(HDMenuViewController *)nextResponder respondsToSelector:@selector(_setFrontViewController:animated:)]) {
+            [(HDMenuViewController *)nextResponder _setFrontViewController:controller animated:animated];
+            return;
+        }
+    }
+}
+
+- (void)bounceFrontViewController:(id)sender
 {
     UIResponder *nextResponder = self.nextResponder;
     while ((nextResponder = nextResponder.nextResponder)) {

@@ -35,10 +35,4 @@
     }
 }
 
-- (void)setStrokeColor:(UIColor *)strokeColor
-{
-    [super setStrokeColor:strokeColor];
-    [self setFillColor:strokeColor];
-}
-
 @end
