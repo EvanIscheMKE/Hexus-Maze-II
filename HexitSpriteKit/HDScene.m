@@ -10,8 +10,11 @@
 #import "HDHexagon.h"
 #import "SKColor+HDColor.h"
 #import "NSMutableArray+UniqueAdditions.h"
+#import "UIImage+HDImage.h"
 #import "HDHexagonNode.h"
 #import "HDLevels.h"
+
+static const CGFloat kTileHeightInsetMultiplier = .825f;
 
 @interface HDScene ()
 @property (nonatomic, strong) SKNode *gameLayer;
@@ -20,12 +23,13 @@
 @property (strong, nonatomic) SKAction *selectedSound;
 @end
 
-@implementation HDScene
-{
+@implementation HDScene {
+    
     NSArray *_hexagons;
     NSMutableArray *_selectedHexagons;
     NSUInteger _finishedTileCount;
     CGFloat _kTileSize;
+    
 }
 
 @dynamic delegate;
@@ -52,7 +56,6 @@
 {
     if (!self.contentCreated){
         [self setContentCreated:YES];
-   
     }
 }
 
@@ -61,19 +64,22 @@
     _finishedTileCount = grid.count;
     
     _hexagons = [[NSArray alloc] initWithArray:grid];
-    
     for (HDHexagon *hexagon in grid) {
-        [hexagon.node setPath:[[self hexagonPathForBounds:CGRectMake(0.0f, 0.0f, _kTileSize, _kTileSize)] CGPath]];
-        [hexagon.node setLineWidth:2.0f];
-        [hexagon.node setPosition:[self pointForColumn:hexagon.column row:hexagon.row]];
-        [self.gameLayer addChild:hexagon.node];
-    
+        
+        CGPathRef pathRef = [[self hexagonPathForBounds:CGRectMake(0.0f, 0.0f, _kTileSize, _kTileSize)] CGPath];
+        HDHexagonNode *shapeNode = [HDHexagonNode shapeNodeWithPath:pathRef centered:NO];
+        [shapeNode setPosition:[self pointForColumn:hexagon.column row:hexagon.row]];
+        [shapeNode setLineWidth:2.0f];
+        [hexagon setNode:shapeNode];
+        [hexagon setType:[[self.levels hexagonTypeAtRow:hexagon.row column:hexagon.column] intValue]];
+        [self.gameLayer addChild:shapeNode];
+        
     }
 }
 
 - (CGPoint)pointForColumn:(NSInteger)column row:(NSInteger)row
 {
-    const CGFloat kOriginY = ((row * (_kTileSize * .825)) - (_kTileSize / 2));
+    const CGFloat kOriginY = ((row * (_kTileSize * kTileHeightInsetMultiplier)) - (_kTileSize / 2));
     const CGFloat kOriginX = ((column * _kTileSize) - (_kTileSize / 2));
     const CGFloat kAlternateOffset = (row % 2 == 0) ? _kTileSize / 2.f : 0.0f;
     
@@ -137,6 +143,16 @@
     }
 }
 
+- (void)performEntranceAnimation:(dispatch_block_t)handler
+{
+    
+}
+
+- (void)performCompletionAnimation:(dispatch_block_t)handler
+{
+    
+}
+
 - (void)_preloadSounds
 {
     self.selectedSound = [SKAction playSoundFileNamed:@"104947__glaneur-de-sons__bubble-8.wav"
@@ -156,14 +172,13 @@
 
 - (BOOL)_validateNextMoveToHexagon:(HDHexagon *)toHexagon fromHexagon:(HDHexagon *)fromHexagon
 {
-    BOOL evenLine = (fromHexagon.row % 2 == 0);
-    
     if (toHexagon.row == fromHexagon.row) {
         if (ABS((toHexagon.column  - fromHexagon.column)) == 1) {
             return YES;
         }
     }
-    
+ 
+    BOOL evenLine = (fromHexagon.row % 2 == 0);
     if ( (toHexagon.row == (fromHexagon.row + 1)) || (toHexagon.row == (fromHexagon.row - 1)) ) {
         if (toHexagon.column == (fromHexagon.column) || toHexagon.column == (fromHexagon.column + (evenLine ? 1 : -1) ) ) {
             return YES;

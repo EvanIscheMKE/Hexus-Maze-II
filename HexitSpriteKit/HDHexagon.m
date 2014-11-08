@@ -36,6 +36,7 @@
             break;
         case HDHexagonTypeDouble:
             [self.node setStrokeColor:[SKColor flatTurquoiseColor]];
+            [self addSubSKShapeNode];
             break;
         case HDHexagonTypeTriple:
             [self.node setStrokeColor:[SKColor flatSilverColor]];
@@ -152,6 +153,31 @@
     }
 }
 
+- (void)addSubSKShapeNode
+{
+    const CGFloat kTileSizeWithInset = CGRectGetHeight(self.node.frame) - 12.0f;
+    SKShapeNode *hexagon = [SKShapeNode shapeNodeWithPath:[[self hexagonPathForBounds:CGRectMake(0.0f, 0.0, kTileSizeWithInset, kTileSizeWithInset)] CGPath]];
+    [hexagon setPosition:CGPointMake(5.0f, 5.0f)];
+    [hexagon setStrokeColor:self.node.strokeColor];
+    [hexagon setFillColor:[SKColor redColor]];
+    [hexagon setLineWidth:self.node.lineWidth];
+    [self.node addChild:hexagon];
+}
 
+
+- (UIBezierPath *)hexagonPathForBounds:(CGRect)bounds
+{
+    const CGFloat kPadding = CGRectGetWidth(bounds) / 8 / 2;
+    UIBezierPath *_path = [UIBezierPath bezierPath];
+    [_path moveToPoint:CGPointMake(CGRectGetWidth(bounds) / 2, 0)];
+    [_path addLineToPoint:CGPointMake(CGRectGetWidth(bounds) - kPadding, CGRectGetHeight(bounds) / 4)];
+    [_path addLineToPoint:CGPointMake(CGRectGetWidth(bounds) - kPadding, CGRectGetHeight(bounds) * 3 / 4)];
+    [_path addLineToPoint:CGPointMake(CGRectGetWidth(bounds) / 2, CGRectGetHeight(bounds))];
+    [_path addLineToPoint:CGPointMake(kPadding, CGRectGetHeight(bounds) * 3 / 4)];
+    [_path addLineToPoint:CGPointMake(kPadding, CGRectGetHeight(bounds) / 4)];
+    [_path closePath];
+    
+    return _path;
+}
 
 @end

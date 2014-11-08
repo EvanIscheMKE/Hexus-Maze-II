@@ -51,7 +51,6 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    
     [[NSNotificationCenter defaultCenter] addObserver:self
                                              selector:@selector(applicationWillResignActive)
                                                  name:UIApplicationWillResignActiveNotification
@@ -76,8 +75,7 @@
 
 - (void)beginGame
 {
-    NSArray *hexagons = [_levels hexagons];
-    [self.scene layoutNodesWithGrid:hexagons];
+    [self.scene layoutNodesWithGrid:[_levels hexagons]];
 }
 
 - (void)viewWillAppear:(BOOL)animated

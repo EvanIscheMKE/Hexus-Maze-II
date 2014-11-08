@@ -12,8 +12,7 @@
 #import "HDHexagonNode.h"
 
 typedef void(^CallBackBlock)(NSDictionary *dictionary, NSError *error);
-@implementation HDLevels
-{
+@implementation HDLevels {
     NSMutableDictionary *_levelCache;
     NSMutableArray *_hexagons;
     HDHexagon *_hexagon[18][9];
@@ -72,10 +71,8 @@ typedef void(^CallBackBlock)(NSDictionary *dictionary, NSError *error);
     
     NSError *error = nil;
     NSData *data = [NSData dataWithContentsOfFile:path options:0 error:&error];
-    if (data == nil)
-    {
-        if (callBack)
-        {
+    if (data == nil) {
+        if (callBack) {
             callBack(nil,error);
             return;
         }
@@ -113,6 +110,11 @@ typedef void(^CallBackBlock)(NSDictionary *dictionary, NSError *error);
     return _hexagons;
 }
 
+- (NSNumber *)hexagonTypeAtRow:(NSInteger)row column:(NSInteger)column
+{
+    return _grid[row][column];
+}
+
 - (HDHexagon *)hexagonAtRow:(NSInteger)row column:(NSInteger)column
 {
     return _hexagon[row][column];
@@ -123,8 +125,7 @@ typedef void(^CallBackBlock)(NSDictionary *dictionary, NSError *error);
     HDHexagon *hexagon = [[HDHexagon alloc] init];
     [hexagon setColumn:column];
     [hexagon setRow:row];
-    [hexagon setNode:[HDHexagonNode new]];
-    [hexagon setType:hexagonType];
+    
     
     _hexagon[row][column] = hexagon;
     
