@@ -57,7 +57,6 @@
         [[list firstObject] addTarget:self action:@selector(restartCurrentLevel)     forControlEvents:UIControlEventTouchUpInside];
         [[list lastObject]  addTarget:self action:@selector(openLevelViewController) forControlEvents:UIControlEventTouchUpInside];
     }];
-    
     [self.controller pushViewController:menuController animated:animated];
 }
 
@@ -73,8 +72,7 @@
     
     BOOL isFirstRun = [[NSUserDefaults standardUserDefaults] boolForKey:hdFirstRunKey];
     
-    if (!isFirstRun)
-    {
+    if (!isFirstRun) {
         [[NSUserDefaults standardUserDefaults] setBool:YES forKey:hdSoundkey];
         [[NSUserDefaults standardUserDefaults] setBool:YES forKey:hdFirstRunKey];
         [[HDMapManager sharedManager] initalizeLevelsForFirstRun];

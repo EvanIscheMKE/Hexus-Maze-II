@@ -18,7 +18,7 @@
 - (instancetype)init
 {
     if (self = [super init]) {
-     
+        [self setAntialiased:YES];
     }
     return self;
 }

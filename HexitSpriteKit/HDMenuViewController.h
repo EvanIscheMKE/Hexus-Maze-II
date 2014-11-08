@@ -11,11 +11,10 @@
 typedef void(^CompletionBlock)(NSArray *list);
 
 @interface UIViewController (HDMenuViewController)
-- (void)toggleHDMenu:(id)sender;
+- (void)bounceGameView:(id)sender;
 @end
 
 @interface HDMenuViewController : UIViewController
-@property (nonatomic) NSMutableArray *buttonList;
 @property (nonatomic, readonly) UIViewController *rootViewController;
 - (instancetype)initWithRootViewController:(UIViewController *)controller handler:(CompletionBlock)block NS_DESIGNATED_INITIALIZER;
 @end

@@ -29,36 +29,46 @@
     switch (type) {
         case HDHexagonTypeRegular:
             [self.node setStrokeColor:[SKColor flatPeterRiverColor]];
+            [self.node setFillColor:[SKColor flatMidnightBlueColor]];
             break;
         case HDHexagonTypeStarter:
             [self.node setFillColor:[SKColor flatPeterRiverColor]];
             [self.node setStrokeColor:[SKColor flatPeterRiverColor]];
             break;
         case HDHexagonTypeDouble:
+            [self addDoubleHexagonShapeNode];
             [self.node setStrokeColor:[SKColor flatTurquoiseColor]];
-            [self addSubSKShapeNode];
+            [self.node setFillColor:[SKColor flatMidnightBlueColor]];
             break;
         case HDHexagonTypeTriple:
+            [self addDoubleHexagonShapeNode];
+            [self addTripleHexagonShapeNode];
             [self.node setStrokeColor:[SKColor flatSilverColor]];
+            [self.node setFillColor:[SKColor flatMidnightBlueColor]];
             break;
         case HDHexagonTypeOne:
             [self.node setStrokeColor:[SKColor flatEmeraldColor]];
+            [self.node setFillColor:self.node.strokeColor];
             [self.node updateLabelWithText:@"1"];
             break;
         case HDHexagonTypeTwo:
             [self.node setStrokeColor:[SKColor flatEmeraldColor]];
+            [self.node setFillColor:[SKColor flatMidnightBlueColor]];
             [self.node updateLabelWithText:@"2"];
             break;
         case HDHexagonTypeThree:
             [self.node setStrokeColor:[SKColor flatEmeraldColor]];
+            [self.node setFillColor:[SKColor flatMidnightBlueColor]];
             [self.node updateLabelWithText:@"3"];
             break;
         case HDHexagonTypeFour:
             [self.node setStrokeColor:[SKColor flatEmeraldColor]];
+            [self.node setFillColor:[SKColor flatMidnightBlueColor]];
             [self.node updateLabelWithText:@"4"];
             break;
         case HDHexagonTypeFive:
             [self.node setStrokeColor:[SKColor flatEmeraldColor]];
+            [self.node setFillColor:[SKColor flatMidnightBlueColor]];
             [self.node updateLabelWithText:@"5"];
             break;
     }
@@ -80,7 +90,7 @@
         case HDHexagonTypeDouble:
             switch (_recievedTouchesCount) {
                 case 1:
-                    
+                    [self.node setFillColor:self.node.strokeColor];
                     break;
                 case 2:
                     [self setSelected:YES];
@@ -89,7 +99,7 @@
         case HDHexagonTypeTriple:
             switch (_recievedTouchesCount) {
                 case 1:
-                    
+                   
                     break;
                 case 2:
                     
@@ -123,45 +133,63 @@
         
         switch (self.type) {
             case HDHexagonTypeRegular:
-                [self.node setFillColor:[SKColor flatPeterRiverColor]];
+                [self.node setFillColor:self.node.strokeColor];
                 break;
             case HDHexagonTypeStarter:
-                [self.node setFillColor:[SKColor flatPeterRiverColor]];
+                [self.node setFillColor:self.node.strokeColor];
                 break;
             case HDHexagonTypeDouble:
-                [self.node setFillColor:[SKColor flatTurquoiseColor]];
+                [self.node removeAllChildren];
                 break;
             case HDHexagonTypeTriple:
-                [self.node setFillColor:[SKColor flatSilverColor]];
+                [self.node removeAllChildren];
                 break;
             case HDHexagonTypeOne:
-                [self.node setFillColor:[SKColor flatEmeraldColor]];
+                [self.node setFillColor:self.node.strokeColor];
                 break;
             case HDHexagonTypeTwo:
-                [self.node setFillColor:[SKColor flatEmeraldColor]];
+                [self.node setFillColor:self.node.strokeColor];
                 break;
             case HDHexagonTypeThree:
-                [self.node setFillColor:[SKColor flatEmeraldColor]];
+                [self.node setFillColor:self.node.strokeColor];
                 break;
             case HDHexagonTypeFour:
-                [self.node setFillColor:[SKColor flatEmeraldColor]];
+                [self.node setFillColor:self.node.strokeColor];
                 break;
             case HDHexagonTypeFive:
-                [self.node setFillColor:[SKColor flatEmeraldColor]];
+                [self.node setFillColor:self.node.strokeColor];
                 break;
         }
     }
 }
 
-- (void)addSubSKShapeNode
+- (void)addDoubleHexagonShapeNode
 {
-    const CGFloat kTileSizeWithInset = CGRectGetHeight(self.node.frame) - 12.0f;
+    const CGFloat kHexagonInset = 6.0f;
+    const CGFloat kTileSizeWithInset = CGRectGetHeight(CGRectInset(self.node.frame, kHexagonInset, kHexagonInset));
+    
     SKShapeNode *hexagon = [SKShapeNode shapeNodeWithPath:[[self hexagonPathForBounds:CGRectMake(0.0f, 0.0, kTileSizeWithInset, kTileSizeWithInset)] CGPath]];
-    [hexagon setPosition:CGPointMake(5.0f, 5.0f)];
+    [hexagon setAntialiased:YES];
+    [hexagon setPosition:CGPointMake(kHexagonInset - 1, kHexagonInset - 1)];
     [hexagon setStrokeColor:self.node.strokeColor];
     [hexagon setFillColor:[SKColor redColor]];
     [hexagon setLineWidth:self.node.lineWidth];
     [self.node addChild:hexagon];
+}
+
+- (void)addTripleHexagonShapeNode
+{
+    const CGFloat kHexagonInset = 6.0f;
+    const CGFloat kTileSizeWithInset = CGRectGetHeight(CGRectInset([(SKShapeNode *)[[self.node children] lastObject] frame], kHexagonInset,
+                                                                                                                             kHexagonInset ) );
+    
+    SKShapeNode *hexagon = [SKShapeNode shapeNodeWithPath:[[self hexagonPathForBounds:CGRectMake(0.0f, 0.0, kTileSizeWithInset, kTileSizeWithInset)] CGPath]];
+    [hexagon setAntialiased:YES];
+    [hexagon setPosition:CGPointMake(kHexagonInset - 1, kHexagonInset - 1)];
+    [hexagon setStrokeColor:self.node.strokeColor];
+    [hexagon setFillColor:[SKColor yellowColor]];
+    [hexagon setLineWidth:self.node.lineWidth];
+    [[[self.node children] lastObject] addChild:hexagon];
 }
 
 

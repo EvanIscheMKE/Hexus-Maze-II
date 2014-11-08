@@ -6,7 +6,8 @@
 //  Copyright (c) 2014 Evan William Ische. All rights reserved.
 //
 
-#import <SpriteKit/SpriteKit.h>
+@import SpriteKit;
+
 #import "HDGameViewController.h"
 #import "HDLevels.h"
 #import "HDScene.h"
@@ -24,7 +25,7 @@
 - (void)dealloc
 {
     [[NSNotificationCenter defaultCenter] removeObserver:self name:UIApplicationWillResignActiveNotification object:nil];
-    [[NSNotificationCenter defaultCenter] removeObserver:self name:UIApplicationDidBecomeActiveNotification object:nil];
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:UIApplicationDidBecomeActiveNotification  object:nil];
 }
 
 - (id)init
@@ -44,7 +45,6 @@
 {
     CGRect viewRect = [[UIScreen mainScreen] bounds];
     SKView *skView = [[SKView alloc] initWithFrame:viewRect];
-    [skView setAllowsTransparency:YES];
     [self setView:skView];
 }
 
@@ -52,35 +52,36 @@
 {
     [super viewDidLoad];
     [[NSNotificationCenter defaultCenter] addObserver:self
-                                             selector:@selector(applicationWillResignActive)
-                                                 name:UIApplicationWillResignActiveNotification
+                                             selector:@selector(_applicationWillResignActive) name:UIApplicationWillResignActiveNotification
                                                object:nil];
     
     [[NSNotificationCenter defaultCenter] addObserver:self
-                                             selector:@selector(applicationDidBecomeActive)
-                                                 name:UIApplicationDidBecomeActiveNotification
+                                             selector:@selector(_applicationDidBecomeActive)  name:UIApplicationDidBecomeActiveNotification
                                                object:nil];
     
-    SKView *view = (SKView *)self.view;
-    
-    self.scene = [HDScene sceneWithSize:self.view.bounds.size];
-    [self.scene setScaleMode:SKSceneScaleModeAspectFill];
-    
     _levels = [[HDLevels alloc] initWithLevel:_level];
-    [self.scene setLevels:_levels];
+}
+
+- (void)viewWillLayoutSubviews
+{
+    [super viewWillLayoutSubviews];
     
-    [view presentScene:self.scene];
-    [self beginGame];
+    SKView * skView = (SKView *)self.view;
+    if (!skView.scene) {
+        
+         self.scene = [HDScene sceneWithSize:self.view.bounds.size];
+        [self.scene setScaleMode:SKSceneScaleModeAspectFill];
+        [self.scene setLevels:_levels];
+        
+        [skView presentScene:self.scene];
+        [self beginGame];
+        
+    }
 }
 
 - (void)beginGame
 {
     [self.scene layoutNodesWithGrid:[_levels hexagons]];
-}
-
-- (void)viewWillAppear:(BOOL)animated
-{
-    [super viewWillAppear:animated];
 }
 
 - (void)didReceiveMemoryWarning
@@ -90,32 +91,22 @@
 }
 
 #pragma mark -
-#pragma mark - Notification selectors for game state(Private)
+#pragma mark - Notification selectors(Private)
 
 -(void)_pauseGame
 {
-    _pauseGame = YES;
-    [self.scene.view setPaused:YES];
+    _pauseGame = !_pauseGame;
+    [self.scene.view setPaused:!self.scene.view.paused];
 }
 
--(void)_unpauseGame
+- (void)_applicationDidBecomeActive
 {
-    _pauseGame = NO;
-    [self.scene.view setPaused:NO];
+    [self _pauseGame];
 }
 
-- (void)applicationDidBecomeActive
+- (void)_applicationWillResignActive
 {
-    if (_pauseGame) {
-        [self _unpauseGame];
-    }
-}
-
-- (void)applicationWillResignActive
-{
-    if (!_pauseGame) {
-        [self _pauseGame];
-    }
+    [self _pauseGame];
 }
 
 @end
