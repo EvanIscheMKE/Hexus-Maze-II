@@ -143,12 +143,16 @@ static const CGFloat kTileHeightInsetMultiplier = .825f;
     }
 }
 
-- (void)performEntranceAnimation:(dispatch_block_t)handler
+#pragma mark - 
+#pragma mark - Private
+
+
+- (void)_performEnteranceAnimation:(dispatch_block_t)handler
 {
     
 }
 
-- (void)performCompletionAnimation:(dispatch_block_t)handler
+- (void)_performCompletionAnimation:(dispatch_block_t)handler
 {
     
 }

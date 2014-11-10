@@ -13,11 +13,71 @@
 #import "HDHexagon.h"
 #import "HDConstants.h"
 
+
+@interface HDSettingsContainer : UIView
+
+@property (nonatomic, readonly, strong) NSArray *settingButtons;
+
+@end
+
+@implementation HDSettingsContainer{
+    NSMutableArray *_buttons;
+}
+
+- (instancetype)initWithFrame:(CGRect)frame
+{
+    if (self = [super initWithFrame:frame]) {
+        [self setBackgroundColor:[UIColor flatPeterRiverColor]];
+    }
+    return self;
+}
+
+- (NSArray *)settingButtons
+{
+    if (_buttons) {
+        return _buttons;
+    }
+    
+    _buttons = [NSMutableArray array];
+    
+    UIButton *buttonOne = [UIButton buttonWithType:UIButtonTypeCustom];
+    [buttonOne setBackgroundImage:[UIImage imageNamed:@"Volume"] forState:UIControlStateNormal];
+    [buttonOne setBackgroundImage:[UIImage imageNamed:@"Volume"] forState:UIControlStateSelected];
+    
+    UIButton *buttonTwo = [UIButton buttonWithType:UIButtonTypeCustom];
+    [buttonTwo setBackgroundImage:[UIImage imageNamed:@"Volume"] forState:UIControlStateNormal];
+    [buttonTwo setBackgroundImage:[UIImage imageNamed:@"Volume"] forState:UIControlStateSelected];
+    
+    UIButton *buttonThree = [UIButton buttonWithType:UIButtonTypeCustom];
+    [buttonThree setBackgroundImage:[UIImage imageNamed:@"Volume"] forState:UIControlStateNormal];
+    [buttonThree setBackgroundImage:[UIImage imageNamed:@"Volume"] forState:UIControlStateSelected];
+    
+    for (UIButton *selectors in @[buttonOne, buttonTwo, buttonThree]) {
+        [selectors setTranslatesAutoresizingMaskIntoConstraints:NO];
+        [_buttons addObject:selectors];
+        [self addSubview:selectors];
+    }
+    
+    NSDictionary *dictionary = NSDictionaryOfVariableBindings(buttonOne, buttonTwo, buttonThree);
+    
+    NSString *vfConstaint = @"V:|-[buttonOne(30)]-20-[buttonTwo(30)]-20-[buttonThree(30)]";
+    for (NSArray *constraint in @[
+                    [NSLayoutConstraint constraintsWithVisualFormat:vfConstaint                       options:0 metrics:nil views:dictionary],
+                    [NSLayoutConstraint constraintsWithVisualFormat:@"H:|-10-[buttonOne(120)]-10-|"   options:0 metrics:nil views:dictionary],
+                    [NSLayoutConstraint constraintsWithVisualFormat:@"H:|-10-[buttonTwo(120)]-10-|"   options:0 metrics:nil views:dictionary],
+                    [NSLayoutConstraint constraintsWithVisualFormat:@"H:|-10-[buttonThree(120)]-10-|" options:0 metrics:nil views:dictionary]]) {
+        [self addConstraints:constraint];
+    }
+    return _buttons;
+}
+
+@end
+
 static CGFloat const kAnimationOffsetX = 180.0f;
 
 @interface HDMenuViewController ()<UIGestureRecognizerDelegate>
 
-@property (nonatomic, strong) NSArray *buttonList;
+@property (nonatomic, strong) NSMutableArray *buttonList;
 @property (nonatomic, strong) UIViewController *rootViewController;
 
 @property (nonatomic, strong) UIScreenEdgePanGestureRecognizer *leftGestureRecognizer;
@@ -104,7 +164,7 @@ static CGFloat const kAnimationOffsetX = 180.0f;
 
 - (void)_bounceHDSideMenuController
 {
-    [self.pushBehavior setPushDirection:CGVectorMake(!self.isExpanded ? 45.0f : -45.0f , 0.0f)];
+    [self.pushBehavior setPushDirection:CGVectorMake(!self.isExpanded ? 35.0f : -35.0f , 0.0f)];
     [self.pushBehavior setActive:YES];
 }
 
@@ -150,17 +210,15 @@ static CGFloat const kAnimationOffsetX = 180.0f;
 
 - (void)_layoutSideMenuSelectors
 {
-    self.buttonList = [NSMutableArray arrayWithCapacity:3];
+    self.buttonList = [NSMutableArray array];
     
-    CGRect titleRect = CGRectMake(0.0f, 60.0f, 165.0f, 30.0f);
-    UILabel *title = [[UILabel alloc] initWithFrame:titleRect];
-    [title setTextAlignment:NSTextAlignmentRight];
+    UILabel *title = [[UILabel alloc] init];
+    [title setTranslatesAutoresizingMaskIntoConstraints:NO];
+    [title setTextAlignment:NSTextAlignmentLeft];
     [title setText:@"HEXIT"];
-    [title setFont:GILLSANS(28.0f)];
+    [title setFont:GILLSANS(24.0f)];
     [title setTextColor:[UIColor whiteColor]];
     [self.view addSubview:title];
-    
-    NSMutableArray *buttons = [NSMutableArray array];
     
     UIButton *retry = [UIButton buttonWithType:UIButtonTypeCustom];
     [retry setTitle:@"Retry" forState:UIControlStateNormal];
@@ -178,64 +236,68 @@ static CGFloat const kAnimationOffsetX = 180.0f;
         [[button titleLabel] setTextAlignment:NSTextAlignmentCenter];
         [button setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
         [button.layer setCornerRadius:10.0f];
-        [buttons addObject:button];
+        [self.buttonList addObject:button];
         [self.view addSubview:button];
     }
     
-    NSDictionary *dictionary = NSDictionaryOfVariableBindings(retry, map);
+    NSDictionary *dictionary = NSDictionaryOfVariableBindings(retry, map, title);
+    
+    NSArray *titleCX      = [NSLayoutConstraint constraintsWithVisualFormat:@"H:|-[title]"        options:0 metrics:nil views:dictionary];
+    NSArray *titleCY      = [NSLayoutConstraint constraintsWithVisualFormat:@"V:[title]-|"        options:0 metrics:nil views:dictionary];
     
     NSArray *tConstraint  = [NSLayoutConstraint constraintsWithVisualFormat:@"V:|-130-[retry]"    options:0 metrics:nil views:dictionary];
-    NSArray *vConstraint  = [NSLayoutConstraint constraintsWithVisualFormat:@"V:[retry]-20-[map]" options:0 metrics:nil views:dictionary];
+    NSArray *vConstraint  = [NSLayoutConstraint constraintsWithVisualFormat:@"V:[retry(40)]-20-[map(==retry)]" options:0 metrics:nil views:dictionary];
     
-    NSArray *hMConstraint = [NSLayoutConstraint constraintsWithVisualFormat:@"H:|-20-[map]"       options:0 metrics:nil views:dictionary];
-    NSArray *hRConstraint = [NSLayoutConstraint constraintsWithVisualFormat:@"H:|-20-[retry]"     options:0 metrics:nil views:dictionary];
-    
-    NSArray *mWidth       = [NSLayoutConstraint constraintsWithVisualFormat:@"H:[map(140)]"       options:0 metrics:nil views:dictionary];
-    NSArray *RWidth       = [NSLayoutConstraint constraintsWithVisualFormat:@"H:[retry(140)]"     options:0 metrics:nil views:dictionary];
-    
-    NSArray *mHeight      = [NSLayoutConstraint constraintsWithVisualFormat:@"V:[map(40)]"        options:0 metrics:nil views:dictionary];
-    NSArray *RHeight      = [NSLayoutConstraint constraintsWithVisualFormat:@"V:[retry(40)]"      options:0 metrics:nil views:dictionary];
+    NSArray *hMConstraint = [NSLayoutConstraint constraintsWithVisualFormat:@"H:|-20-[map(140)]"      options:0 metrics:nil views:dictionary];
+    NSArray *hRConstraint = [NSLayoutConstraint constraintsWithVisualFormat:@"H:|-20-[retry(==map)]"  options:0 metrics:nil views:dictionary];
 
-    for (NSArray *constraint in @[tConstraint, vConstraint, hMConstraint, hRConstraint, mWidth, RWidth, mHeight, RHeight]) {
+    for (NSArray *constraint in @[tConstraint, vConstraint, hMConstraint, hRConstraint, titleCX, titleCY]) {
         [self.view addConstraints:constraint];
     }
     
-    self.buttonList = buttons;
+    CGRect rect = CGRectMake(20, 300, 140, 100);
+    HDSettingsContainer *container = [[HDSettingsContainer alloc] initWithFrame:rect];
+    [self.view addSubview:container];
+    
+    for (UIButton *buttons in [container settingButtons]) {
+        [buttons setUserInteractionEnabled:NO];
+    }
 }
 
 - (void)_initalizeGestureRecognizers
 {
-    self.leftGestureRecognizer = [[UIScreenEdgePanGestureRecognizer alloc] initWithTarget:self action:@selector(_toggleHDMenuViewController:)];
+     self.leftGestureRecognizer = [[UIScreenEdgePanGestureRecognizer alloc] initWithTarget:self action:@selector(_toggleHDMenuViewController:)];
     [self.leftGestureRecognizer setEdges:UIRectEdgeLeft];
-    [self.leftGestureRecognizer setDelegate:self];
-    [self.rootViewController.view addGestureRecognizer:self.leftGestureRecognizer];
     
     self.rightGestureRecognizer = [[UIScreenEdgePanGestureRecognizer alloc] initWithTarget:self action:@selector(_toggleHDMenuViewController:)];
     [self.rightGestureRecognizer setEdges:UIRectEdgeRight];
-    [self.rightGestureRecognizer setDelegate:self];
-    [self.rootViewController.view addGestureRecognizer:self.rightGestureRecognizer];
+    
+    for (UIScreenEdgePanGestureRecognizer *edge in @[self.leftGestureRecognizer, self.rightGestureRecognizer]) {
+        [edge setDelegate:self];
+        [self.rootViewController.view addGestureRecognizer:edge];
+    }
 }
 
 - (void)_initalizePhysicsAnimators
 {
     self.animator = [[UIDynamicAnimator alloc] initWithReferenceView:self.view];
     
-    self.gravityBehavior = [[UIGravityBehavior alloc] initWithItems:@[self.rootViewController.view]];
+     self.gravityBehavior = [[UIGravityBehavior alloc] initWithItems:@[self.rootViewController.view]];
     [self.gravityBehavior setGravityDirection:CGVectorMake(-1, 0)];
-    [self.animator addBehavior:self.gravityBehavior];
     
-    self.pushBehavior = [[UIPushBehavior alloc] initWithItems:@[self.rootViewController.view] mode:UIPushBehaviorModeInstantaneous];
+     self.pushBehavior = [[UIPushBehavior alloc] initWithItems:@[self.rootViewController.view] mode:UIPushBehaviorModeInstantaneous];
     [self.pushBehavior setMagnitude:0.0f];
     [self.pushBehavior setAngle:0.0f];
-    [self.animator addBehavior:self.pushBehavior];
     
-    UICollisionBehavior *collisionBehaviour = [[UICollisionBehavior alloc] initWithItems:@[self.rootViewController.view]];
-    [collisionBehaviour setTranslatesReferenceBoundsIntoBoundaryWithInsets:UIEdgeInsetsMake(0, 0, 0, -kAnimationOffsetX)];
-    [self.animator addBehavior:collisionBehaviour];
+    UICollisionBehavior *collisionBehavior = [[UICollisionBehavior alloc] initWithItems:@[self.rootViewController.view]];
+    [collisionBehavior setTranslatesReferenceBoundsIntoBoundaryWithInsets:UIEdgeInsetsMake(0, 0, 0, -kAnimationOffsetX)];
     
-    UIDynamicItemBehavior *itemBehaviour = [[UIDynamicItemBehavior alloc] initWithItems:@[self.rootViewController.view]];
-    [itemBehaviour setElasticity:.45f];
-    [self.animator addBehavior:itemBehaviour];
+    UIDynamicItemBehavior *itemBehavior = [[UIDynamicItemBehavior alloc] initWithItems:@[self.rootViewController.view]];
+    [itemBehavior setElasticity:.45f];
+    
+    for (id animators in @[self.gravityBehavior, self.pushBehavior, collisionBehavior, itemBehavior]) {
+        [self.animator addBehavior:animators];
+    }
 }
 
 @end
@@ -244,6 +306,7 @@ static CGFloat const kAnimationOffsetX = 180.0f;
 
 - (void)setFrontViewController:(UIViewController *)controller animated:(BOOL)animated
 {
+    NSParameterAssert(controller);
     UIResponder *nextResponder = self.nextResponder;
     while ((nextResponder = nextResponder.nextResponder)) {
         if ([(HDMenuViewController *)nextResponder respondsToSelector:@selector(_setFrontViewController:animated:)]) {

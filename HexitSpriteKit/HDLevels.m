@@ -126,7 +126,6 @@ typedef void(^CallBackBlock)(NSDictionary *dictionary, NSError *error);
     [hexagon setColumn:column];
     [hexagon setRow:row];
     
-    
     _hexagon[row][column] = hexagon;
     
     return hexagon;

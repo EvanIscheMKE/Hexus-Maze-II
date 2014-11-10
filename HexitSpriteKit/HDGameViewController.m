@@ -8,6 +8,8 @@
 
 @import SpriteKit;
 
+#import "UIColor+FlatColors.h"
+#import "HDMenuViewController.h"
 #import "HDGameViewController.h"
 #import "HDLevels.h"
 #import "HDScene.h"
@@ -60,6 +62,8 @@
                                                object:nil];
     
     _levels = [[HDLevels alloc] initWithLevel:_level];
+    
+    [self _layoutHUDButtons];
 }
 
 - (void)viewWillLayoutSubviews
@@ -74,12 +78,28 @@
         [self.scene setLevels:_levels];
         
         [skView presentScene:self.scene];
-        [self beginGame];
+        [self _beginGame];
         
     }
 }
 
-- (void)beginGame
+- (void)_layoutHUDButtons
+{
+    UIButton *present = [UIButton buttonWithType:UIButtonTypeCustom];
+    [present setBackgroundImage:[UIImage imageNamed:@"BounceButton"] forState:UIControlStateNormal];
+    [present addTarget:self action:@selector(bounceFrontViewController:) forControlEvents:UIControlEventTouchUpInside];
+    [present setTranslatesAutoresizingMaskIntoConstraints:NO];
+    [self.view addSubview:present];
+    
+    NSDictionary *dictionary = NSDictionaryOfVariableBindings(present);
+    
+    for (NSArray *array in @[[NSLayoutConstraint constraintsWithVisualFormat:@"V:|-20-[present(40)]" options:0 metrics:nil views:dictionary]
+                            ,[NSLayoutConstraint constraintsWithVisualFormat:@"H:|-20-[present(40)]" options:0 metrics:nil views:dictionary]]) {
+        [self.view addConstraints:array];
+    }
+}
+
+- (void)_beginGame
 {
     [self.scene layoutNodesWithGrid:[_levels hexagons]];
 }
