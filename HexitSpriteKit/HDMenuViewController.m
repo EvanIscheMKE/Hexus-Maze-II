@@ -162,43 +162,42 @@ static CGFloat const kAnimationOffsetX = 180.0f;
     
     NSMutableArray *buttons = [NSMutableArray array];
     
-    CGRect firstRect = CGRectMake(20.0f, 150.0f, 140.0f, 35.0f);
+    UIButton *retry = [UIButton buttonWithType:UIButtonTypeCustom];
+    [retry setTitle:@"Retry" forState:UIControlStateNormal];
+    [retry setBackgroundColor:[UIColor flatTurquoiseColor]];
+    [retry addTarget:self action:@selector(_restartPreviousLevelOnGameController) forControlEvents:UIControlEventTouchUpInside];
     
-    CGRect previousRect = CGRectZero;
-    for (int y = 0; y < 2; y++) {
-        
-        CGRect currectRect = previousRect;
-        
-        if (y == 0) {
-            currectRect = firstRect;
-        } else {
-            currectRect.origin.y += 50.0f;
-        }
-        
-        UIButton *hexagon = [UIButton buttonWithType:UIButtonTypeCustom];
-        [hexagon setFrame:currectRect];
-        [[hexagon titleLabel] setFont:GILLSANS_LIGHT(18.0f)];
-        [[hexagon titleLabel] setTextAlignment:NSTextAlignmentCenter];
-        [hexagon setBackgroundColor:[UIColor flatMidnightBlueColor]];
-        [hexagon.layer setCornerRadius:10.0f];
-        [buttons addObject:hexagon];
-        [self.view addSubview:hexagon];
-        
-        switch (y) {
-            case 0:
-                [hexagon setTitle:@"Retry" forState:UIControlStateNormal];
-                [hexagon setBackgroundColor:[UIColor flatTurquoiseColor]];
-                [hexagon setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
-                [hexagon addTarget:self action:@selector(_restartPreviousLevelOnGameController) forControlEvents:UIControlEventTouchUpInside];
-                break;
-            case 1:
-                [hexagon setTitle:@"Map" forState:UIControlStateNormal];
-                [hexagon setBackgroundColor:[UIColor flatEmeraldColor]];
-                [hexagon setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
-                [hexagon addTarget:self action:@selector(_presentLevelViewController) forControlEvents:UIControlEventTouchUpInside];
-                break;
-        }
-        previousRect = hexagon.frame;
+    UIButton *map = [UIButton buttonWithType:UIButtonTypeCustom];
+    [map setBackgroundColor:[UIColor flatEmeraldColor]];
+    [map setTitle:@"Map" forState:UIControlStateNormal];
+    [map addTarget:self action:@selector(_presentLevelViewController) forControlEvents:UIControlEventTouchUpInside];
+    
+    for (UIButton *button in @[retry, map]) {
+        [button setTranslatesAutoresizingMaskIntoConstraints:NO];
+        [[button titleLabel] setFont:GILLSANS_LIGHT(18.0f)];
+        [[button titleLabel] setTextAlignment:NSTextAlignmentCenter];
+        [button setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
+        [button.layer setCornerRadius:10.0f];
+        [buttons addObject:button];
+        [self.view addSubview:button];
+    }
+    
+    NSDictionary *dictionary = NSDictionaryOfVariableBindings(retry, map);
+    
+    NSArray *tConstraint  = [NSLayoutConstraint constraintsWithVisualFormat:@"V:|-130-[retry]"    options:0 metrics:nil views:dictionary];
+    NSArray *vConstraint  = [NSLayoutConstraint constraintsWithVisualFormat:@"V:[retry]-20-[map]" options:0 metrics:nil views:dictionary];
+    
+    NSArray *hMConstraint = [NSLayoutConstraint constraintsWithVisualFormat:@"H:|-20-[map]"       options:0 metrics:nil views:dictionary];
+    NSArray *hRConstraint = [NSLayoutConstraint constraintsWithVisualFormat:@"H:|-20-[retry]"     options:0 metrics:nil views:dictionary];
+    
+    NSArray *mWidth       = [NSLayoutConstraint constraintsWithVisualFormat:@"H:[map(140)]"       options:0 metrics:nil views:dictionary];
+    NSArray *RWidth       = [NSLayoutConstraint constraintsWithVisualFormat:@"H:[retry(140)]"     options:0 metrics:nil views:dictionary];
+    
+    NSArray *mHeight      = [NSLayoutConstraint constraintsWithVisualFormat:@"V:[map(40)]"        options:0 metrics:nil views:dictionary];
+    NSArray *RHeight      = [NSLayoutConstraint constraintsWithVisualFormat:@"V:[retry(40)]"      options:0 metrics:nil views:dictionary];
+
+    for (NSArray *constraint in @[tConstraint, vConstraint, hMConstraint, hRConstraint, mWidth, RWidth, mHeight, RHeight]) {
+        [self.view addConstraints:constraint];
     }
     
     self.buttonList = buttons;
