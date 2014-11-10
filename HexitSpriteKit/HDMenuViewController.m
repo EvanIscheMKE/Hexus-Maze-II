@@ -13,7 +13,6 @@
 #import "HDHexagon.h"
 #import "HDConstants.h"
 
-
 @interface HDSettingsContainer : UIView
 
 @property (nonatomic, readonly, strong) NSArray *settingButtons;
@@ -52,20 +51,42 @@
     [buttonThree setBackgroundImage:[UIImage imageNamed:@"Volume"] forState:UIControlStateNormal];
     [buttonThree setBackgroundImage:[UIImage imageNamed:@"Volume"] forState:UIControlStateSelected];
     
+    UILabel *labelOne = [[UILabel alloc] init];
+    [labelOne setText:@"Effects"];
+    [self addSubview:labelOne];
+    
+    UILabel *labelTwo = [[UILabel alloc] init];
+    [labelTwo setText:@"Sounds"];
+    [self addSubview:labelTwo];
+    
+    UILabel *labelThree = [[UILabel alloc] init];
+    [labelThree setText:@"Vibration"];
+    [self addSubview:labelThree];
+    
+    for (UILabel *label in @[labelOne, labelTwo, labelThree]) {
+        [label setTranslatesAutoresizingMaskIntoConstraints:NO];
+        [label setTextColor:[UIColor whiteColor]];
+        [label setFont:GILLSANS_LIGHT(18.0f)];
+        [self addSubview:label];
+    }
+    
     for (UIButton *selectors in @[buttonOne, buttonTwo, buttonThree]) {
         [selectors setTranslatesAutoresizingMaskIntoConstraints:NO];
         [_buttons addObject:selectors];
         [self addSubview:selectors];
     }
     
-    NSDictionary *dictionary = NSDictionaryOfVariableBindings(buttonOne, buttonTwo, buttonThree);
+    NSDictionary *dictionary = NSDictionaryOfVariableBindings(buttonOne, buttonTwo, buttonThree, labelOne, labelTwo, labelThree);
     
-    NSString *vfConstaint = @"V:|-[buttonOne(30)]-20-[buttonTwo(30)]-20-[buttonThree(30)]";
+    NSString *vfConstaint = @"V:|-[labelOne(18)]-[buttonOne(30)]-20-[labelTwo(18)]-[buttonTwo(30)]-20-[labelThree(18)]-[buttonThree(30)]";
     for (NSArray *constraint in @[
                     [NSLayoutConstraint constraintsWithVisualFormat:vfConstaint                       options:0 metrics:nil views:dictionary],
                     [NSLayoutConstraint constraintsWithVisualFormat:@"H:|-10-[buttonOne(120)]-10-|"   options:0 metrics:nil views:dictionary],
                     [NSLayoutConstraint constraintsWithVisualFormat:@"H:|-10-[buttonTwo(120)]-10-|"   options:0 metrics:nil views:dictionary],
-                    [NSLayoutConstraint constraintsWithVisualFormat:@"H:|-10-[buttonThree(120)]-10-|" options:0 metrics:nil views:dictionary]]) {
+                    [NSLayoutConstraint constraintsWithVisualFormat:@"H:|-10-[buttonThree(120)]-10-|" options:0 metrics:nil views:dictionary],
+                    [NSLayoutConstraint constraintsWithVisualFormat:@"H:|-10-[labelOne]"              options:0 metrics:nil views:dictionary],
+                    [NSLayoutConstraint constraintsWithVisualFormat:@"H:|-10-[labelTwo]"              options:0 metrics:nil views:dictionary],
+                    [NSLayoutConstraint constraintsWithVisualFormat:@"H:|-10-[labelThree]"            options:0 metrics:nil views:dictionary]]) {
         [self addConstraints:constraint];
     }
     return _buttons;
@@ -83,6 +104,7 @@ static CGFloat const kAnimationOffsetX = 180.0f;
 @property (nonatomic, strong) UIScreenEdgePanGestureRecognizer *leftGestureRecognizer;
 @property (nonatomic, strong) UIScreenEdgePanGestureRecognizer *rightGestureRecognizer;
 
+@property (nonatomic, setter=setGameInterfaceHidden:, assign) BOOL isGameInterfaceHidden;
 @property (nonatomic, setter=setExpanded:, assign) BOOL isExpanded;
 
 @property (nonatomic, strong) UIDynamicAnimator *animator;
@@ -94,13 +116,19 @@ static CGFloat const kAnimationOffsetX = 180.0f;
 
 @implementation HDMenuViewController{
     BOOL _isExpanded;
+    BOOL _isGameInterfaceHidden;
+    
+    NSDictionary *_dictionary;
+    NSArray *_vLC;
 }
 
 @synthesize isExpanded = _isExpanded;
+@synthesize isGameInterfaceHidden = _isGameInterfaceHidden;
 - (instancetype)initWithRootViewController:(UIViewController *)controller
 {
     NSParameterAssert(controller);
     if (self = [super init]) {
+        [self setGameInterfaceHidden:NO];
         [self setRootViewController:controller];
     }
     return self;
@@ -144,6 +172,7 @@ static CGFloat const kAnimationOffsetX = 180.0f;
 
 - (void)_setFrontViewController:(UIViewController *)controller animated:(BOOL)animated
 {
+    [self setGameInterfaceHidden:!_isGameInterfaceHidden];
     [(UINavigationController *)self.rootViewController setViewControllers:@[controller] animated:animated];
 }
 
@@ -240,27 +269,26 @@ static CGFloat const kAnimationOffsetX = 180.0f;
         [self.view addSubview:button];
     }
     
-    NSDictionary *dictionary = NSDictionaryOfVariableBindings(retry, map, title);
-    
-    NSArray *titleCX      = [NSLayoutConstraint constraintsWithVisualFormat:@"H:|-[title]"        options:0 metrics:nil views:dictionary];
-    NSArray *titleCY      = [NSLayoutConstraint constraintsWithVisualFormat:@"V:[title]-|"        options:0 metrics:nil views:dictionary];
-    
-    NSArray *tConstraint  = [NSLayoutConstraint constraintsWithVisualFormat:@"V:|-130-[retry]"    options:0 metrics:nil views:dictionary];
-    NSArray *vConstraint  = [NSLayoutConstraint constraintsWithVisualFormat:@"V:[retry(40)]-20-[map(==retry)]" options:0 metrics:nil views:dictionary];
-    
-    NSArray *hMConstraint = [NSLayoutConstraint constraintsWithVisualFormat:@"H:|-20-[map(140)]"      options:0 metrics:nil views:dictionary];
-    NSArray *hRConstraint = [NSLayoutConstraint constraintsWithVisualFormat:@"H:|-20-[retry(==map)]"  options:0 metrics:nil views:dictionary];
-
-    for (NSArray *constraint in @[tConstraint, vConstraint, hMConstraint, hRConstraint, titleCX, titleCY]) {
-        [self.view addConstraints:constraint];
-    }
-    
-    CGRect rect = CGRectMake(20, 300, 140, 100);
-    HDSettingsContainer *container = [[HDSettingsContainer alloc] initWithFrame:rect];
+    HDSettingsContainer *container = [[HDSettingsContainer alloc] init];
+    [container setTranslatesAutoresizingMaskIntoConstraints:NO];
+    [[[container settingButtons] firstObject] addTarget:self action:@selector(openURL:) forControlEvents:UIControlEventTouchUpInside];
+    [[container settingButtons][1]            addTarget:self action:@selector(openURL:) forControlEvents:UIControlEventTouchUpInside];
+    [[[container settingButtons] lastObject]  addTarget:self action:@selector(openURL:) forControlEvents:UIControlEventTouchUpInside];
     [self.view addSubview:container];
     
-    for (UIButton *buttons in [container settingButtons]) {
-        [buttons setUserInteractionEnabled:NO];
+    _dictionary = NSDictionaryOfVariableBindings(retry, map, title, container);
+    
+    NSArray *vCt = [NSLayoutConstraint constraintsWithVisualFormat:@"V:|-130-[retry]-20-[map(==retry)]"  options:0 metrics:nil views:_dictionary];
+    NSArray *titleCX      = [NSLayoutConstraint constraintsWithVisualFormat:@"H:|-[title]"               options:0 metrics:nil views:_dictionary];
+    NSArray *titleCY      = [NSLayoutConstraint constraintsWithVisualFormat:@"V:[title]-|"               options:0 metrics:nil views:_dictionary];
+    NSArray *hMConstraint = [NSLayoutConstraint constraintsWithVisualFormat:@"H:|-20-[map(140)]"         options:0 metrics:nil views:_dictionary];
+    NSArray *hRConstraint = [NSLayoutConstraint constraintsWithVisualFormat:@"H:|-20-[retry(==map)]"     options:0 metrics:nil views:_dictionary];
+    NSArray *hCConstraint = [NSLayoutConstraint constraintsWithVisualFormat:@"H:|-20-[container(==map)]" options:0 metrics:nil views:_dictionary];
+    
+    _vLC  = [NSLayoutConstraint constraintsWithVisualFormat:@"V:[map]-20-[container(200)]" options:0 metrics:nil views:_dictionary];
+
+    for (NSArray *constraint in @[vCt, _vLC, hMConstraint, hRConstraint, hCConstraint, titleCX, titleCY]) {
+        [self.view addConstraints:constraint];
     }
 }
 
@@ -297,6 +325,69 @@ static CGFloat const kAnimationOffsetX = 180.0f;
     
     for (id animators in @[self.gravityBehavior, self.pushBehavior, collisionBehavior, itemBehavior]) {
         [self.animator addBehavior:animators];
+    }
+}
+
+#pragma mark -
+#pragma mark - Override Setters
+
+- (void)setGameInterfaceHidden:(BOOL)isGameInterfaceHidden
+{
+    if (_isGameInterfaceHidden == isGameInterfaceHidden) {
+        return;
+    }
+    
+    _isGameInterfaceHidden = isGameInterfaceHidden;
+    
+    if (_isGameInterfaceHidden) {
+        [self _showInterfaceAnimated:YES];
+    } else {
+        [self _hideInterfaceAnimated:YES];
+    }
+}
+
+#pragma mark -
+#pragma mark - Animation
+
+- (void)_hideInterfaceAnimated:(BOOL)animated
+{
+    [self.view removeConstraints:_vLC];
+    
+    _vLC  = [NSLayoutConstraint constraintsWithVisualFormat:@"V:|-50-[container(200)]" options:0 metrics:nil views:_dictionary];
+    
+    [self.view addConstraints:_vLC];
+    
+    dispatch_block_t closeAnimation = ^{
+        [self.view layoutSubviews];
+    };
+    
+    if (!animated) {
+        closeAnimation();
+    } else {
+        [UIView animateWithDuration:.3f
+                         animations:closeAnimation
+                         completion:nil];
+    }
+}
+
+- (void)_showInterfaceAnimated:(BOOL)animated
+{
+    [self.view removeConstraints:_vLC];
+    
+    _vLC  = [NSLayoutConstraint constraintsWithVisualFormat:@"V:[map]-20-[container(200)]" options:0 metrics:nil views:_dictionary];
+    
+    [self.view addConstraints:_vLC];
+ 
+    dispatch_block_t expandAnimation = ^{
+        [self.view layoutSubviews];
+    };
+    
+    if (!animated) {
+        expandAnimation();
+    } else {
+        [UIView animateWithDuration:.3f
+                         animations:expandAnimation
+                         completion:nil];
     }
 }
 
