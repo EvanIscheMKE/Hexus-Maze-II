@@ -14,9 +14,7 @@
 #import "HDConstants.h"
 
 @interface HDSettingsContainer : UIView
-
 @property (nonatomic, readonly, strong) NSArray *settingButtons;
-
 @end
 
 @implementation HDSettingsContainer{
