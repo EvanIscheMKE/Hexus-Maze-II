@@ -8,7 +8,7 @@
 
 #import "UIColor+FlatColors.h"
 #import "HDLevelViewController.h"
-#import "HDMenuViewController.h"
+#import "HDContainerViewController.h"
 #import "HDGameViewController.h"
 
 static const CGFloat numberOfRows = 10;
@@ -58,8 +58,9 @@ static const CGFloat numberOfColumns = 3;
 {
     UIButton *button = (UIButton *)sender;
     
-    HDGameViewController *controller = [[HDGameViewController alloc] initWithLevel:button.titleLabel.text.integerValue];
-    [self setFrontViewController:controller animated:YES];
+    NSInteger selectedLevel = button.titleLabel.text.integerValue;
+    
+    [ADelegate navigateToNewLevel:selectedLevel];
 }
 
 - (void)didReceiveMemoryWarning

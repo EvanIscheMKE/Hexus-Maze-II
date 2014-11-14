@@ -14,7 +14,6 @@
 @property (nonatomic, weak) id<HDGameCenterManagerDelegate> delegate;
 + (HDGameCenterManager *)sharedManager;
 - (void)authenticateForGameCenter;
-- (void)submitSavedEntries;
 @end
 
 @protocol HDGameCenterManagerDelegate <NSObject>

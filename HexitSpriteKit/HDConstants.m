@@ -19,6 +19,8 @@ NSString * const hdHexZoomKey = @"zoom";
 // UserDefault Keys
 NSString * const hdDefaultLevelKey = @"defaultLevels";
 NSString * const hdFirstRunKey     = @"firstRunKey";
+
+NSString * const hdEffectsKey      = @"effectsKey";
 NSString * const hdSoundkey        = @"soundKey";
 NSString * const hdVibrationKey    = @"vibrationKey";
 

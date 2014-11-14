@@ -9,13 +9,15 @@
 @import SpriteKit;
 
 #import "UIColor+FlatColors.h"
-#import "HDMenuViewController.h"
+#import "HDContainerViewController.h"
 #import "HDGameViewController.h"
 #import "HDLevels.h"
 #import "HDScene.h"
 
 @interface HDGameViewController ()
+
 @property (nonatomic, strong) HDScene *scene;
+
 @end
 
 @implementation HDGameViewController{
@@ -54,11 +56,13 @@
 {
     [super viewDidLoad];
     [[NSNotificationCenter defaultCenter] addObserver:self
-                                             selector:@selector(_applicationWillResignActive) name:UIApplicationWillResignActiveNotification
+                                             selector:@selector(_applicationWillResignActive)
+                                                 name:UIApplicationWillResignActiveNotification
                                                object:nil];
     
     [[NSNotificationCenter defaultCenter] addObserver:self
-                                             selector:@selector(_applicationDidBecomeActive)  name:UIApplicationDidBecomeActiveNotification
+                                             selector:@selector(_applicationDidBecomeActive)
+                                                 name:UIApplicationDidBecomeActiveNotification
                                                object:nil];
     
     _levels = [[HDLevels alloc] initWithLevel:_level];
@@ -85,9 +89,11 @@
 
 - (void)_layoutHUDButtons
 {
+    HDContainerViewController *controller = self.containerViewController;
+    
     UIButton *present = [UIButton buttonWithType:UIButtonTypeCustom];
     [present setBackgroundImage:[UIImage imageNamed:@"BounceButton"] forState:UIControlStateNormal];
-    [present addTarget:self action:@selector(bounceFrontViewController:) forControlEvents:UIControlEventTouchUpInside];
+    [present addTarget:controller action:@selector(bounceFrontViewController) forControlEvents:UIControlEventTouchUpInside];
     [present setTranslatesAutoresizingMaskIntoConstraints:NO];
     [self.view addSubview:present];
     
@@ -116,7 +122,7 @@
 }
 
 #pragma mark -
-#pragma mark - Notification selectors(Private)
+#pragma mark - Private
 
 -(void)_pauseGame
 {

@@ -11,11 +11,12 @@
 #import "HDGameCenterManager.h"
 #import "HDGameViewController.h"
 #import "HDWelcomeViewController.h"
-#import "HDMenuViewController.h"
+#import "HDBackViewController.h"
+#import "HDContainerViewController.h"
 #import "HDLevelViewController.h"
 
 @interface AppDelegate ()
-
+@property (nonatomic, strong) HDContainerViewController *containerController;
 @end
 
 @implementation AppDelegate {
@@ -36,11 +37,87 @@
 
 - (void)presentLevelViewController
 {
-    UINavigationController *controller   = [[UINavigationController alloc] initWithRootViewController:[HDLevelViewController new]];
-    [controller setNavigationBarHidden:YES];
-    HDMenuViewController *menuController = [[HDMenuViewController alloc] initWithRootViewController:controller];
-    [self.window.rootViewController presentViewController:menuController animated:YES completion:nil];
+    HDGameViewController *game = [[HDGameViewController alloc] init];
+    HDBackViewController *rear = [[HDBackViewController alloc] init];
+    
+    self.containerController = [[HDContainerViewController alloc] initWithGameViewController:game
+                                                                          rearViewController:rear];
+    [self.window.rootViewController presentViewController:self.containerController animated:YES completion:nil];
+    
+//    NSArray *switches = menuController.toggleSwitchesForSettings;
+//    
+//    if (switches) {
+//        [switches[0] addTarget:self action:@selector(toggleEffects:)   forControlEvents:UIControlEventTouchUpInside];
+//        [switches[1] addTarget:self action:@selector(toggleSound:)     forControlEvents:UIControlEventTouchUpInside];
+//        [switches[2] addTarget:self action:@selector(toggleVibration:) forControlEvents:UIControlEventTouchUpInside];
+//    }
 }
+
+- (void)restartCurrentLevel
+{
+    [self navigateToNewLevel:_deltaLevel];
+}
+
+- (void)navigateToLevelMap
+{
+    [HDLevelViewController new];
+    [self.containerController setFrontViewController:[HDLevelViewController new] animated:YES];
+}
+
+- (void)navigateToNewLevel:(NSInteger)level
+{
+    _deltaLevel = level;
+    HDGameViewController *controller = [[HDGameViewController alloc] initWithLevel:level];
+    [self.containerController setFrontViewController:controller animated:YES];
+}
+
+#pragma mark -
+#pragma mark - Switches
+
+- (void)toggleSound:(id)sender
+{
+    UIButton *sound = (UIButton *)sender;
+    [sound setSelected:!sound.selected];
+    
+    [[NSUserDefaults standardUserDefaults] setBool:![[NSUserDefaults standardUserDefaults] boolForKey:hdSoundkey] forKey:hdSoundkey];
+}
+
+- (void)toggleVibration:(id)sender
+{
+    UIButton *vibration = (UIButton *)sender;
+    [vibration setSelected:!vibration.selected];
+    
+    [[NSUserDefaults standardUserDefaults] setBool:![[NSUserDefaults standardUserDefaults] boolForKey:hdVibrationKey] forKey:hdVibrationKey];
+}
+
+- (void)toggleEffects:(id)sender
+{
+    UIButton *effects = (UIButton *)sender;
+    [effects setSelected:!effects.selected];
+    
+    [[NSUserDefaults standardUserDefaults] setBool:![[NSUserDefaults standardUserDefaults] boolForKey:hdEffectsKey] forKey:hdEffectsKey];
+}
+
+#pragma mark -
+#pragma mark - Override Getters
+
+- (BOOL)vibrationIsActive
+{
+    return [[NSUserDefaults standardUserDefaults] boolForKey:hdVibrationKey];
+}
+
+- (BOOL)soundIsActive
+{
+    return [[NSUserDefaults standardUserDefaults] boolForKey:hdSoundkey];
+}
+
+- (BOOL)effectsIfActive
+{
+    return [[NSUserDefaults standardUserDefaults] boolForKey:hdEffectsKey];
+}
+
+#pragma mark - 
+#pragma mark - <Private>
 
 - (void)_initalizeModelData
 {

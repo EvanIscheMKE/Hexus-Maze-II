@@ -14,13 +14,14 @@
 #import "HDHexagonNode.h"
 #import "HDLevels.h"
 
-static const CGFloat kTileHeightInsetMultiplier = .825f;
+static const CGFloat kTileHeightInsetMultiplier = .845f;
 
-@interface HDScene ()
+@interface HDScene ()<HDHexagonDelegate>
+
+@property (nonatomic, strong) SKAction *selectedSound;
 @property (nonatomic, strong) SKNode *gameLayer;
 @property (nonatomic, assign) BOOL contentCreated;
 
-@property (strong, nonatomic) SKAction *selectedSound;
 @end
 
 @implementation HDScene {
@@ -33,7 +34,6 @@ static const CGFloat kTileHeightInsetMultiplier = .825f;
 }
 
 @dynamic delegate;
-
 - (id)initWithSize:(CGSize)size
 {
     if (self = [super initWithSize:size]) {
@@ -63,15 +63,17 @@ static const CGFloat kTileHeightInsetMultiplier = .825f;
 {
     _finishedTileCount = grid.count;
     
-    _hexagons = [[NSArray alloc] initWithArray:grid];
+    _hexagons = [NSArray arrayWithArray:grid];
+    
     for (HDHexagon *hexagon in grid) {
         
         CGPathRef pathRef = [[self hexagonPathForBounds:CGRectMake(0.0f, 0.0f, _kTileSize, _kTileSize)] CGPath];
-        HDHexagonNode *shapeNode = [HDHexagonNode shapeNodeWithPath:pathRef centered:NO];
+        
+        HDHexagonNode *shapeNode = [HDHexagonNode shapeNodeWithPath:pathRef];
         [shapeNode setPosition:[self pointForColumn:hexagon.column row:hexagon.row]];
-        [shapeNode setLineWidth:2.0f];
+        [hexagon setDelegate:self];
         [hexagon setNode:shapeNode];
-        [hexagon setType:[[self.levels hexagonTypeAtRow:hexagon.row column:hexagon.column] intValue]];
+        [hexagon setType:(int)[self.levels hexagonTypeAtRow:hexagon.row column:hexagon.column]];
         [self.gameLayer addChild:shapeNode];
         
     }
@@ -113,7 +115,7 @@ static const CGFloat kTileHeightInsetMultiplier = .825f;
             selectedHexagon = hex;
         }
     }    
-   return (selectedHexagon.isSelected) ? nil : selectedHexagon;
+   return (selectedHexagon.isSelected || selectedHexagon.state == HDHexagonStateDisabled) ? nil : selectedHexagon;
 }
 
 - (void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event
@@ -128,13 +130,12 @@ static const CGFloat kTileHeightInsetMultiplier = .825f;
     
     HDHexagon *hexagon = [self findHexagonFromPoint:location];
     
-    if ( hexagon == nil || ( ( ![_selectedHexagons count] ) && hexagon.type != HDHexagonTypeStarter ) )
+    if ( hexagon.node == nil || ( ( ![_selectedHexagons count] ) && hexagon.type != HDHexagonTypeStarter ) )
         return;
     
     if ( [self _validateNextMoveToHexagon:hexagon fromHexagon:[_selectedHexagons lastObject] ] || (hexagon.type == HDHexagonTypeStarter) ) {
         [self.gameLayer runAction:self.selectedSound];
         [_selectedHexagons addUniqueObject:hexagon];
-        [hexagon.node setFillColor:[SKColor redColor]];
         [hexagon recievedTouches];
 
         if ([self _checkIfAllHexagonsAreSelected] && [self.delegate respondsToSelector:@selector(gameOverWithCompletion:)]) {
@@ -188,8 +189,21 @@ static const CGFloat kTileHeightInsetMultiplier = .825f;
             return YES;
         }
     }
-    
     return NO;
+}
+
+#pragma mark -
+#pragma mark - <HDHexagonDelegate>
+
+- (void)unlockFollowingHexagonType:(HDHexagonType)type
+{
+    for (HDHexagon *hexagon in _hexagons) {
+        if (hexagon.type == type + 1) {
+            [hexagon setState:HDHexagonStateEnabled];
+            [hexagon.node setFillColor:[SKColor flatEmeraldColor]];
+            [hexagon.node.label setFontColor:[SKColor flatMidnightBlueColor]];
+        }
+    }
 }
 
 @end

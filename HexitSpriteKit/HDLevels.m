@@ -100,7 +100,7 @@ typedef void(^CallBackBlock)(NSDictionary *dictionary, NSError *error);
                 
                 if (_grid[row][column] != nil) {
                     
-                    HDHexagon *cookie = [self makeHexagonAtRow:row column:column type:[_grid[row][column] intValue]];
+                    HDHexagon *cookie = [self makeHexagonAtRow:row column:column];
                     [_hexagons addObject:cookie];
                     
                     _hexagon[row][column] = cookie;
@@ -110,9 +110,9 @@ typedef void(^CallBackBlock)(NSDictionary *dictionary, NSError *error);
     return _hexagons;
 }
 
-- (NSNumber *)hexagonTypeAtRow:(NSInteger)row column:(NSInteger)column
+- (NSInteger)hexagonTypeAtRow:(NSInteger)row column:(NSInteger)column
 {
-    return _grid[row][column];
+    return [_grid[row][column]integerValue];
 }
 
 - (HDHexagon *)hexagonAtRow:(NSInteger)row column:(NSInteger)column
@@ -120,7 +120,7 @@ typedef void(^CallBackBlock)(NSDictionary *dictionary, NSError *error);
     return _hexagon[row][column];
 }
 
-- (HDHexagon *)makeHexagonAtRow:(NSInteger)row column:(NSInteger)column type:(int)hexagonType
+- (HDHexagon *)makeHexagonAtRow:(NSInteger)row column:(NSInteger)column
 {
     HDHexagon *hexagon = [[HDHexagon alloc] init];
     [hexagon setColumn:column];

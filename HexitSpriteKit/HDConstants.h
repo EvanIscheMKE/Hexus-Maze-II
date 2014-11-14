@@ -30,6 +30,7 @@ extern NSString * const hdRestartNotificaiton;
 //UserDefault Keys
 extern NSString * const hdDefaultLevelKey;
 extern NSString * const hdFirstRunKey;
+extern NSString * const hdEffectsKey;
 extern NSString * const hdSoundkey;
 extern NSString * const hdVibrationKey;
 

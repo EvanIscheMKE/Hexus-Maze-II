@@ -12,8 +12,14 @@
 
 @property (strong, nonatomic) UIWindow *window;
 
+@property (nonatomic, readonly) BOOL vibrationIsActive;
+@property (nonatomic, readonly) BOOL effectsIfActive;
+@property (nonatomic, readonly) BOOL soundIsActive;
+
+- (void)navigateToNewLevel:(NSInteger)level;
 - (void)presentLevelViewController;
-- (void)openLevel:(NSInteger)level animated:(BOOL)animated;
+- (void)navigateToLevelMap;
+- (void)restartCurrentLevel;
 
 @end
 

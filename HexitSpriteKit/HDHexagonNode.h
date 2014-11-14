@@ -6,8 +6,15 @@
 //  Copyright (c) 2014 Evan William Ische. All rights reserved.
 //
 
-#import <SpriteKit/SpriteKit.h>
+@import SpriteKit;
 
 @interface HDHexagonNode : SKShapeNode
+
+@property (nonatomic, strong) SKLabelNode *label;
+
 - (void)updateLabelWithText:(NSString *)text;
+- (void)updateLabelWithText:(NSString *)text color:(UIColor *)color;
+
 @end
+
+

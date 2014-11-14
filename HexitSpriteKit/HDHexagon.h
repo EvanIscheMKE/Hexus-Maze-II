@@ -9,10 +9,9 @@
 @import SpriteKit;
 #import <Foundation/Foundation.h>
 
-static const NSInteger NumberOfRows = 18;
-static const NSInteger NumberOfColumns = 9;
+@class HDHexagonNode;
 
-typedef enum{
+typedef enum {
     HDHexagonTypeRegular = 1,
     HDHexagonTypeDouble  = 2,
     HDHexagonTypeTriple  = 3,
@@ -22,17 +21,38 @@ typedef enum{
     HDHexagonTypeFour    = 7,
     HDHexagonTypeFive    = 8,
     HDHexagonTypeStarter = 9
-}HDHexagonType;
+} HDHexagonType;
+
+typedef enum {
+    HDHexagonStateEnabled  = 3,
+    HDHexagonStateDisabled = 4,
+    HDHexagonStateNone     = 0
+} HDHexagonState;
 
 @class HDHexagonNode;
+
+static const NSInteger NumberOfRows    = 18;
+static const NSInteger NumberOfColumns = 9;
+
+@protocol HDHexagonDelegate;
 @interface HDHexagon : NSObject
 
 @property (nonatomic, getter=isSelected, assign) BOOL selected;
-@property (nonatomic, assign) HDHexagonType type;
-@property (nonatomic, assign) NSInteger column;
-@property (nonatomic, assign) NSInteger row;
+@property (nonatomic, weak) id<HDHexagonDelegate> delegate;
 @property (nonatomic, strong) HDHexagonNode *node;
 
+@property (nonatomic, assign) HDHexagonState state;
+@property (nonatomic, assign) HDHexagonType type;
+
+@property (nonatomic, assign) NSInteger column;
+@property (nonatomic, assign) NSInteger row;
+
 - (void)recievedTouches;
+
+@end
+
+@protocol HDHexagonDelegate <NSObject>
+
+- (void)unlockFollowingHexagonType:(HDHexagonType)type;
 
 @end
