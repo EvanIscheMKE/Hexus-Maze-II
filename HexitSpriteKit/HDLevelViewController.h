@@ -8,6 +8,10 @@
 
 #import <UIKit/UIKit.h>
 
+@interface HDIndicator : UIView
+
+@end
+
 @interface HDLevelViewController : UIViewController
 
 @end

@@ -11,11 +11,13 @@
 #import "UIColor+FlatColors.h"
 #import "HDContainerViewController.h"
 #import "HDGameViewController.h"
+#import "HDProgressView.h"
 #import "HDLevels.h"
 #import "HDScene.h"
 
 @interface HDGameViewController ()
 
+@property (nonatomic, strong) HDProgressView *progressView;
 @property (nonatomic, strong) HDScene *scene;
 
 @end
@@ -55,6 +57,12 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(decreaseTileCount)
+                                                 name:@"DecreaseRemainingTilesByOne"
+                                               object:nil];
+    
     [[NSNotificationCenter defaultCenter] addObserver:self
                                              selector:@selector(_applicationWillResignActive)
                                                  name:UIApplicationWillResignActiveNotification
@@ -67,7 +75,12 @@
     
     _levels = [[HDLevels alloc] initWithLevel:_level];
     
-    [self _layoutHUDButtons];
+    [self _layoutDisplayWithTileCount:[[_levels hexagons] count]];
+}
+
+- (void)decreaseTileCount
+{
+    [self.progressView decreaseTileCountByUno];
 }
 
 - (void)viewWillLayoutSubviews
@@ -80,28 +93,12 @@
          self.scene = [HDScene sceneWithSize:self.view.bounds.size];
         [self.scene setScaleMode:SKSceneScaleModeAspectFill];
         [self.scene setLevels:_levels];
+        [self.scene addUnderlyingIndicatorTiles];
         
         [skView presentScene:self.scene];
+        
         [self _beginGame];
         
-    }
-}
-
-- (void)_layoutHUDButtons
-{
-    HDContainerViewController *controller = self.containerViewController;
-    
-    UIButton *present = [UIButton buttonWithType:UIButtonTypeCustom];
-    [present setBackgroundImage:[UIImage imageNamed:@"BounceButton"] forState:UIControlStateNormal];
-    [present addTarget:controller action:@selector(bounceFrontViewController) forControlEvents:UIControlEventTouchUpInside];
-    [present setTranslatesAutoresizingMaskIntoConstraints:NO];
-    [self.view addSubview:present];
-    
-    NSDictionary *dictionary = NSDictionaryOfVariableBindings(present);
-    
-    for (NSArray *array in @[[NSLayoutConstraint constraintsWithVisualFormat:@"V:|-20-[present(40)]" options:0 metrics:nil views:dictionary]
-                            ,[NSLayoutConstraint constraintsWithVisualFormat:@"H:|-20-[present(40)]" options:0 metrics:nil views:dictionary]]) {
-        [self.view addConstraints:array];
     }
 }
 
@@ -124,7 +121,17 @@
 #pragma mark -
 #pragma mark - Private
 
--(void)_pauseGame
+- (void)_layoutDisplayWithTileCount:(NSInteger)tileCount
+{
+    if (!self.progressView) {
+        CGRect progressFrame = CGRectMake(0.0, CGRectGetHeight(self.view.bounds) - 80.0f, CGRectGetWidth(self.view.bounds), 80.0f);
+         self.progressView = [[HDProgressView alloc] initWithFrame:progressFrame];
+        [self.progressView setRemainingTileCount:tileCount];
+        [self.view addSubview:self.progressView];
+    }
+}
+
+- (void)_pauseGame
 {
     _pauseGame = !_pauseGame;
     [self.scene.view setPaused:!self.scene.view.paused];

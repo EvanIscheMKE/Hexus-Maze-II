@@ -20,28 +20,28 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    [self.view setBackgroundColor:[UIColor flatMidnightBlueColor]];
+    [self.view setBackgroundColor:[UIColor whiteColor]];
     
-    CGSize kTitleSize = [HDHelper sizeFromWidth:CGRectGetWidth(self.view.bounds) font:GILLSANS_LIGHT(80.0f) text:@"HEXIT"];
+    CGSize kTitleSize = [HDHelper sizeFromWidth:CGRectGetWidth(self.view.bounds) font:GILLSANS_LIGHT(90.0f) text:@"HEXUS"];
     
-    CGRect rect = CGRectMake(CGRectGetMidX(self.view.bounds) - (kTitleSize.width / 2), 50.0f, kTitleSize.width, kTitleSize.height);
+    CGRect rect = CGRectMake(CGRectGetMidX(self.view.bounds) - (kTitleSize.width / 2), 160.0f, kTitleSize.width, kTitleSize.height);
     UILabel *title = [[UILabel alloc] initWithFrame:rect];
     [title setTextAlignment:NSTextAlignmentCenter];
-    [title setTextColor:[UIColor whiteColor]];
-    [title setText:@"HEXIT"];
-    [title setFont:GILLSANS_LIGHT(80.0f)];
+    [title setTextColor:[UIColor flatPeterRiverColor]];
+    [title setText:@"HEXUS"];
+    [title setFont:GILLSANS_LIGHT(90.0f)];
     [self.view addSubview:title];
     
-    CGRect startRect = CGRectMake(CGRectGetMidX(self.view.bounds) - 50.0f, 350.0f, 100.0f, 30.0f);
+    CGRect startRect = CGRectMake(CGRectGetMidX(self.view.bounds) - 60.0f, CGRectGetHeight(self.view.bounds) - 275.0f, 120.0f, 40.0f);
     UIButton *start = [UIButton buttonWithType:UIButtonTypeCustom];
     [start addTarget:ADelegate action:@selector(presentLevelViewController) forControlEvents:UIControlEventTouchUpInside];
     [start setFrame:startRect];
-    [start setBackgroundColor:[UIColor flatEmeraldColor]];
+    [start setBackgroundColor:[UIColor flatPeterRiverColor]];
     [[start titleLabel] setTextAlignment:NSTextAlignmentCenter];
-    [[start titleLabel] setFont:GILLSANS_LIGHT(18.0f)];
+    [[start titleLabel] setFont:GILLSANS_LIGHT(22.0f)];
     [start setTitle:@"Start" forState:UIControlStateNormal];
-    [start setTitleColor:[UIColor flatMidnightBlueColor] forState:UIControlStateNormal];
-    [start.layer setCornerRadius:10.0f];
+    [start setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
+    [start.layer setCornerRadius:20.0f];
     [self.view addSubview:start];
 }
 

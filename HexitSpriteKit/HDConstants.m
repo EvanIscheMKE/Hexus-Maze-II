@@ -17,8 +17,11 @@ NSString * const hdHexGridKey = @"grid";
 NSString * const hdHexZoomKey = @"zoom";
 
 // UserDefault Keys
-NSString * const hdDefaultLevelKey = @"defaultLevels";
-NSString * const hdFirstRunKey     = @"firstRunKey";
+NSString * const hdDefaultLevelKey   = @"defaultLevels";
+NSString * const hdFirstRunKey       = @"firstRunKey";
+NSString * const HDRemainingLivesKey = @"livesKey";
+NSString * const HDRemainingTime     = @"remainingTimeUntilNextLife";
+NSString * const HDBackgroundDate    = @"BackgroundDate";
 
 NSString * const hdEffectsKey      = @"effectsKey";
 NSString * const hdSoundkey        = @"soundKey";

@@ -14,6 +14,7 @@
 @property (nonatomic, weak) id<HDSceneDelegate> delegate;
 @property (nonatomic, strong) HDLevels *levels;
 - (void)layoutNodesWithGrid:(NSArray *)grid;
+- (void)addUnderlyingIndicatorTiles;
 @end
 
 @protocol HDSceneDelegate <SKSceneDelegate>

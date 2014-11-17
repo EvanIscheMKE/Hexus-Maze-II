@@ -12,11 +12,18 @@
 @property (nonatomic, readonly, strong) NSArray *settingButtons;
 @end
 
-@interface HDBackViewController : UIViewController
+@protocol HDRearViewControllerDelegate;
+@interface HDRearViewController : UIViewController
 
 @property (nonatomic, strong) HDSettingsContainer *container;
+@property (nonatomic, weak) id<HDRearViewControllerDelegate> delegate;
 
 - (void)hideGameInterfaceAnimated:(BOOL)animated;
 - (void)showGameInterfaceAnimated:(BOOL)animated;
 
+@end
+
+@protocol HDRearViewControllerDelegate <NSObject>
+@optional
+- (void)layoutToggleSwitchesForSettingsFromArray:(NSArray *)array;
 @end

@@ -10,6 +10,21 @@
 
 @implementation HDHelper
 
++ (CGPathRef)hexagonPathForBounds:(CGRect)bounds
+{
+    const CGFloat kPadding = CGRectGetWidth(bounds) / 8 / 2;
+    UIBezierPath *_path = [UIBezierPath bezierPath];
+    [_path moveToPoint:CGPointMake(CGRectGetWidth(bounds) / 2, 0)];
+    [_path addLineToPoint:CGPointMake(CGRectGetWidth(bounds) - kPadding, CGRectGetHeight(bounds) * .25f)];
+    [_path addLineToPoint:CGPointMake(CGRectGetWidth(bounds) - kPadding, CGRectGetHeight(bounds) * .75)];
+    [_path addLineToPoint:CGPointMake(CGRectGetWidth(bounds) / 2, CGRectGetHeight(bounds))];
+    [_path addLineToPoint:CGPointMake(kPadding, CGRectGetHeight(bounds) * .75f)];
+    [_path addLineToPoint:CGPointMake(kPadding, CGRectGetHeight(bounds) * .25f)];
+    [_path closePath];
+    
+    return [_path CGPath];
+}
+
 + (void)blinkView:(UIView *)view duration:(NSTimeInterval)duration repeat:(NSInteger)count
 {
     [self blinkView:view duration:duration repeat:count scale:.95f];

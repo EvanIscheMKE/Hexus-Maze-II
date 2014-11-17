@@ -9,6 +9,7 @@
 #import <Foundation/Foundation.h>
 
 @interface HDHelper : NSObject
++ (CGPathRef)hexagonPathForBounds:(CGRect)bounds;
 + (CGSize)sizeFromWidth:(CGFloat)width font:(UIFont *)font text:(NSString *)text;
 + (void)blinkView:(UIView *)view duration:(NSTimeInterval)duration repeat:(NSInteger)count;
 + (void)blinkView:(UIView *)view duration:(NSTimeInterval)duration repeat:(NSInteger)count scale:(CGFloat)scale;

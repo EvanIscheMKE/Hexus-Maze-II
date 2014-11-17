@@ -11,7 +11,194 @@
 #import "HDLevelViewController.h"
 #import "UIColor+FlatColors.h"
 #import "HDHexagon.h"
+#import "HDHelper.h"
 #import "HDConstants.h"
+
+static const NSUInteger totalAmountOfLives = 5;
+static const CGFloat kPadding   = 12.0f;
+static const CGFloat kHeartSize = 30.0f;
+
+@interface HDNavigationBar ()
+
+@property (nonatomic, assign) NSTimeInterval remainingTime;
+@property (nonatomic, strong) UILabel *timeLabel;
+
+@end
+
+@implementation HDNavigationBar{
+    NSMutableArray *_amountOfLives;
+}
+
++ (Class)layerClass
+{
+    return [CAShapeLayer class];
+}
+
+- (instancetype)initWithFrame:(CGRect)frame
+{
+    return [self initWithFrame:frame numberOfLives:totalAmountOfLives time:1800];
+}
+
+- (instancetype)initWithFrame:(CGRect)frame numberOfLives:(NSInteger)count time:(NSTimeInterval)seconds
+{
+    if (self = [super initWithFrame:frame]) {
+        
+        _remainingTime = seconds;
+        
+        _amountOfLives = [NSMutableArray arrayWithCapacity:totalAmountOfLives];
+        
+        CAShapeLayer *layer = (CAShapeLayer *)self.layer;
+        [layer setPath:[[self _navigationPathForBounds:self.bounds] CGPath]];
+        [layer setFillColor:[[UIColor flatCloudsColor] CGColor]];
+        [layer setStrokeColor:[[UIColor flatCloudsColor] CGColor]];
+        [layer setLineWidth:6.0f];
+        
+        CGRect bounds = CGRectMake(0.0f, 0.0f, CGRectGetHeight(self.bounds), CGRectGetHeight(self.bounds));
+        
+        CAShapeLayer *left = [CAShapeLayer layer];
+        [left setBounds:bounds];
+        [left setPath:[HDHelper hexagonPathForBounds:bounds]];
+        [left setPosition:CGPointMake(CGRectGetMidY(self.bounds), CGRectGetMidY(self.bounds))];
+        [left setFillColor:[[UIColor flatSilverColor] CGColor]];
+        [left setStrokeColor:[[UIColor flatSilverColor] CGColor]];
+        [left setLineWidth:6];
+        [self.layer addSublayer:left];
+        
+         self.toggleSideMenu = [UIButton buttonWithType:UIButtonTypeCustom];
+        [self.toggleSideMenu setImage:[UIImage imageNamed:@"BounceButton"] forState:UIControlStateNormal];
+        [self.toggleSideMenu setBackgroundColor:[UIColor clearColor]];
+        [self.toggleSideMenu setBounds:bounds];
+        [self.toggleSideMenu setCenter:left.position];
+        [self addSubview:self.toggleSideMenu];
+        
+        CAShapeLayer *right = [CAShapeLayer layer];
+        [right setBounds:bounds];
+        [right setPath:[HDHelper hexagonPathForBounds:bounds]];
+        [right setPosition:CGPointMake(CGRectGetWidth(self.bounds) - CGRectGetMidY(self.bounds), CGRectGetMidY(self.bounds))];
+        [right setFillColor:[[UIColor flatSilverColor] CGColor]];
+        [right setStrokeColor:[[UIColor flatSilverColor] CGColor]];
+        [right setLineWidth:6];
+        [self.layer addSublayer:right];
+        
+         self.timeLabel = [[UILabel alloc] init];
+        [self.timeLabel setBounds:bounds];
+        [self.timeLabel setCenter:right.position];
+        [self.timeLabel setFont:GILLSANS(16.0f)];
+        [self.timeLabel setTextColor:[UIColor whiteColor]];
+        [self.timeLabel setText:[self _hoursAndMinutesFromSeconds:seconds]];
+        [self.timeLabel setTextAlignment:NSTextAlignmentCenter];
+        [self addSubview:self.timeLabel];
+        
+        const CGFloat kCenterStartX = CGRectGetMidX(self.bounds) -  ((kHeartSize + kPadding) * 2);
+        
+        for (int i = 0; i < 5; i++) {
+            
+            UIButton *button = [UIButton buttonWithType:UIButtonTypeCustom];
+            [button setBounds:CGRectMake(0.0f, 0.0f, kHeartSize, kHeartSize)];
+            [button setImage:[UIImage imageNamed:@"BlueHeartFill.png"]   forState:UIControlStateNormal];
+            [button setImage:[UIImage imageNamed:@"BlueHeartStroke.png"] forState:UIControlStateSelected];
+            [button setCenter:CGPointMake(kCenterStartX + (i * (kHeartSize + kPadding)), CGRectGetMidY(self.bounds))];
+            [button setSelected:( i + 1 > count )];
+            [_amountOfLives addObject:button];
+            [self addSubview:button];
+            
+        }
+        
+        if (_remainingTime > 0) {
+            [self _setupTimer];
+        }
+    }
+    return self;
+}
+
+- (NSArray *)lives
+{
+    if (_amountOfLives) {
+        return _amountOfLives;
+    }
+    return [NSArray array];
+}
+
+#pragma mark -
+#pragma mark - Private
+
+- (void)_setupTimer
+{
+    self.timer = [NSTimer scheduledTimerWithTimeInterval:1.0f target:self selector:@selector(_updateTime:) userInfo:nil repeats:YES];
+    [[NSRunLoop mainRunLoop] addTimer:self.timer forMode:NSRunLoopCommonModes];
+}
+
+- (void)_updateTime:(NSTimer *)timer
+{
+    _remainingTime -= 1;
+    
+    [self.timeLabel setText:[self _hoursAndMinutesFromSeconds:_remainingTime]];
+    
+    if (_remainingTime == 0) {
+        [self _updateRemainingLives];
+    }
+}
+
+- (void)_updateRemainingLives
+{
+    NSUInteger lives = [[NSUserDefaults standardUserDefaults] integerForKey:HDRemainingLivesKey];
+    
+    NSUInteger count = 0;
+    for (UIButton *life in self.lives) {
+        if (life.selected) {
+            [life setSelected:NO];
+            [self.timer invalidate];
+            [self setTimer:nil];
+            [[NSUserDefaults standardUserDefaults] setInteger:lives + 1 forKey:HDRemainingLivesKey];
+            
+            if (count != 4) {
+                _remainingTime = 1200; // 20 minutes * 60 seconds
+                [self _setupTimer];
+            }
+            
+            return;
+        }
+        count++;
+    }
+}
+
+- (void)updateLives:(NSInteger)lives time:(NSTimeInterval)seconds
+{
+    if (self.timer) {
+        [self setTimer:nil];
+        [self.timer invalidate];
+    }
+}
+
+- (NSString *)_hoursAndMinutesFromSeconds:(NSInteger)totalSeconds
+{
+    if (totalSeconds > 0) {
+        return [NSString stringWithFormat:@"%02ld:%02ld", (long)(totalSeconds / 60) % 60, (long)totalSeconds % 60];
+    }
+    return @"";
+}
+
+- (UIBezierPath *)_navigationPathForBounds:(CGRect)bounds
+{
+    
+    const CGFloat kPadding = CGRectGetHeight(bounds) / 8 / 2;
+    UIBezierPath *_path = [UIBezierPath bezierPath];
+    [_path moveToPoint:CGPointMake(CGRectGetMidX(bounds), 0.0f)];
+    [_path addLineToPoint:CGPointMake(CGRectGetWidth(bounds) - kPadding, 0.0f)];
+    [_path addLineToPoint:CGPointMake(CGRectGetWidth(bounds) - kPadding, CGRectGetHeight(bounds) * .25f)];
+    [_path addLineToPoint:CGPointMake(CGRectGetWidth(bounds) - kPadding, CGRectGetHeight(bounds) * .75f)];
+    [_path addLineToPoint:CGPointMake(CGRectGetWidth(bounds) - CGRectGetHeight(bounds) / 2, CGRectGetHeight(bounds))];
+    [_path addLineToPoint:CGPointMake(CGRectGetMidX(bounds), CGRectGetHeight(bounds))];
+    [_path addLineToPoint:CGPointMake(CGRectGetHeight(bounds) / 2, CGRectGetHeight(bounds))];
+    [_path addLineToPoint:CGPointMake(kPadding, CGRectGetHeight(bounds) * .75f)];
+    [_path addLineToPoint:CGPointMake(kPadding, CGRectGetHeight(bounds) * .25f)];
+    [_path addLineToPoint:CGPointMake(kPadding, 0.0f)];
+    [_path closePath];
+    
+    return _path;
+}
+
+@end
 
 @implementation UIViewController (HDMenuViewController)
 
@@ -32,18 +219,12 @@ static CGFloat const kAnimationOffsetX = 180.0f;
 
 @interface HDContainerViewController ()
 
+@property (nonatomic, strong) HDNavigationBar *navigationBar;
+
 @property (nonatomic, strong) UIViewController *gameViewController;
 @property (nonatomic, strong) UIViewController *rearViewController;
 
-@property (nonatomic, strong) UIScreenEdgePanGestureRecognizer *leftGestureRecognizer;
-@property (nonatomic, strong) UIScreenEdgePanGestureRecognizer *rightGestureRecognizer;
-
 @property (nonatomic, setter=setExpanded:, assign) BOOL isExpanded;
-
-@property (nonatomic, strong) UIDynamicAnimator *animator;
-@property (nonatomic, strong) UIGravityBehavior *gravityBehavior;
-@property (nonatomic, strong) UIPushBehavior* pushBehavior;
-@property (nonatomic, strong) UIAttachmentBehavior *attachmentBehavior;
 
 @end
 
@@ -76,19 +257,24 @@ static CGFloat const kAnimationOffsetX = 180.0f;
     [self.gameViewController didMoveToParentViewController:self];
     [self.rearViewController didMoveToParentViewController:self];
     
-    [self _initalizeGestureRecognizers];
-    [self _initalizePhysicsAnimators];
+    [self _layoutNavigationBarWithLives:[[NSUserDefaults standardUserDefaults] integerForKey:HDRemainingLivesKey]
+                                   time:[[NSUserDefaults standardUserDefaults] integerForKey:HDRemainingTime]];
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(_applicationDidEnterBackground)
+                                                 name:UIApplicationDidEnterBackgroundNotification
+                                               object:nil];
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(_applicationDidBecomeActive)
+                                                 name:UIApplicationDidBecomeActiveNotification
+                                               object:nil];
+
 }
 
 - (void)didReceiveMemoryWarning
 {
     [super didReceiveMemoryWarning];
-}
-
-- (void)bounceFrontViewController
-{
-    [self.pushBehavior setPushDirection:CGVectorMake(!self.isExpanded ? 35.0f : -35.0f , 0.0f)];
-    [self.pushBehavior setActive:YES];
 }
 
 - (void)setFrontViewController:(UIViewController *)controller animated:(BOOL)animated
@@ -103,18 +289,23 @@ static CGFloat const kAnimationOffsetX = 180.0f;
         [oldController willMoveToParentViewController:nil];
         [oldController removeFromParentViewController];
         [self.gameViewController didMoveToParentViewController:self];
-        [self _initalizePhysicsAnimators];
         
+        if (self.delegate && [self.delegate respondsToSelector:@selector(container:transitionedFromController:toController:)]) {
+            [self.delegate container:self transitionedFromController:oldController toController:self.gameViewController];
+        }
     };
     
     dispatch_block_t animation = ^{
+        if (!animated) {
+            [oldController.view removeFromSuperview];
+            [self.view addSubview:self.gameViewController.view];
+        }
+        
+        [self.navigationBar removeFromSuperview];
+        [self.gameViewController.view addSubview:self.navigationBar];
+        
         if (self.isExpanded) {
             self.isExpanded = NO;
-            
-            if (!animated) {
-                [oldController.view removeFromSuperview];
-                [self.view addSubview:self.gameViewController.view];
-            }
             
             CGRect rect = self.gameViewController.view.frame;
             rect.origin.x = 0;
@@ -135,98 +326,99 @@ static CGFloat const kAnimationOffsetX = 180.0f;
     }
 }
 
-#pragma mark - 
-#pragma mark - <UIGestureRecognizerDelegate>
-
-- (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldReceiveTouch:(UITouch *)touch
+- (void)setExpanded:(BOOL)isExpanded
 {
-    if (gestureRecognizer == self.leftGestureRecognizer && self.isExpanded == NO) {
-         return YES;
+    if (_isExpanded == isExpanded) {
+        return;
     }
     
-    if (gestureRecognizer == self.rightGestureRecognizer && self.isExpanded == YES) {
-         return YES;
+    _isExpanded = isExpanded;
+    
+    if (_isExpanded) {
+        [self _expandAnimated:YES];
+    } else {
+        [self _closeAnimated:YES];
     }
-    return NO;
 }
 
 #pragma mark -
 #pragma mark - Private
 
-- (void)_initalizeGestureRecognizers
+- (void)_applicationDidEnterBackground
 {
-    self.leftGestureRecognizer = [[UIScreenEdgePanGestureRecognizer alloc] initWithTarget:self action:@selector(_toggleHDMenuViewController:)];
-    [self.leftGestureRecognizer setEdges:UIRectEdgeLeft];
+    NSLog(@"%@",NSStringFromSelector(_cmd));
+    if (self.navigationBar.timer) {
+        NSLog(@"INVALIDATING TIMER");
+       [self.navigationBar.timer invalidate];
+    }
     
-    self.rightGestureRecognizer = [[UIScreenEdgePanGestureRecognizer alloc] initWithTarget:self action:@selector(_toggleHDMenuViewController:)];
-    [self.rightGestureRecognizer setEdges:UIRectEdgeRight];
+    [[NSUserDefaults standardUserDefaults] setInteger:self.navigationBar.lives.count forKey:HDRemainingLivesKey];
+    [[NSUserDefaults standardUserDefaults] setFloat:self.navigationBar.remainingTime forKey:HDRemainingTime];
+    [[NSUserDefaults standardUserDefaults] setObject:[NSDate date]                   forKey:HDBackgroundDate];
+    [[NSUserDefaults standardUserDefaults] synchronize];
     
-    for (UIScreenEdgePanGestureRecognizer *edge in @[self.leftGestureRecognizer, self.rightGestureRecognizer]) {
-        [edge setDelegate:self];
-        [self.view addGestureRecognizer:edge];
+}
+
+- (void)_applicationDidBecomeActive
+{
+    NSLog(@"%@",NSStringFromSelector(_cmd));
+    
+    NSUInteger remainingLives = [[NSUserDefaults standardUserDefaults] integerForKey:HDRemainingLivesKey];
+    NSUInteger remainingTime  = [[NSUserDefaults standardUserDefaults] floatForKey:HDRemainingTime];
+    
+    NSDate *wentIntoBackground = (NSDate *)[[NSUserDefaults standardUserDefaults] objectForKey:HDBackgroundDate];
+    NSTimeInterval secondsInBackground = [[NSDate date] timeIntervalSinceDate:wentIntoBackground];
+    
+    
+    
+    NSLog(@"%f", secondsInBackground);
+}
+
+- (void)_closeAnimated:(BOOL)flag
+{
+    dispatch_block_t closeAnimation = ^{
+        CGRect rect = self.gameViewController.view.frame;
+        rect.origin.x = 0;
+        [self.gameViewController.view setFrame:rect];
+    };
+    
+    if (!flag) {
+        closeAnimation();
+    } else {
+        [UIView animateWithDuration:.3f
+                         animations:closeAnimation
+                         completion:nil];
     }
 }
 
-- (void)_toggleHDMenuViewController:(UIScreenEdgePanGestureRecognizer *)gestureRecognizer
+- (void)_expandAnimated:(BOOL)flag
 {
-    CGPoint location = [gestureRecognizer locationInView:self.view];
-    location.y = CGRectGetMidY(self.view.bounds);
+    dispatch_block_t expandAnimation = ^{
+        CGRect rect = self.gameViewController.view.frame;
+        rect.origin.x += kAnimationOffsetX;
+        [self.gameViewController.view setFrame:rect];
+    };
     
-    if (gestureRecognizer.state == UIGestureRecognizerStateBegan) {
-        
-        self.attachmentBehavior = [[UIAttachmentBehavior alloc] initWithItem:self.gameViewController.view attachedToAnchor:location];
-        [self.animator removeBehavior:self.gravityBehavior];
-        [self.animator addBehavior:self.attachmentBehavior];
-        
-    } else if (gestureRecognizer.state == UIGestureRecognizerStateChanged) {
-        
-        [self.attachmentBehavior setAnchorPoint:location];
-        
-    } else if (gestureRecognizer.state == UIGestureRecognizerStateEnded) {
-        
-        [self.animator removeBehavior:self.attachmentBehavior];
-        [self setAttachmentBehavior:nil];
-        
-        CGPoint velocity = [gestureRecognizer velocityInView:self.view];
-        
-        NSInteger gravityVectorX = 0;
-        if (velocity.x > 0) {
-            gravityVectorX = 1;
-            [self setExpanded:YES];
-        } else {
-            gravityVectorX = -1;
-            [self setExpanded:NO];
-        }
-        
-        [self.gravityBehavior setGravityDirection:CGVectorMake(gravityVectorX, 0)];
-        [self.animator addBehavior:self.gravityBehavior];
-        
-        [self.pushBehavior setPushDirection:CGVectorMake(velocity.x / 20.0f, 0)];
-        [self.pushBehavior setActive:YES];
-        
+    if (!flag) {
+        expandAnimation();
+    } else {
+        [UIView animateWithDuration:.3f
+                         animations:expandAnimation
+                         completion:nil];
     }
 }
 
-- (void)_initalizePhysicsAnimators
+- (void)_layoutNavigationBarWithLives:(NSInteger)lives time:(NSTimeInterval)seconds;
 {
-     self.animator = [[UIDynamicAnimator alloc] initWithReferenceView:self.view];
-    
-     self.gravityBehavior = [[UIGravityBehavior alloc] initWithItems:@[self.gameViewController.view]];
-    [self.gravityBehavior setGravityDirection:CGVectorMake(-1, 0)];
-    
-     self.pushBehavior = [[UIPushBehavior alloc] initWithItems:@[self.gameViewController.view] mode:UIPushBehaviorModeInstantaneous];
-    [self.pushBehavior setMagnitude:0.0f];
-    [self.pushBehavior setAngle:0.0f];
-    
-    UICollisionBehavior *collisionBehavior = [[UICollisionBehavior alloc] initWithItems:@[self.gameViewController.view]];
-    [collisionBehavior setTranslatesReferenceBoundsIntoBoundaryWithInsets:UIEdgeInsetsMake(0, 0, 0, -kAnimationOffsetX)];
-    
-    UIDynamicItemBehavior *itemBehavior = [[UIDynamicItemBehavior alloc] initWithItems:@[self.gameViewController.view]];
-    [itemBehavior setElasticity:.45f];
-    
-    for (id animators in @[self.gravityBehavior, self.pushBehavior, collisionBehavior, itemBehavior]) {
-        [self.animator addBehavior:animators];
-    }
+    CGRect navigationBarFrame = CGRectMake(0.0f, 3.0f, CGRectGetWidth(self.view.bounds), 50.0f);
+     self.navigationBar = [[HDNavigationBar alloc] initWithFrame:navigationBarFrame numberOfLives:lives time:seconds];
+    [self.navigationBar.toggleSideMenu addTarget:self action:@selector(_toggleHDMenuViewController) forControlEvents:UIControlEventTouchUpInside];
+    [self.gameViewController.view addSubview:self.navigationBar];
+}
+
+- (void)_toggleHDMenuViewController
+{
+    [self setExpanded:!self.isExpanded];
 }
 
 @end

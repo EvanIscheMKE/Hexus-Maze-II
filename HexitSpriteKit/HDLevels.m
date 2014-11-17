@@ -96,6 +96,7 @@ typedef void(^CallBackBlock)(NSDictionary *dictionary, NSError *error);
         _hexagons = [NSMutableArray array];
         
         for (NSInteger row = 0; row < NumberOfRows; row++) {
+            
             for (NSInteger column = 0; column < NumberOfColumns; column++) {
                 
                 if (_grid[row][column] != nil) {

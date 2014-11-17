@@ -20,7 +20,8 @@ typedef enum {
     HDHexagonTypeThree   = 6,
     HDHexagonTypeFour    = 7,
     HDHexagonTypeFive    = 8,
-    HDHexagonTypeStarter = 9
+    HDHexagonTypeStarter = 9,
+    HDHexagonTypeNone   = 10
 } HDHexagonType;
 
 typedef enum {

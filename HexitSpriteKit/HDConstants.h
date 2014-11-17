@@ -33,6 +33,9 @@ extern NSString * const hdFirstRunKey;
 extern NSString * const hdEffectsKey;
 extern NSString * const hdSoundkey;
 extern NSString * const hdVibrationKey;
+extern NSString * const HDRemainingLivesKey;
+extern NSString * const HDRemainingTime;
+extern NSString * const HDBackgroundDate;
 
 //
 extern NSString * const hdBubbleSoundKey;

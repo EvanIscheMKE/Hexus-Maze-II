@@ -8,13 +8,25 @@
 
 #import <UIKit/UIKit.h>
 
+@interface HDNavigationBar : UIView
+@property (nonatomic, readonly) NSArray *lives;
+@property (nonatomic, readonly) NSTimeInterval remainingTime;
+
+@property (nonatomic, strong) NSTimer *timer;
+@property (nonatomic, strong) UIButton *toggleSideMenu;
+@end
+
 @class HDContainerViewController;
 
 @interface UIViewController (HDMenuViewController)
 - (HDContainerViewController *)containerViewController;
 @end
 
+@protocol HDContainerViewControllerDelegate;
 @interface HDContainerViewController : UIViewController <UIGestureRecognizerDelegate>
+
+@property (nonatomic, strong) id<HDContainerViewControllerDelegate> delegate;
+
 @property (nonatomic, readonly) NSArray *toggleSwitchesForSettings;
 @property (nonatomic, readonly) UIViewController *gameViewController;
 @property (nonatomic, readonly) UIViewController *rearViewController;
@@ -22,8 +34,17 @@
 - (instancetype)initWithGameViewController:(UIViewController *)gameController
                         rearViewController:(UIViewController *)rearController NS_DESIGNATED_INITIALIZER;
 
-- (void)bounceFrontViewController;
+- (void)_toggleHDMenuViewController;
 - (void)setFrontViewController:(UIViewController *)controller animated:(BOOL)animated;
+
+@end
+
+@protocol HDContainerViewControllerDelegate <NSObject>
+@optional
+
+- (void)container:(HDContainerViewController *)container
+ transitionedFromController:(UIViewController *)fromController
+               toController:(UIViewController *)toController;
 
 @end
 

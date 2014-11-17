@@ -7,10 +7,11 @@
 //
 
 #import "HDContainerViewController.h"
-#import "HDBackViewController.h"
+#import "HDRearViewController.h"
 #import "UIColor+FlatColors.h"
 
-@implementation HDSettingsContainer{
+@implementation HDSettingsContainer
+{
     NSMutableArray *_buttons;
 }
 
@@ -86,11 +87,11 @@
 
 @end
 
-@interface HDBackViewController ()
+@interface HDRearViewController ()
 @property (nonatomic, strong) NSMutableArray *buttonList;
 @end
 
-@implementation HDBackViewController{
+@implementation HDRearViewController{
     NSDictionary *_dictionary;
     NSArray *_vLC;
 }
@@ -150,9 +151,12 @@
     [self.container setTranslatesAutoresizingMaskIntoConstraints:NO];
     [self.view addSubview:self.container];
     
-    _dictionary = @{@"retry":retry, @"map":map, @"title":title, @"container":self.container};
+    _dictionary = @{ @"retry":retry, @"map":map, @"title":title, @"container":self.container };
     
-    NSArray *vCt = [NSLayoutConstraint constraintsWithVisualFormat:@"V:|-130-[retry(40)]-20-[map(==retry)]"  options:0 metrics:nil views:_dictionary];
+    NSArray *vCt = [NSLayoutConstraint constraintsWithVisualFormat:@"V:|-130-[retry(40)]-20-[map(==retry)]"
+                                                           options:0
+                                                           metrics:nil
+                                                             views:_dictionary];
     NSArray *titleCX      = [NSLayoutConstraint constraintsWithVisualFormat:@"H:|-[title]"               options:0 metrics:nil views:_dictionary];
     NSArray *titleCY      = [NSLayoutConstraint constraintsWithVisualFormat:@"V:[title]-|"               options:0 metrics:nil views:_dictionary];
     NSArray *hMConstraint = [NSLayoutConstraint constraintsWithVisualFormat:@"H:|-20-[map(140)]"         options:0 metrics:nil views:_dictionary];
@@ -164,10 +168,15 @@
     for (NSArray *constraint in @[vCt, _vLC, hMConstraint, hRConstraint, hCConstraint, titleCX, titleCY]) {
         [self.view addConstraints:constraint];
     }
+    
+    if (self.delegate && [self.delegate respondsToSelector:@selector(layoutToggleSwitchesForSettingsFromArray:)]) {
+        [self.delegate layoutToggleSwitchesForSettingsFromArray:self.container.settingButtons];
+    }
 }
 
 - (void)hideGameInterfaceAnimated:(BOOL)animated
 {
+      NSLog(@"HIDE");
     [self.view removeConstraints:_vLC];
     
     _vLC  = [NSLayoutConstraint constraintsWithVisualFormat:@"V:|-50-[container(200)]" options:0 metrics:nil views:_dictionary];
@@ -189,6 +198,7 @@
 
 - (void)showGameInterfaceAnimated:(BOOL)animated
 {
+    NSLog(@"SHOW");
     [self.view removeConstraints:_vLC];
     
     _vLC  = [NSLayoutConstraint constraintsWithVisualFormat:@"V:[map]-20-[container(200)]" options:0 metrics:nil views:_dictionary];

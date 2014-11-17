@@ -9,6 +9,7 @@
 #import "HDScene.h"
 #import "HDHexagon.h"
 #import "SKColor+HDColor.h"
+#import "HDSpriteNode.h"
 #import "NSMutableArray+UniqueAdditions.h"
 #import "UIImage+HDImage.h"
 #import "HDHexagonNode.h"
@@ -19,8 +20,10 @@ static const CGFloat kTileHeightInsetMultiplier = .845f;
 @interface HDScene ()<HDHexagonDelegate>
 
 @property (nonatomic, strong) SKAction *selectedSound;
-@property (nonatomic, strong) SKNode *gameLayer;
 @property (nonatomic, assign) BOOL contentCreated;
+
+@property (nonatomic, strong) SKNode *gameLayer;
+@property (nonatomic, strong) SKNode *tileLayer;
 
 @end
 
@@ -38,6 +41,9 @@ static const CGFloat kTileHeightInsetMultiplier = .845f;
 {
     if (self = [super initWithSize:size]) {
         
+         self.tileLayer = [SKNode node];
+        [self addChild:self.tileLayer];
+        
          self.gameLayer = [SKNode node];
         [self addChild:self.gameLayer];
         
@@ -46,7 +52,7 @@ static const CGFloat kTileHeightInsetMultiplier = .845f;
         _kTileSize = ceilf(CGRectGetWidth([[UIScreen mainScreen] bounds]) / (NumberOfColumns - 1));
         
         [self _preloadSounds];
-        [self setBackgroundColor:[SKColor flatMidnightBlueColor]];
+        [self setBackgroundColor:[SKColor whiteColor]];
     
     }
     return self;
@@ -56,6 +62,24 @@ static const CGFloat kTileHeightInsetMultiplier = .845f;
 {
     if (!self.contentCreated){
         [self setContentCreated:YES];
+    }
+}
+
+- (void)addUnderlyingIndicatorTiles
+{
+    for (NSInteger row = 0; row < NumberOfRows; row++) {
+        
+        for (NSInteger column = 0; column < NumberOfColumns; column++) {
+            if ([_levels hexagonTypeAtRow:row column:column]) {
+                HDSpriteNode *tileNode = [HDSpriteNode spriteNodeWithColor:[UIColor clearColor] size:CGSizeMake(_kTileSize + 6, _kTileSize + 6)];
+                [tileNode setRow:row];
+                [tileNode setColumn:column];
+                [tileNode setAnchorPoint:CGPointMake(0.0, 0.0)];
+                [tileNode setPosition:CGPointMake([self pointForColumn:column row:row].x - 3.0f,
+                                                  [self pointForColumn:column row:row].y - 3.0f)];
+                [self.tileLayer addChild:tileNode];
+            }
+        }
     }
 }
 
@@ -130,10 +154,7 @@ static const CGFloat kTileHeightInsetMultiplier = .845f;
     
     HDHexagon *hexagon = [self findHexagonFromPoint:location];
     
-    if ( hexagon.node == nil || ( ( ![_selectedHexagons count] ) && hexagon.type != HDHexagonTypeStarter ) )
-        return;
-    
-    if ( [self _validateNextMoveToHexagon:hexagon fromHexagon:[_selectedHexagons lastObject] ] || (hexagon.type == HDHexagonTypeStarter) ) {
+    if ([self _validateNextMoveToHexagon:hexagon fromHexagon:[_selectedHexagons lastObject]]) {
         [self.gameLayer runAction:self.selectedSound];
         [_selectedHexagons addUniqueObject:hexagon];
         [hexagon recievedTouches];
@@ -175,21 +196,110 @@ static const CGFloat kTileHeightInsetMultiplier = .845f;
     return (count == _finishedTileCount);
 }
 
+- (NSArray *)_possibleMovesForHexagon:(HDHexagon *)hexagon
+{
+    NSMutableArray *hexagons = [NSMutableArray array];
+    
+    NSInteger hexagonRow[6];
+    hexagonRow[0] = hexagon.row;
+    hexagonRow[1] = hexagon.row;
+    hexagonRow[2] = hexagon.row + 1;
+    hexagonRow[3] = hexagon.row + 1;
+    hexagonRow[4] = hexagon.row - 1;
+    hexagonRow[5] = hexagon.row - 1;
+    
+    NSInteger hexagonColumn[6];
+    hexagonColumn[0] = hexagon.column + 1;
+    hexagonColumn[1] = hexagon.column - 1;
+    hexagonColumn[2] = hexagon.column;
+    hexagonColumn[3] = hexagon.column + ((hexagon.row % 2 == 0) ? 1 : -1);
+    hexagonColumn[4] = hexagon.column;
+    hexagonColumn[5] = hexagon.column + ((hexagon.row % 2 == 0) ? 1 : -1);
+    
+    for (int i = 0; i < 6; i++) {
+        for (HDHexagon *current in _hexagons) {
+            if (!current.isSelected && current.state == HDHexagonStateEnabled) {
+                if (current.row == hexagonRow[i] && current.column == hexagonColumn[i]) {
+                    [hexagons addObject:current];
+                    break;
+                }
+            }
+        }
+    }
+    return hexagons;
+}
+
 - (BOOL)_validateNextMoveToHexagon:(HDHexagon *)toHexagon fromHexagon:(HDHexagon *)fromHexagon
 {
-    if (toHexagon.row == fromHexagon.row) {
-        if (ABS((toHexagon.column  - fromHexagon.column)) == 1) {
-            return YES;
+    if ( toHexagon.node == nil || (( ![_selectedHexagons count] ) && toHexagon.type != HDHexagonTypeStarter ))
+        return NO;
+    
+    NSArray *possibleMoves = [self _possibleMovesForHexagon:fromHexagon];
+    if ([possibleMoves containsObject:toHexagon] || toHexagon.type == HDHexagonTypeStarter) {
+        
+        for (HDSpriteNode *hexagonSprite in self.tileLayer.children) {
+            [hexagonSprite updateTextureFromHexagonType:HDHexagonTypeNone direction:HDSpriteDirectionNone];
         }
-    }
- 
-    BOOL evenLine = (fromHexagon.row % 2 == 0);
-    if ( (toHexagon.row == (fromHexagon.row + 1)) || (toHexagon.row == (fromHexagon.row - 1)) ) {
-        if (toHexagon.column == (fromHexagon.column) || toHexagon.column == (fromHexagon.column + (evenLine ? 1 : -1) ) ) {
-            return YES;
+        
+        NSArray *possibleMovesFromNewlySelectedTile = [self _possibleMovesForHexagon:toHexagon];
+        for (HDHexagon *hexagonShape in possibleMovesFromNewlySelectedTile) {
+            for (HDSpriteNode *hexagonSprite in self.tileLayer.children) {
+                if (hexagonShape.row == hexagonSprite.row && hexagonShape.column == hexagonSprite.column) {
+                    int direction = [self directionToTile:hexagonShape fromTile:toHexagon];
+                    [hexagonSprite updateTextureFromHexagonType:hexagonShape.type direction:direction];
+                    break;
+                }
+            }
         }
+        return YES;
     }
     return NO;
+}
+
+- (HDSpriteDirection)directionToTile:(HDHexagon *)toHexagon fromTile:(HDHexagon *)fromHexagon
+{
+    BOOL evenLine = (fromHexagon.row % 2 == 0);
+    
+    if (toHexagon.row == fromHexagon.row) {
+        if (toHexagon.column == fromHexagon.column + 1) {
+            return HDSpriteDirectionLeft;
+        } else if (toHexagon.column == fromHexagon.column - 1){
+            return HDSpriteDirectionRight;
+        }
+    }
+    
+    if (toHexagon.row == fromHexagon.row + 1) {
+        if (toHexagon.column == fromHexagon.column) {
+            if (evenLine){
+                return HDSpriteDirectionDownRight;
+            } else {
+                return HDSpriteDirectionDownLeft;
+            }
+        } else if (toHexagon.column == fromHexagon.column + evenLine ? 1 : -1 ){
+            if (evenLine){
+                return HDSpriteDirectionDownLeft;
+            } else {
+                return HDSpriteDirectionDownRight;
+            }
+        }
+    }
+    
+    if (toHexagon.row == fromHexagon.row - 1) {
+        if (toHexagon.column == fromHexagon.column) {
+            if (evenLine){
+                return HDSpriteDirectionUpRight;
+            } else {
+                return HDSpriteDirectionUpLeft;
+            }
+        } else if (toHexagon.column == fromHexagon.column + evenLine ? 1 : -1) {
+            if (evenLine){
+                return HDSpriteDirectionUpLeft;
+            } else {
+                return HDSpriteDirectionUpRight;
+            }
+        }
+    }
+    return HDSpriteDirectionNone;
 }
 
 #pragma mark -
@@ -201,7 +311,8 @@ static const CGFloat kTileHeightInsetMultiplier = .845f;
         if (hexagon.type == type + 1) {
             [hexagon setState:HDHexagonStateEnabled];
             [hexagon.node setFillColor:[SKColor flatEmeraldColor]];
-            [hexagon.node.label setFontColor:[SKColor flatMidnightBlueColor]];
+            [hexagon.node.label setFontColor:[SKColor whiteColor]];
+            
         }
     }
 }

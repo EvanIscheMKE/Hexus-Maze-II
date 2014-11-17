@@ -24,12 +24,16 @@
 
 - (void)setType:(HDHexagonType)type
 {
+    if (self.node == nil) {
+        return;
+    }
+    
     _type = type;
     
     switch (type) {
         case HDHexagonTypeRegular:
             [self.node setStrokeColor:[SKColor flatPeterRiverColor]];
-            [self.node setFillColor:[SKColor flatMidnightBlueColor]];
+            [self.node setFillColor:[SKColor whiteColor]];
             break;
         case HDHexagonTypeStarter:
             [self.node setStrokeColor:[SKColor flatPeterRiverColor]];
@@ -37,42 +41,42 @@
             break;
         case HDHexagonTypeDouble:
             [self.node setStrokeColor:[SKColor flatTurquoiseColor]];
-            [self.node setFillColor:[SKColor flatMidnightBlueColor]];
+            [self.node setFillColor:[SKColor whiteColor]];
             [self addDoubleHexagonShapeNode];
             break;
         case HDHexagonTypeTriple:
             [self.node setStrokeColor:[SKColor flatSilverColor]];
-            [self.node setFillColor:[SKColor flatMidnightBlueColor]];
+            [self.node setFillColor:[SKColor whiteColor]];
             [self addDoubleHexagonShapeNode];
             [self addTripleHexagonShapeNode];
             break;
         case HDHexagonTypeOne:
             [self.node setStrokeColor:[SKColor flatEmeraldColor]];
             [self.node setFillColor:self.node.strokeColor];
-            [self.node updateLabelWithText:@"1" color:[SKColor flatMidnightBlueColor]];
+            [self.node updateLabelWithText:@"1" color:[SKColor whiteColor]];
             break;
         case HDHexagonTypeTwo:
             [self setState:HDHexagonStateDisabled];
             [self.node setStrokeColor:[SKColor flatEmeraldColor]];
-            [self.node setFillColor:[SKColor flatMidnightBlueColor]];
+            [self.node setFillColor:[SKColor whiteColor]];
             [self.node updateLabelWithText:@"2"];
             break;
         case HDHexagonTypeThree:
             [self setState:HDHexagonStateDisabled];
             [self.node setStrokeColor:[SKColor flatEmeraldColor]];
-            [self.node setFillColor:[SKColor flatMidnightBlueColor]];
+            [self.node setFillColor:[SKColor whiteColor]];
             [self.node updateLabelWithText:@"3"];
             break;
         case HDHexagonTypeFour:
             [self setState:HDHexagonStateDisabled];
             [self.node setStrokeColor:[SKColor flatEmeraldColor]];
-            [self.node setFillColor:[SKColor flatMidnightBlueColor]];
+            [self.node setFillColor:[SKColor whiteColor]];
             [self.node updateLabelWithText:@"4"];
             break;
         case HDHexagonTypeFive:
             [self setState:HDHexagonStateDisabled];
             [self.node setStrokeColor:[SKColor flatEmeraldColor]];
-            [self.node setFillColor:[SKColor flatMidnightBlueColor]];
+            [self.node setFillColor:[SKColor whiteColor]];
             [self.node updateLabelWithText:@"5"];
             break;
     }
@@ -134,6 +138,8 @@
 {
     if (selected) {
         _selected = selected;
+        
+        [[NSNotificationCenter defaultCenter] postNotificationName:@"DecreaseRemainingTilesByOne" object:nil];
         
         switch (self.type) {
             case HDHexagonTypeRegular:

@@ -11,12 +11,13 @@
 #import "HDGameCenterManager.h"
 #import "HDGameViewController.h"
 #import "HDWelcomeViewController.h"
-#import "HDBackViewController.h"
+#import "HDRearViewController.h"
 #import "HDContainerViewController.h"
 #import "HDLevelViewController.h"
 
-@interface AppDelegate ()
+@interface AppDelegate ()<HDRearViewControllerDelegate, HDContainerViewControllerDelegate>
 @property (nonatomic, strong) HDContainerViewController *containerController;
+@property (nonatomic, strong) HDRearViewController *rearViewController;
 @end
 
 @implementation AppDelegate {
@@ -28,7 +29,7 @@
     [self _initalizeModelData];
     [application setStatusBarHidden:YES];
     
-    self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
+     self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
     [self.window setRootViewController:[HDWelcomeViewController new]];
     [self.window makeKeyAndVisible];
     
@@ -37,30 +38,26 @@
 
 - (void)presentLevelViewController
 {
-    HDGameViewController *game = [[HDGameViewController alloc] init];
-    HDBackViewController *rear = [[HDBackViewController alloc] init];
+    HDLevelViewController *level = [[HDLevelViewController alloc] init];
     
-    self.containerController = [[HDContainerViewController alloc] initWithGameViewController:game
-                                                                          rearViewController:rear];
+    self.rearViewController = [[HDRearViewController alloc] init];
+    [self.rearViewController setDelegate:self];
+    
+     self.containerController = [[HDContainerViewController alloc] initWithGameViewController:level
+                                                                           rearViewController:self.rearViewController];
+    [self.containerController setDelegate:self];
+    
     [self.window.rootViewController presentViewController:self.containerController animated:YES completion:nil];
-    
-//    NSArray *switches = menuController.toggleSwitchesForSettings;
-//    
-//    if (switches) {
-//        [switches[0] addTarget:self action:@selector(toggleEffects:)   forControlEvents:UIControlEventTouchUpInside];
-//        [switches[1] addTarget:self action:@selector(toggleSound:)     forControlEvents:UIControlEventTouchUpInside];
-//        [switches[2] addTarget:self action:@selector(toggleVibration:) forControlEvents:UIControlEventTouchUpInside];
-//    }
 }
 
 - (void)restartCurrentLevel
 {
-    [self navigateToNewLevel:_deltaLevel];
+    [self.containerController _toggleHDMenuViewController];
+   // [self navigateToNewLevel:_deltaLevel];
 }
 
 - (void)navigateToLevelMap
 {
-    [HDLevelViewController new];
     [self.containerController setFrontViewController:[HDLevelViewController new] animated:YES];
 }
 
@@ -126,9 +123,38 @@
     BOOL isFirstRun = [[NSUserDefaults standardUserDefaults] boolForKey:hdFirstRunKey];
     
     if (!isFirstRun) {
-        [[NSUserDefaults standardUserDefaults] setBool:YES forKey:hdSoundkey];
-        [[NSUserDefaults standardUserDefaults] setBool:YES forKey:hdFirstRunKey];
+        [[NSUserDefaults standardUserDefaults] setFloat:0   forKey:HDRemainingTime];
+        [[NSUserDefaults standardUserDefaults] setInteger:5 forKey:HDRemainingLivesKey];
+        [[NSUserDefaults standardUserDefaults] setBool:YES  forKey:hdSoundkey];
+        [[NSUserDefaults standardUserDefaults] setBool:YES  forKey:hdFirstRunKey];
         [[HDMapManager sharedManager] initalizeLevelsForFirstRun];
+    }
+}
+
+#pragma mark -
+#pragma mark - <HDRearViewControllerDelegate>
+
+- (void)layoutToggleSwitchesForSettingsFromArray:(NSArray *)array
+{
+    if (array) {
+        [array[0] addTarget:self action:@selector(toggleEffects:)   forControlEvents:UIControlEventTouchUpInside];
+        [array[1] addTarget:self action:@selector(toggleSound:)     forControlEvents:UIControlEventTouchUpInside];
+        [array[2] addTarget:self action:@selector(toggleVibration:) forControlEvents:UIControlEventTouchUpInside];
+    }
+}
+
+#pragma mark -
+#pragma mark - <HDContainerViewControllerDelegate>
+
+- (void)container:(HDContainerViewController *)container
+       transitionedFromController:(UIViewController *)fromController
+                     toController:(UIViewController *)toController
+{
+    NSLog(@"FROM: %@, TO: %@", NSStringFromClass([fromController class]), NSStringFromClass([toController class]));
+    if ([fromController isKindOfClass:[HDLevelViewController class]] && [toController isKindOfClass:[HDGameViewController class]]) {
+        [(HDRearViewController *)self.containerController.rearViewController showGameInterfaceAnimated:YES];
+    } else if ([toController isKindOfClass:[HDLevelViewController class]] && [fromController isKindOfClass:[HDGameViewController class]]) {
+        [(HDRearViewController *)self.containerController.rearViewController hideGameInterfaceAnimated:YES];
     }
 }
 
