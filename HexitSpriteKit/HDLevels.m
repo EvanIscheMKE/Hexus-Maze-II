@@ -25,7 +25,7 @@ typedef void(^CallBackBlock)(NSDictionary *dictionary, NSError *error);
         
         _levelCache = [NSMutableDictionary dictionary];
         
-        NSDictionary *grid = [self levelWithFileName:LEVEL_URL(level)];
+        NSDictionary *grid = [self _levelWithFileName:LEVEL_URL(level)];
         
         for (int row = 0; row < NumberOfRows; row++) {
             NSArray *rows = [grid[hdHexGridKey] objectAtIndex:row];
@@ -44,10 +44,46 @@ typedef void(^CallBackBlock)(NSDictionary *dictionary, NSError *error);
     return self;
 }
 
-- (NSDictionary *)levelWithFileName:(NSString *)filename
+- (NSArray *)hexagons
+{
+    if (_hexagons) {
+        return _hexagons;
+    }
+        _hexagons = [NSMutableArray array];
+        
+        for (NSInteger row = 0; row < NumberOfRows; row++) {
+            
+            for (NSInteger column = 0; column < NumberOfColumns; column++) {
+                
+                if (_grid[row][column] != nil) {
+                    
+                    HDHexagon *cookie = [self _makeHexagonAtRow:row column:column];
+                    [_hexagons addObject:cookie];
+                    
+                    _hexagon[row][column] = cookie;
+                }
+            }
+        }
+    return _hexagons;
+}
+
+- (NSInteger)hexagonTypeAtRow:(NSInteger)row column:(NSInteger)column
+{
+    return [_grid[row][column]integerValue];
+}
+
+- (HDHexagon *)hexagonAtRow:(NSInteger)row column:(NSInteger)column
+{
+    return _hexagon[row][column];
+}
+
+#pragma mark -
+#pragma mark - PRIVATE
+
+- (NSDictionary *)_levelWithFileName:(NSString *)filename
 {
     __block NSDictionary *gridInfo;
-    [self loadJSON:filename withCallBack:^(NSDictionary *dictionary, NSError *error) {
+    [self _loadJSON:filename withCallBack:^(NSDictionary *dictionary, NSError *error) {
         if (!error) {
             gridInfo = [[NSDictionary alloc] initWithDictionary:dictionary];
         } else {
@@ -58,7 +94,7 @@ typedef void(^CallBackBlock)(NSDictionary *dictionary, NSError *error);
     return gridInfo;
 }
 
-- (void)loadJSON:(NSString *)filename withCallBack:(CallBackBlock)callBack
+- (void)_loadJSON:(NSString *)filename withCallBack:(CallBackBlock)callBack
 {
     if (_levelCache[filename]) {
         if (callBack) {
@@ -79,7 +115,7 @@ typedef void(^CallBackBlock)(NSDictionary *dictionary, NSError *error);
     }
     
     NSDictionary *dictionary = [NSJSONSerialization JSONObjectWithData:data options:0 error:&error];
-    if (dictionary != nil){
+    if (dictionary != nil) {
         _levelCache[filename] = dictionary;
     }
     
@@ -88,40 +124,7 @@ typedef void(^CallBackBlock)(NSDictionary *dictionary, NSError *error);
     }
 }
 
-- (NSArray *)hexagons
-{
-    if (_hexagons) {
-        return _hexagons;
-    }
-        _hexagons = [NSMutableArray array];
-        
-        for (NSInteger row = 0; row < NumberOfRows; row++) {
-            
-            for (NSInteger column = 0; column < NumberOfColumns; column++) {
-                
-                if (_grid[row][column] != nil) {
-                    
-                    HDHexagon *cookie = [self makeHexagonAtRow:row column:column];
-                    [_hexagons addObject:cookie];
-                    
-                    _hexagon[row][column] = cookie;
-                }
-            }
-        }
-    return _hexagons;
-}
-
-- (NSInteger)hexagonTypeAtRow:(NSInteger)row column:(NSInteger)column
-{
-    return [_grid[row][column]integerValue];
-}
-
-- (HDHexagon *)hexagonAtRow:(NSInteger)row column:(NSInteger)column
-{
-    return _hexagon[row][column];
-}
-
-- (HDHexagon *)makeHexagonAtRow:(NSInteger)row column:(NSInteger)column
+- (HDHexagon *)_makeHexagonAtRow:(NSInteger)row column:(NSInteger)column
 {
     HDHexagon *hexagon = [[HDHexagon alloc] initWithRow:row column:column];
     

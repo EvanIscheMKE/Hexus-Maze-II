@@ -25,7 +25,7 @@
 
 - (void)updateLabelWithText:(NSString *)text
 {
-    [self updateLabelWithText:text color:[SKColor flatEmeraldColor]];
+    [self updateLabelWithText:text color:[SKColor flatMidnightBlueColor]];
 }
 
 - (void)updateLabelWithText:(NSString *)text color:(UIColor *)color

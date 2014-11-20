@@ -52,22 +52,12 @@
 
 - (void)navigateToLevelMap
 {
-    [self.containerController _toggleHDMenuViewControllerWithCompletion:^{
-        [[self _gameViewController] showAlertWithTitle:@"Level 5"
-                                           description:@"Are you sure you want to leave, you'll lose a life"
-                                                   tag:0
-                                              delegate:self];
-    }];
+    [self.containerController setFrontViewController:self.frontViewController animated:YES];
 }
 
 - (void)restartCurrentLevel
 {
-    [self.containerController _toggleHDMenuViewControllerWithCompletion:^{
-        [[self _gameViewController] showAlertWithTitle:@"Level 5"
-                                           description:@"Are you sure you want to restart, you'll lose a life"
-                                                   tag:1
-                                              delegate:self];
-    }];
+    [self navigateToNewLevel:_deltaLevel];
 }
 
 - (void)navigateToNewLevel:(NSInteger)level
@@ -97,21 +87,6 @@
         [[NSUserDefaults standardUserDefaults] setBool:YES  forKey:hdSoundkey];
         [[NSUserDefaults standardUserDefaults] setBool:YES  forKey:hdFirstRunKey];
         [[HDMapManager sharedManager] initalizeLevelsForFirstRun];
-    }
-}
-
-
-#pragma mark -
-#pragma mark - <UIAlertViewDelegate>
-
-- (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex
-{
-    if (alertView.tag == 0 && buttonIndex == 1) {
-        [self.containerController setFrontViewController:self.frontViewController animated:YES];
-        [self.containerController decreaseLifeCountByUno];
-    } else if (alertView.tag == 1 && buttonIndex == 1) {
-        [self navigateToNewLevel:_deltaLevel];
-        [self.containerController decreaseLifeCountByUno];
     }
 }
 

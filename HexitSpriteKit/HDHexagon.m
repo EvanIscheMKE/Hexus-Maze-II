@@ -40,7 +40,7 @@
     switch (type) {
         case HDHexagonTypeRegular:
             [self.node setStrokeColor:[SKColor flatPeterRiverColor]];
-            [self.node setFillColor:[SKColor whiteColor]];
+            [self.node setFillColor:[[SKColor flatPeterRiverColor] colorWithAlphaComponent:.4f]];
             break;
         case HDHexagonTypeStarter:
             [self.node setStrokeColor:[SKColor flatPeterRiverColor]];
@@ -48,42 +48,42 @@
             break;
         case HDHexagonTypeDouble:
             [self.node setStrokeColor:[SKColor flatTurquoiseColor]];
-            [self.node setFillColor:[SKColor whiteColor]];
+            [self.node setFillColor:[SKColor clearColor]];
             [self addDoubleHexagonShapeNode];
             break;
         case HDHexagonTypeTriple:
             [self.node setStrokeColor:[SKColor flatSilverColor]];
-            [self.node setFillColor:[SKColor whiteColor]];
+            [self.node setFillColor:[SKColor flatMidnightBlueColor]];
             [self addDoubleHexagonShapeNode];
             [self addTripleHexagonShapeNode];
             break;
         case HDHexagonTypeOne:
             [self.node setStrokeColor:[SKColor flatEmeraldColor]];
             [self.node setFillColor:self.node.strokeColor];
-            [self.node updateLabelWithText:@"1" color:[SKColor whiteColor]];
+            [self.node updateLabelWithText:@"1" color:[SKColor flatMidnightBlueColor]];
             break;
         case HDHexagonTypeTwo:
             [self setState:HDHexagonStateDisabled];
             [self.node setStrokeColor:[SKColor flatEmeraldColor]];
-            [self.node setFillColor:[SKColor whiteColor]];
+            [self.node setFillColor:[self.node.strokeColor colorWithAlphaComponent:.4f]];
             [self.node updateLabelWithText:@"2"];
             break;
         case HDHexagonTypeThree:
             [self setState:HDHexagonStateDisabled];
             [self.node setStrokeColor:[SKColor flatEmeraldColor]];
-            [self.node setFillColor:[SKColor whiteColor]];
+            [self.node setFillColor:[self.node.strokeColor colorWithAlphaComponent:.4f]];
             [self.node updateLabelWithText:@"3"];
             break;
         case HDHexagonTypeFour:
             [self setState:HDHexagonStateDisabled];
             [self.node setStrokeColor:[SKColor flatEmeraldColor]];
-            [self.node setFillColor:[SKColor whiteColor]];
+            [self.node setFillColor:[self.node.strokeColor colorWithAlphaComponent:.4f]];
             [self.node updateLabelWithText:@"4"];
             break;
         case HDHexagonTypeFive:
             [self setState:HDHexagonStateDisabled];
             [self.node setStrokeColor:[SKColor flatEmeraldColor]];
-            [self.node setFillColor:[SKColor whiteColor]];
+            [self.node setFillColor:[self.node.strokeColor colorWithAlphaComponent:.4f]];
             [self.node updateLabelWithText:@"5"];
             break;
     }
@@ -106,6 +106,7 @@
             switch (_recievedTouchesCount) {
                 case 1:
                     [self.node removeAllChildren];
+                    [self.node setFillColor:[self.node.strokeColor colorWithAlphaComponent:.4f]];
                     break;
                 case 2:
                     [self setSelected:YES];
@@ -199,7 +200,7 @@
     [hexagon setAntialiased:YES];
     [hexagon setPosition:CGPointMake(kHexagonInset - 1, kHexagonInset - 1)];
     [hexagon setStrokeColor:self.node.strokeColor];
-    [hexagon setFillColor:self.node.fillColor];
+    [hexagon setFillColor:[self.node.strokeColor colorWithAlphaComponent:.5f]];
     [hexagon setLineWidth:self.node.lineWidth];
     [self.node addChild:hexagon];
 }

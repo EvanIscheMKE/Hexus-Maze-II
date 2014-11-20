@@ -25,40 +25,40 @@
     UIImage *textureImage;
     switch (type) {
         case HDHexagonTypeRegular:
-            textureImage = [self imageWithSize:self.size direction:direction];
+            textureImage = [self _imageWithSize:self.size direction:direction];
             break;
         case HDHexagonTypeStarter:
-            textureImage = [self imageWithSize:self.size direction:direction];
+            textureImage = [self _imageWithSize:self.size direction:direction];
             break;
         case HDHexagonTypeDouble:
-            textureImage = [self imageWithSize:self.size direction:direction];
+            textureImage = [self _imageWithSize:self.size direction:direction];
             break;
         case HDHexagonTypeTriple:
-            textureImage = [self imageWithSize:self.size direction:direction];
+            textureImage = [self _imageWithSize:self.size direction:direction];
             break;
         case HDHexagonTypeOne:
-            textureImage = [self imageWithSize:self.size direction:direction];
+            textureImage = [self _imageWithSize:self.size direction:direction];
             break;
         case HDHexagonTypeTwo:
-            textureImage = [self imageWithSize:self.size direction:direction];
+            textureImage = [self _imageWithSize:self.size direction:direction];
             break;
         case HDHexagonTypeThree:
-            textureImage = [self imageWithSize:self.size direction:direction];
+            textureImage = [self _imageWithSize:self.size direction:direction];
             break;
         case HDHexagonTypeFour:
-            textureImage = [self imageWithSize:self.size direction:direction];
+            textureImage = [self _imageWithSize:self.size direction:direction];
             break;
         case HDHexagonTypeFive:
-            textureImage = [self imageWithSize:self.size direction:direction];
+            textureImage = [self _imageWithSize:self.size direction:direction];
             break;
         case HDHexagonTypeNone:
-            [self setTexture:[SKTexture textureWithImage:[self plainTransparentBackground]]];
+            [self setTexture:[SKTexture textureWithImage:[self _plainTransparentBackground]]];
             return;
     }
     [self setTexture:[SKTexture textureWithImage:textureImage]];
 }
 
-- (UIImage *)plainTransparentBackground
+- (UIImage *)_plainTransparentBackground
 {
     UIGraphicsBeginImageContextWithOptions(self.size, NO, [[UIScreen mainScreen] scale]);
     
@@ -68,11 +68,17 @@
     return circle;
 }
 
-- (UIImage *)imageWithSize:(CGSize)size direction:(HDSpriteDirection)direction
+- (UIImage *)_imageWithSize:(CGSize)size direction:(HDSpriteDirection)direction
 {
+    CGRect imageFrame = CGRectMake(0.0f, 0.0f, size.width, size.height);
+    
     UIGraphicsBeginImageContextWithOptions(size, NO, [[UIScreen mainScreen] scale]);
     
-    [[UIColor flatSilverColor] setStroke];
+    [[UIColor flatPeterRiverColor] setStroke];
+    [[UIColor flatPeterRiverColor] setFill];
+    
+    UIBezierPath *hexagon = [self bezierHexagonInFrame:CGRectInset(imageFrame, 20.0f, 20.0f)];
+    [hexagon fill];
     
     UIBezierPath *line = [UIBezierPath bezierPath];
     switch (direction) {
@@ -107,13 +113,31 @@
             break;
     }
     
-    [line setLineWidth:4];
+    [line setLineWidth:2];
     [line stroke];
     
     UIImage *circle = UIGraphicsGetImageFromCurrentImageContext();
     UIGraphicsEndImageContext();
     
     return circle;
+}
+
+- (UIBezierPath *)bezierHexagonInFrame:(CGRect)frame
+{
+    const CGFloat kWidth   = CGRectGetWidth(frame);
+    const CGFloat kHeight  = CGRectGetHeight(frame);
+    const CGFloat kPadding = kWidth / 8 / 2;
+    
+    UIBezierPath *_path = [UIBezierPath bezierPath];
+    [_path moveToPoint:CGPointMake(CGRectGetMinX(frame) + (kWidth / 2), CGRectGetMinY(frame))];
+    [_path addLineToPoint:CGPointMake(CGRectGetMinX(frame) + (kWidth - kPadding),CGRectGetMinY(frame) + (kHeight / 4))];
+    [_path addLineToPoint:CGPointMake(CGRectGetMinX(frame) + (kWidth - kPadding), CGRectGetMinY(frame) + (kHeight * 3 / 4))];
+    [_path addLineToPoint:CGPointMake(CGRectGetMinX(frame) + (kWidth / 2),CGRectGetMinY(frame) + kHeight)];
+    [_path addLineToPoint:CGPointMake(CGRectGetMinX(frame) + kPadding, CGRectGetMinY(frame) + (kHeight * 3 / 4))];
+    [_path addLineToPoint:CGPointMake(CGRectGetMinX(frame) + kPadding, CGRectGetMinY(frame) + (kHeight / 4))];
+    [_path closePath];
+    
+    return _path;
 }
 
 @end

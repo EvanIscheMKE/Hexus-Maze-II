@@ -73,19 +73,26 @@
         [self addSubview:selectors];
     }
     
-    NSDictionary *dictionary = NSDictionaryOfVariableBindings(buttonOne, buttonTwo, buttonThree, labelOne, labelTwo, labelThree);
+    NSDictionary *views = NSDictionaryOfVariableBindings(buttonOne, buttonTwo, buttonThree, labelOne, labelTwo, labelThree);
     
-    NSString *vfConstaint = @"V:|-[labelOne(18)]-[buttonOne(30)]-20-[labelTwo(18)]-[buttonTwo(30)]-20-[labelThree(18)]-[buttonThree(30)]";
+    NSDictionary *metrics = @{ @"space"       : @(4.0f),
+                              @"buttonHeight": @(30.0f),
+                              @"labelHeight" : @(18.0f),
+                              @"margin"      : @(20.0f)};
+    
+    NSString *vfConstaint = @"V:|-[labelOne(labelHeight)]-space-[buttonOne(buttonHeight)]-margin-[labelTwo(labelHeight)]-space-[buttonTwo(buttonHeight)]-margin-[labelThree(labelHeight)]-space-[buttonThree(buttonHeight)]";
+    
     for (NSArray *constraint in @[
-                        [NSLayoutConstraint constraintsWithVisualFormat:vfConstaint                       options:0 metrics:nil views:dictionary],
-                        [NSLayoutConstraint constraintsWithVisualFormat:@"H:|-10-[buttonOne(120)]-10-|"   options:0 metrics:nil views:dictionary],
-                        [NSLayoutConstraint constraintsWithVisualFormat:@"H:|-10-[buttonTwo(120)]-10-|"   options:0 metrics:nil views:dictionary],
-                        [NSLayoutConstraint constraintsWithVisualFormat:@"H:|-10-[buttonThree(120)]-10-|" options:0 metrics:nil views:dictionary],
-                        [NSLayoutConstraint constraintsWithVisualFormat:@"H:|-10-[labelOne]"              options:0 metrics:nil views:dictionary],
-                        [NSLayoutConstraint constraintsWithVisualFormat:@"H:|-10-[labelTwo]"              options:0 metrics:nil views:dictionary],
-                        [NSLayoutConstraint constraintsWithVisualFormat:@"H:|-10-[labelThree]"            options:0 metrics:nil views:dictionary]]) {
+                        [NSLayoutConstraint constraintsWithVisualFormat:vfConstaint                       options:0 metrics:metrics views:views],
+                        [NSLayoutConstraint constraintsWithVisualFormat:@"H:|-10-[buttonOne(120)]-10-|"   options:0 metrics:metrics views:views],
+                        [NSLayoutConstraint constraintsWithVisualFormat:@"H:|-10-[buttonTwo(120)]-10-|"   options:0 metrics:metrics views:views],
+                        [NSLayoutConstraint constraintsWithVisualFormat:@"H:|-10-[buttonThree(120)]-10-|" options:0 metrics:metrics views:views],
+                        [NSLayoutConstraint constraintsWithVisualFormat:@"H:|-10-[labelOne]"              options:0 metrics:metrics views:views],
+                        [NSLayoutConstraint constraintsWithVisualFormat:@"H:|-10-[labelTwo]"              options:0 metrics:metrics views:views],
+                        [NSLayoutConstraint constraintsWithVisualFormat:@"H:|-10-[labelThree]"            options:0 metrics:metrics views:views]]) {
         [self addConstraints:constraint];
     }
+    
     return _buttons;
 }
 

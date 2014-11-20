@@ -12,7 +12,6 @@
 		383698641A169E72007BB7B0 /* _DOUBLEUPP.png in Resources */ = {isa = PBXBuildFile; fileRef = 383698631A169E72007BB7B0 /* _DOUBLEUPP.png */; };
 		38521F151A17044400484830 /* HDHexagonView.m in Sources */ = {isa = PBXBuildFile; fileRef = 38521F141A17044400484830 /* HDHexagonView.m */; };
 		38521F171A171D3C00484830 /* hexagonshexagons.png in Resources */ = {isa = PBXBuildFile; fileRef = 38521F161A171D3C00484830 /* hexagonshexagons.png */; };
-		38521F1A1A17429300484830 /* HDProgressView.m in Sources */ = {isa = PBXBuildFile; fileRef = 38521F191A17429300484830 /* HDProgressView.m */; };
 		38521F281A187F4400484830 /* BounceButton.png in Resources */ = {isa = PBXBuildFile; fileRef = 38521F271A187F4400484830 /* BounceButton.png */; };
 		38521F2B1A1880EF00484830 /* BlueHeartFill.png in Resources */ = {isa = PBXBuildFile; fileRef = 38521F291A1880EF00484830 /* BlueHeartFill.png */; };
 		38521F2C1A1880EF00484830 /* BlueHeartStroke.png in Resources */ = {isa = PBXBuildFile; fileRef = 38521F2A1A1880EF00484830 /* BlueHeartStroke.png */; };
@@ -96,8 +95,6 @@
 		38521F131A17044400484830 /* HDHexagonView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HDHexagonView.h; sourceTree = "<group>"; };
 		38521F141A17044400484830 /* HDHexagonView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HDHexagonView.m; sourceTree = "<group>"; };
 		38521F161A171D3C00484830 /* hexagonshexagons.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = hexagonshexagons.png; sourceTree = "<group>"; };
-		38521F181A17429300484830 /* HDProgressView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HDProgressView.h; sourceTree = "<group>"; };
-		38521F191A17429300484830 /* HDProgressView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HDProgressView.m; sourceTree = "<group>"; };
 		38521F271A187F4400484830 /* BounceButton.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = BounceButton.png; sourceTree = "<group>"; };
 		38521F291A1880EF00484830 /* BlueHeartFill.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = BlueHeartFill.png; sourceTree = "<group>"; };
 		38521F2A1A1880EF00484830 /* BlueHeartStroke.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = BlueHeartStroke.png; sourceTree = "<group>"; };
@@ -332,8 +329,6 @@
 				38521F3C1A19A20600484830 /* HDSpriteNode.m */,
 				38C0A86C1A0727FA00C552F1 /* HDScene.h */,
 				38C0A86D1A0727FA00C552F1 /* HDScene.m */,
-				38521F181A17429300484830 /* HDProgressView.h */,
-				38521F191A17429300484830 /* HDProgressView.m */,
 			);
 			name = Views;
 			sourceTree = "<group>";
@@ -579,7 +574,6 @@
 				383698601A168B8A007BB7B0 /* HDMapScrollView.m in Sources */,
 				38521F3D1A19A20600484830 /* HDSpriteNode.m in Sources */,
 				38C67CEB1A0AC21C0038526C /* HDLevelViewController.m in Sources */,
-				38521F1A1A17429300484830 /* HDProgressView.m in Sources */,
 				38CA40241A1485380024D6BF /* HDRearViewController.m in Sources */,
 				38F7CC6E1A0D6FBE002E7C7F /* UIImage+HDImage.m in Sources */,
 				38C67D2C1A0AEBD50038526C /* HDGameCenterManager.m in Sources */,

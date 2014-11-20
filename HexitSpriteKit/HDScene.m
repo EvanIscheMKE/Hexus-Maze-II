@@ -52,7 +52,7 @@ static const CGFloat kTileHeightInsetMultiplier = .845f;
         _kTileSize = ceilf(CGRectGetWidth([[UIScreen mainScreen] bounds]) / (NumberOfColumns - 1));
         
         [self _preloadSounds];
-        [self setBackgroundColor:[SKColor whiteColor]];
+        [self setBackgroundColor:[SKColor flatMidnightBlueColor]];
     
     }
     return self;
@@ -313,7 +313,7 @@ static const CGFloat kTileHeightInsetMultiplier = .845f;
         if (hexagon.type == type + 1) {
             [hexagon setState:HDHexagonStateEnabled];
             [hexagon.node setFillColor:[SKColor flatEmeraldColor]];
-            [hexagon.node.label setFontColor:[SKColor whiteColor]];
+            [hexagon.node.label setFontColor:[SKColor flatMidnightBlueColor]];
             
         }
     }

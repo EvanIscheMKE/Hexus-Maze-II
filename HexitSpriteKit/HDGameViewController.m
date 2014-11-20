@@ -11,13 +11,11 @@
 #import "UIColor+FlatColors.h"
 #import "HDContainerViewController.h"
 #import "HDGameViewController.h"
-#import "HDProgressView.h"
 #import "HDLevels.h"
 #import "HDScene.h"
 
 @interface HDGameViewController ()
 
-@property (nonatomic, strong) HDProgressView *progressView;
 @property (nonatomic, strong) HDScene *scene;
 
 @end
@@ -72,7 +70,6 @@
     
     _levels = [[HDLevels alloc] initWithLevel:_level];
     
-    [self _layoutDisplayWithTileCount:[[_levels hexagons] count]];
 }
 
 - (void)viewWillLayoutSubviews
@@ -126,15 +123,6 @@
 
 #pragma mark -
 #pragma mark - Private
-
-- (void)_layoutDisplayWithTileCount:(NSInteger)tileCount
-{
-    if (!self.progressView) {
-        CGRect progressFrame = CGRectMake(0.0, CGRectGetHeight(self.view.bounds) - 53.0f, CGRectGetWidth(self.view.bounds), 50.0f);
-         self.progressView = [[HDProgressView alloc] initWithFrame:progressFrame];
-        [self.view addSubview:self.progressView];
-    }
-}
 
 - (void)_applicationDidBecomeActive
 {

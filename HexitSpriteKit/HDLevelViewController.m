@@ -12,7 +12,6 @@
 #import "HDLevelViewController.h"
 #import "HDContainerViewController.h"
 #import "HDGameViewController.h"
-#import "HDProgressView.h"
 
 @implementation HDIndicator
 
