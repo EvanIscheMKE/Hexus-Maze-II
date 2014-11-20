@@ -10,9 +10,4 @@
 
 @interface HDProgressView : UIView
 
-@property (nonatomic, assign) NSInteger remainingTileCount;
-@property (nonatomic, strong) UILabel *countLabel;
-
-- (void)decreaseTileCountByUno;
-
 @end

@@ -75,6 +75,7 @@
 		38F5A6B91A07F2FA0036750A /* Grid-1.json in Resources */ = {isa = PBXBuildFile; fileRef = 38F5A6B71A07F2FA0036750A /* Grid-1.json */; };
 		38F5A6BD1A08014F0036750A /* HDHexagon.m in Sources */ = {isa = PBXBuildFile; fileRef = 38F5A6BC1A08014F0036750A /* HDHexagon.m */; };
 		38F7CC6E1A0D6FBE002E7C7F /* UIImage+HDImage.m in Sources */ = {isa = PBXBuildFile; fileRef = 38F7CC6D1A0D6FBE002E7C7F /* UIImage+HDImage.m */; };
+		38FDF9B51A1BEF1F005CCFE1 /* HDSettingsManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 38FDF9B41A1BEF1F005CCFE1 /* HDSettingsManager.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -184,6 +185,8 @@
 		38F5A6BC1A08014F0036750A /* HDHexagon.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HDHexagon.m; sourceTree = "<group>"; };
 		38F7CC6C1A0D6FBE002E7C7F /* UIImage+HDImage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIImage+HDImage.h"; sourceTree = "<group>"; };
 		38F7CC6D1A0D6FBE002E7C7F /* UIImage+HDImage.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIImage+HDImage.m"; sourceTree = "<group>"; };
+		38FDF9B31A1BEF1F005CCFE1 /* HDSettingsManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HDSettingsManager.h; sourceTree = "<group>"; };
+		38FDF9B41A1BEF1F005CCFE1 /* HDSettingsManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HDSettingsManager.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -347,6 +350,8 @@
 				38C0A8741A0758AC00C552F1 /* HDLevels.m */,
 				38F5A6BB1A08014F0036750A /* HDHexagon.h */,
 				38F5A6BC1A08014F0036750A /* HDHexagon.m */,
+				38FDF9B31A1BEF1F005CCFE1 /* HDSettingsManager.h */,
+				38FDF9B41A1BEF1F005CCFE1 /* HDSettingsManager.m */,
 			);
 			name = Model;
 			sourceTree = "<group>";
@@ -562,6 +567,7 @@
 				38C0A8751A0758AC00C552F1 /* HDLevels.m in Sources */,
 				38521F151A17044400484830 /* HDHexagonView.m in Sources */,
 				38C0A86E1A0727FA00C552F1 /* HDScene.m in Sources */,
+				38FDF9B51A1BEF1F005CCFE1 /* HDSettingsManager.m in Sources */,
 				38C67CDD1A0AB9350038526C /* UIColor+FlatColors.m in Sources */,
 				38C67CE81A0ABF0E0038526C /* HDConstants.m in Sources */,
 				38C67D2F1A0AF3960038526C /* NSMutableArray+UniqueAdditions.m in Sources */,

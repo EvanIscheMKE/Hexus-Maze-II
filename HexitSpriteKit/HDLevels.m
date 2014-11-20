@@ -123,9 +123,7 @@ typedef void(^CallBackBlock)(NSDictionary *dictionary, NSError *error);
 
 - (HDHexagon *)makeHexagonAtRow:(NSInteger)row column:(NSInteger)column
 {
-    HDHexagon *hexagon = [[HDHexagon alloc] init];
-    [hexagon setColumn:column];
-    [hexagon setRow:row];
+    HDHexagon *hexagon = [[HDHexagon alloc] initWithRow:row column:column];
     
     _hexagon[row][column] = hexagon;
     

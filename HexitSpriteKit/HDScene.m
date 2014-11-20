@@ -70,8 +70,10 @@ static const CGFloat kTileHeightInsetMultiplier = .845f;
     for (NSInteger row = 0; row < NumberOfRows; row++) {
         
         for (NSInteger column = 0; column < NumberOfColumns; column++) {
+            
             if ([_levels hexagonTypeAtRow:row column:column]) {
-                HDSpriteNode *tileNode = [HDSpriteNode spriteNodeWithColor:[UIColor clearColor] size:CGSizeMake(_kTileSize + 6, _kTileSize + 6)];
+                HDSpriteNode *tileNode = [HDSpriteNode spriteNodeWithColor:[UIColor clearColor]
+                                                                      size:CGSizeMake(_kTileSize + 6.0f, _kTileSize + 6.0f)];
                 [tileNode setRow:row];
                 [tileNode setColumn:column];
                 [tileNode setAnchorPoint:CGPointMake(0.0, 0.0)];
@@ -245,7 +247,7 @@ static const CGFloat kTileHeightInsetMultiplier = .845f;
         for (HDHexagon *hexagonShape in possibleMovesFromNewlySelectedTile) {
             for (HDSpriteNode *hexagonSprite in self.tileLayer.children) {
                 if (hexagonShape.row == hexagonSprite.row && hexagonShape.column == hexagonSprite.column) {
-                    int direction = [self directionToTile:hexagonShape fromTile:toHexagon];
+                    int direction = [self _directionToTile:hexagonShape fromTile:toHexagon];
                     [hexagonSprite updateTextureFromHexagonType:hexagonShape.type direction:direction];
                     break;
                 }
@@ -256,7 +258,7 @@ static const CGFloat kTileHeightInsetMultiplier = .845f;
     return NO;
 }
 
-- (HDSpriteDirection)directionToTile:(HDHexagon *)toHexagon fromTile:(HDHexagon *)fromHexagon
+- (HDSpriteDirection)_directionToTile:(HDHexagon *)toHexagon fromTile:(HDHexagon *)fromHexagon
 {
     BOOL evenLine = (fromHexagon.row % 2 == 0);
     

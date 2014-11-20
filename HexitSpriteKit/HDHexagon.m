@@ -16,7 +16,14 @@
 
 - (instancetype)init
 {
+    return [self initWithRow:0 column:0];
+}
+
+- (instancetype)initWithRow:(NSInteger)row column:(NSInteger)column
+{
     if (self = [super init]) {
+        [self setRow:row];
+        [self setColumn:column];
         [self setState:HDHexagonStateEnabled];
     }
     return self;

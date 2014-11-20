@@ -25,8 +25,8 @@ typedef enum {
 } HDHexagonType;
 
 typedef enum {
-    HDHexagonStateEnabled  = 3,
-    HDHexagonStateDisabled = 4,
+    HDHexagonStateEnabled  = 1,
+    HDHexagonStateDisabled = 2,
     HDHexagonStateNone     = 0
 } HDHexagonState;
 
@@ -49,6 +49,7 @@ static const NSInteger NumberOfColumns = 9;
 @property (nonatomic, assign) NSInteger row;
 
 - (void)recievedTouches;
+- (instancetype)initWithRow:(NSInteger)row column:(NSInteger)column NS_DESIGNATED_INITIALIZER;
 
 @end
 

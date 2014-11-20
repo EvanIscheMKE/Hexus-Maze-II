@@ -6,71 +6,66 @@
 //  Copyright (c) 2014 Evan William Ische. All rights reserved.
 //
 
+#import "HDHelper.h"
 #import "HDProgressView.h"
 #import "UIColor+FlatColors.h"
 
-static const CGFloat kPadding = 5.0f;
 
 @implementation HDProgressView{
     NSInteger _remainingTileCount;
 }
 
-- (instancetype)initWithFrame:(CGRect)frame
++ (Class)layerClass
 {
-    return [self initWithFrame:frame tileTypes:[NSArray array]];
+    return [CAShapeLayer class];
 }
 
-- (instancetype)initWithFrame:(CGRect)frame tileTypes:(NSArray *)tileTypes
+- (instancetype)initWithFrame:(CGRect)frame
 {
     if (self = [super initWithFrame:frame]) {
         
-        [self setOpaque:NO];
-        [self setBackgroundColor:[UIColor clearColor]];
+        CGRect bounds = CGRectMake(0.0f, 0.0f, CGRectGetHeight(self.bounds), CGRectGetHeight(self.bounds));
         
-         self.countLabel = [[UILabel alloc] init];
-        [self.countLabel setText:@"50"];
-        [self.countLabel setTextColor:[UIColor flatConcreteColor]];
-        [self.countLabel setFont:GILLSANS_LIGHT(20.0f)];
-        [self.countLabel sizeToFit];
-        [self.countLabel setCenter:CGPointMake(CGRectGetMidX(self.bounds), CGRectGetMidY(self.bounds) + kPadding)];
-        [self addSubview:self.countLabel];
+        CAShapeLayer *layer = (CAShapeLayer *)self.layer;
+        [layer setPath:[self _navigationPathForBounds:self.bounds]];
+        [layer setFillColor:[[UIColor flatCloudsColor] CGColor]];
+        [layer setStrokeColor:[[UIColor flatCloudsColor] CGColor]];
+        [layer setLineWidth:6.0f];
         
+        CAShapeLayer *left = [CAShapeLayer layer];
+        [left setPosition:CGPointMake(CGRectGetMidY(self.bounds), CGRectGetMidY(self.bounds))];
+        
+        CAShapeLayer *right = [CAShapeLayer layer];
+        [right setPosition:CGPointMake(CGRectGetWidth(self.bounds) - CGRectGetMidY(self.bounds), CGRectGetMidY(self.bounds))];
+        
+        for (CAShapeLayer *shape in @[left,right]) {
+            [shape setBounds:bounds];
+            [shape setPath:[HDHelper hexagonPathForBounds:bounds]];
+            [shape setFillColor:[[UIColor flatSilverColor] CGColor]];
+            [shape setStrokeColor:[[UIColor flatSilverColor] CGColor]];
+            [shape setLineWidth:6];
+            [self.layer addSublayer:shape];
+        }
     }
     return self;
 }
 
-- (void)setRemainingTileCount:(NSInteger)remainingTileCount
+- (CGPathRef)_navigationPathForBounds:(CGRect)bounds
 {
-    _remainingTileCount = remainingTileCount;
     
-    [self.countLabel setText:[NSString stringWithFormat:@"%ld", _remainingTileCount]];
-    [self.countLabel sizeToFit];
-    [self.countLabel setCenter:CGPointMake(CGRectGetMidX(self.bounds), CGRectGetMidY(self.bounds) + kPadding)];
+    const CGFloat kPadding = CGRectGetHeight(bounds) / 8 / 2;
+    UIBezierPath *_path = [UIBezierPath bezierPath];
+    [_path moveToPoint:CGPointMake(CGRectGetMidX(bounds), CGRectGetHeight(self.bounds))];
+    [_path addLineToPoint:CGPointMake(CGRectGetWidth(bounds) - kPadding, CGRectGetHeight(self.bounds))];
+    [_path addLineToPoint:CGPointMake(CGRectGetWidth(bounds) - kPadding, CGRectGetHeight(self.bounds) - (CGRectGetHeight(bounds) * .25f))];
+    [_path addLineToPoint:CGPointMake(CGRectGetWidth(bounds) - kPadding, CGRectGetHeight(self.bounds) - (CGRectGetHeight(bounds) * .75f))];
+    [_path addLineToPoint:CGPointMake(kPadding, CGRectGetHeight(self.bounds) - (CGRectGetHeight(bounds) * .75f))];
+    [_path addLineToPoint:CGPointMake(kPadding, CGRectGetHeight(self.bounds) - (CGRectGetHeight(bounds) * .25f))];
+    [_path addLineToPoint:CGPointMake(kPadding, CGRectGetHeight(self.bounds))];
+    [_path closePath];
+    
+    return [_path CGPath];
 }
 
-- (void)decreaseTileCountByUno
-{
-    [self setRemainingTileCount:MAX(self.remainingTileCount - 1, 0)];
-}
-
-- (void)drawRect:(CGRect)rect
-{
-    [super drawRect:rect];
-    
-    [[UIColor flatCloudsColor] setFill];
-    
-    UIBezierPath *path = [UIBezierPath bezierPath];
-    [path setLineWidth:6.0f];
-    [path moveToPoint:CGPointMake(0.0f, CGRectGetHeight(self.bounds) / 1.5)];
-    [path addArcWithCenter:CGPointMake(CGRectGetMidX(self.bounds), CGRectGetHeight(self.bounds) / 1.5)
-                    radius:30
-                startAngle:M_PI
-                  endAngle:0
-                 clockwise:YES];
-    [path addLineToPoint:CGPointMake(CGRectGetWidth(self.bounds), CGRectGetHeight(self.bounds) / 1.5)];
-    [path addLineToPoint:CGPointMake(CGRectGetWidth(self.bounds), CGRectGetHeight(self.bounds))];
-    [path addLineToPoint:CGPointMake(0.0f, CGRectGetHeight(self.bounds))];
-    [path fill];
-}
 
 @end

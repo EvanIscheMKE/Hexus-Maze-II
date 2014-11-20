@@ -14,9 +14,10 @@
 #import "HDHelper.h"
 #import "HDConstants.h"
 
-static const NSUInteger totalAmountOfLives = 5;
 static const CGFloat kPadding   = 12.0f;
 static const CGFloat kHeartSize = 30.0f;
+static const NSUInteger maxAmountOfLives = 5;
+static const NSTimeInterval timeUntilNextLife = 1200;
 
 @interface HDNavigationBar ()
 
@@ -36,7 +37,7 @@ static const CGFloat kHeartSize = 30.0f;
 
 - (instancetype)initWithFrame:(CGRect)frame
 {
-    return [self initWithFrame:frame numberOfLives:totalAmountOfLives time:1800];
+    return [self initWithFrame:frame numberOfLives:maxAmountOfLives time:timeUntilNextLife];
 }
 
 - (instancetype)initWithFrame:(CGRect)frame numberOfLives:(NSInteger)count time:(NSTimeInterval)seconds
@@ -45,7 +46,9 @@ static const CGFloat kHeartSize = 30.0f;
         
         _remainingTime = seconds;
         
-        _amountOfLives = [NSMutableArray arrayWithCapacity:totalAmountOfLives];
+        _amountOfLives = [NSMutableArray arrayWithCapacity:maxAmountOfLives];
+        
+        CGRect bounds = CGRectMake(0.0f, 0.0f, CGRectGetHeight(self.bounds), CGRectGetHeight(self.bounds));
         
         CAShapeLayer *layer = (CAShapeLayer *)self.layer;
         [layer setPath:[[self _navigationPathForBounds:self.bounds] CGPath]];
@@ -53,16 +56,20 @@ static const CGFloat kHeartSize = 30.0f;
         [layer setStrokeColor:[[UIColor flatCloudsColor] CGColor]];
         [layer setLineWidth:6.0f];
         
-        CGRect bounds = CGRectMake(0.0f, 0.0f, CGRectGetHeight(self.bounds), CGRectGetHeight(self.bounds));
-        
         CAShapeLayer *left = [CAShapeLayer layer];
-        [left setBounds:bounds];
-        [left setPath:[HDHelper hexagonPathForBounds:bounds]];
         [left setPosition:CGPointMake(CGRectGetMidY(self.bounds), CGRectGetMidY(self.bounds))];
-        [left setFillColor:[[UIColor flatSilverColor] CGColor]];
-        [left setStrokeColor:[[UIColor flatSilverColor] CGColor]];
-        [left setLineWidth:6];
-        [self.layer addSublayer:left];
+        
+        CAShapeLayer *right = [CAShapeLayer layer];
+        [right setPosition:CGPointMake(CGRectGetWidth(self.bounds) - CGRectGetMidY(self.bounds), CGRectGetMidY(self.bounds))];
+        
+        for (CAShapeLayer *shape in @[left,right]) {
+            [shape setBounds:bounds];
+            [shape setPath:[HDHelper hexagonPathForBounds:bounds]];
+            [shape setFillColor:[[UIColor flatSilverColor] CGColor]];
+            [shape setStrokeColor:[[UIColor flatSilverColor] CGColor]];
+            [shape setLineWidth:6];
+            [self.layer addSublayer:shape];
+        }
         
          self.toggleSideMenu = [UIButton buttonWithType:UIButtonTypeCustom];
         [self.toggleSideMenu setImage:[UIImage imageNamed:@"BounceButton"] forState:UIControlStateNormal];
@@ -71,21 +78,12 @@ static const CGFloat kHeartSize = 30.0f;
         [self.toggleSideMenu setCenter:left.position];
         [self addSubview:self.toggleSideMenu];
         
-        CAShapeLayer *right = [CAShapeLayer layer];
-        [right setBounds:bounds];
-        [right setPath:[HDHelper hexagonPathForBounds:bounds]];
-        [right setPosition:CGPointMake(CGRectGetWidth(self.bounds) - CGRectGetMidY(self.bounds), CGRectGetMidY(self.bounds))];
-        [right setFillColor:[[UIColor flatSilverColor] CGColor]];
-        [right setStrokeColor:[[UIColor flatSilverColor] CGColor]];
-        [right setLineWidth:6];
-        [self.layer addSublayer:right];
-        
          self.timeLabel = [[UILabel alloc] init];
         [self.timeLabel setBounds:bounds];
         [self.timeLabel setCenter:right.position];
         [self.timeLabel setFont:GILLSANS(16.0f)];
         [self.timeLabel setTextColor:[UIColor whiteColor]];
-        [self.timeLabel setText:[self _hoursAndMinutesFromSeconds:seconds]];
+        [self.timeLabel setText:[self _hoursMinutesFromSeconds:seconds]];
         [self.timeLabel setTextAlignment:NSTextAlignmentCenter];
         [self addSubview:self.timeLabel];
         
@@ -111,12 +109,23 @@ static const CGFloat kHeartSize = 30.0f;
     return self;
 }
 
+- (NSInteger)remainingLives
+{
+    NSInteger count = 0;
+    for (UIButton *heart in _amountOfLives) {
+        if (!heart.selected) {
+            count++;
+        }
+    }
+    return count;
+}
+
 - (NSArray *)lives
 {
     if (_amountOfLives) {
         return _amountOfLives;
     }
-    return [NSArray array];
+    return nil;
 }
 
 #pragma mark -
@@ -124,15 +133,17 @@ static const CGFloat kHeartSize = 30.0f;
 
 - (void)_setupTimer
 {
-    self.timer = [NSTimer scheduledTimerWithTimeInterval:1.0f target:self selector:@selector(_updateTime:) userInfo:nil repeats:YES];
-    [[NSRunLoop mainRunLoop] addTimer:self.timer forMode:NSRunLoopCommonModes];
+    if (!self.timer) {
+        self.timer = [NSTimer scheduledTimerWithTimeInterval:1.0f target:self selector:@selector(_tick:) userInfo:nil repeats:YES];
+        [[NSRunLoop mainRunLoop] addTimer:self.timer forMode:NSRunLoopCommonModes];
+    }
 }
 
-- (void)_updateTime:(NSTimer *)timer
+- (void)_tick:(NSTimer *)timer
 {
     _remainingTime -= 1;
     
-    [self.timeLabel setText:[self _hoursAndMinutesFromSeconds:_remainingTime]];
+    [self.timeLabel setText:[self _hoursMinutesFromSeconds:_remainingTime]];
     
     if (_remainingTime == 0) {
         [self _updateRemainingLives];
@@ -152,7 +163,7 @@ static const CGFloat kHeartSize = 30.0f;
             [[NSUserDefaults standardUserDefaults] setInteger:lives + 1 forKey:HDRemainingLivesKey];
             
             if (count != 4) {
-                _remainingTime = 1200; // 20 minutes * 60 seconds
+                _remainingTime = timeUntilNextLife; // 20 minutes * 60 seconds
                 [self _setupTimer];
             }
             
@@ -162,18 +173,48 @@ static const CGFloat kHeartSize = 30.0f;
     }
 }
 
+- (void)decreaseLifeCountByUno
+{
+     NSUInteger lives = [[NSUserDefaults standardUserDefaults] integerForKey:HDRemainingLivesKey];
+    
+    lives--;
+    
+    [[NSUserDefaults standardUserDefaults] setInteger:lives forKey:HDRemainingLivesKey];
+    
+    [self updateLives:lives time:_remainingTime];
+}
+
 - (void)updateLives:(NSInteger)lives time:(NSTimeInterval)seconds
 {
     if (self.timer) {
-        [self setTimer:nil];
         [self.timer invalidate];
+        [self setTimer:nil];
     }
+    
+    for (UIButton *life in _amountOfLives) {
+        [life setSelected:YES];
+    }
+    
+    if (lives > 0) {
+        NSInteger count = 1;
+        for (UIButton *life in _amountOfLives) {
+            [life setSelected:NO];
+            if (count  == lives) break;
+            count++;
+        }
+    }
+    
+    if (_remainingTime != seconds) {
+         _remainingTime = seconds;
+    }
+    
+    [self _setupTimer];
 }
 
-- (NSString *)_hoursAndMinutesFromSeconds:(NSInteger)totalSeconds
+- (NSString *)_hoursMinutesFromSeconds:(NSInteger)totalSeconds
 {
     if (totalSeconds > 0) {
-        return [NSString stringWithFormat:@"%02ld:%02ld", (long)(totalSeconds / 60) % 60, (long)totalSeconds % 60];
+        return [NSString stringWithFormat:@"%ld:%02ld", (long)(totalSeconds / 60) % 60, (long)totalSeconds % 60];
     }
     return @"";
 }
@@ -187,9 +228,6 @@ static const CGFloat kHeartSize = 30.0f;
     [_path addLineToPoint:CGPointMake(CGRectGetWidth(bounds) - kPadding, 0.0f)];
     [_path addLineToPoint:CGPointMake(CGRectGetWidth(bounds) - kPadding, CGRectGetHeight(bounds) * .25f)];
     [_path addLineToPoint:CGPointMake(CGRectGetWidth(bounds) - kPadding, CGRectGetHeight(bounds) * .75f)];
-    [_path addLineToPoint:CGPointMake(CGRectGetWidth(bounds) - CGRectGetHeight(bounds) / 2, CGRectGetHeight(bounds))];
-    [_path addLineToPoint:CGPointMake(CGRectGetMidX(bounds), CGRectGetHeight(bounds))];
-    [_path addLineToPoint:CGPointMake(CGRectGetHeight(bounds) / 2, CGRectGetHeight(bounds))];
     [_path addLineToPoint:CGPointMake(kPadding, CGRectGetHeight(bounds) * .75f)];
     [_path addLineToPoint:CGPointMake(kPadding, CGRectGetHeight(bounds) * .25f)];
     [_path addLineToPoint:CGPointMake(kPadding, 0.0f)];
@@ -348,13 +386,12 @@ static CGFloat const kAnimationOffsetX = 180.0f;
 {
     NSLog(@"%@",NSStringFromSelector(_cmd));
     if (self.navigationBar.timer) {
-        NSLog(@"INVALIDATING TIMER");
        [self.navigationBar.timer invalidate];
     }
     
-    [[NSUserDefaults standardUserDefaults] setInteger:self.navigationBar.lives.count forKey:HDRemainingLivesKey];
-    [[NSUserDefaults standardUserDefaults] setFloat:self.navigationBar.remainingTime forKey:HDRemainingTime];
-    [[NSUserDefaults standardUserDefaults] setObject:[NSDate date]                   forKey:HDBackgroundDate];
+    [[NSUserDefaults standardUserDefaults] setInteger:self.navigationBar.remainingLives forKey:HDRemainingLivesKey];
+    [[NSUserDefaults standardUserDefaults] setFloat:self.navigationBar.remainingTime    forKey:HDRemainingTime];
+    [[NSUserDefaults standardUserDefaults] setObject:[NSDate date]                      forKey:HDBackgroundDate];
     [[NSUserDefaults standardUserDefaults] synchronize];
     
 }
@@ -363,18 +400,43 @@ static CGFloat const kAnimationOffsetX = 180.0f;
 {
     NSLog(@"%@",NSStringFromSelector(_cmd));
     
-    NSUInteger remainingLives = [[NSUserDefaults standardUserDefaults] integerForKey:HDRemainingLivesKey];
-    NSUInteger remainingTime  = [[NSUserDefaults standardUserDefaults] floatForKey:HDRemainingTime];
+    NSInteger remainingLives = [[NSUserDefaults standardUserDefaults] integerForKey:HDRemainingLivesKey];
+    NSTimeInterval remainingTime    = [[NSUserDefaults standardUserDefaults] floatForKey:HDRemainingTime];
     
     NSDate *wentIntoBackground = (NSDate *)[[NSUserDefaults standardUserDefaults] objectForKey:HDBackgroundDate];
     NSTimeInterval secondsInBackground = [[NSDate date] timeIntervalSinceDate:wentIntoBackground];
     
+    NSTimeInterval timeLeft = 0;
+    NSInteger additionalLivesFilled = 0;
+    if (remainingTime - secondsInBackground > 0) {
+        timeLeft = remainingTime -= secondsInBackground;
+        
+    } else if ( ( remainingTime - secondsInBackground ) < 0 ) {
+        
+        NSTimeInterval remainingAfterReplenishingLife = (NSTimeInterval)abs(remainingTime - secondsInBackground);
+        
+        if (remainingAfterReplenishingLife > timeUntilNextLife) {
+            additionalLivesFilled = remainingAfterReplenishingLife / timeUntilNextLife;
+            timeLeft = fmod(remainingAfterReplenishingLife, timeUntilNextLife);
+        } else {
+            timeLeft = remainingAfterReplenishingLife;
+        }
+    }
     
+    remainingLives = (remainingLives + additionalLivesFilled >= 5) ? 5 : remainingLives + additionalLivesFilled;
+    remainingTime  = (remainingLives == 5) ? 0 : (float)timeLeft;
     
-    NSLog(@"%f", secondsInBackground);
+    NSLog(@"TIME LEFT: %f, REMAINING LIVES: %lu",timeLeft, remainingLives);
+    
+    [[NSUserDefaults standardUserDefaults] setFloat:remainingTime    forKey:HDRemainingTime];
+    [[NSUserDefaults standardUserDefaults] setInteger:remainingLives forKey:HDRemainingLivesKey];
+    
+    [self.navigationBar updateLives:remainingLives
+                               time:remainingTime];
+    
 }
 
-- (void)_closeAnimated:(BOOL)flag
+- (void)_closeAnimated:(BOOL)animated
 {
     dispatch_block_t closeAnimation = ^{
         CGRect rect = self.gameViewController.view.frame;
@@ -382,7 +444,7 @@ static CGFloat const kAnimationOffsetX = 180.0f;
         [self.gameViewController.view setFrame:rect];
     };
     
-    if (!flag) {
+    if (!animated) {
         closeAnimation();
     } else {
         [UIView animateWithDuration:.3f
@@ -391,7 +453,7 @@ static CGFloat const kAnimationOffsetX = 180.0f;
     }
 }
 
-- (void)_expandAnimated:(BOOL)flag
+- (void)_expandAnimated:(BOOL)animated
 {
     dispatch_block_t expandAnimation = ^{
         CGRect rect = self.gameViewController.view.frame;
@@ -399,13 +461,18 @@ static CGFloat const kAnimationOffsetX = 180.0f;
         [self.gameViewController.view setFrame:rect];
     };
     
-    if (!flag) {
+    if (!animated) {
         expandAnimation();
     } else {
         [UIView animateWithDuration:.3f
                          animations:expandAnimation
                          completion:nil];
     }
+}
+
+- (void)decreaseLifeCountByUno
+{
+    [self.navigationBar decreaseLifeCountByUno];
 }
 
 - (void)_layoutNavigationBarWithLives:(NSInteger)lives time:(NSTimeInterval)seconds;
@@ -418,7 +485,18 @@ static CGFloat const kAnimationOffsetX = 180.0f;
 
 - (void)_toggleHDMenuViewController
 {
+    [self _toggleHDMenuViewControllerWithCompletion:nil];
+}
+
+- (void)_toggleHDMenuViewControllerWithCompletion:(dispatch_block_t)completion
+{
     [self setExpanded:!self.isExpanded];
+    
+    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(.3 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+        if (completion) {
+            completion();
+        }
+    });
 }
 
 @end

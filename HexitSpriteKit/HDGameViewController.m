@@ -43,6 +43,7 @@
 {
     if (self = [super init]){
         _level = level;
+        _pauseGame = NO;
     }
     return self;
 }
@@ -58,10 +59,6 @@
 {
     [super viewDidLoad];
     
-    [[NSNotificationCenter defaultCenter] addObserver:self
-                                             selector:@selector(decreaseTileCount)
-                                                 name:@"DecreaseRemainingTilesByOne"
-                                               object:nil];
     
     [[NSNotificationCenter defaultCenter] addObserver:self
                                              selector:@selector(_applicationWillResignActive)
@@ -76,11 +73,6 @@
     _levels = [[HDLevels alloc] initWithLevel:_level];
     
     [self _layoutDisplayWithTileCount:[[_levels hexagons] count]];
-}
-
-- (void)decreaseTileCount
-{
-    [self.progressView decreaseTileCountByUno];
 }
 
 - (void)viewWillLayoutSubviews
@@ -118,33 +110,42 @@
     // Dispose of any resources that can be recreated.
 }
 
+- (void)showAlertWithTitle:(NSString *)title
+               description:(NSString *)descripton
+                       tag:(NSInteger)tag
+                  delegate:(id<UIAlertViewDelegate>)delegate
+{
+    UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:title
+                                                        message:descripton
+                                                       delegate:delegate
+                                              cancelButtonTitle:@"Continue"
+                                              otherButtonTitles:@"Leave",nil];
+    [alertView setTag:tag];
+    [alertView show];
+}
+
 #pragma mark -
 #pragma mark - Private
 
 - (void)_layoutDisplayWithTileCount:(NSInteger)tileCount
 {
     if (!self.progressView) {
-        CGRect progressFrame = CGRectMake(0.0, CGRectGetHeight(self.view.bounds) - 80.0f, CGRectGetWidth(self.view.bounds), 80.0f);
+        CGRect progressFrame = CGRectMake(0.0, CGRectGetHeight(self.view.bounds) - 53.0f, CGRectGetWidth(self.view.bounds), 50.0f);
          self.progressView = [[HDProgressView alloc] initWithFrame:progressFrame];
-        [self.progressView setRemainingTileCount:tileCount];
         [self.view addSubview:self.progressView];
     }
 }
 
-- (void)_pauseGame
-{
-    _pauseGame = !_pauseGame;
-    [self.scene.view setPaused:!self.scene.view.paused];
-}
-
 - (void)_applicationDidBecomeActive
 {
-    [self _pauseGame];
+    _pauseGame = NO;
+    [self.scene.view setPaused:_pauseGame];
 }
 
 - (void)_applicationWillResignActive
 {
-    [self _pauseGame];
+    _pauseGame = YES;
+    [self.scene.view setPaused:_pauseGame];
 }
 
 @end

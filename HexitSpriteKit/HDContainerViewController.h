@@ -10,10 +10,13 @@
 
 @interface HDNavigationBar : UIView
 @property (nonatomic, readonly) NSArray *lives;
+@property (nonatomic, assign)   NSInteger remainingLives;
 @property (nonatomic, readonly) NSTimeInterval remainingTime;
 
 @property (nonatomic, strong) NSTimer *timer;
 @property (nonatomic, strong) UIButton *toggleSideMenu;
+
+- (void)decreaseLifeCountByUno;
 @end
 
 @class HDContainerViewController;
@@ -34,8 +37,10 @@
 - (instancetype)initWithGameViewController:(UIViewController *)gameController
                         rearViewController:(UIViewController *)rearController NS_DESIGNATED_INITIALIZER;
 
-- (void)_toggleHDMenuViewController;
+- (void)_toggleHDMenuViewControllerWithCompletion:(dispatch_block_t)completion;
 - (void)setFrontViewController:(UIViewController *)controller animated:(BOOL)animated;
+
+- (void)decreaseLifeCountByUno;
 
 @end
 

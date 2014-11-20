@@ -9,6 +9,7 @@
 #import "HDContainerViewController.h"
 #import "HDRearViewController.h"
 #import "UIColor+FlatColors.h"
+#import "HDSettingsManager.h"
 
 @implementation HDSettingsContainer
 {
@@ -32,14 +33,17 @@
     _buttons = [NSMutableArray array];
     
     UIButton *buttonOne = [UIButton buttonWithType:UIButtonTypeCustom];
+    [buttonOne setTag:0];
     [buttonOne setBackgroundImage:[UIImage imageNamed:@"_ToggleOnButton"]  forState:UIControlStateNormal];
     [buttonOne setBackgroundImage:[UIImage imageNamed:@"_ToggleOffButton"] forState:UIControlStateSelected];
     
     UIButton *buttonTwo = [UIButton buttonWithType:UIButtonTypeCustom];
+    [buttonTwo setTag:1];
     [buttonTwo setBackgroundImage:[UIImage imageNamed:@"_ToggleOnButton"]  forState:UIControlStateNormal];
     [buttonTwo setBackgroundImage:[UIImage imageNamed:@"_ToggleOffButton"] forState:UIControlStateSelected];
     
     UIButton *buttonThree = [UIButton buttonWithType:UIButtonTypeCustom];
+    [buttonThree setTag:2];
     [buttonThree setBackgroundImage:[UIImage imageNamed:@"_ToggleOnButton"]  forState:UIControlStateNormal];
     [buttonThree setBackgroundImage:[UIImage imageNamed:@"_ToggleOffButton"] forState:UIControlStateSelected];
     
@@ -107,6 +111,7 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    [self setDelegate:[HDSettingsManager sharedManager]];
     [self _layoutSideMenuSelectors];
     [self.view setBackgroundColor:[UIColor flatPeterRiverColor]];
 }
@@ -176,7 +181,6 @@
 
 - (void)hideGameInterfaceAnimated:(BOOL)animated
 {
-      NSLog(@"HIDE");
     [self.view removeConstraints:_vLC];
     
     _vLC  = [NSLayoutConstraint constraintsWithVisualFormat:@"V:|-50-[container(200)]" options:0 metrics:nil views:_dictionary];
@@ -198,7 +202,6 @@
 
 - (void)showGameInterfaceAnimated:(BOOL)animated
 {
-    NSLog(@"SHOW");
     [self.view removeConstraints:_vLC];
     
     _vLC  = [NSLayoutConstraint constraintsWithVisualFormat:@"V:[map]-20-[container(200)]" options:0 metrics:nil views:_dictionary];

@@ -15,9 +15,10 @@
 #import "HDContainerViewController.h"
 #import "HDLevelViewController.h"
 
-@interface AppDelegate ()<HDRearViewControllerDelegate, HDContainerViewControllerDelegate>
+@interface AppDelegate ()<HDContainerViewControllerDelegate, UIAlertViewDelegate>
 @property (nonatomic, strong) HDContainerViewController *containerController;
 @property (nonatomic, strong) HDRearViewController *rearViewController;
+@property (nonatomic, strong) HDLevelViewController *frontViewController;
 @end
 
 @implementation AppDelegate {
@@ -38,27 +39,35 @@
 
 - (void)presentLevelViewController
 {
-    HDLevelViewController *level = [[HDLevelViewController alloc] init];
+    self.frontViewController = [[HDLevelViewController alloc] init];
     
-    self.rearViewController = [[HDRearViewController alloc] init];
-    [self.rearViewController setDelegate:self];
+    self.rearViewController  = [[HDRearViewController alloc] init];
     
-     self.containerController = [[HDContainerViewController alloc] initWithGameViewController:level
-                                                                           rearViewController:self.rearViewController];
+    self.containerController = [[HDContainerViewController alloc] initWithGameViewController:self.frontViewController
+                                                                          rearViewController:self.rearViewController];
     [self.containerController setDelegate:self];
     
     [self.window.rootViewController presentViewController:self.containerController animated:YES completion:nil];
 }
 
-- (void)restartCurrentLevel
-{
-    [self.containerController _toggleHDMenuViewController];
-   // [self navigateToNewLevel:_deltaLevel];
-}
-
 - (void)navigateToLevelMap
 {
-    [self.containerController setFrontViewController:[HDLevelViewController new] animated:YES];
+    [self.containerController _toggleHDMenuViewControllerWithCompletion:^{
+        [[self _gameViewController] showAlertWithTitle:@"Level 5"
+                                           description:@"Are you sure you want to leave, you'll lose a life"
+                                                   tag:0
+                                              delegate:self];
+    }];
+}
+
+- (void)restartCurrentLevel
+{
+    [self.containerController _toggleHDMenuViewControllerWithCompletion:^{
+        [[self _gameViewController] showAlertWithTitle:@"Level 5"
+                                           description:@"Are you sure you want to restart, you'll lose a life"
+                                                   tag:1
+                                              delegate:self];
+    }];
 }
 
 - (void)navigateToNewLevel:(NSInteger)level
@@ -68,53 +77,13 @@
     [self.containerController setFrontViewController:controller animated:YES];
 }
 
-#pragma mark -
-#pragma mark - Switches
-
-- (void)toggleSound:(id)sender
-{
-    UIButton *sound = (UIButton *)sender;
-    [sound setSelected:!sound.selected];
-    
-    [[NSUserDefaults standardUserDefaults] setBool:![[NSUserDefaults standardUserDefaults] boolForKey:hdSoundkey] forKey:hdSoundkey];
-}
-
-- (void)toggleVibration:(id)sender
-{
-    UIButton *vibration = (UIButton *)sender;
-    [vibration setSelected:!vibration.selected];
-    
-    [[NSUserDefaults standardUserDefaults] setBool:![[NSUserDefaults standardUserDefaults] boolForKey:hdVibrationKey] forKey:hdVibrationKey];
-}
-
-- (void)toggleEffects:(id)sender
-{
-    UIButton *effects = (UIButton *)sender;
-    [effects setSelected:!effects.selected];
-    
-    [[NSUserDefaults standardUserDefaults] setBool:![[NSUserDefaults standardUserDefaults] boolForKey:hdEffectsKey] forKey:hdEffectsKey];
-}
-
-#pragma mark -
-#pragma mark - Override Getters
-
-- (BOOL)vibrationIsActive
-{
-    return [[NSUserDefaults standardUserDefaults] boolForKey:hdVibrationKey];
-}
-
-- (BOOL)soundIsActive
-{
-    return [[NSUserDefaults standardUserDefaults] boolForKey:hdSoundkey];
-}
-
-- (BOOL)effectsIfActive
-{
-    return [[NSUserDefaults standardUserDefaults] boolForKey:hdEffectsKey];
-}
-
 #pragma mark - 
 #pragma mark - <Private>
+
+- (HDGameViewController *)_gameViewController
+{
+    return (HDGameViewController *)self.containerController.gameViewController;
+}
 
 - (void)_initalizeModelData
 {
@@ -123,23 +92,26 @@
     BOOL isFirstRun = [[NSUserDefaults standardUserDefaults] boolForKey:hdFirstRunKey];
     
     if (!isFirstRun) {
-        [[NSUserDefaults standardUserDefaults] setFloat:0   forKey:HDRemainingTime];
-        [[NSUserDefaults standardUserDefaults] setInteger:5 forKey:HDRemainingLivesKey];
+        [[NSUserDefaults standardUserDefaults] setFloat:1000   forKey:HDRemainingTime];
+        [[NSUserDefaults standardUserDefaults] setInteger:3 forKey:HDRemainingLivesKey];
         [[NSUserDefaults standardUserDefaults] setBool:YES  forKey:hdSoundkey];
         [[NSUserDefaults standardUserDefaults] setBool:YES  forKey:hdFirstRunKey];
         [[HDMapManager sharedManager] initalizeLevelsForFirstRun];
     }
 }
 
-#pragma mark -
-#pragma mark - <HDRearViewControllerDelegate>
 
-- (void)layoutToggleSwitchesForSettingsFromArray:(NSArray *)array
+#pragma mark -
+#pragma mark - <UIAlertViewDelegate>
+
+- (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex
 {
-    if (array) {
-        [array[0] addTarget:self action:@selector(toggleEffects:)   forControlEvents:UIControlEventTouchUpInside];
-        [array[1] addTarget:self action:@selector(toggleSound:)     forControlEvents:UIControlEventTouchUpInside];
-        [array[2] addTarget:self action:@selector(toggleVibration:) forControlEvents:UIControlEventTouchUpInside];
+    if (alertView.tag == 0 && buttonIndex == 1) {
+        [self.containerController setFrontViewController:self.frontViewController animated:YES];
+        [self.containerController decreaseLifeCountByUno];
+    } else if (alertView.tag == 1 && buttonIndex == 1) {
+        [self navigateToNewLevel:_deltaLevel];
+        [self.containerController decreaseLifeCountByUno];
     }
 }
 
