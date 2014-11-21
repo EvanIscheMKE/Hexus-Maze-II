@@ -9,11 +9,10 @@
 #import <UIKit/UIKit.h>
 
 @interface HDGameViewController : UIViewController
+
 @property (nonatomic, readonly) NSInteger level;
+
 - (instancetype)initWithLevel:(NSInteger)level;
-- (void)showAlertWithTitle:(NSString *)title
-               description:(NSString *)descripton
-                       tag:(NSInteger)tag
-                  delegate:(id<UIAlertViewDelegate>)delegate;
+
 @end
 

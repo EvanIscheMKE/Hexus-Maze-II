@@ -11,10 +11,12 @@
 #import "UIColor+FlatColors.h"
 #import "HDContainerViewController.h"
 #import "HDGameViewController.h"
-#import "HDLevels.h"
+#import "HDGridManager.h"
 #import "HDScene.h"
 
 @interface HDGameViewController ()
+
+@property (nonatomic, strong) HDGridManager *gridManager;
 
 @property (nonatomic, strong) HDScene *scene;
 
@@ -22,7 +24,6 @@
 
 @implementation HDGameViewController{
     BOOL _pauseGame;
-    HDLevels *_levels;
     NSInteger _level;
 }
 
@@ -68,7 +69,7 @@
                                                  name:UIApplicationDidBecomeActiveNotification
                                                object:nil];
     
-    _levels = [[HDLevels alloc] initWithLevel:_level];
+    self.gridManager = [[HDGridManager alloc] initWithLevelNumber:_level];
     
 }
 
@@ -81,7 +82,7 @@
         
          self.scene = [HDScene sceneWithSize:self.view.bounds.size];
         [self.scene setScaleMode:SKSceneScaleModeAspectFill];
-        [self.scene setLevels:_levels];
+        [self.scene setGridManager:self.gridManager];
         [self.scene addUnderlyingIndicatorTiles];
         
         [skView presentScene:self.scene];
@@ -93,7 +94,7 @@
 
 - (void)_beginGame
 {
-    [self.scene layoutNodesWithGrid:[_levels hexagons]];
+    [self.scene layoutNodesWithGrid:[self.gridManager hexagons]];
 }
 
 - (NSInteger)level

@@ -6,9 +6,12 @@
 //  Copyright (c) 2014 Evan William Ische. All rights reserved.
 //
 
+#import "HDHelper.h"
 #import "HDHexagon.h"
 #import "SKColor+HDColor.h"
 #import "HDHexagonNode.h"
+
+static const CGFloat kHexagonInset = 6.0f;
 
 @implementation HDHexagon{
     NSInteger _recievedTouchesCount;
@@ -40,22 +43,26 @@
     switch (type) {
         case HDHexagonTypeRegular:
             [self.node setStrokeColor:[SKColor flatPeterRiverColor]];
-            [self.node setFillColor:[[SKColor flatPeterRiverColor] colorWithAlphaComponent:.4f]];
+            [self.node setFillColor:[[SKColor flatPeterRiverColor] colorWithAlphaComponent:.25f]];
             break;
         case HDHexagonTypeStarter:
             [self.node setStrokeColor:[SKColor flatPeterRiverColor]];
-            [self.node setFillColor:[SKColor flatPeterRiverColor]];
+            [self.node setFillColor:[[SKColor flatPeterRiverColor] colorWithAlphaComponent:.25f]];
+            [self.node updateLabelWithText:@"S" color:[SKColor flatPeterRiverColor]];
             break;
-        case HDHexagonTypeDouble:
+        case HDHexagonTypeDouble:{
             [self.node setStrokeColor:[SKColor flatTurquoiseColor]];
             [self.node setFillColor:[SKColor clearColor]];
-            [self addDoubleHexagonShapeNode];
-            break;
+            [self _doubleHexagonShapeNodeWithStroke:self.node.strokeColor
+                                               fill:[self.node.strokeColor colorWithAlphaComponent:.25f]];
+        }  break;
         case HDHexagonTypeTriple:
             [self.node setStrokeColor:[SKColor flatSilverColor]];
-            [self.node setFillColor:[SKColor flatMidnightBlueColor]];
-            [self addDoubleHexagonShapeNode];
-            [self addTripleHexagonShapeNode];
+            [self.node setFillColor:[SKColor clearColor]];
+            [self _doubleHexagonShapeNodeWithStroke:self.node.strokeColor
+                                              fill:[SKColor clearColor]];
+            [self _tripleHexagonShapeNodeWithStroke:self.node.strokeColor
+                                               fill:[self.node.strokeColor colorWithAlphaComponent:.25f]];
             break;
         case HDHexagonTypeOne:
             [self.node setStrokeColor:[SKColor flatEmeraldColor]];
@@ -65,25 +72,25 @@
         case HDHexagonTypeTwo:
             [self setState:HDHexagonStateDisabled];
             [self.node setStrokeColor:[SKColor flatEmeraldColor]];
-            [self.node setFillColor:[self.node.strokeColor colorWithAlphaComponent:.4f]];
+            [self.node setFillColor:[self.node.strokeColor colorWithAlphaComponent:.25f]];
             [self.node updateLabelWithText:@"2"];
             break;
         case HDHexagonTypeThree:
             [self setState:HDHexagonStateDisabled];
             [self.node setStrokeColor:[SKColor flatEmeraldColor]];
-            [self.node setFillColor:[self.node.strokeColor colorWithAlphaComponent:.4f]];
+            [self.node setFillColor:[self.node.strokeColor colorWithAlphaComponent:.25f]];
             [self.node updateLabelWithText:@"3"];
             break;
         case HDHexagonTypeFour:
             [self setState:HDHexagonStateDisabled];
             [self.node setStrokeColor:[SKColor flatEmeraldColor]];
-            [self.node setFillColor:[self.node.strokeColor colorWithAlphaComponent:.4f]];
+            [self.node setFillColor:[self.node.strokeColor colorWithAlphaComponent:.25f]];
             [self.node updateLabelWithText:@"4"];
             break;
         case HDHexagonTypeFive:
             [self setState:HDHexagonStateDisabled];
             [self.node setStrokeColor:[SKColor flatEmeraldColor]];
-            [self.node setFillColor:[self.node.strokeColor colorWithAlphaComponent:.4f]];
+            [self.node setFillColor:[self.node.strokeColor colorWithAlphaComponent:.25f]];
             [self.node updateLabelWithText:@"5"];
             break;
     }
@@ -119,6 +126,7 @@
                 } break;
                 case 2:
                     [self.node removeAllChildren];
+                    [self.node setFillColor:[self.node.strokeColor colorWithAlphaComponent:.4f]];
                     break;
                 case 3:
                     [self setSelected:YES];
@@ -147,14 +155,14 @@
     if (selected) {
         _selected = selected;
         
-        [[NSNotificationCenter defaultCenter] postNotificationName:@"DecreaseRemainingTilesByOne" object:nil];
-        
         switch (self.type) {
             case HDHexagonTypeRegular:
                 [self.node setFillColor:self.node.strokeColor];
                 break;
             case HDHexagonTypeStarter:
                 [self.node setFillColor:self.node.strokeColor];
+                [self.node.label setText:@""];
+                [self.node setLabel:nil];
                 break;
             case HDHexagonTypeDouble:
                 [self.node setFillColor:self.node.strokeColor];
@@ -191,49 +199,39 @@
     }
 }
 
-- (void)addDoubleHexagonShapeNode
+- (void)_doubleHexagonShapeNodeWithStroke:(UIColor *)stroke
+                                     fill:(UIColor *)fill
 {
-    const CGFloat kHexagonInset = 6.0f;
     const CGFloat kTileSizeWithInset = CGRectGetHeight(CGRectInset(self.node.frame, kHexagonInset, kHexagonInset));
     
-    SKShapeNode *hexagon = [SKShapeNode shapeNodeWithPath:[[self hexagonPathForBounds:CGRectMake(0.0f, 0.0, kTileSizeWithInset, kTileSizeWithInset)] CGPath]];
+    
+    CGPathRef pathRef = [HDHelper hexagonPathForBounds:CGRectMake(0.0f, 0.0, kTileSizeWithInset, kTileSizeWithInset)];
+    
+    SKShapeNode *hexagon = [SKShapeNode shapeNodeWithPath:pathRef centered:YES];
     [hexagon setAntialiased:YES];
-    [hexagon setPosition:CGPointMake(kHexagonInset - 1, kHexagonInset - 1)];
+    [hexagon setPosition:CGPointMake(1.f,1.f)];
     [hexagon setStrokeColor:self.node.strokeColor];
-    [hexagon setFillColor:[self.node.strokeColor colorWithAlphaComponent:.5f]];
+    [hexagon setFillColor:[self.node.strokeColor colorWithAlphaComponent:.25f]];
     [hexagon setLineWidth:self.node.lineWidth];
     [self.node addChild:hexagon];
 }
 
-- (void)addTripleHexagonShapeNode
+- (void)_tripleHexagonShapeNodeWithStroke:(UIColor *)stroke
+                                    fill:(UIColor *)fill
 {
-    const CGFloat kHexagonInset = 6.0f;
-    const CGFloat kTileSizeWithInset = CGRectGetHeight(CGRectInset([(SKShapeNode *)[[self.node children] lastObject] frame], kHexagonInset,
-                                                                                                                             kHexagonInset ) );
+    CGRect rectWithInset = CGRectInset([(SKShapeNode *)[[self.node children] lastObject] frame], kHexagonInset, kHexagonInset);
+    const CGFloat kTileSizeWithInset = CGRectGetHeight(rectWithInset);
     
-    SKShapeNode *hexagon = [SKShapeNode shapeNodeWithPath:[[self hexagonPathForBounds:CGRectMake(0.0f, 0.0, kTileSizeWithInset, kTileSizeWithInset)] CGPath]];
+    
+    CGPathRef pathRef = [HDHelper hexagonPathForBounds:CGRectMake(0.0f, 0.0, kTileSizeWithInset, kTileSizeWithInset)];
+    
+    SKShapeNode *hexagon = [SKShapeNode shapeNodeWithPath:pathRef centered:YES];
     [hexagon setAntialiased:YES];
-    [hexagon setPosition:CGPointMake(kHexagonInset - 1, kHexagonInset - 1)];
+    [hexagon setPosition:CGPointMake(1.f, 1.f)];
     [hexagon setStrokeColor:self.node.strokeColor];
-    [hexagon setFillColor:self.node.fillColor];
+    [hexagon setFillColor:[self.node.strokeColor colorWithAlphaComponent:.25f]];
     [hexagon setLineWidth:self.node.lineWidth];
-    [[[self.node children] lastObject] addChild:hexagon];
-}
-
-
-- (UIBezierPath *)hexagonPathForBounds:(CGRect)bounds
-{
-    const CGFloat kPadding = CGRectGetWidth(bounds) / 8 / 2;
-    UIBezierPath *_path = [UIBezierPath bezierPath];
-    [_path moveToPoint:CGPointMake(CGRectGetWidth(bounds) / 2, 0)];
-    [_path addLineToPoint:CGPointMake(CGRectGetWidth(bounds) - kPadding, CGRectGetHeight(bounds) / 4)];
-    [_path addLineToPoint:CGPointMake(CGRectGetWidth(bounds) - kPadding, CGRectGetHeight(bounds) * 3 / 4)];
-    [_path addLineToPoint:CGPointMake(CGRectGetWidth(bounds) / 2, CGRectGetHeight(bounds))];
-    [_path addLineToPoint:CGPointMake(kPadding, CGRectGetHeight(bounds) * 3 / 4)];
-    [_path addLineToPoint:CGPointMake(kPadding, CGRectGetHeight(bounds) / 4)];
-    [_path closePath];
-    
-    return _path;
+   [[[self.node children] lastObject] addChild:hexagon];
 }
 
 @end

@@ -54,6 +54,7 @@ static const NSInteger NumberOfColumns = 9;
 @end
 
 @protocol HDHexagonDelegate <NSObject>
+@optional
 
 - (void)unlockFollowingHexagonType:(HDHexagonType)type;
 

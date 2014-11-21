@@ -7,19 +7,18 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		383698601A168B8A007BB7B0 /* HDMapScrollView.m in Sources */ = {isa = PBXBuildFile; fileRef = 3836985F1A168B8A007BB7B0 /* HDMapScrollView.m */; };
 		383698621A16920B007BB7B0 /* Hexagon_Blue.png in Resources */ = {isa = PBXBuildFile; fileRef = 383698611A16920B007BB7B0 /* Hexagon_Blue.png */; };
 		383698641A169E72007BB7B0 /* _DOUBLEUPP.png in Resources */ = {isa = PBXBuildFile; fileRef = 383698631A169E72007BB7B0 /* _DOUBLEUPP.png */; };
-		38521F151A17044400484830 /* HDHexagonView.m in Sources */ = {isa = PBXBuildFile; fileRef = 38521F141A17044400484830 /* HDHexagonView.m */; };
 		38521F171A171D3C00484830 /* hexagonshexagons.png in Resources */ = {isa = PBXBuildFile; fileRef = 38521F161A171D3C00484830 /* hexagonshexagons.png */; };
-		38521F281A187F4400484830 /* BounceButton.png in Resources */ = {isa = PBXBuildFile; fileRef = 38521F271A187F4400484830 /* BounceButton.png */; };
 		38521F2B1A1880EF00484830 /* BlueHeartFill.png in Resources */ = {isa = PBXBuildFile; fileRef = 38521F291A1880EF00484830 /* BlueHeartFill.png */; };
 		38521F2C1A1880EF00484830 /* BlueHeartStroke.png in Resources */ = {isa = PBXBuildFile; fileRef = 38521F2A1A1880EF00484830 /* BlueHeartStroke.png */; };
-		38521F3A1A18964900484830 /* Tile.png in Resources */ = {isa = PBXBuildFile; fileRef = 38521F391A18964900484830 /* Tile.png */; };
 		38521F3D1A19A20600484830 /* HDSpriteNode.m in Sources */ = {isa = PBXBuildFile; fileRef = 38521F3C1A19A20600484830 /* HDSpriteNode.m */; };
+		385600991A1E013900830ED7 /* ToggleMenuButton.png in Resources */ = {isa = PBXBuildFile; fileRef = 385600981A1E013900830ED7 /* ToggleMenuButton.png */; };
 		387D7C9C1A10A60900670846 /* Volume.png in Resources */ = {isa = PBXBuildFile; fileRef = 387D7C9B1A10A60900670846 /* Volume.png */; };
 		387D7C9F1A12B58800670846 /* _ToggleOffButton.png in Resources */ = {isa = PBXBuildFile; fileRef = 387D7C9D1A12B58800670846 /* _ToggleOffButton.png */; };
 		387D7CA01A12B58800670846 /* _ToggleOnButton.png in Resources */ = {isa = PBXBuildFile; fileRef = 387D7C9E1A12B58800670846 /* _ToggleOnButton.png */; };
+		389144171A1F0063004D08EA /* HDMapScene.m in Sources */ = {isa = PBXBuildFile; fileRef = 389144161A1F0063004D08EA /* HDMapScene.m */; };
+		389144191A1F02E2004D08EA /* MapGrid.json in Resources */ = {isa = PBXBuildFile; fileRef = 389144181A1F02E2004D08EA /* MapGrid.json */; };
 		38C0A8441A07251700C552F1 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 38C0A8431A07251700C552F1 /* main.m */; };
 		38C0A8471A07251700C552F1 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 38C0A8461A07251700C552F1 /* AppDelegate.m */; };
 		38C0A84A1A07251700C552F1 /* HDGameViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 38C0A8491A07251700C552F1 /* HDGameViewController.m */; };
@@ -28,14 +27,14 @@
 		38C0A86B1A0726A300C552F1 /* SpriteKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 38C0A86A1A0726A300C552F1 /* SpriteKit.framework */; };
 		38C0A86E1A0727FA00C552F1 /* HDScene.m in Sources */ = {isa = PBXBuildFile; fileRef = 38C0A86D1A0727FA00C552F1 /* HDScene.m */; };
 		38C0A8721A07348400C552F1 /* SKColor+HDColor.m in Sources */ = {isa = PBXBuildFile; fileRef = 38C0A8711A07348400C552F1 /* SKColor+HDColor.m */; };
-		38C0A8751A0758AC00C552F1 /* HDLevels.m in Sources */ = {isa = PBXBuildFile; fileRef = 38C0A8741A0758AC00C552F1 /* HDLevels.m */; };
+		38C0A8751A0758AC00C552F1 /* HDGridManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 38C0A8741A0758AC00C552F1 /* HDGridManager.m */; };
 		38C0A8781A075FBA00C552F1 /* HDHexagonNode.m in Sources */ = {isa = PBXBuildFile; fileRef = 38C0A8771A075FBA00C552F1 /* HDHexagonNode.m */; };
 		38C67CD71A0AB8D80038526C /* HDWelcomeViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 38C67CD61A0AB8D80038526C /* HDWelcomeViewController.m */; };
 		38C67CDA1A0AB8FF0038526C /* HDContainerViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 38C67CD91A0AB8FF0038526C /* HDContainerViewController.m */; };
 		38C67CDD1A0AB9350038526C /* UIColor+FlatColors.m in Sources */ = {isa = PBXBuildFile; fileRef = 38C67CDC1A0AB9350038526C /* UIColor+FlatColors.m */; };
 		38C67CE31A0ABD050038526C /* HDHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = 38C67CE21A0ABD050038526C /* HDHelper.m */; };
 		38C67CE81A0ABF0E0038526C /* HDConstants.m in Sources */ = {isa = PBXBuildFile; fileRef = 38C67CE71A0ABF0E0038526C /* HDConstants.m */; };
-		38C67CEB1A0AC21C0038526C /* HDLevelViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 38C67CEA1A0AC21C0038526C /* HDLevelViewController.m */; };
+		38C67CEB1A0AC21C0038526C /* HDMapViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 38C67CEA1A0AC21C0038526C /* HDMapViewController.m */; };
 		38C67CED1A0ACE040038526C /* Grid-2.json in Resources */ = {isa = PBXBuildFile; fileRef = 38C67CEC1A0ACE040038526C /* Grid-2.json */; };
 		38C67CEF1A0ACE0C0038526C /* Grid-3.json in Resources */ = {isa = PBXBuildFile; fileRef = 38C67CEE1A0ACE0C0038526C /* Grid-3.json */; };
 		38C67CF11A0ACE150038526C /* Grid-4.json in Resources */ = {isa = PBXBuildFile; fileRef = 38C67CF01A0ACE150038526C /* Grid-4.json */; };
@@ -88,22 +87,20 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
-		3836985E1A168B8A007BB7B0 /* HDMapScrollView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HDMapScrollView.h; sourceTree = "<group>"; };
-		3836985F1A168B8A007BB7B0 /* HDMapScrollView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HDMapScrollView.m; sourceTree = "<group>"; };
 		383698611A16920B007BB7B0 /* Hexagon_Blue.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Hexagon_Blue.png; sourceTree = "<group>"; };
 		383698631A169E72007BB7B0 /* _DOUBLEUPP.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = _DOUBLEUPP.png; sourceTree = "<group>"; };
-		38521F131A17044400484830 /* HDHexagonView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HDHexagonView.h; sourceTree = "<group>"; };
-		38521F141A17044400484830 /* HDHexagonView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HDHexagonView.m; sourceTree = "<group>"; };
 		38521F161A171D3C00484830 /* hexagonshexagons.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = hexagonshexagons.png; sourceTree = "<group>"; };
-		38521F271A187F4400484830 /* BounceButton.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = BounceButton.png; sourceTree = "<group>"; };
 		38521F291A1880EF00484830 /* BlueHeartFill.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = BlueHeartFill.png; sourceTree = "<group>"; };
 		38521F2A1A1880EF00484830 /* BlueHeartStroke.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = BlueHeartStroke.png; sourceTree = "<group>"; };
-		38521F391A18964900484830 /* Tile.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = Tile.png; path = HexitSpriteKit/Tile.png; sourceTree = "<group>"; };
 		38521F3B1A19A20600484830 /* HDSpriteNode.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HDSpriteNode.h; sourceTree = "<group>"; };
 		38521F3C1A19A20600484830 /* HDSpriteNode.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HDSpriteNode.m; sourceTree = "<group>"; };
+		385600981A1E013900830ED7 /* ToggleMenuButton.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = ToggleMenuButton.png; path = ../../Desktop/ToggleMenuButton.png; sourceTree = "<group>"; };
 		387D7C9B1A10A60900670846 /* Volume.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Volume.png; sourceTree = "<group>"; };
 		387D7C9D1A12B58800670846 /* _ToggleOffButton.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = _ToggleOffButton.png; sourceTree = "<group>"; };
 		387D7C9E1A12B58800670846 /* _ToggleOnButton.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = _ToggleOnButton.png; sourceTree = "<group>"; };
+		389144151A1F0063004D08EA /* HDMapScene.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HDMapScene.h; sourceTree = "<group>"; };
+		389144161A1F0063004D08EA /* HDMapScene.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HDMapScene.m; sourceTree = "<group>"; };
+		389144181A1F02E2004D08EA /* MapGrid.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = MapGrid.json; sourceTree = "<group>"; };
 		38C0A83E1A07251700C552F1 /* Hexus.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Hexus.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		38C0A8421A07251700C552F1 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		38C0A8431A07251700C552F1 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
@@ -120,8 +117,8 @@
 		38C0A86D1A0727FA00C552F1 /* HDScene.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HDScene.m; sourceTree = "<group>"; };
 		38C0A8701A07348400C552F1 /* SKColor+HDColor.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "SKColor+HDColor.h"; sourceTree = "<group>"; };
 		38C0A8711A07348400C552F1 /* SKColor+HDColor.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "SKColor+HDColor.m"; sourceTree = "<group>"; };
-		38C0A8731A0758AC00C552F1 /* HDLevels.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HDLevels.h; sourceTree = "<group>"; };
-		38C0A8741A0758AC00C552F1 /* HDLevels.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HDLevels.m; sourceTree = "<group>"; };
+		38C0A8731A0758AC00C552F1 /* HDGridManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HDGridManager.h; sourceTree = "<group>"; };
+		38C0A8741A0758AC00C552F1 /* HDGridManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HDGridManager.m; sourceTree = "<group>"; };
 		38C0A8761A075FBA00C552F1 /* HDHexagonNode.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HDHexagonNode.h; sourceTree = "<group>"; };
 		38C0A8771A075FBA00C552F1 /* HDHexagonNode.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HDHexagonNode.m; sourceTree = "<group>"; };
 		38C67CD51A0AB8D80038526C /* HDWelcomeViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HDWelcomeViewController.h; sourceTree = "<group>"; };
@@ -135,8 +132,8 @@
 		38C67CE51A0ABE820038526C /* Hexit-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Hexit-Prefix.pch"; sourceTree = "<group>"; };
 		38C67CE61A0ABF0E0038526C /* HDConstants.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HDConstants.h; sourceTree = "<group>"; };
 		38C67CE71A0ABF0E0038526C /* HDConstants.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HDConstants.m; sourceTree = "<group>"; };
-		38C67CE91A0AC21C0038526C /* HDLevelViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HDLevelViewController.h; sourceTree = "<group>"; };
-		38C67CEA1A0AC21C0038526C /* HDLevelViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HDLevelViewController.m; sourceTree = "<group>"; };
+		38C67CE91A0AC21C0038526C /* HDMapViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HDMapViewController.h; sourceTree = "<group>"; };
+		38C67CEA1A0AC21C0038526C /* HDMapViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HDMapViewController.m; sourceTree = "<group>"; };
 		38C67CEC1A0ACE040038526C /* Grid-2.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = "Grid-2.json"; sourceTree = "<group>"; };
 		38C67CEE1A0ACE0C0038526C /* Grid-3.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = "Grid-3.json"; sourceTree = "<group>"; };
 		38C67CF01A0ACE150038526C /* Grid-4.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = "Grid-4.json"; sourceTree = "<group>"; };
@@ -208,10 +205,9 @@
 		38C0A8351A07251600C552F1 = {
 			isa = PBXGroup;
 			children = (
-				38521F391A18964900484830 /* Tile.png */,
+				385600981A1E013900830ED7 /* ToggleMenuButton.png */,
 				38521F291A1880EF00484830 /* BlueHeartFill.png */,
 				38521F2A1A1880EF00484830 /* BlueHeartStroke.png */,
-				38521F271A187F4400484830 /* BounceButton.png */,
 				38C0A8401A07251700C552F1 /* HexitSpriteKit */,
 				38C0A85A1A07251700C552F1 /* HexitSpriteKitTests */,
 				38C0A8671A07252E00C552F1 /* Frameworks */,
@@ -309,8 +305,8 @@
 			children = (
 				38C67CD51A0AB8D80038526C /* HDWelcomeViewController.h */,
 				38C67CD61A0AB8D80038526C /* HDWelcomeViewController.m */,
-				38C67CE91A0AC21C0038526C /* HDLevelViewController.h */,
-				38C67CEA1A0AC21C0038526C /* HDLevelViewController.m */,
+				38C67CE91A0AC21C0038526C /* HDMapViewController.h */,
+				38C67CEA1A0AC21C0038526C /* HDMapViewController.m */,
 				38CA40211A1482CE0024D6BF /* Game/SideMenu */,
 			);
 			name = Controller;
@@ -319,16 +315,14 @@
 		38C67CD21A0A29E70038526C /* Views */ = {
 			isa = PBXGroup;
 			children = (
-				38521F131A17044400484830 /* HDHexagonView.h */,
-				38521F141A17044400484830 /* HDHexagonView.m */,
-				3836985E1A168B8A007BB7B0 /* HDMapScrollView.h */,
-				3836985F1A168B8A007BB7B0 /* HDMapScrollView.m */,
 				38C0A8761A075FBA00C552F1 /* HDHexagonNode.h */,
 				38C0A8771A075FBA00C552F1 /* HDHexagonNode.m */,
 				38521F3B1A19A20600484830 /* HDSpriteNode.h */,
 				38521F3C1A19A20600484830 /* HDSpriteNode.m */,
 				38C0A86C1A0727FA00C552F1 /* HDScene.h */,
 				38C0A86D1A0727FA00C552F1 /* HDScene.m */,
+				389144151A1F0063004D08EA /* HDMapScene.h */,
+				389144161A1F0063004D08EA /* HDMapScene.m */,
 			);
 			name = Views;
 			sourceTree = "<group>";
@@ -339,14 +333,14 @@
 				38C67D291A0AEA550038526C /* Map */,
 				38C67D2A1A0AEBD50038526C /* HDGameCenterManager.h */,
 				38C67D2B1A0AEBD50038526C /* HDGameCenterManager.m */,
-				38C67CE11A0ABD050038526C /* HDHelper.h */,
-				38C67CE21A0ABD050038526C /* HDHelper.m */,
-				38C0A8731A0758AC00C552F1 /* HDLevels.h */,
-				38C0A8741A0758AC00C552F1 /* HDLevels.m */,
-				38F5A6BB1A08014F0036750A /* HDHexagon.h */,
-				38F5A6BC1A08014F0036750A /* HDHexagon.m */,
 				38FDF9B31A1BEF1F005CCFE1 /* HDSettingsManager.h */,
 				38FDF9B41A1BEF1F005CCFE1 /* HDSettingsManager.m */,
+				38C0A8731A0758AC00C552F1 /* HDGridManager.h */,
+				38C0A8741A0758AC00C552F1 /* HDGridManager.m */,
+				38F5A6BB1A08014F0036750A /* HDHexagon.h */,
+				38F5A6BC1A08014F0036750A /* HDHexagon.m */,
+				38C67CE11A0ABD050038526C /* HDHelper.h */,
+				38C67CE21A0ABD050038526C /* HDHelper.m */,
 			);
 			name = Model;
 			sourceTree = "<group>";
@@ -384,6 +378,7 @@
 				38C67D201A0AE3FD0038526C /* Grid-28.json */,
 				38C67D221A0AE4060038526C /* Grid-29.json */,
 				38C67D241A0AE4100038526C /* Grid-30.json */,
+				389144181A1F02E2004D08EA /* MapGrid.json */,
 			);
 			name = Levels;
 			sourceTree = "<group>";
@@ -498,9 +493,9 @@
 				38C67D151A0AE3B80038526C /* Grid-22.json in Resources */,
 				38C67CED1A0ACE040038526C /* Grid-2.json in Resources */,
 				38C67CFB1A0ACE3C0038526C /* Grid-9.json in Resources */,
-				38521F281A187F4400484830 /* BounceButton.png in Resources */,
 				38C67D211A0AE3FD0038526C /* Grid-28.json in Resources */,
 				38C67CF11A0ACE150038526C /* Grid-4.json in Resources */,
+				385600991A1E013900830ED7 /* ToggleMenuButton.png in Resources */,
 				38C67CEF1A0ACE0C0038526C /* Grid-3.json in Resources */,
 				383698621A16920B007BB7B0 /* Hexagon_Blue.png in Resources */,
 				38C67CF91A0ACE340038526C /* Grid-8.json in Resources */,
@@ -508,6 +503,7 @@
 				38521F2C1A1880EF00484830 /* BlueHeartStroke.png in Resources */,
 				38C67CFF1A0ACE4D0038526C /* Grid-11.json in Resources */,
 				38C67D1F1A0AE3F30038526C /* Grid-27.json in Resources */,
+				389144191A1F02E2004D08EA /* MapGrid.json in Resources */,
 				38C67CF31A0ACE1D0038526C /* Grid-5.json in Resources */,
 				387D7CA01A12B58800670846 /* _ToggleOnButton.png in Resources */,
 				38C67D111A0AE3A90038526C /* Grid-20.json in Resources */,
@@ -523,7 +519,6 @@
 				38C67D191A0AE3C90038526C /* Grid-24.json in Resources */,
 				38C67CF71A0ACE2C0038526C /* Grid-7.json in Resources */,
 				38C67CF51A0ACE230038526C /* Grid-6.json in Resources */,
-				38521F3A1A18964900484830 /* Tile.png in Resources */,
 				38C0A84F1A07251700C552F1 /* Images.xcassets in Resources */,
 				38C67D131A0AE3B00038526C /* Grid-21.json in Resources */,
 				38C67D011A0ACE530038526C /* Grid-12.json in Resources */,
@@ -559,8 +554,7 @@
 				38C0A8781A075FBA00C552F1 /* HDHexagonNode.m in Sources */,
 				38C67CD71A0AB8D80038526C /* HDWelcomeViewController.m in Sources */,
 				38C0A8471A07251700C552F1 /* AppDelegate.m in Sources */,
-				38C0A8751A0758AC00C552F1 /* HDLevels.m in Sources */,
-				38521F151A17044400484830 /* HDHexagonView.m in Sources */,
+				38C0A8751A0758AC00C552F1 /* HDGridManager.m in Sources */,
 				38C0A86E1A0727FA00C552F1 /* HDScene.m in Sources */,
 				38FDF9B51A1BEF1F005CCFE1 /* HDSettingsManager.m in Sources */,
 				38C67CDD1A0AB9350038526C /* UIColor+FlatColors.m in Sources */,
@@ -570,10 +564,10 @@
 				38C0A8721A07348400C552F1 /* SKColor+HDColor.m in Sources */,
 				38F5A6BD1A08014F0036750A /* HDHexagon.m in Sources */,
 				38C67CE31A0ABD050038526C /* HDHelper.m in Sources */,
+				389144171A1F0063004D08EA /* HDMapScene.m in Sources */,
 				38C67D281A0AEA490038526C /* HDMapManager.m in Sources */,
-				383698601A168B8A007BB7B0 /* HDMapScrollView.m in Sources */,
 				38521F3D1A19A20600484830 /* HDSpriteNode.m in Sources */,
-				38C67CEB1A0AC21C0038526C /* HDLevelViewController.m in Sources */,
+				38C67CEB1A0AC21C0038526C /* HDMapViewController.m in Sources */,
 				38CA40241A1485380024D6BF /* HDRearViewController.m in Sources */,
 				38F7CC6E1A0D6FBE002E7C7F /* UIImage+HDImage.m in Sources */,
 				38C67D2C1A0AEBD50038526C /* HDGameCenterManager.m in Sources */,

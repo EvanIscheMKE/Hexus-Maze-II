@@ -13,12 +13,12 @@
 #import "HDWelcomeViewController.h"
 #import "HDRearViewController.h"
 #import "HDContainerViewController.h"
-#import "HDLevelViewController.h"
+#import "HDMapViewController.h"
 
 @interface AppDelegate ()<HDContainerViewControllerDelegate, UIAlertViewDelegate>
 @property (nonatomic, strong) HDContainerViewController *containerController;
 @property (nonatomic, strong) HDRearViewController *rearViewController;
-@property (nonatomic, strong) HDLevelViewController *frontViewController;
+@property (nonatomic, strong) HDMapViewController *frontViewController;
 @end
 
 @implementation AppDelegate {
@@ -39,7 +39,7 @@
 
 - (void)presentLevelViewController
 {
-    self.frontViewController = [[HDLevelViewController alloc] init];
+    self.frontViewController = [[HDMapViewController alloc] init];
     
     self.rearViewController  = [[HDRearViewController alloc] init];
     
@@ -98,9 +98,9 @@
                      toController:(UIViewController *)toController
 {
     NSLog(@"FROM: %@, TO: %@", NSStringFromClass([fromController class]), NSStringFromClass([toController class]));
-    if ([fromController isKindOfClass:[HDLevelViewController class]] && [toController isKindOfClass:[HDGameViewController class]]) {
+    if ([fromController isKindOfClass:[HDMapViewController class]] && [toController isKindOfClass:[HDGameViewController class]]) {
         [(HDRearViewController *)self.containerController.rearViewController showGameInterfaceAnimated:YES];
-    } else if ([toController isKindOfClass:[HDLevelViewController class]] && [fromController isKindOfClass:[HDGameViewController class]]) {
+    } else if ([toController isKindOfClass:[HDMapViewController class]] && [fromController isKindOfClass:[HDGameViewController class]]) {
         [(HDRearViewController *)self.containerController.rearViewController hideGameInterfaceAnimated:YES];
     }
 }

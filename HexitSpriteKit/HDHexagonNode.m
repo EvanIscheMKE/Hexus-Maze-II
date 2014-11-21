@@ -6,6 +6,7 @@
 //  Copyright (c) 2014 Evan William Ische. All rights reserved.
 //
 
+#import "HDHelper.h"
 #import "HDHexagonNode.h"
 #import "SKColor+HDColor.h"
 
@@ -25,18 +26,19 @@
 
 - (void)updateLabelWithText:(NSString *)text
 {
-    [self updateLabelWithText:text color:[SKColor flatMidnightBlueColor]];
+    [self updateLabelWithText:text color:[SKColor flatEmeraldColor]];
 }
 
 - (void)updateLabelWithText:(NSString *)text color:(UIColor *)color
 {
-    if (!self.label) {
+    if (!self.label)
+    {
          self.label = [SKLabelNode labelNodeWithText:text];
         [self.label setHorizontalAlignmentMode:SKLabelHorizontalAlignmentModeCenter];
         [self.label setVerticalAlignmentMode:SKLabelVerticalAlignmentModeCenter];
-        [self.label setPosition:CGPointMake(CGRectGetWidth(self.frame) / 2, CGRectGetHeight(self.frame) / 2)];
-        [self.label setFontName:@"GillSans"];
-        [self.label setFontSize:20.0f];
+        [self.label setPosition:CGPointMake(0.0f, 0.0f)];
+        [self.label setFontName:@"GillSans-Light"];
+        [self.label setFontSize:CGRectGetHeight(self.frame) / 3];
         [self.label setFontColor:color];
         [self addChild:self.label];
     }

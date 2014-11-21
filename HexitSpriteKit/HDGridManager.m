@@ -6,29 +6,37 @@
 //  Copyright (c) 2014 Evan William Ische. All rights reserved.
 //
 
-#import "HDLevels.h"
+#import "HDGridManager.h"
 #import "HDLevel.h"
 #import "HDHexagon.h"
 #import "HDHexagonNode.h"
 
 typedef void(^CallBackBlock)(NSDictionary *dictionary, NSError *error);
-@implementation HDLevels {
+
+@implementation HDGridManager {
     NSMutableDictionary *_levelCache;
     NSMutableArray *_hexagons;
     HDHexagon *_hexagon[18][9];
     NSNumber *_grid[18][9];
 }
 
-- (id)initWithLevel:(NSInteger)level
+- (instancetype)initWithLevelNumber:(NSInteger)levelNumber
+{
+    return [self initWithLevel:LEVEL_URL(levelNumber)];
+}
+
+- (instancetype)initWithLevel:(NSString *)level
 {
     if (self = [super init]) {
         
         _levelCache = [NSMutableDictionary dictionary];
         
-        NSDictionary *grid = [self _levelWithFileName:LEVEL_URL(level)];
+        NSDictionary *grid = [self _levelWithFileName:level];
         
         for (int row = 0; row < NumberOfRows; row++) {
+            
             NSArray *rows = [grid[hdHexGridKey] objectAtIndex:row];
+            
             for (int column = 0; column < NumberOfColumns; column++) {
                 
                 NSNumber *columns = [rows objectAtIndex:column];
@@ -36,6 +44,7 @@ typedef void(^CallBackBlock)(NSDictionary *dictionary, NSError *error);
                 NSInteger tileRow = NumberOfRows - row - 1;
                 
                 if ([columns integerValue] != 0) {
+                    NSLog(@"CALLED");
                     _grid[tileRow][column] = columns;
                 }
             }
@@ -59,7 +68,7 @@ typedef void(^CallBackBlock)(NSDictionary *dictionary, NSError *error);
                     
                     HDHexagon *cookie = [self _makeHexagonAtRow:row column:column];
                     [_hexagons addObject:cookie];
-                    
+                    NSLog(@"CALLEd");
                     _hexagon[row][column] = cookie;
                 }
             }

@@ -12,6 +12,6 @@
 
 @end
 
-@interface HDLevelViewController : UIViewController
+@interface HDMapViewController : UIViewController
 
 @end

@@ -25,31 +25,31 @@
     UIImage *textureImage;
     switch (type) {
         case HDHexagonTypeRegular:
-            textureImage = [self _imageWithSize:self.size direction:direction];
+            textureImage = [self _imageWithSize:self.size direction:direction type:type];
             break;
         case HDHexagonTypeStarter:
-            textureImage = [self _imageWithSize:self.size direction:direction];
+            textureImage = [self _imageWithSize:self.size direction:direction type:type];
             break;
         case HDHexagonTypeDouble:
-            textureImage = [self _imageWithSize:self.size direction:direction];
+            textureImage = [self _imageWithSize:self.size direction:direction type:type];
             break;
         case HDHexagonTypeTriple:
-            textureImage = [self _imageWithSize:self.size direction:direction];
+            textureImage = [self _imageWithSize:self.size direction:direction type:type];
             break;
         case HDHexagonTypeOne:
-            textureImage = [self _imageWithSize:self.size direction:direction];
+            textureImage = [self _imageWithSize:self.size direction:direction type:type];
             break;
         case HDHexagonTypeTwo:
-            textureImage = [self _imageWithSize:self.size direction:direction];
+            textureImage = [self _imageWithSize:self.size direction:direction type:type];
             break;
         case HDHexagonTypeThree:
-            textureImage = [self _imageWithSize:self.size direction:direction];
+            textureImage = [self _imageWithSize:self.size direction:direction type:type];
             break;
         case HDHexagonTypeFour:
-            textureImage = [self _imageWithSize:self.size direction:direction];
+            textureImage = [self _imageWithSize:self.size direction:direction type:type];
             break;
         case HDHexagonTypeFive:
-            textureImage = [self _imageWithSize:self.size direction:direction];
+            textureImage = [self _imageWithSize:self.size direction:direction type:type];
             break;
         case HDHexagonTypeNone:
             [self setTexture:[SKTexture textureWithImage:[self _plainTransparentBackground]]];
@@ -68,14 +68,47 @@
     return circle;
 }
 
-- (UIImage *)_imageWithSize:(CGSize)size direction:(HDSpriteDirection)direction
+- (UIImage *)_imageWithSize:(CGSize)size direction:(HDSpriteDirection)direction type:(HDHexagonType)type
 {
     CGRect imageFrame = CGRectMake(0.0f, 0.0f, size.width, size.height);
     
     UIGraphicsBeginImageContextWithOptions(size, NO, [[UIScreen mainScreen] scale]);
     
-    [[UIColor flatPeterRiverColor] setStroke];
-    [[UIColor flatPeterRiverColor] setFill];
+    
+    switch (type) {
+        case HDHexagonTypeRegular:
+            [[UIColor flatPeterRiverColor] setStroke];
+            [[UIColor flatPeterRiverColor] setFill];
+            break;
+        case HDHexagonTypeDouble:
+            [[UIColor flatTurquoiseColor] setStroke];
+            [[UIColor flatTurquoiseColor] setFill];
+            break;
+        case HDHexagonTypeTriple:
+            [[UIColor flatSilverColor] setStroke];
+            [[UIColor flatSilverColor] setFill];
+            break;
+        case HDHexagonTypeOne:
+            [[UIColor flatEmeraldColor] setStroke];
+            [[UIColor flatEmeraldColor] setFill];
+            break;
+        case HDHexagonTypeTwo:
+            [[UIColor flatEmeraldColor] setStroke];
+            [[UIColor flatEmeraldColor] setFill];
+            break;
+        case HDHexagonTypeThree:
+            [[UIColor flatEmeraldColor] setStroke];
+            [[UIColor flatEmeraldColor] setFill];
+            break;
+        case HDHexagonTypeFour:
+            [[UIColor flatEmeraldColor] setStroke];
+            [[UIColor flatEmeraldColor] setFill];
+            break;
+        case HDHexagonTypeFive:
+            [[UIColor flatEmeraldColor] setStroke];
+            [[UIColor flatEmeraldColor] setFill];
+           break;
+    }
     
     UIBezierPath *hexagon = [self bezierHexagonInFrame:CGRectInset(imageFrame, 20.0f, 20.0f)];
     [hexagon fill];
@@ -113,7 +146,7 @@
             break;
     }
     
-    [line setLineWidth:2];
+    [line setLineWidth:3];
     [line stroke];
     
     UIImage *circle = UIGraphicsGetImageFromCurrentImageContext();

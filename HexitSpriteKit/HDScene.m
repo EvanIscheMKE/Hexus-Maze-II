@@ -7,13 +7,14 @@
 //
 
 #import "HDScene.h"
+#import "HDHelper.h"
 #import "HDHexagon.h"
 #import "SKColor+HDColor.h"
 #import "HDSpriteNode.h"
 #import "NSMutableArray+UniqueAdditions.h"
 #import "UIImage+HDImage.h"
 #import "HDHexagonNode.h"
-#import "HDLevels.h"
+#import "HDGridManager.h"
 
 static const CGFloat kTileHeightInsetMultiplier = .845f;
 
@@ -33,6 +34,9 @@ static const CGFloat kTileHeightInsetMultiplier = .845f;
     NSMutableArray *_selectedHexagons;
     NSUInteger _finishedTileCount;
     CGFloat _kTileSize;
+    
+    NSUInteger _startingTileCount;
+    NSInteger _startingTilesUsed;
     
 }
 
@@ -71,14 +75,12 @@ static const CGFloat kTileHeightInsetMultiplier = .845f;
         
         for (NSInteger column = 0; column < NumberOfColumns; column++) {
             
-            if ([_levels hexagonTypeAtRow:row column:column]) {
+            if ([self.gridManager hexagonTypeAtRow:row column:column]) {
                 HDSpriteNode *tileNode = [HDSpriteNode spriteNodeWithColor:[UIColor clearColor]
                                                                       size:CGSizeMake(_kTileSize + 6.0f, _kTileSize + 6.0f)];
                 [tileNode setRow:row];
                 [tileNode setColumn:column];
-                [tileNode setAnchorPoint:CGPointMake(0.0, 0.0)];
-                [tileNode setPosition:CGPointMake([self pointForColumn:column row:row].x - 3.0f,
-                                                  [self pointForColumn:column row:row].y - 3.0f)];
+                [tileNode setPosition:[self pointForColumn:column row:row]];
                 [self.tileLayer addChild:tileNode];
             }
         }
@@ -87,46 +89,37 @@ static const CGFloat kTileHeightInsetMultiplier = .845f;
 
 - (void)layoutNodesWithGrid:(NSArray *)grid
 {
+    _startingTileCount = 0;
+    _startingTilesUsed = 0;
+    
     _finishedTileCount = grid.count;
     
     _hexagons = [NSArray arrayWithArray:grid];
     
     for (HDHexagon *hexagon in grid) {
         
-        CGPathRef pathRef = [[self hexagonPathForBounds:CGRectMake(0.0f, 0.0f, _kTileSize, _kTileSize)] CGPath];
+        CGPathRef pathRef = [HDHelper hexagonPathForBounds:CGRectMake(0.0f, 0.0f, _kTileSize, _kTileSize)];
         
-        HDHexagonNode *shapeNode = [HDHexagonNode shapeNodeWithPath:pathRef];
+        HDHexagonNode *shapeNode = [HDHexagonNode shapeNodeWithPath:pathRef centered:YES];
         [shapeNode setPosition:[self pointForColumn:hexagon.column row:hexagon.row]];
         [hexagon setDelegate:self];
         [hexagon setNode:shapeNode];
-        [hexagon setType:(int)[self.levels hexagonTypeAtRow:hexagon.row column:hexagon.column]];
+        [hexagon setType:(int)[self.gridManager hexagonTypeAtRow:hexagon.row column:hexagon.column]];
         [self.gameLayer addChild:shapeNode];
         
+        if (hexagon.type == HDHexagonTypeStarter) {
+            _startingTileCount++;
+        }
     }
 }
 
 - (CGPoint)pointForColumn:(NSInteger)column row:(NSInteger)row
 {
-    const CGFloat kOriginY = ((row * (_kTileSize * kTileHeightInsetMultiplier)) - (_kTileSize / 2));
-    const CGFloat kOriginX = ((column * _kTileSize) - (_kTileSize / 2));
+    const CGFloat kOriginY = ((row * (_kTileSize * kTileHeightInsetMultiplier)) );
+    const CGFloat kOriginX = ((column * _kTileSize) );
     const CGFloat kAlternateOffset = (row % 2 == 0) ? _kTileSize / 2.f : 0.0f;
     
     return CGPointMake(kAlternateOffset + kOriginX, kOriginY);
-}
-
-- (UIBezierPath *)hexagonPathForBounds:(CGRect)bounds
-{
-    const CGFloat kPadding = CGRectGetWidth(bounds) / 8 / 2;
-    UIBezierPath *_path = [UIBezierPath bezierPath];
-    [_path moveToPoint:CGPointMake(CGRectGetWidth(bounds) / 2, 0)];
-    [_path addLineToPoint:CGPointMake(CGRectGetWidth(bounds) - kPadding, CGRectGetHeight(bounds) / 4)];
-    [_path addLineToPoint:CGPointMake(CGRectGetWidth(bounds) - kPadding, CGRectGetHeight(bounds) * 3 / 4)];
-    [_path addLineToPoint:CGPointMake(CGRectGetWidth(bounds) / 2, CGRectGetHeight(bounds))];
-    [_path addLineToPoint:CGPointMake(kPadding, CGRectGetHeight(bounds) * 3 / 4)];
-    [_path addLineToPoint:CGPointMake(kPadding, CGRectGetHeight(bounds) / 4)];
-    [_path closePath];
-    
-    return _path;
 }
 
 #pragma mark -
@@ -154,31 +147,54 @@ static const CGFloat kTileHeightInsetMultiplier = .845f;
     UITouch *touch   = [touches anyObject];
     CGPoint location = [touch locationInNode:self];
     
-    HDHexagon *hexagon = [self findHexagonFromPoint:location];
-    
+    HDHexagon *hexagon = [self findHexagonFromPoint:location];    
     if ([self _validateNextMoveToHexagon:hexagon fromHexagon:[_selectedHexagons lastObject]]) {
         [self.gameLayer runAction:self.selectedSound];
         [_selectedHexagons addUniqueObject:hexagon];
         [hexagon recievedTouches];
 
-        if ([self _checkIfAllHexagonsAreSelected] && [self.delegate respondsToSelector:@selector(gameOverWithCompletion:)]) {
-            [self.delegate gameOverWithCompletion:YES];
-        }
+        [self _checkGameStatusAfterSelectingTile:hexagon];
     }
 }
 
 #pragma mark - 
 #pragma mark - Private
 
+- (void)_checkGameStatusAfterSelectingTile:(HDHexagon *)hexagon
+{
+    if ([self _checkIfAllHexagonsAreSelected]) {
+        [self _performCompletionAnimation:^{
+            NSLog(@"WON");
+            
+            SKSpriteNode *sprite = [SKSpriteNode spriteNodeWithColor:[[SKColor flatPeterRiverColor] colorWithAlphaComponent:.25f]
+                                                                size:CGSizeMake(self.frame.size.width, self.frame.size.height)];
+            [sprite setAnchorPoint:CGPointZero];
+            [self addChild:sprite];
+            
+        }];
+    } else if (![[self _possibleMovesForHexagon:hexagon] count] && _startingTilesUsed == ( _startingTileCount - 1 )){
+        [self _performCompletionAnimation:^{
+            NSLog(@"LOST");
+            
+            SKSpriteNode *sprite = [SKSpriteNode spriteNodeWithColor:[[SKColor flatPeterRiverColor] colorWithAlphaComponent:.25f]
+                                                                size:CGSizeMake(self.frame.size.width, self.frame.size.height)];
+            [sprite setAnchorPoint:CGPointZero];
+            [self addChild:sprite];
+            
+        }];
+    } else if (![[self _possibleMovesForHexagon:hexagon] count]) {
+        _startingTilesUsed++;
+    }
+}
 
 - (void)_performEnteranceAnimation:(dispatch_block_t)handler
 {
-    
+    handler();
 }
 
 - (void)_performCompletionAnimation:(dispatch_block_t)handler
 {
-    
+    handler();
 }
 
 - (void)_preloadSounds
