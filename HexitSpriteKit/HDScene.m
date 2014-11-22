@@ -15,6 +15,7 @@
 #import "UIImage+HDImage.h"
 #import "HDHexagonNode.h"
 #import "HDGridManager.h"
+#import "HDAlertNode.h"
 
 static const CGFloat kTileHeightInsetMultiplier = .845f;
 
@@ -166,22 +167,24 @@ static const CGFloat kTileHeightInsetMultiplier = .845f;
         [self _performCompletionAnimation:^{
             NSLog(@"WON");
             
-            SKSpriteNode *sprite = [SKSpriteNode spriteNodeWithColor:[[SKColor flatPeterRiverColor] colorWithAlphaComponent:.25f]
+            SKSpriteNode *sprite = [SKSpriteNode spriteNodeWithColor:[[SKColor flatMidnightBlueColor] colorWithAlphaComponent:.25f]
                                                                 size:CGSizeMake(self.frame.size.width, self.frame.size.height)];
             [sprite setAnchorPoint:CGPointZero];
             [self addChild:sprite];
             
         }];
     } else if (![[self _possibleMovesForHexagon:hexagon] count] && _startingTilesUsed == ( _startingTileCount - 1 )){
+        
         [self _performCompletionAnimation:^{
-            NSLog(@"LOST");
             
-            SKSpriteNode *sprite = [SKSpriteNode spriteNodeWithColor:[[SKColor flatPeterRiverColor] colorWithAlphaComponent:.25f]
-                                                                size:CGSizeMake(self.frame.size.width, self.frame.size.height)];
-            [sprite setAnchorPoint:CGPointZero];
-            [self addChild:sprite];
+            HDAlertNode *alertNode = [HDAlertNode spriteNodeWithColor:[SKColor flatMidnightBlueColor] size:self.frame.size];
+            [alertNode setPosition:CGPointMake(CGRectGetWidth(self.frame) / 2, CGRectGetHeight(self.frame) / 2)];
+            [self addChild:alertNode];
+            
+            [alertNode showAlertNode];
             
         }];
+        
     } else if (![[self _possibleMovesForHexagon:hexagon] count]) {
         _startingTilesUsed++;
     }

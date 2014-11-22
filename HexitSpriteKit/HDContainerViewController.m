@@ -8,7 +8,6 @@
 
 #import "HDContainerViewController.h"
 #import "HDGameViewController.h"
-#import "HDMapViewController.h"
 #import "UIColor+FlatColors.h"
 #import "HDHexagon.h"
 #import "HDHelper.h"
@@ -158,11 +157,11 @@ static CGFloat const kAnimationOffsetX = 180.0f;
 - (void)_layoutNavigationButtons
 {
      self.toggleButton = [UIButton buttonWithType:UIButtonTypeCustom];
-    [self.toggleButton setImage:[UIImage imageNamed: @"ToggleMenuButton"] forState:UIControlStateNormal];
+    [self.toggleButton setImage:[UIImage imageNamed: @"TOGGLEE"] forState:UIControlStateNormal];
     [self.toggleButton addTarget:self action:@selector(_toggleHDMenuViewController) forControlEvents:UIControlEventTouchUpInside];
     
      self.shareButton = [UIButton buttonWithType:UIButtonTypeCustom];
-    [self.shareButton setImage:[UIImage imageNamed: @"ToggleMenuButton"] forState:UIControlStateNormal];
+    [self.shareButton setImage:[UIImage imageNamed: @"SHAREE"] forState:UIControlStateNormal];
     [self.shareButton addTarget:self action:@selector(_presentShareViewController) forControlEvents:UIControlEventTouchUpInside];
     
     for (UIButton *button in @[self.toggleButton, self.shareButton]) {

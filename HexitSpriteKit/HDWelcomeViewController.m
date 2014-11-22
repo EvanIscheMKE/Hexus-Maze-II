@@ -20,14 +20,14 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    [self.view setBackgroundColor:[UIColor whiteColor]];
+    [self.view setBackgroundColor:[UIColor flatMidnightBlueColor]];
     
     CGSize kTitleSize = [HDHelper sizeFromWidth:CGRectGetWidth(self.view.bounds) font:GILLSANS_LIGHT(90.0f) text:@"HEXUS"];
     
     CGRect rect = CGRectMake(CGRectGetMidX(self.view.bounds) - (kTitleSize.width / 2), 160.0f, kTitleSize.width, kTitleSize.height);
     UILabel *title = [[UILabel alloc] initWithFrame:rect];
     [title setTextAlignment:NSTextAlignmentCenter];
-    [title setTextColor:[UIColor flatPeterRiverColor]];
+    [title setTextColor:[UIColor whiteColor]];
     [title setText:@"HEXUS"];
     [title setFont:GILLSANS_LIGHT(90.0f)];
     [self.view addSubview:title];
@@ -40,7 +40,7 @@
     [[start titleLabel] setTextAlignment:NSTextAlignmentCenter];
     [[start titleLabel] setFont:GILLSANS_LIGHT(22.0f)];
     [start setTitle:@"Start" forState:UIControlStateNormal];
-    [start setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
+    [start setTitleColor:[UIColor flatMidnightBlueColor] forState:UIControlStateNormal];
     [start.layer setCornerRadius:20.0f];
     [self.view addSubview:start];
 }
