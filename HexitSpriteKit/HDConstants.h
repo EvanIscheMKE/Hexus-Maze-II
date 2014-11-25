@@ -28,11 +28,12 @@ extern NSString * const hdVibrationNotification;
 extern NSString * const hdRestartNotificaiton;
 
 //UserDefault Keys
-extern NSString * const hdDefaultLevelKey;
-extern NSString * const hdFirstRunKey;
-extern NSString * const hdEffectsKey;
-extern NSString * const hdSoundkey;
-extern NSString * const hdVibrationKey;
+extern NSString * const HDDefaultLevelKey;
+extern NSString * const HDGuideKey;
+extern NSString * const HDFirstRunKey;
+extern NSString * const HDEffectsKey;
+extern NSString * const HDSoundkey;
+extern NSString * const HDVibrationKey;
 extern NSString * const HDRemainingLivesKey;
 extern NSString * const HDRemainingTime;
 extern NSString * const HDBackgroundDate;

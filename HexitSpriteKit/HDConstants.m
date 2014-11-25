@@ -17,14 +17,15 @@ NSString * const hdHexGridKey = @"grid";
 NSString * const hdHexZoomKey = @"zoom";
 
 // UserDefault Keys
-NSString * const hdDefaultLevelKey   = @"defaultLevels";
-NSString * const hdFirstRunKey       = @"firstRunKey";
+NSString * const HDDefaultLevelKey   = @"defaultLevels";
+NSString * const HDFirstRunKey       = @"firstRunKey";
 NSString * const HDRemainingLivesKey = @"livesKey";
+NSString * const HDGuideKey          = @"guide";
 NSString * const HDRemainingTime     = @"remainingTimeUntilNextLife";
 NSString * const HDBackgroundDate    = @"BackgroundDate";
-NSString * const hdEffectsKey        = @"effectsKey";
-NSString * const hdSoundkey          = @"soundKey";
-NSString * const hdVibrationKey      = @"vibrationKey";
+NSString * const HDEffectsKey        = @"effectsKey";
+NSString * const HDSoundkey          = @"soundKey";
+NSString * const HDVibrationKey      = @"vibrationKey";
 
 // Sound Keys
 NSString * const hdBubbleSoundKey = @"104947__glaneur-de-sons__bubble-8.wav";

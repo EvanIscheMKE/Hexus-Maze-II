@@ -75,40 +75,44 @@
     UIGraphicsBeginImageContextWithOptions(size, NO, [[UIScreen mainScreen] scale]);
     
     
-    switch (type) {
-        case HDHexagonTypeRegular:
-            [[UIColor flatPeterRiverColor] setStroke];
-            [[UIColor flatPeterRiverColor] setFill];
-            break;
-        case HDHexagonTypeDouble:
-            [[UIColor flatTurquoiseColor] setStroke];
-            [[UIColor flatTurquoiseColor] setFill];
-            break;
-        case HDHexagonTypeTriple:
-            [[UIColor flatSilverColor] setStroke];
-            [[UIColor flatSilverColor] setFill];
-            break;
-        case HDHexagonTypeOne:
-            [[UIColor flatEmeraldColor] setStroke];
-            [[UIColor flatEmeraldColor] setFill];
-            break;
-        case HDHexagonTypeTwo:
-            [[UIColor flatEmeraldColor] setStroke];
-            [[UIColor flatEmeraldColor] setFill];
-            break;
-        case HDHexagonTypeThree:
-            [[UIColor flatEmeraldColor] setStroke];
-            [[UIColor flatEmeraldColor] setFill];
-            break;
-        case HDHexagonTypeFour:
-            [[UIColor flatEmeraldColor] setStroke];
-            [[UIColor flatEmeraldColor] setFill];
-            break;
-        case HDHexagonTypeFive:
-            [[UIColor flatEmeraldColor] setStroke];
-            [[UIColor flatEmeraldColor] setFill];
-           break;
-    }
+//    switch (type) {
+//        case HDHexagonTypeStarter:
+             [[UIColor whiteColor] setStroke];
+             [[UIColor whiteColor] setFill];
+//             break;
+//        case HDHexagonTypeRegular:
+//            [[UIColor flatPeterRiverColor] setStroke];
+//            [[UIColor flatPeterRiverColor] setFill];
+//            break;
+//        case HDHexagonTypeDouble:
+//            [[UIColor flatTurquoiseColor] setStroke];
+//            [[UIColor flatTurquoiseColor] setFill];
+//            break;
+//        case HDHexagonTypeTriple:
+//            [[UIColor flatSilverColor] setStroke];
+//            [[UIColor flatSilverColor] setFill];
+//            break;
+//        case HDHexagonTypeOne:
+//            [[UIColor flatEmeraldColor] setStroke];
+//            [[UIColor flatEmeraldColor] setFill];
+//            break;
+//        case HDHexagonTypeTwo:
+//            [[UIColor flatEmeraldColor] setStroke];
+//            [[UIColor flatEmeraldColor] setFill];
+//            break;
+//        case HDHexagonTypeThree:
+//            [[UIColor flatEmeraldColor] setStroke];
+//            [[UIColor flatEmeraldColor] setFill];
+//            break;
+//        case HDHexagonTypeFour:
+//            [[UIColor flatEmeraldColor] setStroke];
+//            [[UIColor flatEmeraldColor] setFill];
+//            break;
+//        case HDHexagonTypeFive:
+//            [[UIColor flatEmeraldColor] setStroke];
+//            [[UIColor flatEmeraldColor] setFill];
+//           break;
+//    }
     
     UIBezierPath *hexagon = [self bezierHexagonInFrame:CGRectInset(imageFrame, 20.0f, 20.0f)];
     [hexagon fill];

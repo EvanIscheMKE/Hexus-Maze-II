@@ -31,7 +31,7 @@
 @end
 
 @protocol HDContainerViewControllerDelegate <NSObject>
-@optional
+@required
 
 - (void)container:(HDContainerViewController *)container
  transitionedFromController:(UIViewController *)fromController

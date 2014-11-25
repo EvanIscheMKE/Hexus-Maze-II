@@ -42,6 +42,21 @@ static const CGFloat kPadding = 15.0f;
     return self;
 }
 
+- (void)setCompleted:(BOOL)completed
+{
+    if (_completed == completed) {
+        return;
+    }
+    
+    _completed = completed;
+    
+    if (_completed) {
+        [self.imageView setImage:[UIImage imageNamed:@"STAR_COMPLETED.png"]];
+    } else {
+        [self.imageView setImage:[UIImage imageNamed:@"STAR_NOT_COMPLETED.png"]];
+    }
+}
+
 - (void)layoutSubviews
 {
     [super layoutSubviews];

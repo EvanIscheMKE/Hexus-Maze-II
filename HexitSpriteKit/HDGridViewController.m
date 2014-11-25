@@ -6,11 +6,18 @@
 //  Copyright (c) 2014 Evan William Ische. All rights reserved.
 //
 
+#import "HDLevel.h"
+#import "HDMapManager.h"
 #import "HDLevelViewCell.h"
 #import "UIColor+FlatColors.h"
 #import "HDGridViewController.h"
 #import "HDCollectionViewCell.h"
+#import "HDSpaceView.h"
 
+#define singularMessage [NSString stringWithFormat:@"You must first complete level 1 to unlock the Level"]
+#define pluralMessage(x)[NSString stringWithFormat:@"You must first complete levels 1 through %ld to unlock this Level",x]
+
+static NSString * const title = @"Locked";
 static NSString * const cellReuseIdentifer = @"identifier";
 
 @interface HDGridViewController ()<UICollectionViewDataSource, UICollectionViewDelegate>
@@ -20,6 +27,13 @@ static NSString * const cellReuseIdentifer = @"identifier";
 @end
 
 @implementation HDGridViewController
+
+- (void)loadView
+{
+    CGRect spaceRect = [[UIScreen mainScreen] bounds];
+    HDSpaceView *space = [[HDSpaceView alloc] initWithFrame:spaceRect];
+    [self setView:space];
+}
 
 - (instancetype)init
 {
@@ -48,7 +62,7 @@ static NSString * const cellReuseIdentifer = @"identifier";
     [self.collectionView setDataSource:self];
     [self.collectionView setPagingEnabled:YES];
     [self.collectionView setTag:5];
-    [self.collectionView setBackgroundColor:[UIColor flatMidnightBlueColor]];
+    [self.collectionView setBackgroundColor:[UIColor clearColor]];
     [self.view addSubview:self.collectionView];
 
 }
@@ -80,7 +94,14 @@ static NSString * const cellReuseIdentifer = @"identifier";
         HDLevelViewCell *cell = (HDLevelViewCell *)[collectionView dequeueReusableCellWithReuseIdentifier:levelCellReuseIdentifer
                                                                                              forIndexPath:indexPath];
         
-        [cell.indexLabel setText:[NSString stringWithFormat:@"%ld", (indexPath.item + 1) + (collectionView.tag * 15)]];
+        NSInteger levelIndex  = (indexPath.item) + (collectionView.tag * 15);
+        NSInteger levelNumber = levelIndex + 1;
+        
+        HDLevel *level = [[HDMapManager sharedManager] levels][levelIndex];
+        
+        [cell setCompleted:level.isCompleted];
+        
+        [cell.indexLabel setText:[NSString stringWithFormat:@"%ld", levelNumber]];
         switch (collectionView.tag) {
             case 0:
                 [cell setBackgroundColor:[[UIColor flatPeterRiverColor] colorWithAlphaComponent:.25f]];
@@ -106,8 +127,47 @@ static NSString * const cellReuseIdentifer = @"identifier";
 
 - (void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath
 {
-    NSInteger index = (indexPath.item + 1) + (collectionView.tag * 15);
-    [ADelegate navigateToNewLevel:index];
+    NSInteger levelIndex  = (indexPath.item) + (collectionView.tag * 15);
+    NSInteger levelNumber = levelIndex + 1;
+    
+  //  HDLevel *level = [[HDMapManager sharedManager] levels][levelIndex];
+    
+  //  NSString *message = ((indexPath.row + 1) <= 2) ? singularMessage : pluralMessage(indexPath.row);
+ 
+    
+  //  if (level.isUnlocked) {
+        [ADelegate navigateToNewLevel:levelNumber];
+//    } else {
+//        
+//        if (NSClassFromString(@"UIAlertController")) {
+//            
+//            UIAlertController *alert = [UIAlertController alertControllerWithTitle:title
+//                                                                           message:message
+//                                                                    preferredStyle:UIAlertControllerStyleAlert];
+//            
+//            UIAlertAction *okay = [UIAlertAction actionWithTitle:@"Okay" style:UIAlertActionStyleDefault handler:^(UIAlertAction * action){
+//                [alert dismissViewControllerAnimated:YES completion:nil];
+//            }];
+//            
+//            [alert addAction:okay];
+//            [self.navigationController presentViewController:alert animated:NO completion:nil];
+//            
+//        } else {
+//            
+//            UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:title
+//                                                                message:message
+//                                                               delegate:self
+//                                                      cancelButtonTitle:@"Okay"
+//                                                      otherButtonTitles:nil];
+//            [alertView show];
+//        }
+//    }
+}
+
+- (void)viewWillAppear:(BOOL)animated
+{
+    [super viewWillAppear:animated];
+    [self.collectionView reloadData];
 }
 
 - (void)didReceiveMemoryWarning {

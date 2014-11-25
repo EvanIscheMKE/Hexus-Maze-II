@@ -208,7 +208,6 @@ static CGFloat const kAnimationOffsetX = 180.0f;
     self.layoutMenuToggle = layoutToggleButtonConstraints;
     
     layoutToggleButtonConstraints();
-
 }
 
 - (void)_closeAnimated:(BOOL)animated

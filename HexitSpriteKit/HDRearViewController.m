@@ -34,18 +34,18 @@
     
     UIButton *buttonOne = [UIButton buttonWithType:UIButtonTypeCustom];
     [buttonOne setTag:0];
-    [buttonOne setBackgroundImage:[UIImage imageNamed:@"_ToggleOnButton"]  forState:UIControlStateNormal];
-    [buttonOne setBackgroundImage:[UIImage imageNamed:@"_ToggleOffButton"] forState:UIControlStateSelected];
+    [buttonOne setImage:[UIImage imageNamed:@"_ToggleOnButton"]  forState:UIControlStateNormal];
+    [buttonOne setImage:[UIImage imageNamed:@"_ToggleOffButton"] forState:UIControlStateSelected];
     
     UIButton *buttonTwo = [UIButton buttonWithType:UIButtonTypeCustom];
     [buttonTwo setTag:1];
-    [buttonTwo setBackgroundImage:[UIImage imageNamed:@"_ToggleOnButton"]  forState:UIControlStateNormal];
-    [buttonTwo setBackgroundImage:[UIImage imageNamed:@"_ToggleOffButton"] forState:UIControlStateSelected];
+    [buttonTwo setImage:[UIImage imageNamed:@"_ToggleOnButton"]  forState:UIControlStateNormal];
+    [buttonTwo setImage:[UIImage imageNamed:@"_ToggleOffButton"] forState:UIControlStateSelected];
     
     UIButton *buttonThree = [UIButton buttonWithType:UIButtonTypeCustom];
     [buttonThree setTag:2];
-    [buttonThree setBackgroundImage:[UIImage imageNamed:@"_ToggleOnButton"]  forState:UIControlStateNormal];
-    [buttonThree setBackgroundImage:[UIImage imageNamed:@"_ToggleOffButton"] forState:UIControlStateSelected];
+    [buttonThree setImage:[UIImage imageNamed:@"_ToggleOnButton"]  forState:UIControlStateNormal];
+    [buttonThree setImage:[UIImage imageNamed:@"_ToggleOffButton"] forState:UIControlStateSelected];
     
     UILabel *labelOne = [[UILabel alloc] init];
     [labelOne setText:@"Effects"];
@@ -76,20 +76,56 @@
     NSDictionary *views = NSDictionaryOfVariableBindings(buttonOne, buttonTwo, buttonThree, labelOne, labelTwo, labelThree);
     
     NSDictionary *metrics = @{ @"space"       : @(4.0f),
-                              @"buttonHeight": @(30.0f),
-                              @"labelHeight" : @(18.0f),
-                              @"margin"      : @(20.0f)};
+                               @"buttonHeight": @(30.0f),
+                               @"labelHeight" : @(18.0f),
+                               @"margin"      : @(20.0f),
+                               @"inset"       : @(10.0f),
+                               @"buttonWidth" : @(120.0f) };
     
     NSString *vfConstaint = @"V:|-[labelOne(labelHeight)]-space-[buttonOne(buttonHeight)]-margin-[labelTwo(labelHeight)]-space-[buttonTwo(buttonHeight)]-margin-[labelThree(labelHeight)]-space-[buttonThree(buttonHeight)]";
     
-    for (NSArray *constraint in @[
-                        [NSLayoutConstraint constraintsWithVisualFormat:vfConstaint                       options:0 metrics:metrics views:views],
-                        [NSLayoutConstraint constraintsWithVisualFormat:@"H:|-10-[buttonOne(120)]-10-|"   options:0 metrics:metrics views:views],
-                        [NSLayoutConstraint constraintsWithVisualFormat:@"H:|-10-[buttonTwo(120)]-10-|"   options:0 metrics:metrics views:views],
-                        [NSLayoutConstraint constraintsWithVisualFormat:@"H:|-10-[buttonThree(120)]-10-|" options:0 metrics:metrics views:views],
-                        [NSLayoutConstraint constraintsWithVisualFormat:@"H:|-10-[labelOne]"              options:0 metrics:metrics views:views],
-                        [NSLayoutConstraint constraintsWithVisualFormat:@"H:|-10-[labelTwo]"              options:0 metrics:metrics views:views],
-                        [NSLayoutConstraint constraintsWithVisualFormat:@"H:|-10-[labelThree]"            options:0 metrics:metrics views:views]]) {
+    NSArray *verticalConstraint = [NSLayoutConstraint constraintsWithVisualFormat:vfConstaint
+                                                                    options:0
+                                                                    metrics:metrics
+                                                                      views:views];
+    
+    NSArray *horizontal1Spacing = [NSLayoutConstraint constraintsWithVisualFormat:@"H:|-inset-[buttonOne(buttonWidth)]-inset-|"
+                                                                         options:0
+                                                                         metrics:metrics
+                                                                           views:views];
+    
+    NSArray *horizontal2Spacing = [NSLayoutConstraint constraintsWithVisualFormat:@"H:|-inset-[buttonTwo(buttonWidth)]-inset-|"
+                                                                          options:0
+                                                                          metrics:metrics
+                                                                            views:views];
+    
+    NSArray *horizontal3Spacing = [NSLayoutConstraint constraintsWithVisualFormat:@"H:|-inset-[buttonThree(buttonWidth)]-inset-|"
+                                                                          options:0
+                                                                          metrics:metrics
+                                                                            views:views];
+    
+    NSArray *horizontal4Spacing = [NSLayoutConstraint constraintsWithVisualFormat:@"H:|-inset-[labelOne]"
+                                                                          options:0
+                                                                          metrics:metrics
+                                                                            views:views];
+    
+    NSArray *horizontal5Spacing = [NSLayoutConstraint constraintsWithVisualFormat:@"H:|-inset-[labelTwo]"
+                                                                         options:0
+                                                                         metrics:metrics
+                                                                           views:views];
+    
+    NSArray *horizontal6Spacing = [NSLayoutConstraint constraintsWithVisualFormat:@"H:|-inset-[labelThree]"
+                                                                          options:0
+                                                                          metrics:metrics
+                                                                            views:views];
+    
+    for (NSArray *constraint in @[verticalConstraint,
+                                  horizontal1Spacing,
+                                  horizontal2Spacing,
+                                  horizontal3Spacing,
+                                  horizontal4Spacing,
+                                  horizontal5Spacing,
+                                  horizontal6Spacing]) {
         [self addConstraints:constraint];
     }
     
@@ -103,7 +139,8 @@
 @end
 
 @implementation HDRearViewController{
-    NSDictionary *_dictionary;
+    NSDictionary *_views;
+    NSDictionary *_metrics;
     NSArray *_vLC;
 }
 
@@ -118,8 +155,9 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    [self _layoutTitle];
     [self setDelegate:[HDSettingsManager sharedManager]];
-    [self _layoutSideMenuSelectors];
+    [self _layoutSideMenu];
     [self.view setBackgroundColor:[UIColor flatPeterRiverColor]];
 }
 
@@ -129,9 +167,8 @@
     // Dispose of any resources that can be recreated.
 }
 
-- (void)_layoutSideMenuSelectors
+- (void)_layoutTitle
 {
-    
     UILabel *title = [[UILabel alloc] init];
     [title setTranslatesAutoresizingMaskIntoConstraints:NO];
     [title setTextAlignment:NSTextAlignmentLeft];
@@ -140,9 +177,34 @@
     [title setTextColor:[UIColor whiteColor]];
     [self.view addSubview:title];
     
+    NSDictionary *views   = NSDictionaryOfVariableBindings(title);
+    NSDictionary *metrics = @{ @"inset" : @(5.0f) };
+    
+    NSArray *titleXAxis = [NSLayoutConstraint constraintsWithVisualFormat:@"H:|-inset-[title]"
+                                                                  options:0
+                                                                  metrics:metrics
+                                                                    views:views];
+    
+    NSArray *titleYAxis = [NSLayoutConstraint constraintsWithVisualFormat:@"V:[title]-inset-|"
+                                                                  options:0
+                                                                  metrics:metrics
+                                                                    views:views];
+    
+    for (NSArray *layout in @[titleXAxis, titleYAxis]) {
+        [self.view addConstraints:layout];
+    }
+    
+}
+
+- (void)_layoutSideMenu
+{
+     self.container = [[HDSettingsContainer alloc] init];
+    [self.container setTranslatesAutoresizingMaskIntoConstraints:NO];
+    [self.view addSubview:self.container];
+    
     UIButton *retry = [UIButton buttonWithType:UIButtonTypeCustom];
     [retry setTitle:@"Retry" forState:UIControlStateNormal];
-    [retry setBackgroundColor:[UIColor flatTurquoiseColor]];
+    [retry setBackgroundColor:[UIColor flatMidnightBlueColor]];
     [retry addTarget:ADelegate action:@selector(restartCurrentLevel) forControlEvents:UIControlEventTouchUpInside];
     
     UIButton *map = [UIButton buttonWithType:UIButtonTypeCustom];
@@ -150,34 +212,60 @@
     [map setTitle:@"Map" forState:UIControlStateNormal];
     [map addTarget:ADelegate action:@selector(navigateToLevelMap) forControlEvents:UIControlEventTouchUpInside];
     
-    for (UIButton *button in @[retry, map]) {
+    UIButton *achievements = [UIButton buttonWithType:UIButtonTypeCustom];
+    [achievements setBackgroundColor:[UIColor flatTurquoiseColor]];
+    [achievements setTitle:@"Achievemnets" forState:UIControlStateNormal];
+    [achievements addTarget:ADelegate action:@selector(navigateToLevelMap) forControlEvents:UIControlEventTouchUpInside];
+    
+    for (UIButton *button in @[retry, map, achievements]) {
         [button setTranslatesAutoresizingMaskIntoConstraints:NO];
         [[button titleLabel] setFont:GILLSANS_LIGHT(20.0f)];
         [[button titleLabel] setTextAlignment:NSTextAlignmentCenter];
         [button setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
         [button.layer setCornerRadius:10.0f];
-        [self.view addSubview:button];
+        [self.view insertSubview:button belowSubview:self.container];
     }
     
-     self.container = [[HDSettingsContainer alloc] init];
-    [self.container setTranslatesAutoresizingMaskIntoConstraints:NO];
-    [self.view addSubview:self.container];
+    UIView *container = self.container;
     
-    _dictionary = @{ @"retry":retry, @"map":map, @"title":title, @"container":self.container };
+    _views = NSDictionaryOfVariableBindings(retry, map, achievements, container);
     
-    NSArray *vCt = [NSLayoutConstraint constraintsWithVisualFormat:@"V:|-130-[retry(40)]-20-[map(==retry)]"
-                                                           options:0
-                                                           metrics:nil
-                                                             views:_dictionary];
-    NSArray *titleCX      = [NSLayoutConstraint constraintsWithVisualFormat:@"H:|-[title]"               options:0 metrics:nil views:_dictionary];
-    NSArray *titleCY      = [NSLayoutConstraint constraintsWithVisualFormat:@"V:[title]-|"               options:0 metrics:nil views:_dictionary];
-    NSArray *hMConstraint = [NSLayoutConstraint constraintsWithVisualFormat:@"H:|-20-[map(140)]"         options:0 metrics:nil views:_dictionary];
-    NSArray *hRConstraint = [NSLayoutConstraint constraintsWithVisualFormat:@"H:|-20-[retry(==map)]"     options:0 metrics:nil views:_dictionary];
-    NSArray *hCConstraint = [NSLayoutConstraint constraintsWithVisualFormat:@"H:|-20-[container(==map)]" options:0 metrics:nil views:_dictionary];
+    _metrics = @{ @"inset"            : @20.0f,
+                  @"buttonHeight"     : @40.0f,
+                  @"buttonWidth"      : @140.0f,
+                  @"originYAxis"      : @130.0f,
+                  @"containerHeight"  : @280.0f,
+                  @"containerOriginX" : @50.0f };
     
-    _vLC  = [NSLayoutConstraint constraintsWithVisualFormat:@"V:|-50-[container(200)]" options:0 metrics:nil views:_dictionary];
+    NSArray *verticalConstraint = [NSLayoutConstraint constraintsWithVisualFormat:
+                                   @"V:|-originYAxis-[retry(buttonHeight)]-inset-[map(==retry)]-inset-[achievements(==retry)]"
+                                                                          options:0
+                                                                          metrics:_metrics
+                                                                            views:_views];
     
-    for (NSArray *constraint in @[vCt, _vLC, hMConstraint, hRConstraint, hCConstraint, titleCX, titleCY]) {
+    NSArray *hMConstraint = [NSLayoutConstraint constraintsWithVisualFormat:@"H:|-inset-[map(buttonWidth)]"
+                                                                    options:0
+                                                                    metrics:_metrics
+                                                                      views:_views];
+    
+    NSArray *hRConstraint = [NSLayoutConstraint constraintsWithVisualFormat:@"H:|-inset-[retry(==map)]"
+                                                                    options:0
+                                                                    metrics:_metrics
+                                                                      views:_views];
+    
+    NSArray *aCConstraint = [NSLayoutConstraint constraintsWithVisualFormat:@"H:|-inset-[achievements(==map)]"
+                                                                    options:0
+                                                                    metrics:_metrics
+                                                                      views:_views];
+    
+    NSArray *hCConstraint = [NSLayoutConstraint constraintsWithVisualFormat:@"H:|-inset-[container(==map)]"
+                                                                    options:0
+                                                                    metrics:_metrics
+                                                                      views:_views];
+    
+    _vLC  = [NSLayoutConstraint constraintsWithVisualFormat:@"V:|-50-[container(280)]" options:0 metrics:nil views:_views];
+    
+    for (NSArray *constraint in @[verticalConstraint, aCConstraint, _vLC, hMConstraint, hRConstraint, hCConstraint]) {
         [self.view addConstraints:constraint];
     }
     
@@ -190,8 +278,10 @@
 {
     [self.view removeConstraints:_vLC];
     
-    _vLC  = [NSLayoutConstraint constraintsWithVisualFormat:@"V:|-50-[container(200)]" options:0 metrics:nil views:_dictionary];
-    
+    _vLC  = [NSLayoutConstraint constraintsWithVisualFormat:@"V:|-50-[container(containerHeight)]"
+                                                    options:0
+                                                    metrics:_metrics
+                                                      views:_views];
     [self.view addConstraints:_vLC];
     
     dispatch_block_t closeAnimation = ^{
@@ -211,8 +301,10 @@
 {
     [self.view removeConstraints:_vLC];
     
-    _vLC  = [NSLayoutConstraint constraintsWithVisualFormat:@"V:[map]-20-[container(200)]" options:0 metrics:nil views:_dictionary];
-    
+    _vLC  = [NSLayoutConstraint constraintsWithVisualFormat:@"V:[achievements]-inset-[container(280)]"
+                                                    options:0
+                                                    metrics:_metrics
+                                                      views:_views];
     [self.view addConstraints:_vLC];
     
     dispatch_block_t expandAnimation = ^{

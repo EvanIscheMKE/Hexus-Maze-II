@@ -16,13 +16,20 @@
 
 @interface HDGameViewController ()
 
+@property (nonatomic, strong) UIButton *reverseAMove;
+@property (nonatomic, strong) UIButton *selectATile;
+
 @property (nonatomic, strong) HDGridManager *gridManager;
 
 @property (nonatomic, strong) HDScene *scene;
 
 @end
 
-@implementation HDGameViewController{
+@implementation HDGameViewController {
+    
+    NSDictionary *_views;
+    NSDictionary *_metrics;
+    
     BOOL _pauseGame;
     NSInteger _level;
 }
@@ -69,8 +76,40 @@
                                                  name:UIApplicationDidBecomeActiveNotification
                                                object:nil];
     
-    self.gridManager = [[HDGridManager alloc] initWithLevelNumber:_level];
+     self.gridManager = [[HDGridManager alloc] initWithLevelNumber:_level];
+    [self _layoutNavigationButtons];
+}
+
+- (void)_layoutNavigationButtons
+{
+     self.reverseAMove = [UIButton buttonWithType:UIButtonTypeCustom];
+    [self.reverseAMove setImage:[UIImage imageNamed: @"ReverseATurn"] forState:UIControlStateNormal];
+    [self.reverseAMove setTranslatesAutoresizingMaskIntoConstraints:NO];
+    [self.view addSubview:self.reverseAMove];
     
+    UIButton *reverse = self.reverseAMove;
+    
+    _views = NSDictionaryOfVariableBindings(reverse);
+    
+    _metrics = @{ @"buttonHeight" : @(30.0f), @"inset" : @(20.0f) };
+    
+    dispatch_block_t layoutToggleButtonConstraints = ^{
+        
+        NSArray *sHorizontalConstraint = [NSLayoutConstraint constraintsWithVisualFormat:@"H:[reverse(buttonHeight)]-inset-|"
+                                                                                 options:0
+                                                                                 metrics:_metrics
+                                                                                   views:_views];
+        
+        NSArray *sVerticalConstraint   = [NSLayoutConstraint constraintsWithVisualFormat:@"V:[reverse(buttonHeight)]-inset-|"
+                                                                                 options:0
+                                                                                 metrics:_metrics
+                                                                                   views:_views];
+        [self.view addConstraints:sHorizontalConstraint];
+        [self.view addConstraints:sVerticalConstraint];
+        
+    };
+    
+    layoutToggleButtonConstraints();
 }
 
 - (void)viewWillLayoutSubviews

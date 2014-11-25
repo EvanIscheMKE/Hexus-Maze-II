@@ -11,10 +11,7 @@
 @interface AppDelegate : UIResponder <UIApplicationDelegate>
 
 @property (strong, nonatomic) UIWindow *window;
-
-@property (nonatomic, readonly) BOOL vibrationIsActive;
-@property (nonatomic, readonly) BOOL effectsIfActive;
-@property (nonatomic, readonly) BOOL soundIsActive;
+@property (nonatomic, readonly) NSInteger previousLevel;
 
 - (void)navigateToNewLevel:(NSInteger)level;
 - (void)presentLevelViewController;

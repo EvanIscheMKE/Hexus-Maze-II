@@ -11,7 +11,8 @@
 @interface HDMapManager : NSObject
 @property (nonatomic, readonly) NSArray *levels;
 
-- (void)initalizeLevelsForFirstRun;
-- (void)completedLevelAtIndex:(NSInteger)index;
 + (HDMapManager *)sharedManager;
+- (void)configureLevelDataForFirstRun;
+- (void)completedLevelAtIndex:(NSInteger)index;
+
 @end

@@ -12,6 +12,8 @@ extern NSString * const levelCellReuseIdentifer;
 
 @interface HDLevelViewCell : UICollectionViewCell
 
+@property (nonatomic, assign) BOOL completed;
+
 @property (nonatomic, strong) UIImageView *imageView;
 
 @property (nonatomic, strong) UILabel *indexLabel;

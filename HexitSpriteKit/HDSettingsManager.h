@@ -13,7 +13,8 @@
 
 @property (nonatomic, readonly) BOOL sound;
 @property (nonatomic, readonly) BOOL vibration;
-@property (nonatomic, readonly) BOOL effects;
+@property (nonatomic, readonly) BOOL space;
+@property (nonatomic, readonly) BOOL guide;
 
 + (HDSettingsManager *)sharedManager;
 

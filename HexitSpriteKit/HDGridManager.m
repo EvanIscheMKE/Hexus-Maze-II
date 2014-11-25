@@ -44,7 +44,6 @@ typedef void(^CallBackBlock)(NSDictionary *dictionary, NSError *error);
                 NSInteger tileRow = NumberOfRows - row - 1;
                 
                 if ([columns integerValue] != 0) {
-                    NSLog(@"CALLED");
                     _grid[tileRow][column] = columns;
                 }
             }

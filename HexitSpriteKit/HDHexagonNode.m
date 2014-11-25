@@ -20,6 +20,7 @@
 {
     if (self = [super init]) {
         [self setLineWidth:4.0f];
+        [self setGlowWidth:0.0f];
     }
     return self;
 }

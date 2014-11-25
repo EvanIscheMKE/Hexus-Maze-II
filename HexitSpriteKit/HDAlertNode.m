@@ -42,11 +42,16 @@
         [self.rightButton setPosition:CGPointMake( -35.0f, -(CGRectGetHeight(self.container.frame) / 2))];
         [self.container addChild:self.rightButton];
         
+        SKSpriteNode *display = [SKSpriteNode spriteNodeWithTexture:[SKTexture textureWithImage:[self displayImage]]];
+        [display setAnchorPoint:CGPointMake(0.5f, 0.5f)];
+        [display setPosition:CGPointMake(0.0, 50.0f)];
+        [self.container addChild:display];
+        
         SKLabelNode *levelLabel = [[SKLabelNode alloc] initWithFontNamed:@"GillSans-Light"];
         [levelLabel setPosition:CGPointMake(0.0f, CGRectGetHeight(self.container.frame) / 2 - 5.0f)];
         [levelLabel setFontSize:24.0f];
         [levelLabel setFontColor:color];
-        [levelLabel setText:@"Level 20"];
+        [levelLabel setText:[NSString stringWithFormat:@"Level %ld", [ADelegate previousLevel]]];
         [levelLabel setHorizontalAlignmentMode:SKLabelHorizontalAlignmentModeCenter];
         [levelLabel setVerticalAlignmentMode:SKLabelVerticalAlignmentModeTop];
         [self.container addChild:levelLabel];
@@ -66,9 +71,28 @@
     
 }
 
+- (UIImage *)displayImage
+{
+    CGRect containerRect = CGRectMake(0.0f, 0.0f, 140.0f, 140.0f);
+    UIGraphicsBeginImageContext(containerRect.size);
+    
+    [[UIColor flatPeterRiverColor] setFill];
+    
+    UIBezierPath *container = [UIBezierPath bezierPathWithOvalInRect:containerRect];
+    
+    [container addClip];
+    [container fill];
+    
+    UIImage *circle = UIGraphicsGetImageFromCurrentImageContext();
+    UIGraphicsEndImageContext();
+    
+    return circle;
+
+}
+
 - (UIImage *)rightAlertButton
 {
-    CGRect containerRect = CGRectMake(0.0f, 0.0f, 180.0f, 100.0f);
+    CGRect containerRect = CGRectMake(0.0f, 0.0f, 180.0f, 90.0f);
     UIGraphicsBeginImageContext(containerRect.size);
     
     [[UIColor flatTurquoiseColor] setFill];
@@ -89,7 +113,7 @@
 
 - (UIImage *)leftAlertButton
 {
-    CGRect containerRect = CGRectMake(0.0f, 0.0f, 110.0f, 100.0f);
+    CGRect containerRect = CGRectMake(0.0f, 0.0f, 110.0f, 90.0f);
     UIGraphicsBeginImageContext(containerRect.size);
     
     [[UIColor flatPeterRiverColor] setFill];
@@ -114,7 +138,7 @@
     CGRect containerRect = CGRectMake(0.0f, 0.0f, 290.0f, 400.0f);
     UIGraphicsBeginImageContext(containerRect.size);
     
-    [[UIColor whiteColor] setFill];
+    [[UIColor flatSilverColor] setFill];
     
     UIBezierPath *container = [UIBezierPath bezierPathWithRoundedRect:containerRect cornerRadius:15.0f];
     
@@ -125,6 +149,18 @@
     UIGraphicsEndImageContext();
     
     return texture;
+}
+
+- (void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event
+{
+    [self touchesMoved:touches withEvent:event];
+}
+
+- (void)touchesMoved:(NSSet *)touches withEvent:(UIEvent *)event
+{
+    UITouch *touch     = [touches anyObject];
+    CGPoint location   = [touch locationInNode:self];
+    SKSpriteNode *node = (SKSpriteNode *)[self nodeAtPoint:location];
 }
 
 @end

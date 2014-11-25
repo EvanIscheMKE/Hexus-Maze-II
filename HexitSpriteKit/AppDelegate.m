@@ -68,25 +68,29 @@
 }
 
 #pragma mark - 
-#pragma mark - <Private>
+#pragma mark - < Private >
 
-- (HDGameViewController *)_gameViewController
+- (NSInteger)previousLevel
 {
-    return (HDGameViewController *)self.containerController.gameViewController;
+    return _deltaLevel;
 }
 
 - (void)_initalizeModelData
 {
     [[HDGameCenterManager sharedManager] authenticateForGameCenter];
     
-    BOOL isFirstRun = [[NSUserDefaults standardUserDefaults] boolForKey:hdFirstRunKey];
+    NSInteger x = 45;
+    
+    NSInteger *it = &x;
+    
+    BOOL isFirstRun = [[NSUserDefaults standardUserDefaults] boolForKey:HDFirstRunKey];
     
     if (!isFirstRun) {
         [[NSUserDefaults standardUserDefaults] setFloat:1000   forKey:HDRemainingTime];
         [[NSUserDefaults standardUserDefaults] setInteger:3 forKey:HDRemainingLivesKey];
-        [[NSUserDefaults standardUserDefaults] setBool:YES  forKey:hdSoundkey];
-        [[NSUserDefaults standardUserDefaults] setBool:YES  forKey:hdFirstRunKey];
-        [[HDMapManager sharedManager] initalizeLevelsForFirstRun];
+        [[NSUserDefaults standardUserDefaults] setBool:YES  forKey:HDSoundkey];
+        [[NSUserDefaults standardUserDefaults] setBool:YES  forKey:HDFirstRunKey];
+        [[HDMapManager sharedManager] configureLevelDataForFirstRun];
     }
 }
 
