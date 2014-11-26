@@ -26,7 +26,6 @@ static const CGFloat kTileHeightInsetMultiplier = .845f;
 @property (nonatomic, assign) BOOL contentCreated;
 
 @property (nonatomic, strong) SKEmitterNode *stars;
-@property (nonatomic, strong) SKSpriteNode *camera;
 
 @property (nonatomic, strong) SKNode *gameLayer;
 @property (nonatomic, strong) SKNode *tileLayer;
@@ -65,7 +64,7 @@ static const CGFloat kTileHeightInsetMultiplier = .845f;
         [self _preloadSounds];
         [self setBackgroundColor:[SKColor flatMidnightBlueColor]];
         
-        _previousTouchedPoint = CGPointMake(50, 50);
+        _previousTouchedPoint = CGPointMake(50.0f, 50.0f);
         
         _minCenterX = MAXFLOAT;
         _maxCenterX = 0.0f;
@@ -83,14 +82,7 @@ static const CGFloat kTileHeightInsetMultiplier = .845f;
         [self addChild:self.stars];
         [self addChild:self.tileLayer];
         [self addChild:self.gameLayer];
-        
-        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(3.0f * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
             
-            self.camera = [SKSpriteNode spriteNodeWithTexture:[SKTexture textureWithImage:[self underYOfinga]]];
-            [self.camera setAnchorPoint:CGPointMake(.5, .5)];
-            [self.camera setPosition:CGPointMake(50.0f, 50.0f)];
-            [self.gameLayer addChild:self.camera];
-        });
     }
     return self;
 }
@@ -240,7 +232,11 @@ static const CGFloat kTileHeightInsetMultiplier = .845f;
     if ([self _checkIfAllHexagonsAreSelected]) {
         [self _performCompletionAnimation:^{
             
-            [[HDMapManager sharedManager] completedLevelAtIndex:[ADelegate previousLevel]];
+            
+            if ([ADelegate previousLevel]) {
+                [[HDMapManager sharedManager] completedLevelAtIndex:[ADelegate previousLevel]];
+            }
+            
             SKSpriteNode *sprite = [SKSpriteNode spriteNodeWithColor:[[SKColor flatMidnightBlueColor] colorWithAlphaComponent:.25f]
                                                                 size:CGSizeMake(self.frame.size.width, self.frame.size.height)];
             [sprite setAnchorPoint:CGPointZero];
@@ -467,24 +463,6 @@ static const CGFloat kTileHeightInsetMultiplier = .845f;
 - (void)update:(NSTimeInterval)currentTime
 {
     [_stars setParticleColor:((arc4random() % 2) == 0) ? [UIColor whiteColor] : [UIColor flatPeterRiverColor]];
-    [self.camera setTexture:[SKTexture textureWithImage:[self underYOfinga]]];
-}
-
-- (UIImage *)underYOfinga
-{
-    CGFloat flippedPositionY = CGRectGetHeight(self.frame) - _previousTouchedPoint.y;
-    
-    UIGraphicsBeginImageContextWithOptions(self.frame.size, NO, [[UIScreen mainScreen] scale]);
-    [self.view drawViewHierarchyInRect:self.frame afterScreenUpdates:NO];
-    UIImage *underDaFinga = UIGraphicsGetImageFromCurrentImageContext();
-    UIGraphicsEndImageContext();
-    
-    UIGraphicsBeginImageContext(CGSizeMake(80.0f, 80.0f));
-    [[UIBezierPath bezierPathWithOvalInRect:CGRectMake(0.0f, 0.0, 80.0f, 80.0f)] addClip];
-    [underDaFinga drawAtPoint:CGPointMake( -(_previousTouchedPoint.x - 40.0f), -(flippedPositionY - 40.0f))];
-    UIImage *croppedImage = UIGraphicsGetImageFromCurrentImageContext();
-    
-    return croppedImage;
 }
 
 @end

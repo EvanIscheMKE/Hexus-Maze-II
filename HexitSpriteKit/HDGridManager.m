@@ -32,24 +32,39 @@ typedef void(^CallBackBlock)(NSDictionary *dictionary, NSError *error);
         _levelCache = [NSMutableDictionary dictionary];
         
         NSDictionary *grid = [self _levelWithFileName:level];
+     
+        [self layoutInitialGrid:grid];
         
-        for (int row = 0; row < NumberOfRows; row++) {
+        
+    }
+    return self;
+}
+
+- (instancetype)initWithRandomLevel:(NSDictionary *)grid
+{
+    if (self = [super init]) {
+        [self layoutInitialGrid:grid];
+    }
+    return self;
+}
+
+- (void)layoutInitialGrid:(NSDictionary *)grid
+{
+    for (int row = 0; row < NumberOfRows; row++) {
+        
+        NSArray *rows = [grid[hdHexGridKey] objectAtIndex:row];
+        
+        for (int column = 0; column < NumberOfColumns; column++) {
             
-            NSArray *rows = [grid[hdHexGridKey] objectAtIndex:row];
+            NSNumber *columns = [rows objectAtIndex:column];
             
-            for (int column = 0; column < NumberOfColumns; column++) {
-                
-                NSNumber *columns = [rows objectAtIndex:column];
-                
-                NSInteger tileRow = NumberOfRows - row - 1;
-                
-                if ([columns integerValue] != 0) {
-                    _grid[tileRow][column] = columns;
-                }
+            NSInteger tileRow = NumberOfRows - row - 1;
+            
+            if ([columns integerValue] != 0) {
+                _grid[tileRow][column] = columns;
             }
         }
     }
-    return self;
 }
 
 - (NSArray *)hexagons

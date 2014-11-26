@@ -8,6 +8,7 @@
 
 @import SpriteKit;
 
+#import "HDLevelGenerator.h"
 #import "UIColor+FlatColors.h"
 #import "HDContainerViewController.h"
 #import "HDGameViewController.h"
@@ -30,8 +31,10 @@
     NSDictionary *_views;
     NSDictionary *_metrics;
     
-    BOOL _pauseGame;
     NSInteger _level;
+    
+    BOOL _pauseGame;
+    BOOL _RandomlyGeneratedLevel;
 }
 
 - (void)dealloc
@@ -50,6 +53,16 @@
     if (self = [super init]){
         _level = level;
         _pauseGame = NO;
+        _RandomlyGeneratedLevel = NO;
+    }
+    return self;
+}
+
+- (instancetype)initWithRandomlyGeneratedLevel
+{
+    if (self = [super init]){
+        _pauseGame = NO;
+        _RandomlyGeneratedLevel = YES;
     }
     return self;
 }
@@ -76,7 +89,20 @@
                                                  name:UIApplicationDidBecomeActiveNotification
                                                object:nil];
     
-     self.gridManager = [[HDGridManager alloc] initWithLevelNumber:_level];
+    if (!_RandomlyGeneratedLevel) {
+        self.gridManager = [[HDGridManager alloc] initWithLevelNumber:_level];
+    } else {
+        HDLevelGenerator *generator = [[HDLevelGenerator alloc] init];
+        [generator setNumberOfTiles:4];
+        
+        [generator generateWithCompletionHandler:^(NSDictionary *dictionary, NSError *error) {
+            if (!error) {
+                 self.gridManager = [[HDGridManager alloc] initWithRandomLevel:dictionary];
+                [self _setupGame];
+            }
+        }];
+    }
+    
     [self _layoutNavigationButtons];
 }
 
@@ -115,20 +141,25 @@
 - (void)viewWillLayoutSubviews
 {
     [super viewWillLayoutSubviews];
-    
     SKView * skView = (SKView *)self.view;
-    if (!skView.scene) {
-        
-         self.scene = [HDScene sceneWithSize:self.view.bounds.size];
-        [self.scene setScaleMode:SKSceneScaleModeAspectFill];
-        [self.scene setGridManager:self.gridManager];
-        [self.scene addUnderlyingIndicatorTiles];
-        
-        [skView presentScene:self.scene];
-        
-        [self _beginGame];
-        
+    if (!skView.scene && self.gridManager) {
+        [self _setupGame];
     }
+    
+}
+
+- (void)_setupGame
+{
+    SKView * skView = (SKView *)self.view;
+    
+    self.scene = [HDScene sceneWithSize:self.view.bounds.size];
+    [self.scene setScaleMode:SKSceneScaleModeAspectFill];
+    [self.scene setGridManager:self.gridManager];
+    [self.scene addUnderlyingIndicatorTiles];
+    
+    [skView presentScene:self.scene];
+    
+    [self _beginGame];
 }
 
 - (void)_beginGame
@@ -145,20 +176,6 @@
 {
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
-}
-
-- (void)showAlertWithTitle:(NSString *)title
-               description:(NSString *)descripton
-                       tag:(NSInteger)tag
-                  delegate:(id<UIAlertViewDelegate>)delegate
-{
-    UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:title
-                                                        message:descripton
-                                                       delegate:delegate
-                                              cancelButtonTitle:@"Continue"
-                                              otherButtonTitles:@"Leave",nil];
-    [alertView setTag:tag];
-    [alertView show];
 }
 
 #pragma mark -

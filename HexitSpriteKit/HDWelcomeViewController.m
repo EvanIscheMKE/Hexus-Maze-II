@@ -12,9 +12,7 @@
 #import "HDHelper.h"
 
 @interface HDWelcomeViewController ()
-
 @property (nonatomic, strong) UIButton *startButton;
-
 @end
 
 @implementation HDWelcomeViewController
@@ -29,7 +27,6 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    [self.view setBackgroundColor:[UIColor flatMidnightBlueColor]];
     
     CGSize kTitleSize = [HDHelper sizeFromWidth:CGRectGetWidth(self.view.bounds) font:GILLSANS_LIGHT(90.0f) text:@"HEXUS"];
     

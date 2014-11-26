@@ -67,6 +67,12 @@
     [self.containerController setFrontViewController:controller animated:YES];
 }
 
+- (void)navigateToRandomlyGeneratedLevel
+{
+    HDGameViewController *controller = [[HDGameViewController alloc] initWithRandomlyGeneratedLevel];
+    [self.containerController setFrontViewController:controller animated:YES];
+}
+
 #pragma mark - 
 #pragma mark - < Private >
 
@@ -78,10 +84,6 @@
 - (void)_initalizeModelData
 {
     [[HDGameCenterManager sharedManager] authenticateForGameCenter];
-    
-    NSInteger x = 45;
-    
-    NSInteger *it = &x;
     
     BOOL isFirstRun = [[NSUserDefaults standardUserDefaults] boolForKey:HDFirstRunKey];
     

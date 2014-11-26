@@ -50,7 +50,6 @@
 
 - (void)configureLevelDataForFirstRun
 {
-    NSLog(@"CALLED");
     NSMutableArray *levels = [NSMutableArray array];
     
     for (int i = 1; i < 76; i++) {

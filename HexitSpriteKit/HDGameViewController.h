@@ -13,6 +13,7 @@
 @property (nonatomic, readonly) NSInteger level;
 
 - (instancetype)initWithLevel:(NSInteger)level;
+- (instancetype)initWithRandomlyGeneratedLevel;
 
 @end
 

@@ -48,6 +48,14 @@ static NSString * const cellReuseIdentifer = @"identifier";
     [super viewDidLoad];
     [self.view setBackgroundColor:[UIColor flatMidnightBlueColor]];
     
+    UIButton *toNonJSONLevel = [UIButton buttonWithType:UIButtonTypeCustom];
+    [toNonJSONLevel setBackgroundColor:[UIColor redColor]];
+    [toNonJSONLevel setTitle:@"Random" forState:UIControlStateNormal];
+    [toNonJSONLevel sizeToFit];
+    [toNonJSONLevel setCenter:CGPointMake(CGRectGetMidX(self.view.bounds), 30.0f)];
+    [toNonJSONLevel addTarget:ADelegate action:@selector(navigateToRandomlyGeneratedLevel) forControlEvents:UIControlEventTouchDown];
+    [self.view addSubview:toNonJSONLevel];
+    
     UICollectionViewFlowLayout *layout = [[UICollectionViewFlowLayout alloc] init];
     [layout setScrollDirection:UICollectionViewScrollDirectionHorizontal];
     [layout setMinimumInteritemSpacing:0];
@@ -72,7 +80,7 @@ static NSString * const cellReuseIdentifer = @"identifier";
     if (collectionView.tag == 5) {
         return 4;
     }
-    return 15;
+    return [[[HDMapManager sharedManager] levels] count] / 5;
 }
 
 - (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath

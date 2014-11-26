@@ -52,6 +52,7 @@
 		38C0A8721A07348400C552F1 /* SKColor+HDColor.m in Sources */ = {isa = PBXBuildFile; fileRef = 38C0A8711A07348400C552F1 /* SKColor+HDColor.m */; };
 		38C0A8751A0758AC00C552F1 /* HDGridManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 38C0A8741A0758AC00C552F1 /* HDGridManager.m */; };
 		38C0A8781A075FBA00C552F1 /* HDHexagonNode.m in Sources */ = {isa = PBXBuildFile; fileRef = 38C0A8771A075FBA00C552F1 /* HDHexagonNode.m */; };
+		38C2E13B1A2671F3008D5F33 /* HDLevelGenerator.m in Sources */ = {isa = PBXBuildFile; fileRef = 38C2E13A1A2671F3008D5F33 /* HDLevelGenerator.m */; };
 		38C67CD71A0AB8D80038526C /* HDWelcomeViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 38C67CD61A0AB8D80038526C /* HDWelcomeViewController.m */; };
 		38C67CDA1A0AB8FF0038526C /* HDContainerViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 38C67CD91A0AB8FF0038526C /* HDContainerViewController.m */; };
 		38C67CDD1A0AB9350038526C /* UIColor+FlatColors.m in Sources */ = {isa = PBXBuildFile; fileRef = 38C67CDC1A0AB9350038526C /* UIColor+FlatColors.m */; };
@@ -170,6 +171,8 @@
 		38C0A8741A0758AC00C552F1 /* HDGridManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HDGridManager.m; sourceTree = "<group>"; };
 		38C0A8761A075FBA00C552F1 /* HDHexagonNode.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HDHexagonNode.h; sourceTree = "<group>"; };
 		38C0A8771A075FBA00C552F1 /* HDHexagonNode.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HDHexagonNode.m; sourceTree = "<group>"; };
+		38C2E1391A2671F3008D5F33 /* HDLevelGenerator.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HDLevelGenerator.h; sourceTree = "<group>"; };
+		38C2E13A1A2671F3008D5F33 /* HDLevelGenerator.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HDLevelGenerator.m; sourceTree = "<group>"; };
 		38C67CD51A0AB8D80038526C /* HDWelcomeViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HDWelcomeViewController.h; sourceTree = "<group>"; };
 		38C67CD61A0AB8D80038526C /* HDWelcomeViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HDWelcomeViewController.m; sourceTree = "<group>"; };
 		38C67CD81A0AB8FF0038526C /* HDContainerViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HDContainerViewController.h; sourceTree = "<group>"; };
@@ -487,6 +490,8 @@
 				38F5A6BC1A08014F0036750A /* HDHexagon.m */,
 				38C67CE11A0ABD050038526C /* HDHelper.h */,
 				38C67CE21A0ABD050038526C /* HDHelper.m */,
+				38C2E1391A2671F3008D5F33 /* HDLevelGenerator.h */,
+				38C2E13A1A2671F3008D5F33 /* HDLevelGenerator.m */,
 			);
 			name = Model;
 			sourceTree = "<group>";
@@ -716,6 +721,7 @@
 				38521F3D1A19A20600484830 /* HDSpriteNode.m in Sources */,
 				38CA40241A1485380024D6BF /* HDRearViewController.m in Sources */,
 				38F7CC6E1A0D6FBE002E7C7F /* UIImage+HDImage.m in Sources */,
+				38C2E13B1A2671F3008D5F33 /* HDLevelGenerator.m in Sources */,
 				38C67D2C1A0AEBD50038526C /* HDGameCenterManager.m in Sources */,
 				38DAD0B71A202B0800EC5524 /* HDLevelViewCell.m in Sources */,
 			);
