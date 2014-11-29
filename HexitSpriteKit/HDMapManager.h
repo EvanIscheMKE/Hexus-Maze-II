@@ -11,6 +11,10 @@
 @interface HDMapManager : NSObject
 @property (nonatomic, readonly) NSArray *levels;
 
+@property (nonatomic, readonly) NSUInteger totalNumberOfLevels;
+@property (nonatomic, readonly) NSUInteger numberOfSections;
+@property (nonatomic, readonly) NSUInteger numberOfLevelsInSection;
+
 + (HDMapManager *)sharedManager;
 - (void)configureLevelDataForFirstRun;
 - (void)completedLevelAtIndex:(NSInteger)index;

@@ -28,20 +28,17 @@
     if (self = [super initWithFrame:frame]) {
         
         self.shouldAnimteWhenMovedToSuperView = YES;
-     
-//        [[NSRunLoop mainRunLoop] addTimer:[ NSTimer scheduledTimerWithTimeInterval:.05f target:self
-//                                                                          selector:@selector(changeEmitterColor:)
-//                                                                          userInfo:nil
-//                                                                           repeats:YES]
-//                                  forMode:NSRunLoopCommonModes];
 
         self.emitterLayer = [CAEmitterLayer new];
         [self.emitterLayer setEmitterPosition:CGPointMake(CGRectGetMidX(self.bounds), 0.0f)];
         [self.emitterLayer setEmitterSize:self.bounds.size];
         [self.emitterLayer setEmitterShape:kCAEmitterLayerLine];
+        self.emitterLayer.renderMode = kCAEmitterLayerPoints;
+        self.emitterLayer.emitterMode = kCAEmitterLayerUnordered;
         
         CAGradientLayer *gradientLayer = self.gradientLayer;
-        gradientLayer.colors = @[(id)[UIColor flatMidnightBlueColor].CGColor, (id)[UIColor flatPeterRiverColor].CGColor];
+        gradientLayer.colors = @[(id)[UIColor flatMidnightBlueColor].CGColor,
+                                 (id)[[UIColor flatMidnightBlueColor] colorWithAlphaComponent:.5f].CGColor];
         gradientLayer.locations = @[@(.65),@(1.25)];
         
         [self.layer addSublayer:self.emitterLayer];
@@ -99,7 +96,7 @@
     [star setContents: (__bridge id)[[UIImage imageNamed:@"spark.png"] CGImage]];
     [star setSpeed:1];
     [star setName:@"space"];
-    [star setBirthRate:20];
+    [star setBirthRate:8];
     [star setLifetime:15];
     [star setLifetimeRange:2];
     [star setColor:[color CGColor]];

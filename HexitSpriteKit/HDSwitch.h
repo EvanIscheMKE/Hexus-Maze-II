@@ -10,4 +10,9 @@
 
 @interface HDSwitch : UIControl
 
+@property (nonatomic, getter=isON, assign) BOOL on;
+
+- (instancetype)initWithOnColor:(UIColor *)onColor offColor:(UIColor *)offColor;
+- (instancetype)initWithFrame:(CGRect)frame onColor:(UIColor *)onColor offColor:(UIColor *)offColor;
+
 @end

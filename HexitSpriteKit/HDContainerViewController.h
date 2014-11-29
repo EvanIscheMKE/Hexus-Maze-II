@@ -8,6 +8,8 @@
 
 #import <UIKit/UIKit.h>
 
+#define kAnimationOffsetX [[UIScreen mainScreen] bounds].size.width / 2 + 40.0f
+
 @class HDContainerViewController;
 
 @interface UIViewController (HDMenuViewController)
@@ -27,6 +29,7 @@
                         rearViewController:(UIViewController *)rearController NS_DESIGNATED_INITIALIZER;
 
 - (void)setFrontViewController:(UIViewController *)controller animated:(BOOL)animated;
+- (void)_toggleHDMenuViewController;
 
 @end
 

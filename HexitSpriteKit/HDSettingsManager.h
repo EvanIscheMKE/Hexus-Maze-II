@@ -7,14 +7,18 @@
 //
 
 #import <Foundation/Foundation.h>
-#import "HDRearViewController.h"
 
-@interface HDSettingsManager : NSObject<HDRearViewControllerDelegate>
+@interface HDSettingsManager : NSObject
 
 @property (nonatomic, readonly) BOOL sound;
 @property (nonatomic, readonly) BOOL vibration;
 @property (nonatomic, readonly) BOOL space;
 @property (nonatomic, readonly) BOOL guide;
+
+- (void)toggleSound;
+- (void)toggleVibration;
+- (void)toggleSpace;
+- (void)toggleGuide;
 
 + (HDSettingsManager *)sharedManager;
 

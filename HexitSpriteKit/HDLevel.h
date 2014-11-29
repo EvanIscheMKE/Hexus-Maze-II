@@ -10,6 +10,7 @@
 
 @interface HDLevel : NSObject <NSCoding>
 @property (nonatomic, assign) NSInteger levelIndex;
+@property (nonatomic, assign) NSUInteger countUntilCompletion;
 @property (nonatomic, getter=isUnlocked,  assign) BOOL unlocked;
 @property (nonatomic, getter=isCompleted, assign) BOOL completed;
 + (HDLevel *)levelUnlocked:(BOOL)unlocked index:(NSInteger)index completed:(BOOL)completed;

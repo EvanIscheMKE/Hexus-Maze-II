@@ -18,14 +18,11 @@ static inline CGFloat DEGREES_RADIANS(CGFloat degrees){
 //    return number / 2.0f;
 //};
 //
-static CGFloat HEXAGON_WITH_INSET(CGFloat number){
-    return number / 1.25f;
-};
 
 //keys
-extern NSString * const hdSoundNotification;
-extern NSString * const hdVibrationNotification;
-extern NSString * const hdRestartNotificaiton;
+extern NSString * const HDSoundNotification;
+extern NSString * const HDVibrationNotification;
+extern NSString * const HDRestartNotificaiton;
 
 //UserDefault Keys
 extern NSString * const HDDefaultLevelKey;
@@ -39,12 +36,10 @@ extern NSString * const HDRemainingTime;
 extern NSString * const HDBackgroundDate;
 
 //
-extern NSString * const hdBubbleSoundKey;
-extern NSString * const hdHexGridKey;
-extern NSString * const hdHexZoomKey;
+extern NSString * const HDBubbleSoundKey;
+extern NSString * const HDHexGridKey;
 
 #define GILLSANS(x)       [UIFont fontWithName:@"GillSans" size:x]
-#define GILLSANS_BOLD(x)  [UIFont fontWithName:@"GillSans-Bold" size:x]
 #define GILLSANS_LIGHT(x) [UIFont fontWithName:@"GillSans-Light" size:x]
 
 #define LEVEL_URL(x) [NSString stringWithFormat:@"Grid-%ld",x]

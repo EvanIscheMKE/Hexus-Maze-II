@@ -11,12 +11,9 @@
 #import "UIColor+FlatColors.h"
 
 @interface HDAlertNode ()
-
-@property (nonatomic , strong) SKSpriteNode *container;
-
-@property (nonatomic , strong) SKSpriteNode *leftButton;
-@property (nonatomic , strong) SKSpriteNode *rightButton;
-
+@property (nonatomic, strong) SKSpriteNode *container;
+@property (nonatomic, strong) SKSpriteNode *leftButton;
+@property (nonatomic, strong) SKSpriteNode *rightButton;
 @end
 
 @implementation HDAlertNode

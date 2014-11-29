@@ -15,18 +15,21 @@
 #import "HDSpaceView.h"
 
 #define singularMessage [NSString stringWithFormat:@"You must first complete level 1 to unlock the Level"]
-#define pluralMessage(x)[NSString stringWithFormat:@"You must first complete levels 1 through %ld to unlock this Level",x]
+#define pluralMessage(x)[NSString stringWithFormat:@"You must first complete levels 1 through %ld to unlock this Level",x ]
 
 static NSString * const title = @"Locked";
 static NSString * const cellReuseIdentifer = @"identifier";
 
-@interface HDGridViewController ()<UICollectionViewDataSource, UICollectionViewDelegate>
+@interface HDGridViewController ()<UICollectionViewDataSource, UICollectionViewDelegate, UIScrollViewDelegate>
 
 @property (nonatomic, strong) UICollectionView *collectionView;
+@property (nonatomic, strong) UIPageControl *pageControl;
 
 @end
 
-@implementation HDGridViewController
+@implementation HDGridViewController {
+    NSInteger _previousPage;
+}
 
 - (void)loadView
 {
@@ -46,22 +49,30 @@ static NSString * const cellReuseIdentifer = @"identifier";
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    [self.view setBackgroundColor:[UIColor flatMidnightBlueColor]];
     
-    UIButton *toNonJSONLevel = [UIButton buttonWithType:UIButtonTypeCustom];
-    [toNonJSONLevel setBackgroundColor:[UIColor redColor]];
-    [toNonJSONLevel setTitle:@"Random" forState:UIControlStateNormal];
-    [toNonJSONLevel sizeToFit];
-    [toNonJSONLevel setCenter:CGPointMake(CGRectGetMidX(self.view.bounds), 30.0f)];
-    [toNonJSONLevel addTarget:ADelegate action:@selector(navigateToRandomlyGeneratedLevel) forControlEvents:UIControlEventTouchDown];
-    [self.view addSubview:toNonJSONLevel];
+//    UIButton *toNonJSONLevel = [UIButton buttonWithType:UIButtonTypeCustom];
+//    [toNonJSONLevel setBackgroundColor:[UIColor redColor]];
+//    [toNonJSONLevel setTitle:@"Random" forState:UIControlStateNormal];
+//    [toNonJSONLevel sizeToFit];
+//    [toNonJSONLevel setCenter:CGPointMake(CGRectGetMidX(self.view.bounds), 30.0f)];
+//    [toNonJSONLevel addTarget:ADelegate action:@selector(navigateToRandomlyGeneratedLevel) forControlEvents:UIControlEventTouchDown];
+//    [self.view addSubview:toNonJSONLevel];
+    
+   // CGRect pageControlFrame = CGRectMake(0.0f, 0.0f, CGRectGetMidX(self.view.bounds), 30.0f);
+     self.pageControl = [[UIPageControl alloc] initWithFrame:CGRectZero];
+    [self.pageControl setBackgroundColor:[UIColor flatMidnightBlueColor]];
+    [self.pageControl setNumberOfPages:[[HDMapManager sharedManager] numberOfSections]];
+    [self.pageControl setCurrentPage:0];
+    [self.pageControl sizeToFit];
+    [self.pageControl setCenter:CGPointMake(CGRectGetMidX(self.view.bounds), 35.0f)];
+    [self.pageControl setCurrentPageIndicatorTintColor:[UIColor flatPeterRiverColor]];
+    [self.view addSubview:self.pageControl];
     
     UICollectionViewFlowLayout *layout = [[UICollectionViewFlowLayout alloc] init];
     [layout setScrollDirection:UICollectionViewScrollDirectionHorizontal];
     [layout setMinimumInteritemSpacing:0];
     [layout setMinimumLineSpacing:0];
-    [layout setItemSize:CGSizeMake(CGRectGetWidth(self.view.bounds),
-                                   CGRectGetHeight(self.view.bounds) - 60.0f)];
+    [layout setItemSize:CGSizeMake(CGRectGetWidth(self.view.bounds), CGRectGetHeight(self.view.bounds) - 60.0f)];
     
     CGRect collectionViewRect = CGRectMake(0.0, 60.0f, CGRectGetWidth(self.view.bounds), CGRectGetHeight(self.view.bounds) - 60.0f);
      self.collectionView = [[UICollectionView alloc] initWithFrame:collectionViewRect collectionViewLayout:layout];
@@ -72,15 +83,14 @@ static NSString * const cellReuseIdentifer = @"identifier";
     [self.collectionView setTag:5];
     [self.collectionView setBackgroundColor:[UIColor clearColor]];
     [self.view addSubview:self.collectionView];
-
 }
 
 - (NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section
 {
     if (collectionView.tag == 5) {
-        return 4;
+        return [[HDMapManager sharedManager] numberOfSections];
     }
-    return [[[HDMapManager sharedManager] levels] count] / 5;
+    return [[HDMapManager sharedManager] numberOfLevelsInSection];
 }
 
 - (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath
@@ -102,29 +112,32 @@ static NSString * const cellReuseIdentifer = @"identifier";
         HDLevelViewCell *cell = (HDLevelViewCell *)[collectionView dequeueReusableCellWithReuseIdentifier:levelCellReuseIdentifer
                                                                                              forIndexPath:indexPath];
         
-        NSInteger levelIndex  = (indexPath.item) + (collectionView.tag * 15);
-        NSInteger levelNumber = levelIndex + 1;
+        NSInteger levelIndex  = (indexPath.item) + (collectionView.tag * [[HDMapManager sharedManager] numberOfLevelsInSection]);
         
         HDLevel *level = [[HDMapManager sharedManager] levels][levelIndex];
         
         [cell setCompleted:level.isCompleted];
         
-        [cell.indexLabel setText:[NSString stringWithFormat:@"%ld", levelNumber]];
+        [cell.indexLabel setText:[NSString stringWithFormat:@"%ld", levelIndex + 1]];
         switch (collectionView.tag) {
             case 0:
-                [cell setBackgroundColor:[[UIColor flatPeterRiverColor] colorWithAlphaComponent:.25f]];
+                [cell setBackgroundColor:[UIColor flatMidnightBlueColor]];
                 [cell.layer setBorderColor:[[UIColor flatPeterRiverColor] CGColor]];
                 break;
             case 1:
-                [cell setBackgroundColor:[[UIColor flatEmeraldColor] colorWithAlphaComponent:.25f]];
+                [cell setBackgroundColor:[UIColor flatMidnightBlueColor]];
                 [cell.layer setBorderColor:[[UIColor flatEmeraldColor] CGColor]];
                 break;
             case 2:
-                [cell setBackgroundColor:[[UIColor flatTurquoiseColor] colorWithAlphaComponent:.25f]];
+                [cell setBackgroundColor:[UIColor flatMidnightBlueColor]];
                 [cell.layer setBorderColor:[[UIColor flatTurquoiseColor] CGColor]];
                 break;
             case 3:
-                [cell setBackgroundColor:[[UIColor flatSilverColor] colorWithAlphaComponent:.25f]];
+                [cell setBackgroundColor:[UIColor flatMidnightBlueColor]];
+                [cell.layer setBorderColor:[[UIColor flatSilverColor] CGColor]];
+                break;
+            case 4:
+                [cell setBackgroundColor:[UIColor flatMidnightBlueColor]];
                 [cell.layer setBorderColor:[[UIColor flatSilverColor] CGColor]];
                 break;
         }
@@ -170,6 +183,40 @@ static NSString * const cellReuseIdentifer = @"identifier";
 //            [alertView show];
 //        }
 //    }
+}
+
+#pragma mark -
+#pragma mark - <UIScrollViewDelegate>
+
+- (void)scrollViewDidScroll:(UIScrollView *)scrollView
+{
+    NSInteger currentPage = ceilf(scrollView.contentOffset.x / CGRectGetWidth(self.collectionView.bounds));
+    
+    if (_previousPage == currentPage) {
+        return;
+    }
+    
+    [self.pageControl setCurrentPage:currentPage];
+    
+    switch (currentPage) {
+        case 0:
+            [self.pageControl setCurrentPageIndicatorTintColor:[UIColor flatPeterRiverColor]];
+            break;
+        case 1:
+            [self.pageControl setCurrentPageIndicatorTintColor:[UIColor flatEmeraldColor]];
+            break;
+        case 2:
+            [self.pageControl setCurrentPageIndicatorTintColor:[UIColor flatTurquoiseColor]];
+            break;
+        case 3:
+            [self.pageControl setCurrentPageIndicatorTintColor:[UIColor flatSilverColor]];
+            break;
+        case 4:
+            [self.pageControl setCurrentPageIndicatorTintColor:[UIColor flatSilverColor]];
+            break;
+    }
+    
+    _previousPage = currentPage;
 }
 
 - (void)viewWillAppear:(BOOL)animated

@@ -9,6 +9,14 @@
 #import "HDLevel.h"
 #import "HDMapManager.h"
 
+@interface HDMapManager ()
+
+@property (nonatomic, assign) NSUInteger totalNumberOfLevels;
+@property (nonatomic, assign) NSUInteger numberOfSections;
+@property (nonatomic, assign) NSUInteger numberOfLevelsInSection;
+
+@end
+
 @implementation HDMapManager{
       NSMutableArray *_levels;
 }
@@ -16,7 +24,8 @@
 - (instancetype)init
 {
     if (self = [super init]) {
-        
+        self.totalNumberOfLevels = 75;
+        self.numberOfSections = 5;
     }
     return self;
 }
@@ -41,7 +50,6 @@
     
     for (NSData *data in [[NSUserDefaults standardUserDefaults] objectForKey:HDDefaultLevelKey]) {
         HDLevel *level = (HDLevel *)[NSKeyedUnarchiver unarchiveObjectWithData:data];
-       // [level setUnlocked:YES];
         [_levels addObject:level];
     }
     
@@ -52,7 +60,7 @@
 {
     NSMutableArray *levels = [NSMutableArray array];
     
-    for (int i = 1; i < 76; i++) {
+    for (int i = 1; i < self.totalNumberOfLevels + 1; i++) {
         HDLevel *level = [HDLevel levelUnlocked:(i == 1) index:i completed:NO];
         
         NSData *levelData = [NSKeyedArchiver archivedDataWithRootObject:level];
@@ -63,10 +71,14 @@
 
 - (void)completedLevelAtIndex:(NSInteger)index
 {
+    if (!index) {
+        return;
+    }
+    
     [[NSUserDefaults standardUserDefaults] removeObjectForKey:HDDefaultLevelKey];
     
     HDLevel *thisLevel = [_levels objectAtIndex:index - 1];
-    HDLevel *nextLevel = [_levels objectAtIndex:MIN(index, 74)];
+    HDLevel *nextLevel = [_levels objectAtIndex:MIN(index, self.totalNumberOfLevels - 1)];
     
     [thisLevel setCompleted:YES];
     [nextLevel setUnlocked:YES];
@@ -79,6 +91,11 @@
     }
     
     [[NSUserDefaults standardUserDefaults] setObject:levels forKey:HDDefaultLevelKey];
+}
+
+- (NSUInteger)numberOfLevelsInSection
+{
+    return self.totalNumberOfLevels / self.numberOfSections;
 }
 
 

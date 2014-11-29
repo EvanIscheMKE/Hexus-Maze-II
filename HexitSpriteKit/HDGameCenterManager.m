@@ -28,16 +28,16 @@
     return _manager;
 }
 
-// Login user into Game Center. If their Game Center is not set up, continue to game, otherwise check for scores to submit(for Six Squared)
+// Login user into Game Center. If their Game Center is not set up, continue to game, otherwise check for scores to submit
 - (void)authenticateForGameCenter
 {
     if (![GKLocalPlayer localPlayer].isAuthenticated) {
         GKLocalPlayer *localPlayer = [GKLocalPlayer localPlayer];
-        __weak GKLocalPlayer *weakLocalPlayer = localPlayer;
         
+        __weak GKLocalPlayer *weakLocalPlayer = localPlayer;
         localPlayer.authenticateHandler = (^(UIViewController* viewController, NSError *error) {
             if (weakLocalPlayer.authenticated) {
-             //
+            
             } else if(viewController) {
                 /* Any feature using Game Center will alert user they're not logged in, instead of waiting for an unpredictable signup controller thats annoying as shit! */
             }

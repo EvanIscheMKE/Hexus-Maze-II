@@ -52,6 +52,8 @@
 		38C0A8721A07348400C552F1 /* SKColor+HDColor.m in Sources */ = {isa = PBXBuildFile; fileRef = 38C0A8711A07348400C552F1 /* SKColor+HDColor.m */; };
 		38C0A8751A0758AC00C552F1 /* HDGridManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 38C0A8741A0758AC00C552F1 /* HDGridManager.m */; };
 		38C0A8781A075FBA00C552F1 /* HDHexagonNode.m in Sources */ = {isa = PBXBuildFile; fileRef = 38C0A8771A075FBA00C552F1 /* HDHexagonNode.m */; };
+		38C122181A29417100224B33 /* ToggleSwitchImage.png in Resources */ = {isa = PBXBuildFile; fileRef = 38C122171A29417100224B33 /* ToggleSwitchImage.png */; };
+		38C1221B1A2A2EF300224B33 /* HDSwitch.m in Sources */ = {isa = PBXBuildFile; fileRef = 38C1221A1A2A2EF300224B33 /* HDSwitch.m */; };
 		38C2E13B1A2671F3008D5F33 /* HDLevelGenerator.m in Sources */ = {isa = PBXBuildFile; fileRef = 38C2E13A1A2671F3008D5F33 /* HDLevelGenerator.m */; };
 		38C67CD71A0AB8D80038526C /* HDWelcomeViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 38C67CD61A0AB8D80038526C /* HDWelcomeViewController.m */; };
 		38C67CDA1A0AB8FF0038526C /* HDContainerViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 38C67CD91A0AB8FF0038526C /* HDContainerViewController.m */; };
@@ -97,7 +99,6 @@
 		38F5A6B61A076B960036750A /* HDLevel.m in Sources */ = {isa = PBXBuildFile; fileRef = 38F5A6B51A076B960036750A /* HDLevel.m */; };
 		38F5A6B91A07F2FA0036750A /* Grid-1.json in Resources */ = {isa = PBXBuildFile; fileRef = 38F5A6B71A07F2FA0036750A /* Grid-1.json */; };
 		38F5A6BD1A08014F0036750A /* HDHexagon.m in Sources */ = {isa = PBXBuildFile; fileRef = 38F5A6BC1A08014F0036750A /* HDHexagon.m */; };
-		38F7CC6E1A0D6FBE002E7C7F /* UIImage+HDImage.m in Sources */ = {isa = PBXBuildFile; fileRef = 38F7CC6D1A0D6FBE002E7C7F /* UIImage+HDImage.m */; };
 		38FDF9B51A1BEF1F005CCFE1 /* HDSettingsManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 38FDF9B41A1BEF1F005CCFE1 /* HDSettingsManager.m */; };
 /* End PBXBuildFile section */
 
@@ -171,6 +172,9 @@
 		38C0A8741A0758AC00C552F1 /* HDGridManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HDGridManager.m; sourceTree = "<group>"; };
 		38C0A8761A075FBA00C552F1 /* HDHexagonNode.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HDHexagonNode.h; sourceTree = "<group>"; };
 		38C0A8771A075FBA00C552F1 /* HDHexagonNode.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HDHexagonNode.m; sourceTree = "<group>"; };
+		38C122171A29417100224B33 /* ToggleSwitchImage.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = ToggleSwitchImage.png; path = ../../Desktop/ToggleSwitchImage.png; sourceTree = "<group>"; };
+		38C122191A2A2EF300224B33 /* HDSwitch.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HDSwitch.h; sourceTree = "<group>"; };
+		38C1221A1A2A2EF300224B33 /* HDSwitch.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HDSwitch.m; sourceTree = "<group>"; };
 		38C2E1391A2671F3008D5F33 /* HDLevelGenerator.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HDLevelGenerator.h; sourceTree = "<group>"; };
 		38C2E13A1A2671F3008D5F33 /* HDLevelGenerator.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HDLevelGenerator.m; sourceTree = "<group>"; };
 		38C67CD51A0AB8D80038526C /* HDWelcomeViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HDWelcomeViewController.h; sourceTree = "<group>"; };
@@ -231,8 +235,6 @@
 		38F5A6B71A07F2FA0036750A /* Grid-1.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = "Grid-1.json"; sourceTree = "<group>"; };
 		38F5A6BB1A08014F0036750A /* HDHexagon.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HDHexagon.h; sourceTree = "<group>"; };
 		38F5A6BC1A08014F0036750A /* HDHexagon.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HDHexagon.m; sourceTree = "<group>"; };
-		38F7CC6C1A0D6FBE002E7C7F /* UIImage+HDImage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIImage+HDImage.h"; sourceTree = "<group>"; };
-		38F7CC6D1A0D6FBE002E7C7F /* UIImage+HDImage.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIImage+HDImage.m"; sourceTree = "<group>"; };
 		38FDF9B31A1BEF1F005CCFE1 /* HDSettingsManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HDSettingsManager.h; sourceTree = "<group>"; };
 		38FDF9B41A1BEF1F005CCFE1 /* HDSettingsManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HDSettingsManager.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -356,6 +358,7 @@
 		38C0A8351A07251600C552F1 = {
 			isa = PBXGroup;
 			children = (
+				38C122171A29417100224B33 /* ToggleSwitchImage.png */,
 				38C0A8401A07251700C552F1 /* HexitSpriteKit */,
 				38C0A85A1A07251700C552F1 /* HexitSpriteKitTests */,
 				38C0A8671A07252E00C552F1 /* Frameworks */,
@@ -437,8 +440,6 @@
 				38C67CDC1A0AB9350038526C /* UIColor+FlatColors.m */,
 				38C0A8701A07348400C552F1 /* SKColor+HDColor.h */,
 				38C0A8711A07348400C552F1 /* SKColor+HDColor.m */,
-				38F7CC6C1A0D6FBE002E7C7F /* UIImage+HDImage.h */,
-				38F7CC6D1A0D6FBE002E7C7F /* UIImage+HDImage.m */,
 			);
 			name = Categories;
 			sourceTree = "<group>";
@@ -472,6 +473,8 @@
 				3874B9A51A20736000400CEB /* HDAlertNode.m */,
 				388F4CFE1A231AD400941BCD /* HDSpaceView.h */,
 				388F4CFF1A231AD400941BCD /* HDSpaceView.m */,
+				38C122191A2A2EF300224B33 /* HDSwitch.h */,
+				38C1221A1A2A2EF300224B33 /* HDSwitch.m */,
 			);
 			name = Views;
 			sourceTree = "<group>";
@@ -645,6 +648,7 @@
 				38C67CFD1A0ACE450038526C /* Grid-10.json in Resources */,
 				38BDDCFA1A20FBB2005035EE /* Grid-59.json in Resources */,
 				38C67D0F1A0AE3A00038526C /* Grid-19.json in Resources */,
+				38C122181A29417100224B33 /* ToggleSwitchImage.png in Resources */,
 				38C67D231A0AE4060038526C /* Grid-29.json in Resources */,
 				38BDDCEA1A20FB5E005035EE /* Grid-51.json in Resources */,
 				38C67D1B1A0AE3DA0038526C /* Grid-25.json in Resources */,
@@ -720,8 +724,8 @@
 				38C67D281A0AEA490038526C /* HDMapManager.m in Sources */,
 				38521F3D1A19A20600484830 /* HDSpriteNode.m in Sources */,
 				38CA40241A1485380024D6BF /* HDRearViewController.m in Sources */,
-				38F7CC6E1A0D6FBE002E7C7F /* UIImage+HDImage.m in Sources */,
 				38C2E13B1A2671F3008D5F33 /* HDLevelGenerator.m in Sources */,
+				38C1221B1A2A2EF300224B33 /* HDSwitch.m in Sources */,
 				38C67D2C1A0AEBD50038526C /* HDGameCenterManager.m in Sources */,
 				38DAD0B71A202B0800EC5524 /* HDLevelViewCell.m in Sources */,
 			);

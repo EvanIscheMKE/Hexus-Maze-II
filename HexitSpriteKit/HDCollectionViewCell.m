@@ -24,7 +24,9 @@
         [layout setMinimumInteritemSpacing:20];
         [layout setMinimumLineSpacing:20];
         [layout setSectionInset:UIEdgeInsetsMake(30.0, 30.0f, 20.0f, 30.0f)];
-        [layout setItemSize:CGSizeMake(90.0f, 90.0f)];
+        [layout setItemSize:CGSizeMake(ceilf(CGRectGetWidth(self.bounds)/4.4f), ceilf(CGRectGetWidth(self.bounds)/4.4f))];
+        
+        NSLog(@"%F",self.bounds.size.width);
         
          self.collectionViewGrid = [[UICollectionView alloc] initWithFrame:self.bounds collectionViewLayout:layout];
         [self.collectionViewGrid registerClass:[HDLevelViewCell class] forCellWithReuseIdentifier:levelCellReuseIdentifer];
@@ -33,12 +35,6 @@
         
     }
     return self;
-}
-
-- (void)prepareForReuse
-{
-    [super prepareForReuse];
-    [self.collectionViewGrid setTag:0];
 }
 
 - (void)layoutSubviews

@@ -8,13 +8,13 @@
 
 
 // Notification Keys
-NSString * const hdSoundNotification = @"TileWasSoundNotification";
-NSString * const hdVibrationNotification = @"TileWasVibrationNotification";
-NSString * const hdRestartNotificaiton = @"restartNotification";
+NSString * const HDSoundNotification = @"TileWasSoundNotification";
+NSString * const HDVibrationNotification = @"TileWasVibrationNotification";
+NSString * const HDRestartNotificaiton = @"restartNotification";
 
 //Dictionary Keys
-NSString * const hdHexGridKey = @"grid";
-NSString * const hdHexZoomKey = @"zoom";
+NSString * const HDHexGridKey = @"grid";
+NSString * const HDHexZoomKey = @"zoom";
 
 // UserDefault Keys
 NSString * const HDDefaultLevelKey   = @"defaultLevels";

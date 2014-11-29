@@ -13,22 +13,20 @@
 #import "HDHelper.h"
 #import "HDConstants.h"
 
+static const CGFloat MINIMUM_MENU_OFFSET_X = 228.0f;
+
 @implementation UIViewController (HDMenuViewController)
 
 - (HDContainerViewController *)containerViewController
 {
     UIViewController *parent = self;
-    Class revealClass = [HDContainerViewController class];
-    while ( nil != (parent = [parent parentViewController])
-           && ![parent isKindOfClass:revealClass] ) {
+    Class containerClass = [HDContainerViewController class];
+    while ( nil != (parent = [parent parentViewController]) && ![parent isKindOfClass:containerClass] ) { }
     
-    }
     return (id)parent;
 }
 
 @end
-
-static CGFloat const kAnimationOffsetX = 180.0f;
 
 @interface HDContainerViewController ()
 
@@ -222,6 +220,10 @@ static CGFloat const kAnimationOffsetX = 180.0f;
         closeAnimation();
     } else {
         [UIView animateWithDuration:.3f
+                             delay:0.0f
+             usingSpringWithDamping:.8f
+              initialSpringVelocity:.05f
+                            options:0
                          animations:closeAnimation
                          completion:nil];
     }
@@ -231,14 +233,20 @@ static CGFloat const kAnimationOffsetX = 180.0f;
 {
     dispatch_block_t expandAnimation = ^{
         CGRect rect = self.gameViewController.view.frame;
-        rect.origin.x += kAnimationOffsetX;
+        rect.origin.x += MAX(ceilf(kAnimationOffsetX), MINIMUM_MENU_OFFSET_X);
         [self.gameViewController.view setFrame:rect];
     };
+    
+    NSLog(@"%f",kAnimationOffsetX);
     
     if (!animated) {
         expandAnimation();
     } else {
         [UIView animateWithDuration:.3f
+                              delay:0.0f
+             usingSpringWithDamping:.8f
+              initialSpringVelocity:.05f
+                            options:0
                          animations:expandAnimation
                          completion:nil];
     }

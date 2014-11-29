@@ -11,7 +11,7 @@
 #import "HDHexagon.h"
 #import "HDHexagonNode.h"
 
-typedef void(^CallBackBlock)(NSDictionary *dictionary, NSError *error);
+typedef void(^CallbackBlock)(NSDictionary *dictionary, NSError *error);
 
 @implementation HDGridManager {
     NSMutableDictionary *_levelCache;
@@ -32,10 +32,7 @@ typedef void(^CallBackBlock)(NSDictionary *dictionary, NSError *error);
         _levelCache = [NSMutableDictionary dictionary];
         
         NSDictionary *grid = [self _levelWithFileName:level];
-     
         [self layoutInitialGrid:grid];
-        
-        
     }
     return self;
 }
@@ -52,7 +49,7 @@ typedef void(^CallBackBlock)(NSDictionary *dictionary, NSError *error);
 {
     for (int row = 0; row < NumberOfRows; row++) {
         
-        NSArray *rows = [grid[hdHexGridKey] objectAtIndex:row];
+        NSArray *rows = [grid[HDHexGridKey] objectAtIndex:row];
         
         for (int column = 0; column < NumberOfColumns; column++) {
             
@@ -80,10 +77,9 @@ typedef void(^CallBackBlock)(NSDictionary *dictionary, NSError *error);
                 
                 if (_grid[row][column] != nil) {
                     
-                    HDHexagon *cookie = [self _makeHexagonAtRow:row column:column];
-                    [_hexagons addObject:cookie];
-                    NSLog(@"CALLEd");
+                    HDHexagon *cookie = [self _createHexagonAtRow:row column:column];
                     _hexagon[row][column] = cookie;
+                    [_hexagons addObject:cookie];
                 }
             }
         }
@@ -106,7 +102,7 @@ typedef void(^CallBackBlock)(NSDictionary *dictionary, NSError *error);
 - (NSDictionary *)_levelWithFileName:(NSString *)filename
 {
     __block NSDictionary *gridInfo;
-    [self _loadJSON:filename withCallBack:^(NSDictionary *dictionary, NSError *error) {
+    [self _loadJSON:filename withCallback:^(NSDictionary *dictionary, NSError *error) {
         if (!error) {
             gridInfo = [[NSDictionary alloc] initWithDictionary:dictionary];
         } else {
@@ -117,11 +113,11 @@ typedef void(^CallBackBlock)(NSDictionary *dictionary, NSError *error);
     return gridInfo;
 }
 
-- (void)_loadJSON:(NSString *)filename withCallBack:(CallBackBlock)callBack
+- (void)_loadJSON:(NSString *)filename withCallback:(CallbackBlock)callback
 {
     if (_levelCache[filename]) {
-        if (callBack) {
-            callBack(_levelCache[filename],nil);
+        if (callback) {
+            callback(_levelCache[filename],nil);
             return;
         }
     }
@@ -131,8 +127,8 @@ typedef void(^CallBackBlock)(NSDictionary *dictionary, NSError *error);
     NSError *error = nil;
     NSData *data = [NSData dataWithContentsOfFile:path options:0 error:&error];
     if (data == nil) {
-        if (callBack) {
-            callBack(nil,error);
+        if (callback) {
+            callback(nil,error);
             return;
         }
     }
@@ -142,12 +138,12 @@ typedef void(^CallBackBlock)(NSDictionary *dictionary, NSError *error);
         _levelCache[filename] = dictionary;
     }
     
-    if (callBack){
-        callBack(dictionary,nil);
+    if (callback){
+        callback(dictionary,nil);
     }
 }
 
-- (HDHexagon *)_makeHexagonAtRow:(NSInteger)row column:(NSInteger)column
+- (HDHexagon *)_createHexagonAtRow:(NSInteger)row column:(NSInteger)column
 {
     HDHexagon *hexagon = [[HDHexagon alloc] initWithRow:row column:column];
     

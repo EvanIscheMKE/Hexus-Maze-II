@@ -31,8 +31,7 @@
 
 - (void)updateLabelWithText:(NSString *)text color:(UIColor *)color
 {
-    if (!self.label)
-    {
+    if (!self.label) {
          self.label = [SKLabelNode labelNodeWithText:text];
         [self.label setHorizontalAlignmentMode:SKLabelHorizontalAlignmentModeCenter];
         [self.label setVerticalAlignmentMode:SKLabelVerticalAlignmentModeCenter];

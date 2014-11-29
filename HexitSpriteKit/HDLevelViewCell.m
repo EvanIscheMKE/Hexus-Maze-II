@@ -13,13 +13,12 @@ NSString * const levelCellReuseIdentifer = @"levelReuseIdentifier";
 
 
 static const CGFloat kPadding = 15.0f;
-@implementation HDLevelViewCell {
-    UIImageView *_lockedImageView;
-}
+@implementation HDLevelViewCell
 
 - (instancetype)initWithFrame:(CGRect)frame
 {
     if (self = [super initWithFrame:frame]) {
+        
         [self.layer setBorderWidth:4.0f];
         [self.layer setCornerRadius:CGRectGetMidX(self.bounds)];
         [self.layer setMasksToBounds:YES];
@@ -34,9 +33,6 @@ static const CGFloat kPadding = 15.0f;
         
         self.imageView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"STAR_NOT_COMPLETED.png"]];
         [self.contentView addSubview:self.imageView];
-        
-        _lockedImageView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"LOCKEDLEVEL.png"]];
-     //   [self.contentView addSubview:_lockedImageView];
         
     }
     return self;
@@ -60,10 +56,8 @@ static const CGFloat kPadding = 15.0f;
 - (void)layoutSubviews
 {
     [super layoutSubviews];
-    
-    [self.imageView   setCenter:CGPointMake(CGRectGetMidX(self.contentView.bounds), kPadding * 1.5)];
-    [self.indexLabel  setCenter:CGPointMake(CGRectGetMidX(self.contentView.bounds), CGRectGetMidY(self.contentView.bounds) + kPadding)];
-   // [_lockedImageView setCenter:CGPointMake(CGRectGetMidX(self.contentView.bounds), CGRectGetMidY(self.contentView.bounds))];
+    [self.imageView  setCenter:CGPointMake(CGRectGetMidX(self.contentView.bounds), kPadding * 1.5f)];
+    [self.indexLabel setCenter:CGPointMake(CGRectGetMidX(self.contentView.bounds), CGRectGetMidY(self.contentView.bounds) + kPadding)];
 }
 
 @end

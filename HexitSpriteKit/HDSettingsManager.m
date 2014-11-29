@@ -22,12 +22,10 @@
 - (instancetype)init
 {
     if (self = [super init]) {
-        
         [self setSound:    [[NSUserDefaults standardUserDefaults] boolForKey:HDSoundkey]];
         [self setVibration:[[NSUserDefaults standardUserDefaults] boolForKey:HDVibrationKey]];
         [self setSpace:    [[NSUserDefaults standardUserDefaults] boolForKey:HDEffectsKey]];
         [self setGuide:    [[NSUserDefaults standardUserDefaults] boolForKey:HDGuideKey]];
-        
     }
     return self;
 }
@@ -42,50 +40,25 @@
     return manager;
 }
 
-#pragma mark -
-#pragma mark - <HDRearViewControllerDelegate>
-
-- (void)layoutToggleSwitchesForSettingsFromArray:(NSArray *)array
+- (void)toggleSound
 {
-    if (array) {
-        
-        for (UIButton *button in array) {
-            [button addTarget:self action:@selector(toggleSwitch:) forControlEvents:UIControlEventTouchUpInside];
-        }
-        
-        [array[0] setSelected:self.vibration];
-        [array[1] setSelected:self.sound];
-        [array[2] setSelected:self.space];
-       // [array[3] setSelected:self.guide];
-    }
+    [self setSound:!self.sound];
 }
 
-#pragma mark -
-#pragma mark - Switches
-
-- (void)toggleSwitch:(id)sender
+- (void)toggleVibration
 {
-    UIButton *toggleSwitch = (UIButton *)sender;
-    [toggleSwitch setSelected:!toggleSwitch.selected];
-    
-    switch (toggleSwitch.tag) {
-        case 0:
-            [self setSound:!self.sound];
-            [[NSUserDefaults standardUserDefaults] setBool:self.sound forKey:HDSoundkey];
-            break;
-        case 1:
-            [self setVibration:!self.vibration];
-            [[NSUserDefaults standardUserDefaults] setBool:self.vibration forKey:HDVibrationKey];
-            break;
-        case 2:
-            [self setSpace:!self.space];
-            [[NSUserDefaults standardUserDefaults] setBool:self.space forKey:HDEffectsKey];
-            break;
-        case 3:
-            [self setGuide:!self.guide];
-            [[NSUserDefaults standardUserDefaults] setBool:self.guide forKey:HDGuideKey];
-            break;
-    }
+    [self setVibration:!self.vibration];
 }
+
+- (void)toggleSpace
+{
+    [self setSpace:!self.space];
+}
+
+- (void)toggleGuide
+{
+    [self setGuide:!self.guide];
+}
+
 
 @end
