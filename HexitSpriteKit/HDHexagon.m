@@ -29,6 +29,9 @@ static const CGFloat kHexagonInset = 6.0f;
 {
     if (self = [super init]) {
         
+        NSParameterAssert(row);
+        NSParameterAssert(column);
+        
         _recievedTouchesCount = 0;
         
         [self setRow:row];
@@ -108,9 +111,12 @@ static const CGFloat kHexagonInset = 6.0f;
                 case 1:{
                     SKShapeNode *shapeNode = (SKShapeNode *)[self.node childNodeWithName:@"double"];
                     [shapeNode setFillColor:shapeNode.strokeColor];
+                    
                     SKAction *position = [SKAction moveByX:-1 y:-1 duration:.3f];
                     SKAction *scale = [SKAction scaleTo:.0f duration:.3f];
-                    [shapeNode runAction:[SKAction group:@[position, scale]] completion:^{
+                    
+                    [shapeNode runAction:[SKAction group:@[position, scale]]
+                              completion:^{
                         [self.node setFillColor:[self _translucentColor:self.node.strokeColor]];
                         [shapeNode removeFromParent];
                     }];
@@ -190,16 +196,6 @@ static const CGFloat kHexagonInset = 6.0f;
     }
 }
 
-- (void)unlock
-{
-    if (self.state == HDHexagonStateEnabled) {
-        return;
-    }
-    [self setState:HDHexagonStateEnabled];
-    [self.node setFillColor:[self _translucentColor:[SKColor flatEmeraldColor]]];
-    [self.node runAction:[SKAction rotateByAngle:M_PI * 2 duration:.2f]];
-}
-
 - (void)returnToPreviousState
 {
     switch (self.type) {
@@ -213,35 +209,55 @@ static const CGFloat kHexagonInset = 6.0f;
             [self.node updateLabelWithText:@"S" color:[UIColor whiteColor]];
             break;
         case HDHexagonTypeDouble:
-            
-             _recievedTouchesCount--;
             switch (_recievedTouchesCount) {
                 case 1:
+                    // return base tile to fully transparent
+                    [self.node setFillColor:[SKColor clearColor]];
+                    
+                    // Add the removed tile back onto the node stack
                     [self _doubleHexagonShapeNodeWithStroke:self.node.strokeColor
                                                        fill:[self _translucentColor:self.node.strokeColor]];
+                    // Animate offset by 1,1 to blend
+                    [[self.node childNodeWithName:DOUBLE_KEY] runAction:[SKAction moveByX:1.0f y:1.0 duration:.3f]];
                     break;
                 case 2:
                     [self setSelected:NO];
                     [self.node setFillColor:[self _translucentColor:self.node.strokeColor]];
                     break;
-          } break;
+          }
+             _recievedTouchesCount--;
+            break;
         case HDHexagonTypeTriple:
-            
-            _recievedTouchesCount--;
+
             switch (_recievedTouchesCount) {
                 case 1:
+                    // return base tile to fully transparent
+                    [(SKShapeNode *)[self.node childNodeWithName:DOUBLE_KEY] setFillColor:[SKColor clearColor]];
+                    
+                    // Add the removed tile back onto the node stack
                     [self _tripleHexagonShapeNodeWithStroke:self.node.strokeColor
                                                        fill:[self _translucentColor:self.node.strokeColor]];
+                    // Animate offset by 1,1 to blend
+                    [[self.node childNodeWithName:DOUBLE_KEY] runAction:[SKAction runAction:[SKAction moveByX:1.0f y:1.0 duration:.3f]
+                                                                            onChildWithName:TRIPLE_KEY]];
                     break;
                 case 2:
+                    // return base tile to fully transparent
+                    [self.node setFillColor:[SKColor clearColor]];
+                    
+                    // Add the removed tile back onto the node stack
                     [self _doubleHexagonShapeNodeWithStroke:self.node.strokeColor
                                                        fill:[self _translucentColor:self.node.strokeColor]];
+                    // Animate offset by 1,1 to blend
+                    [[self.node childNodeWithName:DOUBLE_KEY] runAction:[SKAction moveByX:1.0f y:1.0 duration:.3f]];
                     break;
                 case 3:
                     [self setSelected:NO];
                     [self.node setFillColor:[self _translucentColor:self.node.strokeColor]];
                     break;
-            } break;
+            }
+             _recievedTouchesCount--;
+            break;
         case HDHexagonTypeOne:
             [self _countTileWasSelectedForType:HDHexagonTypeOne];
             break;
@@ -258,6 +274,16 @@ static const CGFloat kHexagonInset = 6.0f;
             [self _countTileWasSelectedForType:HDHexagonTypeFive];
             break;
     }
+}
+
+- (void)unlock
+{
+    if (self.state == HDHexagonStateEnabled) {
+        return;
+    }
+    [self setState:HDHexagonStateEnabled];
+    [self.node setFillColor:[self _translucentColor:[SKColor flatEmeraldColor]]];
+    [self.node runAction:[SKAction rotateByAngle:M_PI * 2 duration:.2f]];
 }
 
 - (void)restoreToInitialState

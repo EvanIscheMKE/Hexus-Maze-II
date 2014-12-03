@@ -35,13 +35,6 @@ static NSString * const cellReuseIdentifer = @"identifier";
     NSInteger _selectedLevelIndex;
 }
 
-//- (void)loadView
-//{
-//    CGRect spaceRect = [[UIScreen mainScreen] bounds];
-//    HDSpaceView *space = [[HDSpaceView alloc] initWithFrame:spaceRect];
-//    [self setView:space];
-//}
-
 - (instancetype)init
 {
     if (self = [super init]) {

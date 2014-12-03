@@ -10,8 +10,6 @@
 
 #import "HDWelcomeViewController.h"
 #import "UIColor+FlatColors.h"
-#import "HDSpaceView.h"
-#import "HDHelper.h"
 
 @interface HDWelcomeViewController ()
 @property (nonatomic, strong) UIButton *beginGame;
@@ -46,8 +44,7 @@
         [self.view addSubview:subView];
     }
     
-    // Title Label
-    
+    // Title Label Width
     NSLayoutConstraint *constraintTitle = [NSLayoutConstraint constraintWithItem:title
                                                                        attribute:NSLayoutAttributeWidth
                                                                        relatedBy:NSLayoutRelationEqual
@@ -57,6 +54,7 @@
                                                                         constant:CGRectGetWidth(CGRectInset(self.view.bounds, 15.0f, 0.0f))];
     [title addConstraint:constraintTitle];
     
+    // Title Label Center X
     NSLayoutConstraint *centerTitleX =  [NSLayoutConstraint constraintWithItem:title
                                                                      attribute:NSLayoutAttributeCenterX
                                                                      relatedBy:NSLayoutRelationEqual
@@ -66,6 +64,7 @@
                                                                       constant:0];
     [self.view addConstraint:centerTitleX];
     
+    // Title Label Center Y
     NSLayoutConstraint *centerTitleY = [NSLayoutConstraint constraintWithItem:title
                                                                      attribute:NSLayoutAttributeCenterY
                                                                      relatedBy:NSLayoutRelationEqual
@@ -75,8 +74,7 @@
                                                                       constant:0];
     [self.view addConstraint:centerTitleY];
 
-    // Button
-    
+    // Begin button width
     NSLayoutConstraint *constraintWidth = [NSLayoutConstraint constraintWithItem:self.beginGame
                                                                        attribute:NSLayoutAttributeWidth
                                                                        relatedBy:NSLayoutRelationEqual
@@ -86,6 +84,7 @@
                                                                         constant:CGRectGetWidth(self.view.bounds)/2.5f];
     [self.beginGame addConstraint:constraintWidth];
     
+    // Begin button height
     NSLayoutConstraint *constraintHeight = [NSLayoutConstraint constraintWithItem:self.beginGame
                                                                         attribute:NSLayoutAttributeHeight
                                                                         relatedBy:NSLayoutRelationEqual
@@ -94,6 +93,7 @@
                                                                        multiplier:1.0f constant:35.0f];
     [self.beginGame addConstraint:constraintHeight];
     
+    // Begin button center C
     NSLayoutConstraint *centerButtonX =  [NSLayoutConstraint constraintWithItem:self.beginGame
                                                                      attribute:NSLayoutAttributeCenterX
                                                                      relatedBy:NSLayoutRelationEqual
@@ -103,6 +103,7 @@
                                                                       constant:0];
     [self.view addConstraint:centerButtonX];
     
+    // Begin button center x
     NSLayoutConstraint *centerButtonY = [NSLayoutConstraint constraintWithItem:self.beginGame
                                                                     attribute:NSLayoutAttributeCenterY
                                                                     relatedBy:NSLayoutRelationEqual

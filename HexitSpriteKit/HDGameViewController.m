@@ -169,14 +169,16 @@
 - (void)_layoutNavigationButtons
 {
      self.restart = [UIButton buttonWithType:UIButtonTypeCustom];
-    [self.restart setImage:[UIImage imageNamed: @"TOGGLEE"] forState:UIControlStateNormal];
+    [self.restart setTitle:@"Restart" forState:UIControlStateNormal];
     [self.restart addTarget:self action:@selector(restartGame) forControlEvents:UIControlEventTouchUpInside];
     
     self.reverse = [UIButton buttonWithType:UIButtonTypeCustom];
-    [self.reverse setImage:[UIImage imageNamed: @"SHAREE"] forState:UIControlStateNormal];
+    [self.reverse setTitle:@"Reverse" forState:UIControlStateNormal];
     [self.reverse addTarget:self action:@selector(reversePreviousMove) forControlEvents:UIControlEventTouchUpInside];
     
     for (UIButton *button in @[self.restart, self.reverse]) {
+        [[button titleLabel] setTextAlignment:NSTextAlignmentCenter];
+        [[button titleLabel] setFont:GILLSANS_LIGHT(8.0f)];
         [button setTranslatesAutoresizingMaskIntoConstraints:NO];
         [self.view addSubview:button];
     }

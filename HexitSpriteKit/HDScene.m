@@ -72,7 +72,6 @@ static const CGFloat kTileHeightInsetMultiplier = .845f;
         [self addChild:self.tileLayer];
         
          self.gameLayer = [SKNode node];
-        [self.gameLayer setName:@"GameLayer"];
         [self addChild:self.gameLayer];
         
         _minCenterX = MAXFLOAT;
@@ -183,15 +182,16 @@ static const CGFloat kTileHeightInsetMultiplier = .845f;
     //Animate restart once animating outs completed
     [self _performEntranceAnimationWithTiles:shuffledTiles delay:delay completion:^{
         [self setAnimating:NO];
-        NSLog(@"entrance");
     }];
 }
 
 - (void)reversePreviousMove
 {
-    if (!_moves.count || !_selectedHexagons.count) {
+    if (!_moves.count || self.animating) {
         return;
     }
+    
+    [self setAnimating:YES];
     
     // Loop through tiles to find node that matches the last selected node and restore to previous state
     for (HDHexagon *hexaNode in _hexagons) {
@@ -222,6 +222,7 @@ static const CGFloat kTileHeightInsetMultiplier = .845f;
             }
         }
     }
+    [self setAnimating:NO];
 }
 
 #pragma mark -
@@ -255,7 +256,7 @@ static const CGFloat kTileHeightInsetMultiplier = .845f;
         
         [_moves addObject:hexagon.node.name];
         [self.gameLayer runAction:self.selectedSound];
-        [_selectedHexagons addUniqueObject:hexagon];
+        [_selectedHexagons addObject:hexagon];
         [hexagon recievedTouches];
         
         [self _checkGameStatusAfterSelectingTile:hexagon];
@@ -286,7 +287,7 @@ static const CGFloat kTileHeightInsetMultiplier = .845f;
         
         HDSpriteNode *sprite = self.tileLayer.children[index];
         
-        // Offset tiles to center entire map (find the inset + or - and adjust accordingly)
+        // Offset tiles to center entire map (find the inset + or -, adjust accordingly)
         CGPoint center = hexagon.node.position;
         center.x += (floorf(_minCenterX) > _minViewAreaOriginX) ? -(_minCenterX - _minViewAreaOriginX) : _minViewAreaOriginX - _minCenterX;
         center.y += (floorf(_minCenterY) > _minViewAreaOriginY) ? -(_minCenterY - _minViewAreaOriginY) : _minViewAreaOriginY - _minCenterY;
@@ -355,10 +356,10 @@ static const CGFloat kTileHeightInsetMultiplier = .845f;
     NSTimeInterval _delay = delay;
     
     // Setup actions for base tiles
-    SKAction *scale = [SKAction scaleTo:0.0f duration:0.0f];
     SKAction *show  = [SKAction unhide];
+    SKAction *scale = [SKAction scaleTo:0.0f  duration:0.0f];
     SKAction *pop   = [SKAction scaleTo:1.15f duration:.3f];
-    SKAction *size  = [SKAction scaleTo:1.0f duration:.3f];
+    SKAction *size  = [SKAction scaleTo:1.0f  duration:.3f];
     
     // setup actions for children nodes
     SKAction *doubleTouch = [SKAction moveTo:CGPointMake(1.0f, 1.0f) duration:.5f];
@@ -390,6 +391,7 @@ static const CGFloat kTileHeightInsetMultiplier = .845f;
                              }
                          }
                          
+                         // after animations complete, call completion block
                          dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(completion * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
                              if (handler) {
                                  handler();
@@ -440,11 +442,11 @@ static const CGFloat kTileHeightInsetMultiplier = .845f;
     hexagonRow[5] = hexagon.row - 1;
     
     NSInteger hexagonColumn[6];
-    hexagonColumn[0] = hexagon.column + 1; // R++ , C==
-    hexagonColumn[1] = hexagon.column - 1; // R-- , C==
-    hexagonColumn[2] = hexagon.column;
+    hexagonColumn[0] = hexagon.column + 1; // R== , C++
+    hexagonColumn[1] = hexagon.column - 1; // R== , C--
+    hexagonColumn[2] = hexagon.column;     // R++ , C==
     hexagonColumn[3] = hexagon.column + ((hexagon.row % 2 == 0) ? 1 : -1);
-    hexagonColumn[4] = hexagon.column;
+    hexagonColumn[4] = hexagon.column;     // R-- , C==
     hexagonColumn[5] = hexagon.column + ((hexagon.row % 2 == 0) ? 1 : -1);
     
     for (int i = 0; i < 6; i++) {
