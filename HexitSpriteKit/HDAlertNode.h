@@ -10,7 +10,7 @@
 
 @interface HDAlertNode : SKSpriteNode
 
-- (void)showAlertNode;
-- (void)dismissAlertNode;
+- (void)show;
+- (void)dismiss;
 
 @end

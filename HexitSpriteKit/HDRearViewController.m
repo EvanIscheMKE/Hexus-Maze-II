@@ -9,10 +9,12 @@
 #import "HDContainerViewController.h"
 #import "HDRearViewController.h"
 #import "UIColor+FlatColors.h"
+#import "HDSoundManager.h"
 #import "HDSettingsManager.h"
 #import "HDSwitch.h"
 
 static const CGFloat MINIMUM_MENU_OFFSET_X = 228.0f;
+
 @interface HDRearViewController ()
 @property (nonatomic, strong) NSMutableArray *arrayOfButtons;
 @property (nonatomic, strong) UIButton *retry;
@@ -77,24 +79,24 @@ static const CGFloat MINIMUM_MENU_OFFSET_X = 228.0f;
 
 - (UIView *)layoutContainerWithToggleSwitches
 {
-    CGRect containerBounds = CGRectMake(0.0f, 0.0f, MAX(kAnimationOffsetX,MINIMUM_MENU_OFFSET_X) - (2 * 20), 200.0f);
+    CGRect containerBounds = CGRectMake(0.0f, 0.0f, MAX(kAnimationOffsetX,MINIMUM_MENU_OFFSET_X) - (2 * 20.0f), 200.0f);
     UIView *container = [[UIView alloc] initWithFrame:containerBounds];
     [container setTranslatesAutoresizingMaskIntoConstraints:NO];
     
     HDSwitch *buttonOne = [[HDSwitch alloc] initWithOnColor:[UIColor flatEmeraldColor] offColor:[UIColor flatMidnightBlueColor]];
-    [buttonOne setSelected:[[HDSettingsManager sharedManager] sound]];
+    [buttonOne setOn:[[HDSettingsManager sharedManager] sound]];
     [buttonOne setTag:0];
     
     HDSwitch *buttonTwo = [[HDSwitch alloc] initWithOnColor:[UIColor flatEmeraldColor]  offColor:[UIColor flatMidnightBlueColor]];
-    [buttonTwo setSelected:[[HDSettingsManager sharedManager] sound]];
+    [buttonTwo setOn:[[HDSettingsManager sharedManager] space]];
     [buttonTwo setTag:1];
     
     HDSwitch *buttonThree = [[HDSwitch alloc] initWithOnColor:[UIColor flatEmeraldColor] offColor:[UIColor flatMidnightBlueColor]];
-    [buttonThree setSelected:[[HDSettingsManager sharedManager] sound]];
+    [buttonThree setOn:[[HDSettingsManager sharedManager] sound]];
     [buttonThree setTag:2];
     
     HDSwitch *buttonFour = [[HDSwitch alloc] initWithOnColor:[UIColor flatEmeraldColor] offColor:[UIColor flatMidnightBlueColor]];
-    [buttonFour setSelected:[[HDSettingsManager sharedManager] sound]];
+    [buttonFour setOn:[[HDSettingsManager sharedManager] sound]];
     [buttonFour setTag:3];
     
     UILabel *labelOne   = [[UILabel alloc] init];
@@ -118,10 +120,7 @@ static const CGFloat MINIMUM_MENU_OFFSET_X = 228.0f;
     }
     
     for (UIButton *toggleButton in @[buttonOne, buttonTwo, buttonThree, buttonFour]) {
-        [toggleButton addTarget:self action:@selector(updateToggleButtonAtTag:) forControlEvents:UIControlEventTouchUpInside];
-//        [toggleButton setImage:[UIImage imageNamed:@"ToggleSwitchImage"]  forState:UIControlStateNormal];
-//        [toggleButton setImage:[UIImage imageNamed:@"ToggleSwitchImage"] forState:UIControlStateSelected];
-//        [toggleButton setAdjustsImageWhenHighlighted:NO];
+        [toggleButton addTarget:self action:@selector(updateToggleButtonAtTag:) forControlEvents:UIControlEventValueChanged];
         [toggleButton setTranslatesAutoresizingMaskIntoConstraints:NO];
         [self.arrayOfButtons addObject:toggleButton];
         [container addSubview:toggleButton];
@@ -275,20 +274,23 @@ static const CGFloat MINIMUM_MENU_OFFSET_X = 228.0f;
 
 - (IBAction)openAcheivementsController:(id)sender
 {
+    [[HDSoundManager sharedManager] playSound:@"menuClicked.wav"];
+    
     HDContainerViewController *container = self.containerViewController;
-    [container _toggleHDMenuViewController];
+    [container toggleHDMenuViewController];
     [ADelegate openAchievementsViewController];
 }
 
 - (IBAction)popToRootViewController:(id)sender
 {
+    [[HDSoundManager sharedManager] playSound:@"menuClicked.wav"];
+    
     [self.parentViewController dismissViewControllerAnimated:YES completion:nil];
 }
 
 - (IBAction)updateToggleButtonAtTag:(id)sender
 {
-    UIButton *toggle = (UIButton *)sender;
-    [toggle setSelected:!toggle.selected];
+    HDSwitch *toggle = (HDSwitch *)sender;
     
     switch (toggle.tag) {
         case 0:

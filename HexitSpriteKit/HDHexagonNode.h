@@ -14,6 +14,7 @@
 
 - (void)updateLabelWithText:(NSString *)text;
 - (void)updateLabelWithText:(NSString *)text color:(UIColor *)color;
+- (void)setStrokeColor:(UIColor *)strokeColor fillColor:(UIColor *)fillColor;
 
 @end
 

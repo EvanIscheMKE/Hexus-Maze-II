@@ -6,6 +6,8 @@
 //  Copyright (c) 2014 Evan William Ische. All rights reserved.
 //
 
+@import QuartzCore;
+
 #import "HDSpaceView.h"
 #import "UIColor+FlatColors.h"
 
@@ -38,7 +40,7 @@
         
         CAGradientLayer *gradientLayer = self.gradientLayer;
         gradientLayer.colors = @[(id)[UIColor flatMidnightBlueColor].CGColor,
-                                 (id)[[UIColor flatMidnightBlueColor] colorWithAlphaComponent:.5f].CGColor];
+                                 (id)[UIColor flatMidnightBlueColor].CGColor];
         gradientLayer.locations = @[@(.65),@(1.25)];
         
         [self.layer addSublayer:self.emitterLayer];
@@ -87,7 +89,7 @@
 
 - (CAGradientLayer *)gradientLayer
 {
-    return  (CAGradientLayer *)self.layer;
+    return (CAGradientLayer *)self.layer;
 }
 
 - (CAEmitterCell *)_buildSpaceEmitterCellWithColor:(UIColor *)color
@@ -96,16 +98,14 @@
     [star setContents: (__bridge id)[[UIImage imageNamed:@"spark.png"] CGImage]];
     [star setSpeed:1];
     [star setName:@"space"];
-    [star setBirthRate:8];
-    [star setLifetime:15];
-    [star setLifetimeRange:2];
+    [star setBirthRate:2];
+    [star setLifetime:HUGE_VAL];
     [star setColor:[color CGColor]];
-    [star setVelocity: 40];
-    [star setVelocityRange: 80];
-    [star setEmissionLongitude:M_PI + (M_PI_4 /2)];
-    [star setYAcceleration:3.0f];
-    [star setXAcceleration:2.0f];
-    [star setAlphaRange:.0f];
+    [star setVelocity: 30];
+    [star setVelocityRange:0];
+    [star setEmissionLongitude:M_PI];
+    [star setXAcceleration:.15f];
+    [star setAlphaRange:.5];
     [star setAlphaSpeed:.0f];
     [star setScale:.07f];
     [star setScaleRange: 0.1f];

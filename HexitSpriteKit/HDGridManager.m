@@ -97,7 +97,7 @@ typedef void(^CallbackBlock)(NSDictionary *dictionary, NSError *error);
 }
 
 #pragma mark -
-#pragma mark - PRIVATE
+#pragma mark - < PRIVATE >
 
 - (NSDictionary *)_levelWithFileName:(NSString *)filename
 {

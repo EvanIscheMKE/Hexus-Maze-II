@@ -9,6 +9,7 @@
 #import "HDLevel.h"
 #import "HDMapManager.h"
 
+static const NSInteger LEVELS_PER_PAGE = 15;
 @interface HDMapManager ()
 
 @property (nonatomic, assign) NSUInteger totalNumberOfLevels;
@@ -25,7 +26,7 @@
 {
     if (self = [super init]) {
         self.totalNumberOfLevels = 75;
-        self.numberOfSections = 5;
+        self.numberOfSections = self.totalNumberOfLevels / LEVELS_PER_PAGE;
     }
     return self;
 }

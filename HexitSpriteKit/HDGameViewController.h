@@ -15,5 +15,7 @@
 - (instancetype)initWithLevel:(NSInteger)level;
 - (instancetype)initWithRandomlyGeneratedLevel;
 
+- (void)restartGame;
+
 @end
 

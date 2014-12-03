@@ -8,10 +8,13 @@
 
 #import "HDLevel.h"
 #import "HDMapManager.h"
+#import "HDSoundManager.h"
 #import "HDLevelViewCell.h"
 #import "UIColor+FlatColors.h"
 #import "HDGridViewController.h"
 #import "HDCollectionViewCell.h"
+#import "HDGridMenu.h"
+#import "HDPageControl.h"
 #import "HDSpaceView.h"
 
 #define singularMessage [NSString stringWithFormat:@"You must first complete level 1 to unlock the Level"]
@@ -23,20 +26,21 @@ static NSString * const cellReuseIdentifer = @"identifier";
 @interface HDGridViewController ()<UICollectionViewDataSource, UICollectionViewDelegate, UIScrollViewDelegate>
 
 @property (nonatomic, strong) UICollectionView *collectionView;
-@property (nonatomic, strong) UIPageControl *pageControl;
+@property (nonatomic, strong) HDPageControl *pageControl;
 
 @end
 
 @implementation HDGridViewController {
     NSInteger _previousPage;
+    NSInteger _selectedLevelIndex;
 }
 
-- (void)loadView
-{
-    CGRect spaceRect = [[UIScreen mainScreen] bounds];
-    HDSpaceView *space = [[HDSpaceView alloc] initWithFrame:spaceRect];
-    [self setView:space];
-}
+//- (void)loadView
+//{
+//    CGRect spaceRect = [[UIScreen mainScreen] bounds];
+//    HDSpaceView *space = [[HDSpaceView alloc] initWithFrame:spaceRect];
+//    [self setView:space];
+//}
 
 - (instancetype)init
 {
@@ -49,6 +53,7 @@ static NSString * const cellReuseIdentifer = @"identifier";
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    [self.view setBackgroundColor:[UIColor flatMidnightBlueColor]];
     
 //    UIButton *toNonJSONLevel = [UIButton buttonWithType:UIButtonTypeCustom];
 //    [toNonJSONLevel setBackgroundColor:[UIColor redColor]];
@@ -58,14 +63,13 @@ static NSString * const cellReuseIdentifer = @"identifier";
 //    [toNonJSONLevel addTarget:ADelegate action:@selector(navigateToRandomlyGeneratedLevel) forControlEvents:UIControlEventTouchDown];
 //    [self.view addSubview:toNonJSONLevel];
     
-   // CGRect pageControlFrame = CGRectMake(0.0f, 0.0f, CGRectGetMidX(self.view.bounds), 30.0f);
-     self.pageControl = [[UIPageControl alloc] initWithFrame:CGRectZero];
+     self.pageControl = [[HDPageControl alloc] init];
     [self.pageControl setBackgroundColor:[UIColor flatMidnightBlueColor]];
     [self.pageControl setNumberOfPages:[[HDMapManager sharedManager] numberOfSections]];
-    [self.pageControl setCurrentPage:0];
     [self.pageControl sizeToFit];
     [self.pageControl setCenter:CGPointMake(CGRectGetMidX(self.view.bounds), 35.0f)];
     [self.pageControl setCurrentPageIndicatorTintColor:[UIColor flatPeterRiverColor]];
+    [self.pageControl setCurrentPage:0];
     [self.view addSubview:self.pageControl];
     
     UICollectionViewFlowLayout *layout = [[UICollectionViewFlowLayout alloc] init];
@@ -77,6 +81,7 @@ static NSString * const cellReuseIdentifer = @"identifier";
     CGRect collectionViewRect = CGRectMake(0.0, 60.0f, CGRectGetWidth(self.view.bounds), CGRectGetHeight(self.view.bounds) - 60.0f);
      self.collectionView = [[UICollectionView alloc] initWithFrame:collectionViewRect collectionViewLayout:layout];
     [self.collectionView registerClass:[HDCollectionViewCell class] forCellWithReuseIdentifier:cellReuseIdentifer];
+    [self.collectionView setShowsHorizontalScrollIndicator:NO];
     [self.collectionView setDelegate:self];
     [self.collectionView setDataSource:self];
     [self.collectionView setPagingEnabled:YES];
@@ -116,29 +121,26 @@ static NSString * const cellReuseIdentifer = @"identifier";
         
         HDLevel *level = [[HDMapManager sharedManager] levels][levelIndex];
         
-        [cell setCompleted:level.isCompleted];
         
+        [cell setCompleted:level.isCompleted];
+        [cell setAnimate:(!level.completed && level.unlocked)];
         [cell.indexLabel setText:[NSString stringWithFormat:@"%ld", levelIndex + 1]];
+        
         switch (collectionView.tag) {
             case 0:
-                [cell setBackgroundColor:[UIColor flatMidnightBlueColor]];
-                [cell.layer setBorderColor:[[UIColor flatPeterRiverColor] CGColor]];
+                [cell.hexagonLayer setFillColor:[[UIColor flatPeterRiverColor] CGColor]];
                 break;
             case 1:
-                [cell setBackgroundColor:[UIColor flatMidnightBlueColor]];
-                [cell.layer setBorderColor:[[UIColor flatEmeraldColor] CGColor]];
+                [cell.hexagonLayer setFillColor:[[UIColor flatEmeraldColor] CGColor]];
                 break;
             case 2:
-                [cell setBackgroundColor:[UIColor flatMidnightBlueColor]];
-                [cell.layer setBorderColor:[[UIColor flatTurquoiseColor] CGColor]];
+                [cell.hexagonLayer setFillColor:[[UIColor flatTurquoiseColor] CGColor]];
                 break;
             case 3:
-                [cell setBackgroundColor:[UIColor flatMidnightBlueColor]];
-                [cell.layer setBorderColor:[[UIColor flatSilverColor] CGColor]];
+                [cell.hexagonLayer setFillColor:[[UIColor flatSilverColor] CGColor]];
                 break;
             case 4:
-                [cell setBackgroundColor:[UIColor flatMidnightBlueColor]];
-                [cell.layer setBorderColor:[[UIColor flatSilverColor] CGColor]];
+                [cell.hexagonLayer setFillColor:[[UIColor flatSilverColor] CGColor]];
                 break;
         }
         return cell;
@@ -151,15 +153,20 @@ static NSString * const cellReuseIdentifer = @"identifier";
     NSInteger levelIndex  = (indexPath.item) + (collectionView.tag * 15);
     NSInteger levelNumber = levelIndex + 1;
     
-  //  HDLevel *level = [[HDMapManager sharedManager] levels][levelIndex];
+    HDLevel *level = [[HDMapManager sharedManager] levels][levelIndex];
     
-  //  NSString *message = ((indexPath.row + 1) <= 2) ? singularMessage : pluralMessage(indexPath.row);
- 
+    NSString *message = ((indexPath.row + 1) <= 2) ? singularMessage : pluralMessage(indexPath.row);
     
-  //  if (level.isUnlocked) {
-        [ADelegate navigateToNewLevel:levelNumber];
-//    } else {
-//        
+    _selectedLevelIndex = levelNumber;
+    
+    if (level.isUnlocked) {
+        
+        [[HDSoundManager sharedManager] playSound:@"menuClicked.wav"];
+        [ADelegate navigateToNewLevel:_selectedLevelIndex];
+        
+    }
+    //else {
+        
 //        if (NSClassFromString(@"UIAlertController")) {
 //            
 //            UIAlertController *alert = [UIAlertController alertControllerWithTitle:title
@@ -182,13 +189,12 @@ static NSString * const cellReuseIdentifer = @"identifier";
 //                                                      otherButtonTitles:nil];
 //            [alertView show];
 //        }
-//    }
 }
 
 #pragma mark -
 #pragma mark - <UIScrollViewDelegate>
 
-- (void)scrollViewDidScroll:(UIScrollView *)scrollView
+- (void)scrollViewDidEndDecelerating:(UIScrollView *)scrollView
 {
     NSInteger currentPage = ceilf(scrollView.contentOffset.x / CGRectGetWidth(self.collectionView.bounds));
     
@@ -196,6 +202,7 @@ static NSString * const cellReuseIdentifer = @"identifier";
         return;
     }
     
+    [[HDSoundManager sharedManager] playSound:@"Swooshed.mp3"];
     [self.pageControl setCurrentPage:currentPage];
     
     switch (currentPage) {
@@ -225,7 +232,8 @@ static NSString * const cellReuseIdentifer = @"identifier";
     [self.collectionView reloadData];
 }
 
-- (void)didReceiveMemoryWarning {
+- (void)didReceiveMemoryWarning
+{
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
 }

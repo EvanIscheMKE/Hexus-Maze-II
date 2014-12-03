@@ -6,6 +6,8 @@
 //  Copyright (c) 2014 Evan William Ische. All rights reserved.
 //
 
+@import QuartzCore;
+
 #import "HDSwitch.h"
 
 static const CGFloat kPadding = 5.0f;
@@ -23,7 +25,7 @@ static const CGFloat kPadding = 5.0f;
     UIColor *_offColor;
     
     BOOL _animating;
-    BOOL _switchValue;
+    BOOL _toggleValue;
 }
 
 - (instancetype)initWithFrame:(CGRect)frame
@@ -55,8 +57,12 @@ static const CGFloat kPadding = 5.0f;
 
 - (void)setupSubviews;
 {
-    const CGFloat kOriginX = CGRectGetWidth(self.bounds) - (CGRectGetWidth(self.slidingView.bounds) + kPadding);
-    CGRect slidingViewFrame = CGRectMake(kOriginX, kPadding, CGRectGetWidth(self.bounds)/3, CGRectGetHeight(self.bounds) - (kPadding*2));
+    CGRect slidingViewFrame = CGRectMake(
+                                         CGRectGetWidth(self.bounds) - (CGRectGetWidth(self.slidingView.bounds) + kPadding),
+                                         kPadding,
+                                         CGRectGetWidth(self.bounds)/3,
+                                         CGRectGetHeight(self.bounds) - (kPadding*2));
+    
     self.slidingView = [[UIView alloc] initWithFrame:slidingViewFrame];
     [self.slidingView.layer setCornerRadius:3.0f];
     [self.slidingView setUserInteractionEnabled:NO];
@@ -90,8 +96,11 @@ static const CGFloat kPadding = 5.0f;
         [self.onLabel setFrame:CGRectMake(0.0f, 0.0f, CGRectGetWidth(self.bounds)/1.5f, CGRectGetHeight(self.bounds))];
         
         if (self.isON) {
-            const CGFloat kOriginX = CGRectGetWidth(self.bounds) - (CGRectGetWidth(self.slidingView.bounds) + kPadding);
-            CGRect slidingViewFrame = CGRectMake(kOriginX, kPadding, CGRectGetWidth(self.bounds)/3, CGRectGetHeight(self.bounds)-(kPadding*2));
+            CGRect slidingViewFrame = CGRectMake(
+                                                 CGRectGetWidth(self.bounds) - (CGRectGetWidth(self.slidingView.bounds) + kPadding),
+                                                 kPadding,
+                                                 CGRectGetWidth(self.bounds)/3,
+                                                 CGRectGetHeight(self.bounds)-(kPadding*2));
             [self.slidingView setFrame:slidingViewFrame];
         } else {
            [self.slidingView setFrame:CGRectMake(kPadding, kPadding, CGRectGetWidth(self.bounds)/3, CGRectGetHeight(self.bounds)-(kPadding*2))];
@@ -113,7 +122,7 @@ static const CGFloat kPadding = 5.0f;
         [self setOn:YES animated:YES];
     }
     
-    if (wasPreviouslyOn != _switchValue) {
+    if (wasPreviouslyOn != _toggleValue) {
         [self sendActionsForControlEvents:UIControlEventValueChanged];
     }
     
@@ -127,12 +136,12 @@ static const CGFloat kPadding = 5.0f;
 
 - (BOOL)isON
 {
-    return _switchValue;
+    return _toggleValue;
 }
 
 - (void)setOn:(BOOL)flag animated:(BOOL)animated
 {
-    _switchValue = flag;
+    _toggleValue = flag;
     
     if (flag) {
         [self showOnAnimated:animated];

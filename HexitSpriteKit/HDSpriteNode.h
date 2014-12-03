@@ -16,5 +16,6 @@
 @property (nonatomic, assign) NSInteger column;
 
 - (void)updateTextureFromHexagonType:(HDHexagonType)type;
+- (void)updateTextureFromHexagonType:(HDHexagonType)type touchesCount:(NSInteger)count;
 
 @end

@@ -7,6 +7,7 @@
 //
 
 #import "HDContainerViewController.h"
+#import "HDSoundManager.h"
 #import "HDGameViewController.h"
 #import "UIColor+FlatColors.h"
 #import "HDHexagon.h"
@@ -107,8 +108,6 @@ static const CGFloat MINIMUM_MENU_OFFSET_X = 228.0f;
         
         [self.toggleButton removeFromSuperview];
         [self.shareButton  removeFromSuperview];
-        [self.gameViewController.view addSubview:self.toggleButton];
-        [self.gameViewController.view addSubview:self.shareButton];
     
         self.layoutMenuToggle();
         
@@ -150,21 +149,20 @@ static const CGFloat MINIMUM_MENU_OFFSET_X = 228.0f;
 }
 
 #pragma mark -
-#pragma mark - Private
+#pragma mark - < PRIVATE >
 
 - (void)_layoutNavigationButtons
 {
-     self.toggleButton = [UIButton buttonWithType:UIButtonTypeCustom];
+    self.toggleButton = [UIButton buttonWithType:UIButtonTypeCustom];
     [self.toggleButton setImage:[UIImage imageNamed: @"TOGGLEE"] forState:UIControlStateNormal];
-    [self.toggleButton addTarget:self action:@selector(_toggleHDMenuViewController) forControlEvents:UIControlEventTouchUpInside];
+    [self.toggleButton addTarget:self action:@selector(toggleHDMenuViewController) forControlEvents:UIControlEventTouchUpInside];
     
-     self.shareButton = [UIButton buttonWithType:UIButtonTypeCustom];
+    self.shareButton = [UIButton buttonWithType:UIButtonTypeCustom];
     [self.shareButton setImage:[UIImage imageNamed: @"SHAREE"] forState:UIControlStateNormal];
     [self.shareButton addTarget:self action:@selector(_presentShareViewController) forControlEvents:UIControlEventTouchUpInside];
     
     for (UIButton *button in @[self.toggleButton, self.shareButton]) {
         [button setTranslatesAutoresizingMaskIntoConstraints:NO];
-        [self.gameViewController.view addSubview:button];
     }
     
     UIButton *toggle = self.toggleButton;
@@ -176,29 +174,31 @@ static const CGFloat MINIMUM_MENU_OFFSET_X = 228.0f;
     
     dispatch_block_t layoutToggleButtonConstraints = ^{
         
+        [self.gameViewController.view addSubview:self.toggleButton];
+        [self.gameViewController.view addSubview:self.shareButton];
+        
         NSArray *tHorizontalConstraint = [NSLayoutConstraint constraintsWithVisualFormat:@"H:|-inset-[toggle(buttonHeight)]"
                                                                                  options:0
                                                                                  metrics:_metrics
                                                                                    views:_views];
+        [self.gameViewController.view addConstraints:tHorizontalConstraint];
         
         NSArray *tVerticalConstraint   = [NSLayoutConstraint constraintsWithVisualFormat:@"V:|-inset-[toggle(buttonHeight)]"
                                                                                  options:0
                                                                                  metrics:_metrics
                                                                                    views:_views];
+        [self.gameViewController.view addConstraints:tVerticalConstraint];
         
         NSArray *sHorizontalConstraint = [NSLayoutConstraint constraintsWithVisualFormat:@"H:[share(buttonHeight)]-inset-|"
                                                                                  options:0
                                                                                  metrics:_metrics
                                                                                    views:_views];
+        [self.gameViewController.view addConstraints:sHorizontalConstraint];
         
         NSArray *sVerticalConstraint   = [NSLayoutConstraint constraintsWithVisualFormat:@"V:|-inset-[share(buttonHeight)]"
                                                                                  options:0
                                                                                  metrics:_metrics
                                                                                    views:_views];
-        
-        [self.gameViewController.view addConstraints:tHorizontalConstraint];
-        [self.gameViewController.view addConstraints:tVerticalConstraint];
-        [self.gameViewController.view addConstraints:sHorizontalConstraint];
         [self.gameViewController.view addConstraints:sVerticalConstraint];
         
     };
@@ -252,15 +252,18 @@ static const CGFloat MINIMUM_MENU_OFFSET_X = 228.0f;
     }
 }
 
-- (void)_toggleHDMenuViewController
+- (void)toggleHDMenuViewController
 {
+    [[HDSoundManager sharedManager] playSound:@"menuClicked.wav"];
     [self setExpanded:!self.isExpanded];
 }
 
 - (void)_presentShareViewController
 {
-    UIActivityViewController *controller = [[UIActivityViewController alloc] initWithActivityItems:@[@"HELLO",
-                                                                                                    [self _screenshotOfFrontMostViewController]]
+     [[HDSoundManager sharedManager] playSound:@"menuClicked.wav"];
+    
+    NSArray *activityItems = @[@"HELLO", [self _screenshotOfFrontMostViewController]];
+    UIActivityViewController *controller = [[UIActivityViewController alloc] initWithActivityItems:activityItems
                                                                              applicationActivities:nil];
     [controller setExcludedActivityTypes: @[UIActivityTypePostToWeibo,
                                             UIActivityTypePrint,

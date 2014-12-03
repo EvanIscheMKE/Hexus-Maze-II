@@ -20,12 +20,17 @@
     return self;
 }
 
-- (void)updateTextureFromHexagonType:(HDHexagonType)type;
+- (void)updateTextureFromHexagonType:(HDHexagonType)type
+{
+    return [self updateTextureFromHexagonType:type touchesCount:0];
+}
+
+- (void)updateTextureFromHexagonType:(HDHexagonType)type touchesCount:(NSInteger)count;
 {
     if (type == HDHexagonTypeNone) {
         [self setTexture:[SKTexture textureWithImage:[self _plainTransparentBackground]]];
     } else {
-        [self setTexture:[SKTexture textureWithImage:[self _imageWithSize:self.size type:type]]];
+        [self setTexture:[SKTexture textureWithImage:[self _imageWithSize:self.size type:type touchesCount:count]]];
     }
 }
 
@@ -39,7 +44,7 @@
     return circle;
 }
 
-- (UIImage *)_imageWithSize:(CGSize)size type:(HDHexagonType)type
+- (UIImage *)_imageWithSize:(CGSize)size type:(HDHexagonType)type touchesCount:(NSInteger)count
 {
     UIGraphicsBeginImageContextWithOptions(size, NO, [[UIScreen mainScreen] scale]);
     
@@ -49,14 +54,24 @@
     CGRect indicatorFrame = CGRectInset(CGRectMake(0.0f, 0.0f, size.width, size.height), 15.0f, 15.0f);
     switch (type) {
         case HDHexagonTypeDouble:
-            indicatorFrame.origin.x += 1.0f;
-            indicatorFrame.origin.y -= 1.0f;
+            switch (count) {
+                case 0:
+                    indicatorFrame.origin.x += 1.0f;
+                    indicatorFrame.origin.y -= 1.0f;
+                    break;
+            }
             break;
         case HDHexagonTypeTriple:
-            indicatorFrame.origin.x += 2.0f;
-            indicatorFrame.origin.y -= 2.0f;
-            break;
-        default:
+            switch (count) {
+                case 0:
+                    indicatorFrame.origin.x += 2.0f;
+                    indicatorFrame.origin.y -= 2.0f;
+                    break;
+                case 1:
+                    indicatorFrame.origin.x += 1.0f;
+                    indicatorFrame.origin.y -= 1.0f;
+                    break;
+            }
             break;
     }
     

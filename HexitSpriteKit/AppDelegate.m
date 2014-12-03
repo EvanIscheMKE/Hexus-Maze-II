@@ -8,6 +8,7 @@
 
 #import "AppDelegate.h"
 #import "HDMapManager.h"
+#import "HDSoundManager.h"
 #import "HDGameCenterManager.h"
 #import "HDGameViewController.h"
 #import "HDGridViewController.h"
@@ -32,6 +33,7 @@
     [self.window setRootViewController:[HDWelcomeViewController new]];
     [self.window makeKeyAndVisible];
     
+    [[HDSoundManager sharedManager] preloadSounds:SOUNDS_TO_PRELOAD];
     [[HDGameCenterManager sharedManager] authenticateForGameCenter];
     if (![[NSUserDefaults standardUserDefaults] boolForKey:HDFirstRunKey]) {
         [self _initalizeModelData];
@@ -42,6 +44,8 @@
 
 - (void)presentLevelViewController
 {
+    [[HDSoundManager sharedManager] playSound:@"menuClicked.wav"];
+    
     self.frontViewController = [[HDGridViewController alloc] init];
     self.rearViewController  = [[HDRearViewController alloc] init];
     self.containerController = [[HDContainerViewController alloc] initWithGameViewController:self.frontViewController
@@ -66,12 +70,15 @@
 
 - (void)navigateToLevelMap
 {
+    [[HDSoundManager sharedManager] playSound:@"menuClicked.wav"];
     [self.containerController setFrontViewController:self.frontViewController animated:YES];
 }
 
 - (void)restartCurrentLevel
 {
-    [self navigateToNewLevel:_deltaLevel];
+    [[HDSoundManager sharedManager] playSound:@"menuClicked.wav"];
+    [self.containerController toggleHDMenuViewController];
+    [(HDGameViewController *)self.containerController.gameViewController restartGame];
 }
 
 - (void)navigateToNewLevel:(NSInteger)level

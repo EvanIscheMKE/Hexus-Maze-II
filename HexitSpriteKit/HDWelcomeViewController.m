@@ -6,6 +6,8 @@
 //  Copyright (c) 2014 Evan William Ische. All rights reserved.
 //
 
+@import QuartzCore;
+
 #import "HDWelcomeViewController.h"
 #import "UIColor+FlatColors.h"
 #import "HDSpaceView.h"
@@ -17,37 +19,32 @@
 
 @implementation HDWelcomeViewController
 
-- (void)loadView
-{
-    CGRect spaceFrame = [[UIScreen mainScreen] bounds];
-    HDSpaceView *space = [[HDSpaceView alloc] initWithFrame:spaceFrame];
-    [self setView:space];
-}
-
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    [self.view setBackgroundColor:[UIColor flatMidnightBlueColor]];
     
     UILabel *title = [[UILabel alloc] init];
-    [title setTranslatesAutoresizingMaskIntoConstraints:NO];
     [title setTextAlignment:NSTextAlignmentCenter];
     [title setTextColor:[UIColor whiteColor]];
     [title setText:@"HEXUS"];
     [title setFont:GILLSANS_LIGHT(120.0f)];
     [title setMinimumScaleFactor:.25f];
     [title setAdjustsFontSizeToFitWidth:YES];
-    [self.view addSubview:title];
     
      self.beginGame = [UIButton buttonWithType:UIButtonTypeCustom];
     [self.beginGame addTarget:ADelegate action:@selector(presentLevelViewController) forControlEvents:UIControlEventTouchUpInside];
-    [self.beginGame setTranslatesAutoresizingMaskIntoConstraints:NO];
-    [self.beginGame setBackgroundColor:[[UIColor flatPeterRiverColor] colorWithAlphaComponent:.85f]];
+    [self.beginGame setBackgroundColor:[UIColor flatPeterRiverColor]];
     [[self.beginGame titleLabel] setTextAlignment:NSTextAlignmentCenter];
     [[self.beginGame titleLabel] setFont:GILLSANS_LIGHT(22.0f)];
     [self.beginGame setTitle:@"Start" forState:UIControlStateNormal];
     [self.beginGame setTitleColor:[UIColor flatMidnightBlueColor] forState:UIControlStateNormal];
     [self.beginGame.layer setCornerRadius:17.5f];
-    [self.view addSubview:self.beginGame];
+    
+    for (UIView *subView in @[title, self.beginGame]) {
+        [subView setTranslatesAutoresizingMaskIntoConstraints:NO];
+        [self.view addSubview:subView];
+    }
     
     // Title Label
     
@@ -111,7 +108,7 @@
                                                                     relatedBy:NSLayoutRelationEqual
                                                                        toItem:self.view
                                                                     attribute:NSLayoutAttributeCenterY
-                                                                   multiplier:1.2f
+                                                                   multiplier:1.1f
                                                                      constant:0];
     [self.view addConstraint:centerButtonY];
 }

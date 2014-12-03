@@ -44,4 +44,4 @@ extern NSString * const HDHexGridKey;
 
 #define LEVEL_URL(x) [NSString stringWithFormat:@"Grid-%ld",x]
 
-#define HDSoundsForPreload @[hdBubbleSoundKey]
+#define SOUNDS_TO_PRELOAD @[@"menuClicked.wav",@"Swooshed.mp3"]

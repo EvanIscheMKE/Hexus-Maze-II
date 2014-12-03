@@ -16,4 +16,7 @@
 - (void)layoutNodesWithGrid:(NSArray *)grid;
 - (void)addUnderlyingIndicatorTiles;
 
+- (void)restart;
+- (void)reversePreviousMove;
+
 @end

@@ -26,8 +26,6 @@
         [layout setSectionInset:UIEdgeInsetsMake(30.0, 30.0f, 20.0f, 30.0f)];
         [layout setItemSize:CGSizeMake(ceilf(CGRectGetWidth(self.bounds)/4.4f), ceilf(CGRectGetWidth(self.bounds)/4.4f))];
         
-        NSLog(@"%F",self.bounds.size.width);
-        
          self.collectionViewGrid = [[UICollectionView alloc] initWithFrame:self.bounds collectionViewLayout:layout];
         [self.collectionViewGrid registerClass:[HDLevelViewCell class] forCellWithReuseIdentifier:levelCellReuseIdentifer];
         [self.collectionViewGrid setBackgroundColor:[UIColor clearColor]];

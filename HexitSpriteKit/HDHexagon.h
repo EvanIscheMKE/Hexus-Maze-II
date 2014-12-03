@@ -30,6 +30,9 @@ typedef enum {
     HDHexagonStateNone     = 0
 } HDHexagonState;
 
+extern NSString * const DOUBLE_KEY;
+extern NSString * const TRIPLE_KEY;
+
 @class HDHexagonNode;
 
 static const NSInteger NumberOfRows    = 18;
@@ -39,6 +42,9 @@ static const NSInteger NumberOfColumns = 9;
 @interface HDHexagon : NSObject
 
 @property (nonatomic, getter=isSelected, assign) BOOL selected;
+
+@property (nonatomic, readonly) NSInteger touchesCount;
+
 @property (nonatomic, weak) id<HDHexagonDelegate> delegate;
 @property (nonatomic, strong) HDHexagonNode *node;
 
@@ -48,7 +54,10 @@ static const NSInteger NumberOfColumns = 9;
 @property (nonatomic, assign) NSInteger column;
 @property (nonatomic, assign) NSInteger row;
 
+- (void)unlock;
 - (void)recievedTouches;
+- (void)restoreToInitialState;
+- (void)returnToPreviousState;
 - (instancetype)initWithRow:(NSInteger)row column:(NSInteger)column NS_DESIGNATED_INITIALIZER;
 
 @end

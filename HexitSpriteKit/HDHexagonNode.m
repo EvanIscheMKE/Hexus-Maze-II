@@ -32,15 +32,49 @@
 - (void)updateLabelWithText:(NSString *)text color:(UIColor *)color
 {
     if (!self.label) {
-         self.label = [SKLabelNode labelNodeWithText:text];
-        [self.label setHorizontalAlignmentMode:SKLabelHorizontalAlignmentModeCenter];
-        [self.label setVerticalAlignmentMode:SKLabelVerticalAlignmentModeCenter];
-        [self.label setPosition:CGPointMake(0.0f, 0.0f)];
-        [self.label setFontName:@"GillSans-Light"];
-        [self.label setFontSize:CGRectGetHeight(self.frame) / 3];
-        [self.label setFontColor:color];
+         self.label = [self _makeDropShadowString:text color:color];
         [self addChild:self.label];
+    } else {
+        for (id label in self.children) {
+            if ([label isKindOfClass:[SKLabelNode class]]) {
+                [label setText:text];
+                [label setFontColor:color];
+            }
+        }
     }
+}
+
+- (void)setStrokeColor:(UIColor *)strokeColor fillColor:(UIColor *)fillColor
+{
+    [self setStrokeColor:strokeColor];
+    [self setFillColor:fillColor];
+}
+
+#pragma mark -
+#pragma mark - < PRIVATE >
+
+- (SKLabelNode *)_makeDropShadowString:(NSString *)labelText color:(UIColor *)color
+{
+    const CGFloat kOffset = 1.0f;
+    
+    SKLabelNode *completedString = [SKLabelNode labelNodeWithFontNamed:@"GillSans-Light"];
+    [completedString setFontColor:color];
+    
+    SKLabelNode *dropShadow = [SKLabelNode labelNodeWithFontNamed:@"GillSans-Light"];
+    [dropShadow setFontSize:CGRectGetHeight(self.frame) / 3];
+    [dropShadow setFontColor:[SKColor blackColor]];
+    [dropShadow setZPosition:completedString.zPosition - 1];
+    [dropShadow setPosition:CGPointMake(dropShadow.position.x - kOffset, dropShadow.position.y - kOffset)];
+    
+    [completedString addChild:dropShadow];
+    for (SKLabelNode *label in @[completedString, dropShadow]) {
+        [label setHorizontalAlignmentMode:SKLabelHorizontalAlignmentModeCenter];
+        [label setVerticalAlignmentMode:SKLabelVerticalAlignmentModeCenter];
+        [label setFontSize:CGRectGetHeight(self.frame) / 3];
+        [label setText:labelText];
+    }
+    
+    return completedString;
 }
 
 @end

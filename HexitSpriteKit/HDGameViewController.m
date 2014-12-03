@@ -16,25 +16,23 @@
 #import "HDScene.h"
 
 @interface HDGameViewController ()
-
-@property (nonatomic, strong) UIButton *reverseAMove;
-@property (nonatomic, strong) UIButton *selectATile;
+@property (nonatomic, strong) UIButton *reverse;
+@property (nonatomic, strong) UIButton *restart;
 
 @property (nonatomic, strong) HDGridManager *gridManager;
 
 @property (nonatomic, strong) HDScene *scene;
-
 @end
 
 @implementation HDGameViewController {
+    
+    BOOL _pauseGame;
+    BOOL _RandomlyGeneratedLevel;
     
     NSDictionary *_views;
     NSDictionary *_metrics;
     
     NSInteger _level;
-    
-    BOOL _pauseGame;
-    BOOL _RandomlyGeneratedLevel;
 }
 
 - (void)dealloc
@@ -77,7 +75,6 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    [self.view setBackgroundColor:[SKColor flatMidnightBlueColor]];
     
     [[NSNotificationCenter defaultCenter] addObserver:self
                                              selector:@selector(_applicationWillResignActive)
@@ -102,6 +99,7 @@
             }
         }];
     }
+    [self _layoutNavigationButtons];
 }
 
 - (void)viewWillLayoutSubviews
@@ -112,6 +110,30 @@
         [self _setupGame];
     }
 }
+
+- (NSInteger)level
+{
+    return _level;
+}
+
+- (void)restartGame
+{
+    [self.scene restart];
+}
+
+- (void)reversePreviousMove
+{
+    [self.scene reversePreviousMove];
+}
+
+- (void)didReceiveMemoryWarning
+{
+    [super didReceiveMemoryWarning];
+    // Dispose of any resources that can be recreated.
+}
+
+#pragma mark -
+#pragma mark - Private
 
 - (void)_setupGame
 {
@@ -132,20 +154,6 @@
     [self.scene layoutNodesWithGrid:[self.gridManager hexagons]];
 }
 
-- (NSInteger)level
-{
-    return _level;
-}
-
-- (void)didReceiveMemoryWarning
-{
-    [super didReceiveMemoryWarning];
-    // Dispose of any resources that can be recreated.
-}
-
-#pragma mark -
-#pragma mark - Private
-
 - (void)_applicationDidBecomeActive
 {
     _pauseGame = NO;
@@ -156,6 +164,53 @@
 {
     _pauseGame = YES;
     [self.scene.view setPaused:_pauseGame];
+}
+
+- (void)_layoutNavigationButtons
+{
+     self.restart = [UIButton buttonWithType:UIButtonTypeCustom];
+    [self.restart setImage:[UIImage imageNamed: @"TOGGLEE"] forState:UIControlStateNormal];
+    [self.restart addTarget:self action:@selector(restartGame) forControlEvents:UIControlEventTouchUpInside];
+    
+    self.reverse = [UIButton buttonWithType:UIButtonTypeCustom];
+    [self.reverse setImage:[UIImage imageNamed: @"SHAREE"] forState:UIControlStateNormal];
+    [self.reverse addTarget:self action:@selector(reversePreviousMove) forControlEvents:UIControlEventTouchUpInside];
+    
+    for (UIButton *button in @[self.restart, self.reverse]) {
+        [button setTranslatesAutoresizingMaskIntoConstraints:NO];
+        [self.view addSubview:button];
+    }
+    
+    UIButton *reverse = self.reverse;
+    UIButton *restart = self.restart;
+    
+    _views = NSDictionaryOfVariableBindings(reverse, restart);
+    
+    _metrics = @{ @"buttonHeight" : @(30.0f), @"inset" : @(20.0f) };
+    
+    NSArray *tHorizontalConstraint = [NSLayoutConstraint constraintsWithVisualFormat:@"H:|-inset-[restart(buttonHeight)]"
+                                                                             options:0
+                                                                             metrics:_metrics
+                                                                               views:_views];
+    [self.view addConstraints:tHorizontalConstraint];
+    
+    NSArray *tVerticalConstraint   = [NSLayoutConstraint constraintsWithVisualFormat:@"V:[restart(buttonHeight)]-inset-|"
+                                                                             options:0
+                                                                             metrics:_metrics
+                                                                               views:_views];
+    [self.view addConstraints:tVerticalConstraint];
+    
+    NSArray *sHorizontalConstraint = [NSLayoutConstraint constraintsWithVisualFormat:@"H:[reverse(buttonHeight)]-inset-|"
+                                                                             options:0
+                                                                             metrics:_metrics
+                                                                               views:_views];
+    [self.view addConstraints:sHorizontalConstraint];
+    
+    NSArray *sVerticalConstraint   = [NSLayoutConstraint constraintsWithVisualFormat:@"V:[reverse(buttonHeight)]-inset-|"
+                                                                             options:0
+                                                                             metrics:_metrics
+                                                                               views:_views];
+    [self.view addConstraints:sVerticalConstraint];
 }
 
 @end

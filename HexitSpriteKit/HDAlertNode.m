@@ -6,12 +6,13 @@
 //  Copyright (c) 2014 Evan William Ische. All rights reserved.
 //
 
+#import "HDHelper.h"
 #import "HDAlertNode.h"
 #import "SKColor+HDColor.h"
 #import "UIColor+FlatColors.h"
 
 @interface HDAlertNode ()
-@property (nonatomic, strong) SKSpriteNode *container;
+@property (nonatomic, strong) SKShapeNode *container;
 @property (nonatomic, strong) SKSpriteNode *leftButton;
 @property (nonatomic, strong) SKSpriteNode *rightButton;
 @end
@@ -24,46 +25,50 @@
         
         [self setAnchorPoint:CGPointMake(.5f, .5f)];
         
-         self.container = [SKSpriteNode spriteNodeWithTexture:[SKTexture textureWithImage:[self alertContainer]]];
-        [self.container setAnchorPoint:CGPointMake(.5f, .5f)];
+         self.container = [SKShapeNode shapeNodeWithPath:[HDHelper hexagonPathForBounds:CGRectMake(0.0f, 0.0f, 260.0f, 260.0f)] centered:YES];
+        [self.container setPosition:CGPointMake(0.0f, 0.0f)];
+        [self.container setLineWidth:2.0f];
+        [self.container setStrokeColor:[UIColor whiteColor]];
+        [self.container setFillColor:[UIColor blackColor]];
+        [self.container setZPosition:100.0f];
         [self addChild:self.container];
         
-         self.leftButton = [SKSpriteNode spriteNodeWithTexture:[SKTexture textureWithImage:[self leftAlertButton]]];
-        [self.leftButton setAnchorPoint:CGPointZero];
-        [self.leftButton setPosition:CGPointMake( -(CGRectGetWidth(self.container.frame) / 2),
-                                                  -(CGRectGetHeight(self.container.frame) / 2))];
-        [self.container addChild:self.leftButton];
-        
-         self.rightButton = [SKSpriteNode spriteNodeWithTexture:[SKTexture textureWithImage:[self rightAlertButton]]];
-        [self.rightButton setAnchorPoint:CGPointZero];
-        [self.rightButton setPosition:CGPointMake( -35.0f, -(CGRectGetHeight(self.container.frame) / 2))];
-        [self.container addChild:self.rightButton];
-        
-        SKSpriteNode *display = [SKSpriteNode spriteNodeWithTexture:[SKTexture textureWithImage:[self displayImage]]];
-        [display setAnchorPoint:CGPointMake(0.5f, 0.5f)];
-        [display setPosition:CGPointMake(0.0, 50.0f)];
-        [self.container addChild:display];
-        
-        SKLabelNode *levelLabel = [[SKLabelNode alloc] initWithFontNamed:@"GillSans-Light"];
-        [levelLabel setPosition:CGPointMake(0.0f, CGRectGetHeight(self.container.frame) / 2 - 5.0f)];
-        [levelLabel setFontSize:24.0f];
-        [levelLabel setFontColor:color];
-        [levelLabel setText:[NSString stringWithFormat:@"Level %ld", [ADelegate previousLevel]]];
-        [levelLabel setHorizontalAlignmentMode:SKLabelHorizontalAlignmentModeCenter];
-        [levelLabel setVerticalAlignmentMode:SKLabelVerticalAlignmentModeTop];
-        [self.container addChild:levelLabel];
+//         self.leftButton = [SKSpriteNode spriteNodeWithTexture:[SKTexture textureWithImage:[self leftAlertButton]]];
+//        [self.leftButton setAnchorPoint:CGPointZero];
+//        [self.leftButton setPosition:CGPointMake( -(CGRectGetWidth(self.container.frame) / 2),
+//                                                  -(CGRectGetHeight(self.container.frame) / 2))];
+//        [self.container addChild:self.leftButton];
+//        
+//         self.rightButton = [SKSpriteNode spriteNodeWithTexture:[SKTexture textureWithImage:[self rightAlertButton]]];
+//        [self.rightButton setAnchorPoint:CGPointZero];
+//        [self.rightButton setPosition:CGPointMake( -35.0f, -(CGRectGetHeight(self.container.frame) / 2))];
+//        [self.container addChild:self.rightButton];
+//        
+//        SKSpriteNode *display = [SKSpriteNode spriteNodeWithTexture:[SKTexture textureWithImage:[self displayImage]]];
+//        [display setAnchorPoint:CGPointMake(0.5f, 0.5f)];
+//        [display setPosition:CGPointMake(0.0, 50.0f)];
+//        [self.container addChild:display];
+//        
+//        SKLabelNode *levelLabel = [[SKLabelNode alloc] initWithFontNamed:@"GillSans-Light"];
+//        [levelLabel setPosition:CGPointMake(0.0f, CGRectGetHeight(self.container.frame) / 2 - 5.0f)];
+//        [levelLabel setFontSize:24.0f];
+//        [levelLabel setFontColor:color];
+//        [levelLabel setText:[NSString stringWithFormat:@"Level %ld", [ADelegate previousLevel]]];
+//        [levelLabel setHorizontalAlignmentMode:SKLabelHorizontalAlignmentModeCenter];
+//        [levelLabel setVerticalAlignmentMode:SKLabelVerticalAlignmentModeTop];
+//        [self.container addChild:levelLabel];
         
     }
     return self;
 }
 
-- (void)showAlertNode
+- (void)show
 {
     [self runAction:[SKAction moveTo:CGPointMake(CGRectGetWidth(self.frame) / 2, CGRectGetHeight(self.frame) / 2)
                             duration:.3f]];
 }
 
-- (void)dismissAlertNode
+- (void)dismiss
 {
     
 }

@@ -52,8 +52,29 @@
 		38C0A8721A07348400C552F1 /* SKColor+HDColor.m in Sources */ = {isa = PBXBuildFile; fileRef = 38C0A8711A07348400C552F1 /* SKColor+HDColor.m */; };
 		38C0A8751A0758AC00C552F1 /* HDGridManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 38C0A8741A0758AC00C552F1 /* HDGridManager.m */; };
 		38C0A8781A075FBA00C552F1 /* HDHexagonNode.m in Sources */ = {isa = PBXBuildFile; fileRef = 38C0A8771A075FBA00C552F1 /* HDHexagonNode.m */; };
-		38C122181A29417100224B33 /* ToggleSwitchImage.png in Resources */ = {isa = PBXBuildFile; fileRef = 38C122171A29417100224B33 /* ToggleSwitchImage.png */; };
 		38C1221B1A2A2EF300224B33 /* HDSwitch.m in Sources */ = {isa = PBXBuildFile; fileRef = 38C1221A1A2A2EF300224B33 /* HDSwitch.m */; };
+		38C1221E1A2C1C1E00224B33 /* Grid-61.json in Resources */ = {isa = PBXBuildFile; fileRef = 38C1221D1A2C1C1E00224B33 /* Grid-61.json */; };
+		38C122201A2C1C3D00224B33 /* Grid-62.json in Resources */ = {isa = PBXBuildFile; fileRef = 38C1221F1A2C1C3D00224B33 /* Grid-62.json */; };
+		38C122221A2C1C4700224B33 /* Grid-63.json in Resources */ = {isa = PBXBuildFile; fileRef = 38C122211A2C1C4700224B33 /* Grid-63.json */; };
+		38C122241A2C1C4F00224B33 /* Grid-64.json in Resources */ = {isa = PBXBuildFile; fileRef = 38C122231A2C1C4F00224B33 /* Grid-64.json */; };
+		38C122261A2C1C5600224B33 /* Grid-65.json in Resources */ = {isa = PBXBuildFile; fileRef = 38C122251A2C1C5600224B33 /* Grid-65.json */; };
+		38C122281A2C1C6000224B33 /* Grid-66.json in Resources */ = {isa = PBXBuildFile; fileRef = 38C122271A2C1C6000224B33 /* Grid-66.json */; };
+		38C1222A1A2C1C7A00224B33 /* Grid-67.json in Resources */ = {isa = PBXBuildFile; fileRef = 38C122291A2C1C7A00224B33 /* Grid-67.json */; };
+		38C1222C1A2C1C8B00224B33 /* Grid-68.json in Resources */ = {isa = PBXBuildFile; fileRef = 38C1222B1A2C1C8B00224B33 /* Grid-68.json */; };
+		38C1222E1A2C1C9400224B33 /* Grid-69.json in Resources */ = {isa = PBXBuildFile; fileRef = 38C1222D1A2C1C9400224B33 /* Grid-69.json */; };
+		38C122301A2C1CA200224B33 /* Grid-70.json in Resources */ = {isa = PBXBuildFile; fileRef = 38C1222F1A2C1CA200224B33 /* Grid-70.json */; };
+		38C122321A2C1CAA00224B33 /* Grid-71.json in Resources */ = {isa = PBXBuildFile; fileRef = 38C122311A2C1CAA00224B33 /* Grid-71.json */; };
+		38C122341A2C1CB500224B33 /* Grid-72.json in Resources */ = {isa = PBXBuildFile; fileRef = 38C122331A2C1CB500224B33 /* Grid-72.json */; };
+		38C122361A2C1CBD00224B33 /* Grid-73.json in Resources */ = {isa = PBXBuildFile; fileRef = 38C122351A2C1CBD00224B33 /* Grid-73.json */; };
+		38C122381A2C1CC300224B33 /* Grid-74.json in Resources */ = {isa = PBXBuildFile; fileRef = 38C122371A2C1CC300224B33 /* Grid-74.json */; };
+		38C1223A1A2C1CCB00224B33 /* Grid-75.json in Resources */ = {isa = PBXBuildFile; fileRef = 38C122391A2C1CCB00224B33 /* Grid-75.json */; };
+		38C1223D1A2C29DC00224B33 /* HDSoundManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 38C1223C1A2C29DC00224B33 /* HDSoundManager.m */; };
+		38C1223F1A2C2A0E00224B33 /* menuClicked.wav in Resources */ = {isa = PBXBuildFile; fileRef = 38C1223E1A2C2A0E00224B33 /* menuClicked.wav */; };
+		38C122411A2C2EDE00224B33 /* Swooshed.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 38C122401A2C2EDE00224B33 /* Swooshed.mp3 */; };
+		38C122441A2C30FE00224B33 /* HDPageControl.m in Sources */ = {isa = PBXBuildFile; fileRef = 38C122431A2C30FE00224B33 /* HDPageControl.m */; };
+		38C122461A2C4D8300224B33 /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 38C122451A2C4D8300224B33 /* AVFoundation.framework */; };
+		38C122481A2C519D00224B33 /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 38C122471A2C519D00224B33 /* QuartzCore.framework */; };
+		38C1224B1A2CE89300224B33 /* HDGridMenu.m in Sources */ = {isa = PBXBuildFile; fileRef = 38C1224A1A2CE89300224B33 /* HDGridMenu.m */; };
 		38C2E13B1A2671F3008D5F33 /* HDLevelGenerator.m in Sources */ = {isa = PBXBuildFile; fileRef = 38C2E13A1A2671F3008D5F33 /* HDLevelGenerator.m */; };
 		38C67CD71A0AB8D80038526C /* HDWelcomeViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 38C67CD61A0AB8D80038526C /* HDWelcomeViewController.m */; };
 		38C67CDA1A0AB8FF0038526C /* HDContainerViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 38C67CD91A0AB8FF0038526C /* HDContainerViewController.m */; };
@@ -172,9 +193,33 @@
 		38C0A8741A0758AC00C552F1 /* HDGridManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HDGridManager.m; sourceTree = "<group>"; };
 		38C0A8761A075FBA00C552F1 /* HDHexagonNode.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HDHexagonNode.h; sourceTree = "<group>"; };
 		38C0A8771A075FBA00C552F1 /* HDHexagonNode.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HDHexagonNode.m; sourceTree = "<group>"; };
-		38C122171A29417100224B33 /* ToggleSwitchImage.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = ToggleSwitchImage.png; path = ../../Desktop/ToggleSwitchImage.png; sourceTree = "<group>"; };
 		38C122191A2A2EF300224B33 /* HDSwitch.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HDSwitch.h; sourceTree = "<group>"; };
 		38C1221A1A2A2EF300224B33 /* HDSwitch.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HDSwitch.m; sourceTree = "<group>"; };
+		38C1221D1A2C1C1E00224B33 /* Grid-61.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = "Grid-61.json"; sourceTree = "<group>"; };
+		38C1221F1A2C1C3D00224B33 /* Grid-62.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = "Grid-62.json"; sourceTree = "<group>"; };
+		38C122211A2C1C4700224B33 /* Grid-63.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = "Grid-63.json"; sourceTree = "<group>"; };
+		38C122231A2C1C4F00224B33 /* Grid-64.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = "Grid-64.json"; sourceTree = "<group>"; };
+		38C122251A2C1C5600224B33 /* Grid-65.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = "Grid-65.json"; sourceTree = "<group>"; };
+		38C122271A2C1C6000224B33 /* Grid-66.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = "Grid-66.json"; sourceTree = "<group>"; };
+		38C122291A2C1C7A00224B33 /* Grid-67.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = "Grid-67.json"; sourceTree = "<group>"; };
+		38C1222B1A2C1C8B00224B33 /* Grid-68.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = "Grid-68.json"; sourceTree = "<group>"; };
+		38C1222D1A2C1C9400224B33 /* Grid-69.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = "Grid-69.json"; sourceTree = "<group>"; };
+		38C1222F1A2C1CA200224B33 /* Grid-70.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = "Grid-70.json"; sourceTree = "<group>"; };
+		38C122311A2C1CAA00224B33 /* Grid-71.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = "Grid-71.json"; sourceTree = "<group>"; };
+		38C122331A2C1CB500224B33 /* Grid-72.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = "Grid-72.json"; sourceTree = "<group>"; };
+		38C122351A2C1CBD00224B33 /* Grid-73.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = "Grid-73.json"; sourceTree = "<group>"; };
+		38C122371A2C1CC300224B33 /* Grid-74.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = "Grid-74.json"; sourceTree = "<group>"; };
+		38C122391A2C1CCB00224B33 /* Grid-75.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = "Grid-75.json"; sourceTree = "<group>"; };
+		38C1223B1A2C29DC00224B33 /* HDSoundManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HDSoundManager.h; sourceTree = "<group>"; };
+		38C1223C1A2C29DC00224B33 /* HDSoundManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HDSoundManager.m; sourceTree = "<group>"; };
+		38C1223E1A2C2A0E00224B33 /* menuClicked.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = menuClicked.wav; sourceTree = "<group>"; };
+		38C122401A2C2EDE00224B33 /* Swooshed.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = Swooshed.mp3; sourceTree = "<group>"; };
+		38C122421A2C30FE00224B33 /* HDPageControl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HDPageControl.h; sourceTree = "<group>"; };
+		38C122431A2C30FE00224B33 /* HDPageControl.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HDPageControl.m; sourceTree = "<group>"; };
+		38C122451A2C4D8300224B33 /* AVFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVFoundation.framework; path = System/Library/Frameworks/AVFoundation.framework; sourceTree = SDKROOT; };
+		38C122471A2C519D00224B33 /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
+		38C122491A2CE89300224B33 /* HDGridMenu.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HDGridMenu.h; sourceTree = "<group>"; };
+		38C1224A1A2CE89300224B33 /* HDGridMenu.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HDGridMenu.m; sourceTree = "<group>"; };
 		38C2E1391A2671F3008D5F33 /* HDLevelGenerator.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HDLevelGenerator.h; sourceTree = "<group>"; };
 		38C2E13A1A2671F3008D5F33 /* HDLevelGenerator.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HDLevelGenerator.m; sourceTree = "<group>"; };
 		38C67CD51A0AB8D80038526C /* HDWelcomeViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HDWelcomeViewController.h; sourceTree = "<group>"; };
@@ -244,6 +289,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				38C122481A2C519D00224B33 /* QuartzCore.framework in Frameworks */,
+				38C122461A2C4D8300224B33 /* AVFoundation.framework in Frameworks */,
 				38C0A86B1A0726A300C552F1 /* SpriteKit.framework in Frameworks */,
 				38BAF5281A1FE10B004D5660 /* GameKit.framework in Frameworks */,
 			);
@@ -328,6 +375,8 @@
 		38BDDCE71A20FACE005035EE /* SOUNDS */ = {
 			isa = PBXGroup;
 			children = (
+				38C1223E1A2C2A0E00224B33 /* menuClicked.wav */,
+				38C122401A2C2EDE00224B33 /* Swooshed.mp3 */,
 				38C67D301A0B149F0038526C /* 104947__glaneur-de-sons__bubble-8.wav */,
 			);
 			name = SOUNDS;
@@ -358,7 +407,6 @@
 		38C0A8351A07251600C552F1 = {
 			isa = PBXGroup;
 			children = (
-				38C122171A29417100224B33 /* ToggleSwitchImage.png */,
 				38C0A8401A07251700C552F1 /* HexitSpriteKit */,
 				38C0A85A1A07251700C552F1 /* HexitSpriteKitTests */,
 				38C0A8671A07252E00C552F1 /* Frameworks */,
@@ -424,6 +472,8 @@
 		38C0A8671A07252E00C552F1 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				38C122471A2C519D00224B33 /* QuartzCore.framework */,
+				38C122451A2C4D8300224B33 /* AVFoundation.framework */,
 				38BAF5271A1FE10B004D5660 /* GameKit.framework */,
 				38C0A86A1A0726A300C552F1 /* SpriteKit.framework */,
 			);
@@ -442,6 +492,28 @@
 				38C0A8711A07348400C552F1 /* SKColor+HDColor.m */,
 			);
 			name = Categories;
+			sourceTree = "<group>";
+		};
+		38C1221C1A2C1BF700224B33 /* EXTENDED TRIPLE */ = {
+			isa = PBXGroup;
+			children = (
+				38C1221D1A2C1C1E00224B33 /* Grid-61.json */,
+				38C1221F1A2C1C3D00224B33 /* Grid-62.json */,
+				38C122211A2C1C4700224B33 /* Grid-63.json */,
+				38C122231A2C1C4F00224B33 /* Grid-64.json */,
+				38C122251A2C1C5600224B33 /* Grid-65.json */,
+				38C122271A2C1C6000224B33 /* Grid-66.json */,
+				38C122291A2C1C7A00224B33 /* Grid-67.json */,
+				38C1222B1A2C1C8B00224B33 /* Grid-68.json */,
+				38C1222D1A2C1C9400224B33 /* Grid-69.json */,
+				38C1222F1A2C1CA200224B33 /* Grid-70.json */,
+				38C122311A2C1CAA00224B33 /* Grid-71.json */,
+				38C122331A2C1CB500224B33 /* Grid-72.json */,
+				38C122351A2C1CBD00224B33 /* Grid-73.json */,
+				38C122371A2C1CC300224B33 /* Grid-74.json */,
+				38C122391A2C1CCB00224B33 /* Grid-75.json */,
+			);
+			name = "EXTENDED TRIPLE";
 			sourceTree = "<group>";
 		};
 		38C67CD11A0A29D80038526C /* Controller */ = {
@@ -475,6 +547,10 @@
 				388F4CFF1A231AD400941BCD /* HDSpaceView.m */,
 				38C122191A2A2EF300224B33 /* HDSwitch.h */,
 				38C1221A1A2A2EF300224B33 /* HDSwitch.m */,
+				38C122421A2C30FE00224B33 /* HDPageControl.h */,
+				38C122431A2C30FE00224B33 /* HDPageControl.m */,
+				38C122491A2CE89300224B33 /* HDGridMenu.h */,
+				38C1224A1A2CE89300224B33 /* HDGridMenu.m */,
 			);
 			name = Views;
 			sourceTree = "<group>";
@@ -483,6 +559,8 @@
 			isa = PBXGroup;
 			children = (
 				38C67D291A0AEA550038526C /* Map */,
+				38C1223B1A2C29DC00224B33 /* HDSoundManager.h */,
+				38C1223C1A2C29DC00224B33 /* HDSoundManager.m */,
 				38C67D2A1A0AEBD50038526C /* HDGameCenterManager.h */,
 				38C67D2B1A0AEBD50038526C /* HDGameCenterManager.m */,
 				38FDF9B31A1BEF1F005CCFE1 /* HDSettingsManager.h */,
@@ -506,6 +584,7 @@
 				3874B98B1A2046DF00400CEB /* DOUBLE TILES */,
 				38BDDCE61A20FA86005035EE /* COUNT GRID */,
 				38BDDCE81A20FAE8005035EE /* TRIPLE GRID */,
+				38C1221C1A2C1BF700224B33 /* EXTENDED TRIPLE */,
 			);
 			name = Levels;
 			sourceTree = "<group>";
@@ -622,6 +701,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				38C67D251A0AE4100038526C /* Grid-30.json in Resources */,
+				38C122261A2C1C5600224B33 /* Grid-65.json in Resources */,
 				38BDDCD91A20F9FE005035EE /* Grid-44.json in Resources */,
 				38C67D151A0AE3B80038526C /* Grid-22.json in Resources */,
 				38BDDCFC1A20FBB8005035EE /* Grid-60.json in Resources */,
@@ -634,24 +714,30 @@
 				38C67CF91A0ACE340038526C /* Grid-8.json in Resources */,
 				38C67D0B1A0AE3890038526C /* Grid-17.json in Resources */,
 				38BDDCE51A20FA50005035EE /* Grid-50.json in Resources */,
+				38C122301A2C1CA200224B33 /* Grid-70.json in Resources */,
 				38C67CFF1A0ACE4D0038526C /* Grid-11.json in Resources */,
 				38C67D1F1A0AE3F30038526C /* Grid-27.json in Resources */,
+				38C122201A2C1C3D00224B33 /* Grid-62.json in Resources */,
 				38C67CF31A0ACE1D0038526C /* Grid-5.json in Resources */,
 				38BDDCD51A20F9E4005035EE /* Grid-42.json in Resources */,
+				38C122341A2C1CB500224B33 /* Grid-72.json in Resources */,
 				38BDDCF61A20FBA2005035EE /* Grid-57.json in Resources */,
 				38BDDCC51A20F965005035EE /* Grid-34.json in Resources */,
 				38BDDCF21A20FB80005035EE /* Grid-55.json in Resources */,
 				38BDDCBF1A20F93A005035EE /* Grid-31.json in Resources */,
+				38C1223F1A2C2A0E00224B33 /* menuClicked.wav in Resources */,
 				38BDDCD71A20F9F6005035EE /* Grid-43.json in Resources */,
 				38BDDCF41A20FB89005035EE /* Grid-56.json in Resources */,
 				38C67D111A0AE3A90038526C /* Grid-20.json in Resources */,
 				38C67CFD1A0ACE450038526C /* Grid-10.json in Resources */,
 				38BDDCFA1A20FBB2005035EE /* Grid-59.json in Resources */,
 				38C67D0F1A0AE3A00038526C /* Grid-19.json in Resources */,
-				38C122181A29417100224B33 /* ToggleSwitchImage.png in Resources */,
+				38C1223A1A2C1CCB00224B33 /* Grid-75.json in Resources */,
+				38C1222C1A2C1C8B00224B33 /* Grid-68.json in Resources */,
 				38C67D231A0AE4060038526C /* Grid-29.json in Resources */,
 				38BDDCEA1A20FB5E005035EE /* Grid-51.json in Resources */,
 				38C67D1B1A0AE3DA0038526C /* Grid-25.json in Resources */,
+				38C1222A1A2C1C7A00224B33 /* Grid-67.json in Resources */,
 				38F5A6B91A07F2FA0036750A /* Grid-1.json in Resources */,
 				38BDDCCF1A20F9BB005035EE /* Grid-39.json in Resources */,
 				38BDDCD11A20F9C7005035EE /* Grid-40.json in Resources */,
@@ -660,9 +746,13 @@
 				38C67D191A0AE3C90038526C /* Grid-24.json in Resources */,
 				38BDDCCB1A20F991005035EE /* Grid-37.json in Resources */,
 				38C67CF71A0ACE2C0038526C /* Grid-7.json in Resources */,
+				38C122361A2C1CBD00224B33 /* Grid-73.json in Resources */,
+				38C122321A2C1CAA00224B33 /* Grid-71.json in Resources */,
 				38BDDCC31A20F94D005035EE /* Grid-33.json in Resources */,
 				38C67CF51A0ACE230038526C /* Grid-6.json in Resources */,
 				38BDDCC11A20F943005035EE /* Grid-32.json in Resources */,
+				38C1222E1A2C1C9400224B33 /* Grid-69.json in Resources */,
+				38C122281A2C1C6000224B33 /* Grid-66.json in Resources */,
 				38C0A84F1A07251700C552F1 /* Images.xcassets in Resources */,
 				38C67D131A0AE3B00038526C /* Grid-21.json in Resources */,
 				38BDDCE31A20FA3A005035EE /* Grid-49.json in Resources */,
@@ -672,8 +762,10 @@
 				38C67D171A0AE3C10038526C /* Grid-23.json in Resources */,
 				38BDDCCD1A20F9B1005035EE /* Grid-38.json in Resources */,
 				38C67D311A0B149F0038526C /* 104947__glaneur-de-sons__bubble-8.wav in Resources */,
+				38C1221E1A2C1C1E00224B33 /* Grid-61.json in Resources */,
 				38BDDCEE1A20FB71005035EE /* Grid-53.json in Resources */,
 				38C67D1D1A0AE3E90038526C /* Grid-26.json in Resources */,
+				38C122221A2C1C4700224B33 /* Grid-63.json in Resources */,
 				38C67D031A0ACE5B0038526C /* Grid-13.json in Resources */,
 				38BDDCC91A20F986005035EE /* Grid-36.json in Resources */,
 				38BDDCF01A20FB78005035EE /* Grid-54.json in Resources */,
@@ -684,6 +776,9 @@
 				38C67D051A0ACE620038526C /* Grid-14.json in Resources */,
 				38BDDCDF1A20FA29005035EE /* Grid-47.json in Resources */,
 				38BDDCD31A20F9D2005035EE /* Grid-41.json in Resources */,
+				38C122411A2C2EDE00224B33 /* Swooshed.mp3 in Resources */,
+				38C122381A2C1CC300224B33 /* Grid-74.json in Resources */,
+				38C122241A2C1C4F00224B33 /* Grid-64.json in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -707,6 +802,7 @@
 				38C0A84A1A07251700C552F1 /* HDGameViewController.m in Sources */,
 				38C0A8781A075FBA00C552F1 /* HDHexagonNode.m in Sources */,
 				38C67CD71A0AB8D80038526C /* HDWelcomeViewController.m in Sources */,
+				38C1224B1A2CE89300224B33 /* HDGridMenu.m in Sources */,
 				38C0A8471A07251700C552F1 /* AppDelegate.m in Sources */,
 				38C0A8751A0758AC00C552F1 /* HDGridManager.m in Sources */,
 				38C0A86E1A0727FA00C552F1 /* HDScene.m in Sources */,
@@ -722,12 +818,14 @@
 				38F5A6BD1A08014F0036750A /* HDHexagon.m in Sources */,
 				38C67CE31A0ABD050038526C /* HDHelper.m in Sources */,
 				38C67D281A0AEA490038526C /* HDMapManager.m in Sources */,
+				38C122441A2C30FE00224B33 /* HDPageControl.m in Sources */,
 				38521F3D1A19A20600484830 /* HDSpriteNode.m in Sources */,
 				38CA40241A1485380024D6BF /* HDRearViewController.m in Sources */,
 				38C2E13B1A2671F3008D5F33 /* HDLevelGenerator.m in Sources */,
 				38C1221B1A2A2EF300224B33 /* HDSwitch.m in Sources */,
 				38C67D2C1A0AEBD50038526C /* HDGameCenterManager.m in Sources */,
 				38DAD0B71A202B0800EC5524 /* HDLevelViewCell.m in Sources */,
+				38C1223D1A2C29DC00224B33 /* HDSoundManager.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -834,7 +932,7 @@
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				GCC_PREFIX_HEADER = "HexitSpriteKit/Hexit-Prefix.pch";
 				INFOPLIST_FILE = HexitSpriteKit/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 8.1;
+				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_NAME = Hexus;
 				PROVISIONING_PROFILE = "";
@@ -849,7 +947,7 @@
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				GCC_PREFIX_HEADER = "HexitSpriteKit/Hexit-Prefix.pch";
 				INFOPLIST_FILE = HexitSpriteKit/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 8.1;
+				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_NAME = Hexus;
 				PROVISIONING_PROFILE = "";
