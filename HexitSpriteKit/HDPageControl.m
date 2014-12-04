@@ -36,8 +36,13 @@
         [hexagon.layer setMask:mask];
         
         if (i == self.currentPage) {
+            
+            CGAffineTransform scale = CGAffineTransformMakeScale(1.3f, 1.3f);
+            scale = CGAffineTransformTranslate(scale, .65f, -.65f);
+            [hexagon setTransform:scale];
             [hexagon setBackgroundColor:self.currentPageIndicatorTintColor];
         } else {
+            [hexagon setTransform:CGAffineTransformIdentity];
             [hexagon setBackgroundColor:[UIColor flatCloudsColor]];
         }
     }

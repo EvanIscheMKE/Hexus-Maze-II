@@ -74,6 +74,7 @@ static NSString * const cellReuseIdentifer = @"identifier";
     CGRect collectionViewRect = CGRectMake(0.0, 60.0f, CGRectGetWidth(self.view.bounds), CGRectGetHeight(self.view.bounds) - 60.0f);
      self.collectionView = [[UICollectionView alloc] initWithFrame:collectionViewRect collectionViewLayout:layout];
     [self.collectionView registerClass:[HDCollectionViewCell class] forCellWithReuseIdentifier:cellReuseIdentifer];
+    [self.collectionView setAutoresizingMask:UIViewAutoresizingFlexibleWidth|UIViewAutoresizingFlexibleHeight];
     [self.collectionView setShowsHorizontalScrollIndicator:NO];
     [self.collectionView setDelegate:self];
     [self.collectionView setDataSource:self];

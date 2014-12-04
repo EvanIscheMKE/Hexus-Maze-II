@@ -129,6 +129,7 @@ static const CGFloat kHexagonInset = 6.0f;
             switch (_recievedTouchesCount) {
                 case 1:{
                     [[[(SKShapeNode *)[[self.node children] lastObject] children] firstObject] removeFromParent];
+                    [(SKShapeNode *)[self.node childNodeWithName:@"double"] setFillColor:[self _translucentColor:self.node.strokeColor]];
                 } break;
                 case 2:
                     [self.node removeAllChildren];
@@ -291,10 +292,9 @@ static const CGFloat kHexagonInset = 6.0f;
     _recievedTouchesCount = 0;
     
     [self setSelected:NO];
+    
     [self.node removeAllChildren];
     [self setState:HDHexagonStateEnabled];
-    
-    [self.node.label removeFromParent];
     [self.node setLabel:nil];
     
     [self setType:self.type];
@@ -335,8 +335,8 @@ static const CGFloat kHexagonInset = 6.0f;
     [hexagon setName:DOUBLE_KEY];
     [hexagon setAntialiased:YES];
     [hexagon setPosition:CGPointZero];
-    [hexagon setStrokeColor:self.node.strokeColor];
-    [hexagon setFillColor:[self _translucentColor:self.node.strokeColor]];
+    [hexagon setStrokeColor:stroke];
+    [hexagon setFillColor:fill];
     [hexagon setLineWidth:self.node.lineWidth];
     [self.node addChild:hexagon];
 }
@@ -351,8 +351,8 @@ static const CGFloat kHexagonInset = 6.0f;
     [hexagon setName:TRIPLE_KEY];
     [hexagon setAntialiased:YES];
     [hexagon setPosition:CGPointZero];
-    [hexagon setStrokeColor:self.node.strokeColor];
-    [hexagon setFillColor:[self _translucentColor:self.node.strokeColor]];
+    [hexagon setStrokeColor:stroke];
+    [hexagon setFillColor:fill];
     [hexagon setLineWidth:self.node.lineWidth];
    [[[self.node children] lastObject] addChild:hexagon];
 }

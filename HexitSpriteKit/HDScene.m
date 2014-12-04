@@ -24,11 +24,12 @@
 #define _kTileSize [[UIScreen mainScreen] bounds].size.width / (NumberOfColumns - 1)
 
 static const CGFloat kTileHeightInsetMultiplier = .845f;
-@interface HDScene ()<HDHexagonDelegate>
+@interface HDScene ()<HDHexagonDelegate, HDAlertnodeDelegate>
 
 @property (nonatomic, strong) SKAction *selectedSound;
 
 @property (nonatomic, assign) BOOL animating;
+@property (nonatomic, assign) BOOL tilesAnimatedToCompleted;
 
 @property (nonatomic, strong) SKNode *gameLayer;
 @property (nonatomic, strong) SKNode *tileLayer;
@@ -85,6 +86,7 @@ static const CGFloat kTileHeightInsetMultiplier = .845f;
 
 - (void)addUnderlyingIndicatorTiles
 {
+    // Loop through possible nodes, if a node exists create a layer underneath it to display indicator
     for (NSInteger row = 0; row < NumberOfRows; row++) {
         for (NSInteger column = 0; column < NumberOfColumns; column++) {
             
@@ -143,45 +145,7 @@ static const CGFloat kTileHeightInsetMultiplier = .845f;
     
     // Once all Tiles are layed out, center them
     [self _centerTilePositionWithCompletion:^{
-        [self _performEntranceAnimationWithTiles:shuffledTiles delay:0 completion:nil];
-    }];
-}
-
-- (void)restart
-{
-    if (self.animating) {
-        return;
-    }
-    
-    self.animating = YES;
-    
-    // Return count to ZERO
-    _startingTileCount = 0;
-    _startingTilesUsed = 0;
-    
-    // Clear out Array
-    _selectedHexagons = [NSMutableArray array];
-    
-    // Shuffle a copy of tiles Array to prepare for animations
-    NSMutableArray *shuffledTiles = [_hexagons mutableCopy];
-    [shuffledTiles shuffle];
-    
-    // Restore tiles to their inital state
-    NSTimeInterval delay = 0.0f;
-    for (HDHexagon *tile in shuffledTiles) {
-        [tile.node runAction: [SKAction sequence:@[[SKAction waitForDuration:delay],[SKAction scaleTo:0.0f duration:.3f]]]];
-        [tile restoreToInitialState];
-        delay += .025f;
-    }
-    
-    // Clear out lower indicator layer
-    for (HDSpriteNode *hexagonSprite in self.tileLayer.children) {
-        [hexagonSprite updateTextureFromHexagonType:HDHexagonTypeNone];
-    }
-    
-    //Animate restart once animating outs completed
-    [self _performEntranceAnimationWithTiles:shuffledTiles delay:delay completion:^{
-        [self setAnimating:NO];
+        [self _performEntranceAnimationWithTiles:shuffledTiles completion:nil];
     }];
 }
 
@@ -260,7 +224,6 @@ static const CGFloat kTileHeightInsetMultiplier = .845f;
         [hexagon recievedTouches];
         
         [self _checkGameStatusAfterSelectingTile:hexagon];
-        
     }
 }
 
@@ -305,110 +268,48 @@ static const CGFloat kTileHeightInsetMultiplier = .845f;
 
 - (void)_checkGameStatusAfterSelectingTile:(HDHexagon *)hexagon
 {
-    
-    /*
-     
-     WORK ON THIS
-     
-     LOOP THROUGH AND CHECK EACH NODE FOR
-     
-    */
-    
     if ([self _checkIfAllHexagonsAreSelected]) {
-        [self _performCompletionAnimation:^{
-            // Won Game
-            
-            if ([ADelegate previousLevel]) {
-                [[HDMapManager sharedManager] completedLevelAtIndex:[ADelegate previousLevel]];
-            }
-            
+        
+        // Won Game
+        if ([ADelegate previousLevel]) {
+            [[HDMapManager sharedManager] completedLevelAtIndex:[ADelegate previousLevel]];
+        }
+        
+        [self _performCompletionAnimationWithTiles:_hexagons completion:^{
             HDAlertNode *alertNode = [HDAlertNode spriteNodeWithColor:[UIColor clearColor] size:self.frame.size];
+            [alertNode setDelegate:self];
             [alertNode setPosition:CGPointMake(CGRectGetWidth(self.frame) / 2, CGRectGetHeight(self.frame) / 2)];
             [self addChild:alertNode];
-            
             [alertNode show];
         }];
-    } else if (![[self _possibleMovesForHexagon:hexagon] count] && _startingTilesUsed == ( _startingTileCount - 1 )){
         
-        [self _performCompletionAnimation:^{
-            // Lost Game
-            
-            HDAlertNode *alertNode = [HDAlertNode spriteNodeWithColor:[UIColor clearColor] size:self.frame.size];
-            [alertNode setPosition:CGPointMake(CGRectGetWidth(self.frame) / 2, CGRectGetHeight(self.frame) / 2)];
-            [self addChild:alertNode];
-            
-            [alertNode show];
-            
-        }];
-        
-    } else if (![[self _possibleMovesForHexagon:hexagon] count]) {
-        // Some count iVar that i dont remeber what it does ;)
+    }
+    
+    if (hexagon.type == HDHexagonTypeStarter) {
         _startingTilesUsed++;
     }
-}
-
-- (void)_performEntranceAnimationWithTiles:(NSMutableArray *)tiles delay:(NSTimeInterval)delay completion:(dispatch_block_t)handler
-{
-    /* KEEP READING TRYING TO FIND A BETTER WAY TO DO THIS */
     
-    NSUInteger count = tiles.count;
-    
-    NSTimeInterval _delay = delay;
-    
-    // Setup actions for base tiles
-    SKAction *show  = [SKAction unhide];
-    SKAction *scale = [SKAction scaleTo:0.0f  duration:0.0f];
-    SKAction *pop   = [SKAction scaleTo:1.15f duration:.3f];
-    SKAction *size  = [SKAction scaleTo:1.0f  duration:.3f];
-    
-    // setup actions for children nodes
-    SKAction *doubleTouch = [SKAction moveTo:CGPointMake(1.0f, 1.0f) duration:.5f];
-    SKAction *tripleTouch = [SKAction sequence: @[[SKAction waitForDuration:.75f], doubleTouch]];
-    
-    // Animate regular, start, and base tiles onto node with pop effect
-    __block NSInteger index = 0;
-    for (HDHexagon *hex in tiles) {
-
-        NSArray *sequence =  @[[SKAction waitForDuration:_delay], scale, show, pop, size];
-        
-        [hex.node runAction:[SKAction sequence:sequence]
-                 completion:^{
-                     if (index == count - 1) {
-                        
-                         // Once base animation is complete, check for children and animate them in
-                         NSTimeInterval completion = 0.0f;
-                         for (HDHexagon *hexa in tiles) {
-                             
-                             NSTimeInterval current = completion;
-                             if ([hexa.node childNodeWithName:DOUBLE_KEY]) {
-                                 completion = (.5f > completion) ? .5f : current;
-                                 [[hexa.node childNodeWithName:DOUBLE_KEY] runAction:doubleTouch];
-                                 
-                                 if ([[[hexa.node children] lastObject] childNodeWithName:TRIPLE_KEY]) {
-                                     completion = (1.0f > completion) ? 1.0f : current;
-                                     [[[[hexa.node children] lastObject] childNodeWithName:TRIPLE_KEY] runAction:tripleTouch];
-                                 }
-                             }
-                         }
-                         
-                         // after animations complete, call completion block
-                         dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(completion * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-                             if (handler) {
-                                 handler();
-                             }
-                         });
-                     }
-                     index++;
-                 }];
-        _delay += .05f;
+    NSInteger count = 0;
+    for (HDHexagon *hexa in _hexagons) {
+        if (hexa.selected) {
+            count++;
+        }
     }
-}
-
-- (void)_performCompletionAnimation:(dispatch_block_t)handler
-{
     
-    if (handler) {
-       handler();
+    NSInteger tilesLeft = _finishedTileCount - count;
+    
+    HDHexagon *current = nil;
+    for (HDHexagon *hexa in _hexagons) {
+        if (!hexa.selected) {
+            if (![self _possibleMovesForHexagon:hexa].count && _startingTilesUsed ==  _startingTileCount && tilesLeft != 1) {
+                current = hexa;
+                break;
+            }
+        }
+    }
+    
+    if (current) {
+      //  [self _per]
     }
 }
 
@@ -494,6 +395,155 @@ static const CGFloat kTileHeightInsetMultiplier = .845f;
     return NO;
 }
 
+#pragma mark -
+#pragma mark - < RESTART >
+
+- (void)restart
+{
+    if (self.animating) {
+        return;
+    }
+    
+    self.animating = YES;
+    
+    // Return used starting tile count to ZERO
+    _startingTilesUsed = 0;
+    
+    // Clear out Array
+    _selectedHexagons = [NSMutableArray array];
+    
+    // Shuffle a copy of tiles Array to prepare for animations
+    __block NSMutableArray *shuffledTiles = [_hexagons mutableCopy];
+    [shuffledTiles shuffle];
+    
+    // Clear out lower indicator layer
+    for (HDSpriteNode *hexagonSprite in self.tileLayer.children) {
+        [hexagonSprite updateTextureFromHexagonType:HDHexagonTypeNone];
+    }
+    
+    // Animate out
+    [self _performCompletionAnimationWithTiles:shuffledTiles completion:^{
+        
+        // Restore tiles to their inital state once off screen
+        for (HDHexagon *hexa in _hexagons) {
+            [hexa.node setScale:1.0f];
+            [hexa restoreToInitialState];
+        }
+        
+        // Animate restart once restored
+        [self _performEntranceAnimationWithTiles:shuffledTiles completion:^{
+            [self setAnimating:NO];
+        }];
+    }];
+}
+
+#pragma mark -
+#pragma mark - < ANIMATIONS >
+
+- (void)_performEntranceAnimationWithTiles:(NSArray *)tiles completion:(dispatch_block_t)handler
+{
+    /* KEEP READING TRYING TO FIND A BETTER WAY TO DO THIS */
+    
+    NSUInteger count = tiles.count;
+    
+    NSTimeInterval _delay = 0;
+    
+    // Setup actions for base tiles
+    SKAction *show  = [SKAction unhide];
+    SKAction *scale = [SKAction scaleTo:0.0f  duration:0.0f];
+    SKAction *pop   = [SKAction scaleTo:1.15f duration:.2f];
+    SKAction *size  = [SKAction scaleTo:1.0f  duration:.2f];
+    
+    // setup actions for children nodes
+    SKAction *doubleTouch = [SKAction moveTo:CGPointMake(1.0f, 1.0f) duration:.3f];
+    SKAction *tripleTouch = [SKAction sequence: @[[SKAction waitForDuration:.4f], doubleTouch]];
+    
+    // Animate regular, start, and base tiles onto node with pop effect
+    __block NSInteger index = 0;
+    for (HDHexagon *hex in tiles) {
+        
+        NSArray *sequence =  @[[SKAction waitForDuration:_delay], scale, show, pop, size];
+        
+        [hex.node runAction:[SKAction sequence:sequence]
+                 completion:^{
+                     if (index == count - 1) {
+                         
+                         // Once base animation is complete, check for children and animate them in
+                         NSTimeInterval completion = 0.0f;
+                         for (HDHexagon *hexa in tiles) {
+                             
+                             NSTimeInterval current = completion;
+                             if ([hexa.node childNodeWithName:DOUBLE_KEY]) {
+                                 completion = (.3f > completion) ? .3f : current;
+                                 [[hexa.node childNodeWithName:DOUBLE_KEY] runAction:doubleTouch];
+                                 
+                                 if ([[[hexa.node children] lastObject] childNodeWithName:TRIPLE_KEY]) {
+                                     completion = (.7f > completion) ? .7f : current;
+                                     [[[[hexa.node children] lastObject] childNodeWithName:TRIPLE_KEY] runAction:tripleTouch];
+                                 }
+                             }
+                         }
+                         
+                         // after animations complete, call completion block
+                         dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(completion * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+                             if (handler) {
+                                 handler();
+                             }
+                         });
+                     }
+                     index++;
+                 }];
+        _delay += .025f;
+    }
+}
+
+- (void)_performCompletionAnimationWithTiles:(NSArray *)tiles completion:(dispatch_block_t)handler
+{
+    // Array count --;
+    NSUInteger countTo = tiles.count -1;
+    
+    // Scale to zero
+    SKAction *scale = [SKAction scaleTo:0.0f duration:.2f];
+    
+    // Loop through tiles and scale to zilch
+    __block NSInteger index = 0;
+    NSTimeInterval delay = 0.0f;
+    for (HDHexagon *tile in tiles) {
+        
+        // Setup actions
+        SKAction *wait     = [SKAction waitForDuration:delay];
+        SKAction *hide     = [SKAction hide];
+        SKAction *sequence = [SKAction sequence:@[wait, scale, hide]];
+        
+        [tile.node runAction:sequence
+                  completion:^{
+                    
+                      if (index == countTo) {
+                          if (handler) {
+                              handler();
+                          }
+                      }
+                      index++;
+                  }];
+        delay += .025f;
+    }
+}
+
+#pragma mark - 
+#pragma mark - <HDAlertNodeDelegate>
+
+- (void)alertNode:(HDAlertNode *)alertNode clickedButtonAtIndex:(NSInteger)index
+{
+    if (index == 0) {
+        
+        [alertNode dismissWithCompletion:^{
+          //  [self _restartFromClearedNode];
+        }];
+        
+    } else if (index == 1) {
+        [ADelegate navigateToLevelMap];
+    }
+}
 
 #pragma mark -
 #pragma mark - <HDHexagonDelegate>

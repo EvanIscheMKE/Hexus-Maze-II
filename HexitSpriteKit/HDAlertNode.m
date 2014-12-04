@@ -19,24 +19,26 @@
 
 @implementation HDAlertNode
 
-- (instancetype)initWithColor:(UIColor *)color size:(CGSize)size completion:(BOOL)completion
+- (instancetype)initWithColor:(UIColor *)color size:(CGSize)size
 {
-    if (self = [super initWithColor:[SKColor flatMidnightBlueColor] size:size]) {
+    if (self = [super initWithColor:color size:size]) {
         
         [self setAnchorPoint:CGPointMake(.5f, .5f)];
+        [self setUserInteractionEnabled:YES];
         
         CGRect containerFrame = CGRectMake(0.0f, 0.0f, CGRectGetWidth(self.frame)-20.0f, CGRectGetWidth(self.frame)-20.0f);
          self.container = [SKShapeNode shapeNodeWithPath:[HDHelper hexagonPathForBounds:containerFrame] centered:YES];
-        [self.container setPosition:CGPointMake(0.0f, 0.0f)];
+        [self.container setPosition:CGPointMake(CGRectGetWidth(self.frame), 0.0f)];
         [self.container setFillColor:[SKColor flatAsbestosColor]];
         [self.container setLineWidth:0];
         [self.container setZPosition:100.0f];
         [self addChild:self.container];
         
-        /*      subclass     */
         CGRect topButtonFrame = CGRectMake(0.0f, 0.0, 160.0f, 35.0f);
-        CGPathRef path = [[UIBezierPath bezierPathWithRoundedRect:topButtonFrame cornerRadius:CGRectGetMidY(topButtonFrame)] CGPath];
-         self.topButton = [SKShapeNode shapeNodeWithPath:path centered:YES];
+        CGPathRef pathRef = [[UIBezierPath bezierPathWithRoundedRect:topButtonFrame cornerRadius:CGRectGetMidY(topButtonFrame)] CGPath];
+        
+        /*      Subclass     */
+         self.topButton = [SKShapeNode shapeNodeWithPath:pathRef centered:YES];
         [self.topButton setFillColor:[SKColor flatPeterRiverColor]];
         [self.topButton setLineWidth:0.0f];
         [self.topButton setName:@"Top"];
@@ -44,17 +46,19 @@
         [self.container addChild:self.topButton];
         
         SKLabelNode *topLabel = [[SKLabelNode alloc] initWithFontNamed:@"GillSans-Light"];
-        [topLabel setPosition:CGPointMake(0.0f, CGRectGetHeight(self.container.frame) / 2.75)];
-        [topLabel setFontSize:28.0f];
-        [topLabel setFontColor:[SKColor flatMidnightBlueColor]];
-        [topLabel setText:[NSString stringWithFormat:@"Level %ld",[ADelegate previousLevel]]];
+        [topLabel setUserInteractionEnabled:NO];
+        [topLabel setPosition:CGPointMake(0.0f, 0.0f)];
+        [topLabel setFontSize:22.0f];
+        [topLabel setName:@"Top"];
+        [topLabel setFontColor:[SKColor whiteColor]];
+        [topLabel setText:@"Restart"];
         [topLabel setHorizontalAlignmentMode:SKLabelHorizontalAlignmentModeCenter];
-        [topLabel setVerticalAlignmentMode:SKLabelVerticalAlignmentModeTop];
+        [topLabel setVerticalAlignmentMode:SKLabelVerticalAlignmentModeCenter];
         [self.topButton addChild:topLabel];
-        /*      end    */
+        /*      End    */
         
-        /*      subclass     */
-         self.bottomButton = [SKShapeNode shapeNodeWithPath:path centered:YES];
+        /*      Subclass     */
+         self.bottomButton = [SKShapeNode shapeNodeWithPath:pathRef centered:YES];
         [self.bottomButton setFillColor:[SKColor flatEmeraldColor]];
         [self.bottomButton setLineWidth:0.0f];
         [self.bottomButton setName:@"Bottom"];
@@ -62,22 +66,24 @@
         [self.container addChild:self.bottomButton];
         
         SKLabelNode *bottomLabel = [[SKLabelNode alloc] initWithFontNamed:@"GillSans-Light"];
-        [bottomLabel setPosition:CGPointMake(0.0f, CGRectGetHeight(self.container.frame) / 2.75)];
-        [bottomLabel setFontSize:28.0f];
-        [bottomLabel setFontColor:[SKColor flatMidnightBlueColor]];
-        [bottomLabel setText:[NSString stringWithFormat:@"Level %ld",[ADelegate previousLevel]]];
+        [bottomLabel setUserInteractionEnabled:NO];
+        [bottomLabel setPosition:CGPointMake(0.0f, 0.0f)];
+        [bottomLabel setFontSize:22.0f];
+        [bottomLabel setFontColor:[SKColor whiteColor]];
+        [bottomLabel setText:@"Back to Map"];
+        [bottomLabel setName:@"Bottom"];
         [bottomLabel setHorizontalAlignmentMode:SKLabelHorizontalAlignmentModeCenter];
-        [bottomLabel setVerticalAlignmentMode:SKLabelVerticalAlignmentModeTop];
+        [bottomLabel setVerticalAlignmentMode:SKLabelVerticalAlignmentModeCenter];
         [self.bottomButton addChild:bottomLabel];
-        /*      end     */
+        /*      End     */
         
         SKLabelNode *levelLabel = [[SKLabelNode alloc] initWithFontNamed:@"GillSans-Light"];
         [levelLabel setPosition:CGPointMake(0.0f, CGRectGetHeight(self.container.frame) / 2.75)];
         [levelLabel setFontSize:28.0f];
-        [levelLabel setFontColor:[SKColor flatMidnightBlueColor]];
+        [levelLabel setFontColor:[SKColor whiteColor]];
         [levelLabel setText:[NSString stringWithFormat:@"Level %ld", [ADelegate previousLevel]]];
         [levelLabel setHorizontalAlignmentMode:SKLabelHorizontalAlignmentModeCenter];
-        [levelLabel setVerticalAlignmentMode:SKLabelVerticalAlignmentModeTop];
+        [levelLabel setVerticalAlignmentMode:SKLabelVerticalAlignmentModeCenter];
         [self.container addChild:levelLabel];
         
     }
@@ -86,32 +92,34 @@
 
 - (void)show
 {
-//    [self runAction:[SKAction moveTo:CGPointMake(CGRectGetWidth(self.frame) / 2, CGRectGetHeight(self.frame) / 2)
-//                            duration:.3f]];
+    [self.container runAction:[SKAction moveToX:0.0f duration:.3f]];
 }
 
-- (void)dismiss
+- (void)dismissWithCompletion:(dispatch_block_t)completion
 {
-    
+    [self.container runAction:[SKAction moveToX:CGRectGetWidth(self.frame) duration:.3f] completion:^{
+        [self removeFromParent];
+        if (completion) {
+            completion();
+        }
+    }];
 }
 
 - (void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event
 {
-    [self touchesMoved:touches withEvent:event];
-}
+    UITouch *touch   = [touches anyObject];
+    CGPoint location = [touch locationInNode:self];
+    
+    SKNode *node = [self nodeAtPoint:location];
 
-- (void)touchesMoved:(NSSet *)touches withEvent:(UIEvent *)event
-{
-    UITouch *touch     = [touches anyObject];
-    CGPoint location   = [touch locationInNode:self];
-    
-    SKSpriteNode *node = (SKSpriteNode *)[self nodeAtPoint:location];
-    
-    if ([node.name isEqualToString:@"Top"]) {
-        
-    } else if ([node.name isEqualToString:@"Bottom"]) {
-        
+    if (self.delegate && [self.delegate respondsToSelector:@selector(alertNode:clickedButtonAtIndex:)]) {
+        if ([node.name isEqualToString:@"Top"]) {
+            [self.delegate alertNode:self clickedButtonAtIndex:0];
+        } else if ([node.name isEqualToString:@"Bottom"]) {
+            [self.delegate alertNode:self clickedButtonAtIndex:1];
+        }
     }
 }
+
 
 @end
