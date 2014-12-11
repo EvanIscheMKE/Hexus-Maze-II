@@ -12,14 +12,6 @@
 
 @implementation HDSpriteNode
 
-- (instancetype)init
-{
-    if (self = [super init]) {
-        
-    }
-    return self;
-}
-
 - (void)updateTextureFromHexagonType:(HDHexagonType)type
 {
     return [self updateTextureFromHexagonType:type touchesCount:0];
@@ -28,20 +20,10 @@
 - (void)updateTextureFromHexagonType:(HDHexagonType)type touchesCount:(NSInteger)count;
 {
     if (type == HDHexagonTypeNone) {
-        [self setTexture:[SKTexture textureWithImage:[self _plainTransparentBackground]]];
+        [self setTexture:nil];
     } else {
         [self setTexture:[SKTexture textureWithImage:[self _imageWithSize:self.size type:type touchesCount:count]]];
     }
-}
-
-- (UIImage *)_plainTransparentBackground
-{
-    UIGraphicsBeginImageContextWithOptions(self.size, NO, [[UIScreen mainScreen] scale]);
-    
-    UIImage *circle = UIGraphicsGetImageFromCurrentImageContext();
-    UIGraphicsEndImageContext();
-
-    return circle;
 }
 
 - (UIImage *)_imageWithSize:(CGSize)size type:(HDHexagonType)type touchesCount:(NSInteger)count
@@ -51,8 +33,24 @@
     [[UIColor whiteColor] setStroke];
     [[UIColor whiteColor] setFill];
     
-    CGRect indicatorFrame = CGRectInset(CGRectMake(0.0f, 0.0f, size.width, size.height), 15.0f, 15.0f);
+    CGRect indicatorFrame = CGRectInset(CGRectMake(0.0f, 0.0f, size.width, size.height), 18.0f, 18.0f);
+    CGRect countFrame     = CGRectInset(CGRectMake(0.0f, 0.0f, size.width, size.height), 8.0f, 8.0f);
     switch (type) {
+        case HDHexagonTypeOne:
+            indicatorFrame = countFrame;
+            break;
+            case HDHexagonTypeStarter:
+            indicatorFrame = countFrame;
+            break;
+        case HDHexagonTypeTwo:
+            indicatorFrame = countFrame;
+            break;
+        case HDHexagonTypeThree:
+            indicatorFrame = countFrame;
+            break;
+        case HDHexagonTypeFour:
+            indicatorFrame = countFrame;
+            break;
         case HDHexagonTypeDouble:
             switch (count) {
                 case 0:

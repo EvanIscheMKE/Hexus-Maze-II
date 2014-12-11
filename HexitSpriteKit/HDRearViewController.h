@@ -9,8 +9,5 @@
 #import <UIKit/UIKit.h>
 
 @interface HDRearViewController : UIViewController
-
-- (void)hideGameInterface;
-- (void)showGameInterface;
-
+@property (nonatomic, getter=isGameInterfaceHidden, assign) BOOL gameInterfaceHidden;
 @end

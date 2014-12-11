@@ -6,8 +6,10 @@
 //  Copyright (c) 2014 Evan William Ische. All rights reserved.
 //
 
+@import iAd;
 @import QuartzCore;
 
+#import "HDContainerView.h"
 #import "HDWelcomeViewController.h"
 #import "UIColor+FlatColors.h"
 
@@ -17,10 +19,16 @@
 
 @implementation HDWelcomeViewController
 
+- (void)loadView
+{
+    HDContainerView *space = [[HDContainerView alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
+    [self setView:space];
+}
+
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    [self.view setBackgroundColor:[UIColor flatMidnightBlueColor]];
+    [self setCanDisplayBannerAds:YES];
     
     UILabel *title = [[UILabel alloc] init];
     [title setTextAlignment:NSTextAlignmentCenter];

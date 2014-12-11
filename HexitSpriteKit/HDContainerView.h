@@ -8,7 +8,9 @@
 
 #import <UIKit/UIKit.h>
 
-@interface HDSpaceView : UIView
+@interface HDContainerView : UIView
 @property (nonatomic, assign) BOOL animate;
 @property (nonatomic, assign) BOOL shouldAnimteWhenMovedToSuperView;
+
+- (void)_animateHexAlongPath;
 @end

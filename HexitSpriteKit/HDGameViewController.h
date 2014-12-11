@@ -10,6 +10,8 @@
 
 @interface HDGameViewController : UIViewController
 
+@property (nonatomic, assign) BOOL navigationBarHidden;
+@property (nonatomic, assign) BOOL expanded;
 @property (nonatomic, readonly) NSInteger level;
 
 - (instancetype)initWithLevel:(NSInteger)level;

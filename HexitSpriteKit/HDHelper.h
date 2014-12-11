@@ -6,11 +6,10 @@
 //  Copyright (c) 2014 Evan William Ische. All rights reserved.
 //
 
+
 #import <Foundation/Foundation.h>
 
 @interface HDHelper : NSObject
 + (CGPathRef)hexagonPathForBounds:(CGRect)bounds;
-+ (CGSize)sizeFromWidth:(CGFloat)width font:(UIFont *)font text:(NSString *)text;
-+ (void)blinkView:(UIView *)view duration:(NSTimeInterval)duration repeat:(NSInteger)count;
-+ (void)blinkView:(UIView *)view duration:(NSTimeInterval)duration repeat:(NSInteger)count scale:(CGFloat)scale;
++ (CGPathRef)starPathForBounds:(CGRect)bounds;
 @end

@@ -22,19 +22,19 @@
 @property (nonatomic, strong) HDGridViewController *frontViewController;
 @end
 
-@implementation AppDelegate {
-    NSInteger _deltaLevel;
-}
+@implementation AppDelegate
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
     [application setStatusBarHidden:YES];
+    
      self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
     [self.window setRootViewController:[HDWelcomeViewController new]];
     [self.window makeKeyAndVisible];
     
     [[HDSoundManager sharedManager] preloadSounds:SOUNDS_TO_PRELOAD];
     [[HDGameCenterManager sharedManager] authenticateForGameCenter];
+    
     if (![[NSUserDefaults standardUserDefaults] boolForKey:HDFirstRunKey]) {
         [self _initalizeModelData];
     }
@@ -63,12 +63,7 @@
     [self.containerController presentViewController:controller animated:YES completion:nil];
 }
 
-- (void)gameCenterViewControllerDidFinish:(GKGameCenterViewController *)gameCenterViewController
-{
-    [self.containerController dismissViewControllerAnimated:YES completion:nil];
-}
-
-- (void)navigateToLevelMap
+- (void)navigateToLevelController
 {
     [[HDSoundManager sharedManager] playSound:@"menuClicked.wav"];
     [self.containerController setFrontViewController:self.frontViewController animated:YES];
@@ -78,12 +73,11 @@
 {
     [[HDSoundManager sharedManager] playSound:@"menuClicked.wav"];
     [self.containerController toggleHDMenuViewController];
-    [(HDGameViewController *)self.containerController.gameViewController restartGame];
+    [(HDGameViewController *)self.containerController.frontViewController restartGame];
 }
 
 - (void)navigateToNewLevel:(NSInteger)level
 {
-    _deltaLevel = level;
     HDGameViewController *controller = [[HDGameViewController alloc] initWithLevel:level];
     [self.containerController setFrontViewController:controller animated:YES];
 }
@@ -95,12 +89,7 @@
 }
 
 #pragma mark - 
-#pragma mark - < Private >
-
-- (NSInteger)previousLevel
-{
-    return _deltaLevel;
-}
+#pragma mark - <PRIVATE>
 
 - (void)_initalizeModelData
 {
@@ -112,17 +101,24 @@
 }
 
 #pragma mark -
+#pragma mark - <GKGameCenterControllerDelegate>
+
+- (void)gameCenterViewControllerDidFinish:(GKGameCenterViewController *)gameCenterViewController
+{
+    [self.containerController dismissViewControllerAnimated:YES completion:nil];
+}
+
+#pragma mark -
 #pragma mark - <HDContainerViewControllerDelegate>
 
 - (void)container:(HDContainerViewController *)container
        transitionedFromController:(UIViewController *)fromController
                      toController:(UIViewController *)toController
 {
-    NSLog(@"FROM: %@, TO: %@", NSStringFromClass([fromController class]), NSStringFromClass([toController class]));
     if ([fromController isKindOfClass:[HDGridViewController class]] && [toController isKindOfClass:[HDGameViewController class]]) {
-        [(HDRearViewController *)self.containerController.rearViewController showGameInterface];
+        [(HDRearViewController *)self.containerController.rearViewController setGameInterfaceHidden:NO];
     } else if ([toController isKindOfClass:[HDGridViewController class]] && [fromController isKindOfClass:[HDGameViewController class]]) {
-        [(HDRearViewController *)self.containerController.rearViewController hideGameInterface];
+        [(HDRearViewController *)self.containerController.rearViewController setGameInterfaceHidden:YES];
     }
 }
 

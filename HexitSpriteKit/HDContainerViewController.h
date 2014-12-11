@@ -8,7 +8,7 @@
 
 #import <UIKit/UIKit.h>
 
-#define kAnimationOffsetX [[UIScreen mainScreen] bounds].size.width / 2 + 40.0f
+#define kAnimationOffsetX [[UIScreen mainScreen] bounds].size.width / 2 + 40.0f // UGGLYY
 
 @class HDContainerViewController;
 
@@ -17,13 +17,15 @@
 @end
 
 @protocol HDContainerViewControllerDelegate;
-@interface HDContainerViewController : UIViewController <UIGestureRecognizerDelegate>
+@interface HDContainerViewController : UIViewController
 
-@property (nonatomic, strong) id<HDContainerViewControllerDelegate> delegate;
+@property (nonatomic, weak) id<HDContainerViewControllerDelegate> delegate;
 
 @property (nonatomic, readonly) NSArray *toggleSwitchesForSettings;
-@property (nonatomic, readonly) UIViewController *gameViewController;
+@property (nonatomic, readonly) UIViewController *frontViewController;
 @property (nonatomic, readonly) UIViewController *rearViewController;
+
+@property (nonatomic, assign) BOOL navigationBarHidden;
 
 - (instancetype)initWithGameViewController:(UIViewController *)gameController
                         rearViewController:(UIViewController *)rearController NS_DESIGNATED_INITIALIZER;

@@ -8,9 +8,6 @@
 
 #import <Foundation/Foundation.h>
 
-@class HDHexagon;
 @interface NSMutableArray (UniqueAdditions)
-
-- (void)addUniqueObject:(HDHexagon *)hexagon;
 - (void)shuffle;
 @end

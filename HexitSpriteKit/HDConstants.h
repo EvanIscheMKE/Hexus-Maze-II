@@ -10,16 +10,9 @@ static inline CGFloat DEGREES_RADIANS(CGFloat degrees){
     return ((degrees * M_PI) / 180.0f);
 }
 
-//static CGFloat RADIANS_DEGREES(CGFloat radians){
-//    return ((radians * 180) / M_PI);
-//}
-//
-//static CGFloat half(CGFloat number){
-//    return number / 2.0f;
-//};
-//
-
 //keys
+extern NSString * const HDNextLevelNotification;
+extern NSString * const HDToggleControlsNotification;
 extern NSString * const HDSoundNotification;
 extern NSString * const HDVibrationNotification;
 extern NSString * const HDRestartNotificaiton;

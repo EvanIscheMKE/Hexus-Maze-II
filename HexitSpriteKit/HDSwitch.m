@@ -61,7 +61,8 @@ static const CGFloat kPadding = 5.0f;
                                          CGRectGetWidth(self.bounds) - (CGRectGetWidth(self.slidingView.bounds) + kPadding),
                                          kPadding,
                                          CGRectGetWidth(self.bounds)/3,
-                                         CGRectGetHeight(self.bounds) - (kPadding*2));
+                                         CGRectGetHeight(self.bounds) - (kPadding*2)
+                                         );
     
     self.slidingView = [[UIView alloc] initWithFrame:slidingViewFrame];
     [self.slidingView.layer setCornerRadius:3.0f];

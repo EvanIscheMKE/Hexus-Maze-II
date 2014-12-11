@@ -22,8 +22,6 @@
 
 - (void)preloadSounds:(NSArray *)soundNames
 {
-    if ([_sounds allValues] > 0) return;
-    
     if (!_sounds) {
         _sounds = [NSMutableDictionary dictionary];
     }

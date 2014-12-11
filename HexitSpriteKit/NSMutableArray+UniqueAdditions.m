@@ -11,16 +11,6 @@
 
 @implementation NSMutableArray (UniqueAdditions)
 
-- (void)addUniqueObject:(HDHexagon *)hexagon
-{
-    if (![self containsObject:hexagon]) {
-        [self addObject:hexagon];
-    } else if ( !hexagon.selected || ( hexagon.type == HDHexagonTypeStarter ) ) {
-        [self removeObjectIdenticalTo:hexagon];
-        [self addObject:hexagon];
-    }
-}
-
 - (void)shuffle
 {
     for (int i = 0; i < [self count]; ++i) {

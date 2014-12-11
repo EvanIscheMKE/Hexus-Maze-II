@@ -9,12 +9,16 @@
 @import SpriteKit;
 
 @interface HDHexagonNode : SKShapeNode
-
+@property (nonatomic, getter=isLocked, assign) BOOL locked;
 @property (nonatomic, strong) SKLabelNode *label;
+
+- (void)setStrokeColor:(UIColor *)strokeColor fillColor:(UIColor *)fillColor;
 
 - (void)updateLabelWithText:(NSString *)text;
 - (void)updateLabelWithText:(NSString *)text color:(UIColor *)color;
-- (void)setStrokeColor:(UIColor *)strokeColor fillColor:(UIColor *)fillColor;
+
+- (void)addTripleNodeWithStroke:(UIColor *)stroke fill:(UIColor *)fill;
+- (void)addDoubleNodeWithStroke:(UIColor *)stroke fill:(UIColor *)fill;
 
 @end
 

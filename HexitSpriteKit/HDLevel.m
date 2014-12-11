@@ -8,28 +8,26 @@
 
 #import "HDLevel.h"
 
-NSString * const hdCompletedKey  = @"completed";
-NSString * const hdUnlockedKey   = @"unlocked";
-NSString * const hdLevelIndexKey = @"levelIndex";
-NSString * const hdCountKey      = @"count";
+NSString * const HDCompletedKey  = @"completed";
+NSString * const HDUnlockedKey   = @"unlocked";
+NSString * const HDLevelIndexKey = @"levelIndex";
+NSString * const HDCountKey      = @"count";
 
 @implementation HDLevel
 
 - (void)encodeWithCoder:(NSCoder *)encoder
 {
-    [encoder encodeBool:self.unlocked                forKey:hdUnlockedKey];
-    [encoder encodeBool:self.completed               forKey:hdCompletedKey];
-    [encoder encodeInteger:self.levelIndex           forKey:hdLevelIndexKey];
-    [encoder encodeInteger:self.countUntilCompletion forKey:hdCountKey];
+    [encoder encodeBool:self.unlocked      forKey:HDUnlockedKey];
+    [encoder encodeBool:self.completed     forKey:HDCompletedKey];
+    [encoder encodeInteger:self.levelIndex forKey:HDLevelIndexKey];
 }
 
 - (id)initWithCoder:(NSCoder *)decoder
 {
     if (self = [super init]) {
-        [self setUnlocked:  [decoder decodeBoolForKey:hdUnlockedKey]];
-        [self setCompleted: [decoder decodeBoolForKey:hdCompletedKey]];
-        [self setLevelIndex:[decoder decodeIntegerForKey:hdLevelIndexKey]];
-        [self setCountUntilCompletion:[decoder decodeIntegerForKey:hdCountKey]];
+        [self setUnlocked:  [decoder decodeBoolForKey:HDUnlockedKey]];
+        [self setCompleted: [decoder decodeBoolForKey:HDCompletedKey]];
+        [self setLevelIndex:[decoder decodeIntegerForKey:HDLevelIndexKey]];
     }
     return self;
 }
@@ -37,7 +35,6 @@ NSString * const hdCountKey      = @"count";
 + (HDLevel *)levelUnlocked:(BOOL)unlocked index:(NSInteger)index completed:(BOOL)completed
 {
     HDLevel *level = [[self alloc] init];
-    [level setCountUntilCompletion:0];
     [level setUnlocked:unlocked];
     [level setLevelIndex:index];
     [level setCompleted:completed];

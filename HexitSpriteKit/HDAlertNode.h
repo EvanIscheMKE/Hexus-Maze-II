@@ -11,9 +11,9 @@
 @protocol HDAlertnodeDelegate;
 @interface HDAlertNode : SKSpriteNode
 @property (nonatomic, weak) id <HDAlertnodeDelegate> delegate;
+@property (nonatomic, strong) SKLabelNode *levelLabel;
 
 - (void)show;
-- (void)dismissWithCompletion:(dispatch_block_t)completion;
 
 @end
 
@@ -21,5 +21,6 @@
 @optional
 
 - (void)alertNode:(HDAlertNode *)alertNode clickedButtonAtIndex:(NSInteger)buttonIndex;
+- (void)alertNodeWillDismiss:(HDAlertNode *)alertNode;
 
 @end

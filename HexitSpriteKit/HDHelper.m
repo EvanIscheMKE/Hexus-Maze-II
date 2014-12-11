@@ -7,6 +7,7 @@
 //
 
 #import "HDHelper.h"
+#import "UIColor+FlatColors.h"
 
 @implementation HDHelper
 
@@ -25,40 +26,43 @@
     return [_path CGPath];
 }
 
-+ (void)blinkView:(UIView *)view duration:(NSTimeInterval)duration repeat:(NSInteger)count
++ (CGPathRef)starPathForBounds:(CGRect)bounds
 {
-    [self blinkView:view duration:duration repeat:count scale:.95f];
-}
-
-- (void)blinkView:(UIView *)view duration:(NSTimeInterval)duration repeat:(NSInteger)count scale:(CGFloat)scale
-{
-    UIViewAnimationOptions options = UIViewAnimationOptionAutoreverse | UIViewAnimationCurveEaseInOut |
-                                     UIViewAnimationOptionRepeat | UIViewAnimationOptionAllowUserInteraction;
+    UIBezierPath *starPath = [UIBezierPath bezierPath];
+   
+    const CGPoint center = CGPointMake(CGRectGetMidX(bounds), CGRectGetMidY(bounds));
     
-    [UIView animateWithDuration:duration
-                          delay:0
-                        options:options
-                     animations:^{
-                         [UIView setAnimationRepeatCount:count];
-                         [view setTransform:CGAffineTransformMakeScale(scale, scale)];
-                     } completion:^(BOOL finished){
-                         if (finished) {
-                             [view setTransform:CGAffineTransformMakeScale(1, 1)];
-                             [view.layer removeAllAnimations];
-                         }
-                     }];
-}
-
-+ (CGSize)sizeFromWidth:(CGFloat)width font:(UIFont *)font text:(NSString *)text
-{
-    NSDictionary *attributes = @{ NSForegroundColorAttributeName:[UIColor blackColor], NSFontAttributeName: font };
+    const NSUInteger numberOfPoints = 5;
+    const CGFloat innerRadius = CGRectGetWidth(bounds) / 3.8f;
+    const CGFloat outerRadius = CGRectGetMidX(bounds);
     
-    NSAttributedString *string = [[NSAttributedString alloc] initWithString:text attributes:attributes];
+    CGFloat arcPerPoint = 2.0f * M_PI / 5;
+    CGFloat theta = M_PI / 2.0f;
     
-    CGRect rect = CGRectIntegral([string boundingRectWithSize:CGSizeMake(width, CGFLOAT_MAX)
-                                                      options:(NSStringDrawingUsesLineFragmentOrigin | NSStringDrawingUsesFontLeading)
-                                                      context:nil]);
-    return rect.size;
+    // Move to starting point (tip at 90 degrees on outside of star)
+    CGPoint pt = CGPointMake(center.x + (outerRadius * cosf(theta)), center.y + (outerRadius * sinf(theta)));
+    
+    [starPath moveToPoint:CGPointMake(pt.x, pt.y)];
+    
+    for (int i = 0; i < numberOfPoints; i++) {
+        // Calculate next inner point (moving clockwise), accounting for crossing of 0 degrees
+        theta = theta - (arcPerPoint / 2.0f);
+        if (theta < 0.0f) {
+            theta = theta + (2 * M_PI);
+        }
+        pt = CGPointMake(center.x + (innerRadius * cosf(theta)), center.y + (innerRadius * sinf(theta)));
+        [starPath addLineToPoint:CGPointMake(pt.x, pt.y)];
+        
+        // Calculate next outer point (moving clockwise), accounting for crossing of 0 degrees
+        theta = theta - (arcPerPoint / 2.0f);
+        if (theta < 0.0f) {
+            theta = theta + (2 * M_PI);
+        }
+        pt = CGPointMake(center.x + (outerRadius * cosf(theta)), center.y + (outerRadius * sinf(theta)));
+        [starPath addLineToPoint:CGPointMake(pt.x, pt.y)];
+    }
+   
+    return [starPath CGPath];
 }
 
 @end

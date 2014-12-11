@@ -21,7 +21,7 @@ typedef enum {
     HDHexagonTypeFour    = 7,
     HDHexagonTypeFive    = 8,
     HDHexagonTypeStarter = 9,
-    HDHexagonTypeNone   = 10
+    HDHexagonTypeNone    = 10
 } HDHexagonType;
 
 typedef enum {
@@ -41,9 +41,11 @@ static const NSInteger NumberOfColumns = 9;
 @protocol HDHexagonDelegate;
 @interface HDHexagon : NSObject
 
-@property (nonatomic, getter=isSelected, assign) BOOL selected;
-
 @property (nonatomic, readonly) NSInteger touchesCount;
+
+@property (nonatomic, getter=isCountTile, assign) BOOL countTile;
+@property (nonatomic, getter=isSelected, assign) BOOL selected;
+@property (nonatomic, getter=isLocked,   assign) BOOL locked;
 
 @property (nonatomic, weak) id<HDHexagonDelegate> delegate;
 @property (nonatomic, strong) HDHexagonNode *node;
@@ -54,17 +56,14 @@ static const NSInteger NumberOfColumns = 9;
 @property (nonatomic, assign) NSInteger column;
 @property (nonatomic, assign) NSInteger row;
 
-- (void)unlock;
+- (instancetype)initWithRow:(NSInteger)row column:(NSInteger)column NS_DESIGNATED_INITIALIZER;
+
 - (void)recievedTouches;
 - (void)restoreToInitialState;
-- (void)returnToPreviousState;
-- (instancetype)initWithRow:(NSInteger)row column:(NSInteger)column NS_DESIGNATED_INITIALIZER;
 
 @end
 
 @protocol HDHexagonDelegate <NSObject>
 @optional
-
 - (void)unlockFollowingHexagonType:(HDHexagonType)type;
-
 @end

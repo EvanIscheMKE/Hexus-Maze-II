@@ -7,11 +7,13 @@
 //
 
 #import <Foundation/Foundation.h>
-#import <GameKit/GameKit.h>
-
 
 @interface HDGameCenterManager : NSObject
+
 + (HDGameCenterManager *)sharedManager;
 - (void)authenticateForGameCenter;
+- (void)reportLevelCompletion:(int64_t)level;
+- (void)submitAchievementWithIdentifier:(NSString *)identifier;
+
 @end
 

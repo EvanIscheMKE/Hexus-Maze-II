@@ -6,17 +6,12 @@
 //  Copyright (c) 2014 Evan William Ische. All rights reserved.
 //
 
+@import GameKit;
+
 #import "HDGameCenterManager.h"
 
+NSString * const LEADERBOARDID_KEY = @"leaderboardkey";
 @implementation HDGameCenterManager
-
-- (instancetype)init
-{
-    if (self = [super init]) {
-        
-    }
-    return self;
-}
 
 + (HDGameCenterManager *)sharedManager
 {
@@ -42,6 +37,19 @@
                 /* Any feature using Game Center will alert user they're not logged in, instead of waiting for an unpredictable signup controller thats annoying as shit! */
             }
         });
+    }
+}
+
+- (void)reportLevelCompletion:(int64_t)level
+{
+    if ([GKLocalPlayer localPlayer].isAuthenticated) {
+        GKScore *completedLevel = [[GKScore alloc] initWithLeaderboardIdentifier:LEADERBOARDID_KEY];
+        [completedLevel setValue:level];
+        [GKScore reportScores:@[completedLevel] withCompletionHandler:^(NSError *error) {
+            if (error) {
+                
+            }
+        }];
     }
 }
 

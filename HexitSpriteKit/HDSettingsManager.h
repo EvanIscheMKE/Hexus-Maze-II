@@ -10,16 +10,10 @@
 
 @interface HDSettingsManager : NSObject
 
-@property (nonatomic, readonly) BOOL sound;
-@property (nonatomic, readonly) BOOL vibration;
-@property (nonatomic, readonly) BOOL space;
-@property (nonatomic, readonly) BOOL guide;
-
-- (void)toggleSound;
-- (void)toggleVibration;
-- (void)toggleSpace;
-- (void)toggleGuide;
-
+@property (nonatomic, assign) BOOL sound;
+@property (nonatomic, assign) BOOL vibration;
+@property (nonatomic, assign) BOOL space;
+@property (nonatomic, assign) BOOL guide;
 + (HDSettingsManager *)sharedManager;
 
 @end

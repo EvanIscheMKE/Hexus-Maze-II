@@ -8,15 +8,6 @@
 
 #import "HDSettingsManager.h"
 
-@interface HDSettingsManager ()
-
-@property (nonatomic, assign) BOOL sound;
-@property (nonatomic, assign) BOOL vibration;
-@property (nonatomic, assign) BOOL space;
-@property (nonatomic, assign) BOOL guide;
-
-@end
-
 @implementation HDSettingsManager
 
 - (instancetype)init
@@ -39,26 +30,5 @@
     });
     return manager;
 }
-
-- (void)toggleSound
-{
-    [self setSound:!self.sound];
-}
-
-- (void)toggleVibration
-{
-    [self setVibration:!self.vibration];
-}
-
-- (void)toggleSpace
-{
-    [self setSpace:!self.space];
-}
-
-- (void)toggleGuide
-{
-    [self setGuide:!self.guide];
-}
-
 
 @end

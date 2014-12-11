@@ -99,7 +99,7 @@
 
 - (NSString *)description
 {
-    return [NSString stringWithFormat:@"<PATH: %@ | HITS: %ld>", self.indexPath, self.numberOfHitsNeeded];
+    return [NSString stringWithFormat:@"<PATH: %@ | HITS: %ld>", self.indexPath, (unsigned long)self.numberOfHitsNeeded];
 }
 
 @end

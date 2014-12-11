@@ -7,6 +7,7 @@
 //
 
 @import SpriteKit;
+@import iAd;
 
 #import "HDLevelGenerator.h"
 #import "UIColor+FlatColors.h"
@@ -15,23 +16,21 @@
 #import "HDGridManager.h"
 #import "HDScene.h"
 
-@interface HDGameViewController ()
-@property (nonatomic, strong) UIButton *reverse;
-@property (nonatomic, strong) UIButton *restart;
+@interface HDGameViewController ()<ADBannerViewDelegate>
+
+@property (nonatomic, assign) BOOL pauseGame;
+@property (nonatomic, assign) BOOL bannerViewIsVisible;
 
 @property (nonatomic, strong) HDGridManager *gridManager;
-
 @property (nonatomic, strong) HDScene *scene;
+
+@property (nonatomic, strong) ADBannerView *bannerView;
+
 @end
 
 @implementation HDGameViewController {
-    
-    BOOL _pauseGame;
     BOOL _RandomlyGeneratedLevel;
-    
-    NSDictionary *_views;
-    NSDictionary *_metrics;
-    
+    BOOL _bannerViewIsVisible;
     NSInteger _level;
 }
 
@@ -39,28 +38,28 @@
 {
     [[NSNotificationCenter defaultCenter] removeObserver:self name:UIApplicationWillResignActiveNotification object:nil];
     [[NSNotificationCenter defaultCenter] removeObserver:self name:UIApplicationDidBecomeActiveNotification  object:nil];
-}
-
-- (id)init
-{
-    return [self initWithLevel:(NSInteger)1];
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:HDNextLevelNotification object:nil];
 }
 
 - (id)initWithLevel:(NSInteger)level
 {
-    if (self = [super init]){
+    if (self = [super init]) {
+        
         _level = level;
-        _pauseGame = NO;
         _RandomlyGeneratedLevel = NO;
+        
+        [self setPauseGame:NO];
+        [self setExpanded:NO];
     }
     return self;
 }
 
 - (instancetype)initWithRandomlyGeneratedLevel
 {
-    if (self = [super init]){
+    if (self = [super init]) {
         _pauseGame = NO;
         _RandomlyGeneratedLevel = YES;
+        [self setExpanded:NO];
     }
     return self;
 }
@@ -76,6 +75,11 @@
 {
     [super viewDidLoad];
     [self.view setBackgroundColor:[UIColor flatMidnightBlueColor]];
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(_presentNextLevel)
+                                                 name:HDNextLevelNotification
+                                               object:nil];
     
     [[NSNotificationCenter defaultCenter] addObserver:self
                                              selector:@selector(_applicationWillResignActive)
@@ -100,7 +104,10 @@
             }
         }];
     }
-    [self _layoutNavigationButtons];
+    
+    UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(restartGame)];
+    [tap setNumberOfTapsRequired:2];
+    //[self.view addGestureRecognizer:tap];
 }
 
 - (void)viewWillLayoutSubviews
@@ -122,25 +129,47 @@
     [self.scene restart];
 }
 
-- (void)reversePreviousMove
-{
-    [self.scene reversePreviousMove];
-}
-
 - (void)didReceiveMemoryWarning
 {
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
 }
 
+- (void)setExpanded:(BOOL)expanded
+{
+    if (_expanded == expanded) {
+        return;
+    }
+    
+    _expanded = expanded;
+    
+    if (expanded) {
+        [self.bannerView setHidden:YES];
+    } else {
+        [self.bannerView setHidden:NO];
+    }
+}
+
 #pragma mark -
-#pragma mark - Private
+#pragma mark - < PRIVATE >
+
+- (void)_presentNextLevel
+{
+    _level++;
+    
+     self.gridManager = [[HDGridManager alloc] initWithLevelNumber:_level];
+    [self.scene setLevelIndex:_level];
+    [self.scene setGridManager:self.gridManager];
+    [self.scene addUnderlyingIndicatorTiles];
+    [self _beginGame];
+}
 
 - (void)_setupGame
 {
     SKView * skView = (SKView *)self.view;
     
-    self.scene = [HDScene sceneWithSize:self.view.bounds.size];
+     self.scene = [HDScene sceneWithSize:self.view.bounds.size];
+    [self.scene setLevelIndex:_level];
     [self.scene setScaleMode:SKSceneScaleModeAspectFill];
     [self.scene setGridManager:self.gridManager];
     [self.scene addUnderlyingIndicatorTiles];
@@ -148,6 +177,20 @@
     [skView presentScene:self.scene];
     
     [self _beginGame];
+    [self _layoutBannerView];
+}
+
+- (void)_layoutBannerView
+{
+    self.bannerView = [[ADBannerView alloc] initWithFrame:CGRectZero];
+    [self.bannerView setDelegate:self];
+    [self.view addSubview:self.bannerView];
+    
+    CGRect bannerFrame = self.bannerView.frame;
+    bannerFrame.origin.y = CGRectGetHeight(self.view.bounds);
+    [self.bannerView setFrame:bannerFrame];
+    
+    [self setBannerViewIsVisible:NO];
 }
 
 - (void)_beginGame
@@ -157,63 +200,39 @@
 
 - (void)_applicationDidBecomeActive
 {
-    _pauseGame = NO;
-    [self.scene.view setPaused:_pauseGame];
+    self.pauseGame = NO;
+    [self.scene.view setPaused:self.pauseGame];
 }
 
 - (void)_applicationWillResignActive
 {
-    _pauseGame = YES;
-    [self.scene.view setPaused:_pauseGame];
+    self.pauseGame = YES;
+    [self.scene.view setPaused:self.pauseGame];
 }
 
-- (void)_layoutNavigationButtons
+#pragma mark -
+#pragma mark - <ADBannerView>
+
+- (void)bannerViewDidLoadAd:(ADBannerView *)banner
 {
-     self.restart = [UIButton buttonWithType:UIButtonTypeCustom];
-    [self.restart setTitle:@"Restart" forState:UIControlStateNormal];
-    [self.restart addTarget:self action:@selector(restartGame) forControlEvents:UIControlEventTouchUpInside];
-    
-    self.reverse = [UIButton buttonWithType:UIButtonTypeCustom];
-    [self.reverse setTitle:@"Reverse" forState:UIControlStateNormal];
-    [self.reverse addTarget:self action:@selector(reversePreviousMove) forControlEvents:UIControlEventTouchUpInside];
-    
-    for (UIButton *button in @[self.restart, self.reverse]) {
-        [[button titleLabel] setTextAlignment:NSTextAlignmentCenter];
-        [[button titleLabel] setFont:GILLSANS_LIGHT(8.0f)];
-        [button setTranslatesAutoresizingMaskIntoConstraints:NO];
-        [self.view addSubview:button];
+    if (!self.bannerViewIsVisible) {
+       [UIView animateWithDuration:.3f animations:^{
+           [banner setFrame:CGRectOffset(self.bannerView.frame, 0.0, -CGRectGetHeight(self.bannerView.frame))];
+       } completion:^(BOOL finished) {
+           self.bannerViewIsVisible = YES;
+       }];
     }
-    
-    UIButton *reverse = self.reverse;
-    UIButton *restart = self.restart;
-    
-    _views = NSDictionaryOfVariableBindings(reverse, restart);
-    
-    _metrics = @{ @"buttonHeight" : @(30.0f), @"inset" : @(20.0f) };
-    
-    NSArray *tHorizontalConstraint = [NSLayoutConstraint constraintsWithVisualFormat:@"H:|-inset-[restart(buttonHeight)]"
-                                                                             options:0
-                                                                             metrics:_metrics
-                                                                               views:_views];
-    [self.view addConstraints:tHorizontalConstraint];
-    
-    NSArray *tVerticalConstraint   = [NSLayoutConstraint constraintsWithVisualFormat:@"V:[restart(buttonHeight)]-inset-|"
-                                                                             options:0
-                                                                             metrics:_metrics
-                                                                               views:_views];
-    [self.view addConstraints:tVerticalConstraint];
-    
-    NSArray *sHorizontalConstraint = [NSLayoutConstraint constraintsWithVisualFormat:@"H:[reverse(buttonHeight)]-inset-|"
-                                                                             options:0
-                                                                             metrics:_metrics
-                                                                               views:_views];
-    [self.view addConstraints:sHorizontalConstraint];
-    
-    NSArray *sVerticalConstraint   = [NSLayoutConstraint constraintsWithVisualFormat:@"V:[reverse(buttonHeight)]-inset-|"
-                                                                             options:0
-                                                                             metrics:_metrics
-                                                                               views:_views];
-    [self.view addConstraints:sVerticalConstraint];
+}
+
+- (void)bannerView:(ADBannerView *)banner didFailToReceiveAdWithError:(NSError *)error
+{
+    if (self.bannerViewIsVisible) {
+        [UIView animateWithDuration:.3f animations:^{
+            [banner setFrame:CGRectOffset(self.bannerView.frame, 0.0, CGRectGetHeight(self.bannerView.frame))];
+        } completion:^(BOOL finished) {
+            self.bannerViewIsVisible = NO;
+        }];
+    }
 }
 
 @end

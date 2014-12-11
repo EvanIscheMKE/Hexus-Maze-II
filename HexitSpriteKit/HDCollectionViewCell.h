@@ -9,5 +9,5 @@
 #import <UIKit/UIKit.h>
 
 @interface HDCollectionViewCell : UICollectionViewCell
-@property (nonatomic, strong) UICollectionView *collectionViewGrid;
+@property (nonatomic, strong) UICollectionView *gridCollectionView;
 @end

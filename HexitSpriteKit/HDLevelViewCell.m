@@ -35,7 +35,7 @@ static const CGFloat kPadding = 15.0f;
         
         self.hexagonLayer = [CAShapeLayer layer];
         [self.hexagonLayer setPath:[HDHelper hexagonPathForBounds:CGRectInset(self.contentView.bounds, 2.0f, 2.0f)]];
-        [self.hexagonLayer setStrokeColor:[[UIColor blackColor] CGColor]];
+        [self.hexagonLayer setStrokeColor:[[UIColor flatMidnightBlueColor] CGColor]];
         [self.hexagonLayer setFillColor:[[UIColor flatPeterRiverColor] CGColor]];
         [self.hexagonLayer setLineWidth:4.0f];
         [self.contentView.layer addSublayer:self.hexagonLayer];
@@ -48,8 +48,8 @@ static const CGFloat kPadding = 15.0f;
         [self.indexLabel setTextColor:[UIColor whiteColor]];
         [self.contentView addSubview:self.indexLabel];
         
-        self.imageView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"STAR_NOT_COMPLETED.png"]];
-        [self.contentView addSubview:self.imageView];
+        self.middleStar = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"STAR_NOT_COMPLETED.png"]];
+        [self.contentView addSubview:self.middleStar];
         
     }
     return self;
@@ -59,9 +59,11 @@ static const CGFloat kPadding = 15.0f;
 {
     [self setAnimate:NO];
     [super prepareForReuse];
-    if (_rotatingHexagon) {
-        [_rotatingHexagon removeAllAnimations];
-        [_rotatingHexagon removeFromSuperlayer];
+    
+    if (self.rotatingHexagon) {
+        [self.rotatingHexagon removeAllAnimations];
+        [self.rotatingHexagon removeFromSuperlayer];
+        [self setRotatingHexagon:nil];
     }
 }
 
@@ -71,7 +73,8 @@ static const CGFloat kPadding = 15.0f;
     
     if (animate) {
         
-        CGRect hexaBounds = CGRectInset(self.contentView.bounds, -14.0f, -14.0f);
+        const CGFloat hexaInset = -14.0f;
+        CGRect hexaBounds = CGRectInset(self.contentView.bounds, hexaInset, hexaInset);
         self.rotatingHexagon = [CAShapeLayer layer];
         [self.rotatingHexagon setFrame:hexaBounds];
         [self.rotatingHexagon setPath:[HDHelper hexagonPathForBounds:hexaBounds]];
@@ -86,10 +89,6 @@ static const CGFloat kPadding = 15.0f;
         [rotate setRepeatCount:HUGE_VAL];
         [_rotatingHexagon addAnimation:rotate forKey:@"continiousRotation"];
         
-    } else {
-        if (self.rotatingHexagon) {
-            [self.rotatingHexagon removeAllAnimations];
-        }
     }
 }
 
@@ -102,18 +101,18 @@ static const CGFloat kPadding = 15.0f;
     _completed = completed;
     
     if (_completed) {
-        [self.imageView setImage:[UIImage imageNamed:@"STAR_COMPLETED.png"]];
+        [self.middleStar setImage:[UIImage imageNamed:@"STAR_COMPLETED.png"]];
     } else {
-        [self.imageView setImage:[UIImage imageNamed:@"STAR_NOT_COMPLETED.png"]];
+        [self.middleStar setImage:[UIImage imageNamed:@"STAR_NOT_COMPLETED.png"]];
     }
 }
 
 - (void)layoutSubviews
 {
     [super layoutSubviews];
-    [_outlineLayer     setFrame:self.contentView.bounds];
+    [self.outlineLayer setFrame:self.contentView.bounds];
     [self.hexagonLayer setFrame:CGRectInset(self.contentView.bounds, 2.0f, 2.0f)];
-    [self.imageView    setCenter:CGPointMake(CGRectGetMidX(self.contentView.bounds), kPadding * 1.5f)];
+    [self.middleStar   setCenter:CGPointMake(CGRectGetMidX(self.contentView.bounds), kPadding * 1.5f)];
     [self.indexLabel   setCenter:CGPointMake(CGRectGetMidX(self.contentView.bounds), CGRectGetMidY(self.contentView.bounds) + kPadding)];
 }
 

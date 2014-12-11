@@ -8,13 +8,12 @@
 
 #import "HDLevel.h"
 #import "HDMapManager.h"
+#import "HDGameCenterManager.h"
 
-static const NSInteger LEVELS_PER_PAGE = 15;
 @interface HDMapManager ()
 
 @property (nonatomic, assign) NSUInteger totalNumberOfLevels;
 @property (nonatomic, assign) NSUInteger numberOfSections;
-@property (nonatomic, assign) NSUInteger numberOfLevelsInSection;
 
 @end
 
@@ -70,16 +69,25 @@ static const NSInteger LEVELS_PER_PAGE = 15;
     [[NSUserDefaults standardUserDefaults] setObject:levels forKey:HDDefaultLevelKey];
 }
 
+- (HDLevel *)levelAtIndex:(NSInteger)index
+{
+    return [self.levels objectAtIndex:index];
+}
+
 - (void)completedLevelAtIndex:(NSInteger)index
 {
-    if (!index) {
-        return;
-    }
+    [[HDGameCenterManager sharedManager] reportLevelCompletion:index];
+//    
+//    if (index % 15 == 0) {
+//        
+//    }
+//
+//    [[HDGameCenterManager sharedManager] submitAchievementWithIdentifier:];
     
     [[NSUserDefaults standardUserDefaults] removeObjectForKey:HDDefaultLevelKey];
     
-    HDLevel *thisLevel = [_levels objectAtIndex:index - 1];
-    HDLevel *nextLevel = [_levels objectAtIndex:MIN(index, self.totalNumberOfLevels - 1)];
+    HDLevel *thisLevel = [self levelAtIndex:index - 1];
+    HDLevel *nextLevel = [self levelAtIndex:MIN(index, self.totalNumberOfLevels - 1)];
     
     [thisLevel setCompleted:YES];
     [nextLevel setUnlocked:YES];

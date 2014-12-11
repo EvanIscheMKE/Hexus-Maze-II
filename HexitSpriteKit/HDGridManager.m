@@ -12,17 +12,19 @@
 #import "HDHexagonNode.h"
 
 typedef void(^CallbackBlock)(NSDictionary *dictionary, NSError *error);
-
 @implementation HDGridManager {
+    
     NSMutableDictionary *_levelCache;
     NSMutableArray *_hexagons;
+    
     HDHexagon *_hexagon[18][9];
     NSNumber *_grid[18][9];
+    
 }
 
 - (instancetype)initWithLevelNumber:(NSInteger)levelNumber
 {
-    return [self initWithLevel:LEVEL_URL(levelNumber)];
+    return [self initWithLevel:LEVEL_URL((long)levelNumber)];
 }
 
 - (instancetype)initWithLevel:(NSString *)level
@@ -77,9 +79,9 @@ typedef void(^CallbackBlock)(NSDictionary *dictionary, NSError *error);
                 
                 if (_grid[row][column] != nil) {
                     
-                    HDHexagon *cookie = [self _createHexagonAtRow:row column:column];
-                    _hexagon[row][column] = cookie;
-                    [_hexagons addObject:cookie];
+                    HDHexagon *hexagon = [self _createHexagonAtRow:row column:column];
+                    _hexagon[row][column] = hexagon;
+                    [_hexagons addObject:hexagon];
                 }
             }
         }

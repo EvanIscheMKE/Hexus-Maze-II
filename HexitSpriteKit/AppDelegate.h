@@ -10,15 +10,13 @@
 
 @import GameKit;
 @interface AppDelegate : UIResponder <UIApplicationDelegate>
-
-@property (strong, nonatomic) UIWindow *window;
-@property (nonatomic, readonly) NSInteger previousLevel;
+@property (nonatomic, strong) UIWindow *window;
 
 - (void)openAchievementsViewController;
 - (void)navigateToRandomlyGeneratedLevel;
 - (void)navigateToNewLevel:(NSInteger)level;
 - (void)presentLevelViewController;
-- (void)navigateToLevelMap;
+- (void)navigateToLevelController;
 - (void)restartCurrentLevel;
 
 @end

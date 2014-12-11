@@ -10,6 +10,11 @@
 #import "HDHexagonNode.h"
 #import "SKColor+HDColor.h"
 
+static const CGFloat kHexagonInset = 6.0f;
+
+static NSString * const DOUBLE_KEY = @"double";
+static NSString * const TRIPLE_KEY = @"triple";
+
 @interface HDHexagonNode ()
 
 @end
@@ -50,8 +55,30 @@
     [self setFillColor:fillColor];
 }
 
+- (void)setLocked:(BOOL)locked
+{
+    if (_locked == locked) {
+        return;
+    }
+    
+    _locked = locked;
+    
+    if (locked) {
+        SKSpriteNode *lock = [SKSpriteNode spriteNodeWithImageNamed:@"Locked.png"];
+        [self addChild:lock];
+        [self.label setHidden:YES];
+    } else {
+        for (id nodes in self.children) {
+            if ([nodes isKindOfClass:[SKSpriteNode class]]) {
+                [nodes removeFromParent];
+            }
+        }
+        [self.label setHidden:NO];
+    }
+}
+
 #pragma mark -
-#pragma mark - < PRIVATE >
+#pragma mark - <PRIVATE>
 
 - (SKLabelNode *)_makeDropShadowString:(NSString *)labelText color:(UIColor *)color
 {
@@ -65,8 +92,8 @@
     [dropShadow setFontColor:[SKColor blackColor]];
     [dropShadow setZPosition:completedString.zPosition - 1];
     [dropShadow setPosition:CGPointMake(dropShadow.position.x - kOffset, dropShadow.position.y - kOffset)];
-    
     [completedString addChild:dropShadow];
+    
     for (SKLabelNode *label in @[completedString, dropShadow]) {
         [label setHorizontalAlignmentMode:SKLabelHorizontalAlignmentModeCenter];
         [label setVerticalAlignmentMode:SKLabelVerticalAlignmentModeCenter];
@@ -75,6 +102,37 @@
     }
     
     return completedString;
+}
+
+- (void)addDoubleNodeWithStroke:(UIColor *)stroke fill:(UIColor *)fill
+{
+    const CGFloat kTileSizeWithInset = CGRectGetHeight(CGRectInset(self.frame, kHexagonInset, kHexagonInset));
+    
+    CGPathRef pathRef = [HDHelper hexagonPathForBounds:CGRectMake(0.0f, 0.0f, kTileSizeWithInset, kTileSizeWithInset)];
+    SKShapeNode *hexagon = [SKShapeNode shapeNodeWithPath:pathRef centered:YES];
+    [hexagon setName:DOUBLE_KEY];
+    [hexagon setAntialiased:YES];
+    [hexagon setPosition:CGPointZero];
+    [hexagon setStrokeColor:stroke];
+    [hexagon setFillColor:fill];
+    [hexagon setLineWidth:self.lineWidth];
+    [self addChild:hexagon];
+}
+
+- (void)addTripleNodeWithStroke:(UIColor *)stroke fill:(UIColor *)fill;
+{
+    CGRect rectWithInset = CGRectInset([(SKShapeNode *)[[self children] lastObject] frame], kHexagonInset, kHexagonInset);
+    const CGFloat kTileSizeWithInset = CGRectGetHeight(rectWithInset);
+    
+    CGPathRef pathRef = [HDHelper hexagonPathForBounds:CGRectMake(0.0f, 0.0f, kTileSizeWithInset, kTileSizeWithInset)];
+    SKShapeNode *hexagon = [SKShapeNode shapeNodeWithPath:pathRef centered:YES];
+    [hexagon setName:TRIPLE_KEY];
+    [hexagon setAntialiased:YES];
+    [hexagon setPosition:CGPointZero];
+    [hexagon setStrokeColor:stroke];
+    [hexagon setFillColor:fill];
+    [hexagon setLineWidth:self.lineWidth];
+    [[[self children] lastObject] addChild:hexagon];
 }
 
 @end

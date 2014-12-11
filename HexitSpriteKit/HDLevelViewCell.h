@@ -17,7 +17,7 @@ extern NSString * const levelCellReuseIdentifer;
 
 @property (nonatomic, strong) CAShapeLayer *hexagonLayer;
 
-@property (nonatomic, strong) UIImageView *imageView;
+@property (nonatomic, strong) UIImageView *middleStar;
 
 @property (nonatomic, strong) UILabel *indexLabel;
 
