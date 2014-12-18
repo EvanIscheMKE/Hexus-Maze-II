@@ -9,6 +9,7 @@
 #import "AppDelegate.h"
 #import "HDMapManager.h"
 #import "HDSoundManager.h"
+#import "HDSettingsManager.h"
 #import "HDGameCenterManager.h"
 #import "HDGameViewController.h"
 #import "HDGridViewController.h"
@@ -16,10 +17,12 @@
 #import "HDRearViewController.h"
 #import "HDContainerViewController.h"
 
+#define HEXUS_ID 898568105
+NSString * const iOS8AppStoreURLFormat = @"itms-apps://itunes.apple.com/app/id%d";
+
 @interface AppDelegate ()<HDContainerViewControllerDelegate, GKGameCenterControllerDelegate>
 @property (nonatomic, strong) HDContainerViewController *containerController;
-@property (nonatomic, strong) HDRearViewController *rearViewController;
-@property (nonatomic, strong) HDGridViewController *frontViewController;
+@property (nonatomic, strong) AVAudioPlayer *loop;
 @end
 
 @implementation AppDelegate
@@ -33,10 +36,12 @@
     [self.window makeKeyAndVisible];
     
     [[HDSoundManager sharedManager] preloadSounds:SOUNDS_TO_PRELOAD];
-    [[HDGameCenterManager sharedManager] authenticateForGameCenter];
+    [[HDGameCenterManager sharedManager] authenticateGameCenter];
+    [self _prepareSoundLoop];
     
     if (![[NSUserDefaults standardUserDefaults] boolForKey:HDFirstRunKey]) {
-        [self _initalizeModelData];
+        [[HDMapManager sharedManager] configureDataBaseForFirstRun];
+        [[HDSettingsManager sharedManager] configureSettingsForFirstRun];
     }
     
     return YES;
@@ -44,34 +49,38 @@
 
 - (void)presentLevelViewController
 {
-    [[HDSoundManager sharedManager] playSound:@"menuClicked.wav"];
+    [[HDSoundManager sharedManager] playSound:HDButtonSound];
     
-    self.frontViewController = [[HDGridViewController alloc] init];
-    self.rearViewController  = [[HDRearViewController alloc] init];
-    self.containerController = [[HDContainerViewController alloc] initWithGameViewController:self.frontViewController
-                                                                          rearViewController:self.rearViewController];
+    HDRearViewController *rearViewController  = [[HDRearViewController alloc] init];
+    HDGridViewController *frontViewController = [[HDGridViewController alloc] init];
+    self.containerController = [[HDContainerViewController alloc] initWithGameViewController:frontViewController
+                                                                          rearViewController:rearViewController];
+    [self.containerController setModalTransitionStyle:UIModalTransitionStyleFlipHorizontal];
     [self.containerController setDelegate:self];
     
     [self.window.rootViewController presentViewController:self.containerController animated:YES completion:nil];
 }
 
-- (void)openAchievementsViewController
+- (void)presentGameCenterControllerForState:(GKGameCenterViewControllerState)state
 {
     GKGameCenterViewController *controller = [[GKGameCenterViewController alloc] init];
     [controller setGameCenterDelegate:self];
-    [controller setViewState:GKGameCenterViewControllerStateAchievements];
+    [controller setLeaderboardIdentifier:@""];
+    [controller setViewState:state];
     [self.containerController presentViewController:controller animated:YES completion:nil];
 }
 
 - (void)navigateToLevelController
 {
-    [[HDSoundManager sharedManager] playSound:@"menuClicked.wav"];
-    [self.containerController setFrontViewController:self.frontViewController animated:YES];
+    [[HDSoundManager sharedManager] playSound:HDButtonSound];
+    
+    HDGridViewController *frontViewController = [[HDGridViewController alloc] init];
+    [self.containerController setFrontViewController:frontViewController animated:YES];
 }
 
 - (void)restartCurrentLevel
 {
-    [[HDSoundManager sharedManager] playSound:@"menuClicked.wav"];
+    [[HDSoundManager sharedManager] playSound:HDButtonSound];
     [self.containerController toggleHDMenuViewController];
     [(HDGameViewController *)self.containerController.frontViewController restartGame];
 }
@@ -82,22 +91,21 @@
     [self.containerController setFrontViewController:controller animated:YES];
 }
 
-- (void)navigateToRandomlyGeneratedLevel
-{
-    HDGameViewController *controller = [[HDGameViewController alloc] initWithRandomlyGeneratedLevel];
-    [self.containerController setFrontViewController:controller animated:YES];
-}
+//- (void)navigateToRandomlyGeneratedLevel
+//{
+//    HDGameViewController *controller = [[HDGameViewController alloc] initWithRandomlyGeneratedLevel];
+//    [self.containerController setFrontViewController:controller animated:YES];
+//}
 
-#pragma mark - 
-#pragma mark - <PRIVATE>
-
-- (void)_initalizeModelData
+- (void)_prepareSoundLoop
 {
-    [[NSUserDefaults standardUserDefaults] setFloat:1000 forKey:HDRemainingTime];
-    [[NSUserDefaults standardUserDefaults] setInteger:3  forKey:HDRemainingLivesKey];
-    [[NSUserDefaults standardUserDefaults] setBool:YES   forKey:HDSoundkey];
-    [[NSUserDefaults standardUserDefaults] setBool:YES   forKey:HDFirstRunKey];
-    [[HDMapManager sharedManager] configureLevelDataForFirstRun];
+    NSError *error = nil;
+    NSString *path = [[NSBundle mainBundle] pathForResource:@"Mellowtron" ofType:@"mp3"];
+    self.loop = [[AVAudioPlayer alloc] initWithContentsOfURL:[NSURL URLWithString:path] error:&error];
+    [self.loop setNumberOfLoops:-1];
+    [self.loop setVolume:.3f];
+    [self.loop prepareToPlay];
+    [self.loop play];
 }
 
 #pragma mark -
@@ -121,5 +129,55 @@
         [(HDRearViewController *)self.containerController.rearViewController setGameInterfaceHidden:YES];
     }
 }
+
+- (void)setPlayLoop:(BOOL)playLoop
+{
+    _playLoop = playLoop;
+    
+    if (playLoop) {
+        [self.loop play];
+    } else {
+        [self.loop stop];
+    }
+}
+
+- (void)rateHEXUS
+{
+    NSURL *url = [NSURL URLWithString:iOS8AppStoreURLFormat];
+    [[UIApplication sharedApplication] openURL:url];
+}
+
+- (void)presentShareViewController
+{
+    [[HDSoundManager sharedManager] playSound:HDButtonSound];
+    
+    NSArray *activityItems = @[@"HELLO", [self _screenshotOfFrontViewController]];
+    UIActivityViewController *controller = [[UIActivityViewController alloc] initWithActivityItems:activityItems
+                                                                             applicationActivities:nil];
+    [controller setExcludedActivityTypes: @[UIActivityTypePostToWeibo,
+                                            UIActivityTypePrint,
+                                            UIActivityTypeCopyToPasteboard,
+                                            UIActivityTypeAssignToContact,
+                                            UIActivityTypeAddToReadingList,
+                                            UIActivityTypePostToVimeo,
+                                            UIActivityTypePostToTencentWeibo,
+                                            UIActivityTypeAirDrop]];
+    
+    [self.containerController presentViewController:controller animated:YES completion:nil];
+}
+
+- (UIImage *)_screenshotOfFrontViewController
+{
+    CGRect bounds = [[UIScreen mainScreen] bounds];
+    UIGraphicsBeginImageContextWithOptions(bounds.size, YES, [[UIScreen mainScreen] scale]);
+    
+    [self.containerController.frontViewController.view drawViewHierarchyInRect:bounds afterScreenUpdates:YES];
+    
+    UIImage *screenShot = UIGraphicsGetImageFromCurrentImageContext();
+    UIGraphicsEndImageContext();
+    
+    return screenShot;
+}
+
 
 @end

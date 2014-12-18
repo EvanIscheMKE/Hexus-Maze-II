@@ -14,8 +14,14 @@
 NSString * const RIGHT_BUTTON_KEY = @"RightButtonKey";
 NSString * const LEFT_BUTTON_KEY  = @"LeftButtonKey";
 
+NSString * const SHAREIMAGE        = @"Share";
+NSString * const LEADERBOARDIMAGE  = @"leaderboard";
+NSString * const RATEIMAGE         = @"heart";
+NSString * const ACHIEVEMENTS      = @"Achievements";
+
 @interface HDAlertNode ()
 
+@property (nonatomic, strong) SKShapeNode *star;
 @property (nonatomic, strong) SKShapeNode *container;
 
 @property (nonatomic, strong) SKSpriteNode *rightButton;
@@ -23,14 +29,12 @@ NSString * const LEFT_BUTTON_KEY  = @"LeftButtonKey";
 @property (nonatomic, strong) SKSpriteNode *stripe;
 
 @property (nonatomic, strong) SKLabelNode *descriptionLabel;
-@property (nonatomic, strong) SKLabelNode *activityLabel;
-
-@property (nonatomic, strong) SKShapeNode *button;
-@property (nonatomic, strong) SKShapeNode *star;
 
 @end
 
-@implementation HDAlertNode
+@implementation HDAlertNode {
+    NSArray *_descriptionArray;
+}
 
 - (instancetype)initWithColor:(UIColor *)color size:(CGSize)size
 {
@@ -39,9 +43,21 @@ NSString * const LEFT_BUTTON_KEY  = @"LeftButtonKey";
         [self setAnchorPoint:CGPointMake(.5f, .5f)];
         [self setUserInteractionEnabled:YES];
         
-        CGRect containerFrame = CGRectInset(self.frame, 25.0f, 110.0f);
-         self.container = [SKShapeNode shapeNodeWithPath:[[UIBezierPath bezierPathWithRoundedRect:containerFrame cornerRadius:15.0f] CGPath]
-                                                centered:YES];
+        _descriptionArray = @[@"Now you have it!",
+                              @"You make it look easy.",
+                              @"You're learning fast.",
+                              @"That's the way!",
+                              @"PERFECT!",
+                              @"SENSATIONAL!",
+                              @"You're doing beautifully.",
+                              @"Good thinking!",
+                              @"You've just about mastered that!",
+                              @"GOOD WORK!",
+                              @"Now that's what I call a fine job!"];
+        
+        CGRect containerFrame = CGRectInset(self.frame, CGRectGetWidth(self.frame)/15, CGRectGetHeight(self.frame)/6);
+        self.container = [SKShapeNode shapeNodeWithPath:[[UIBezierPath bezierPathWithRoundedRect:containerFrame cornerRadius:15.0f] CGPath]
+                                               centered:YES];
         [self.container setPosition:CGPointMake(CGRectGetWidth(self.frame), 0.0f)];
         [self.container setAntialiased:YES];
         [self.container setFillColor:[[SKColor flatCloudsColor] colorWithAlphaComponent:1.0f]];
@@ -49,22 +65,22 @@ NSString * const LEFT_BUTTON_KEY  = @"LeftButtonKey";
         [self.container setZPosition:100.0f];
         [self addChild:self.container];
         
-        [self _layoutStarProgressNodes];
         [self _layoutMenuButtons];
         [self _layoutDisplayBar];
         [self _layoutLabels];
+        [self _layoutStarProgressNodes];
         
     }
     return self;
 }
 
 #pragma mark -
-#pragma mark - <PUBLIC>
+#pragma mark - < PUBLIC >
 
 - (void)show
 {
     [self.container runAction:[SKAction moveToX:0.0f duration:.3f] completion:^{
-        [self.star runAction:[SKAction sequence:@[[SKAction scaleTo:1.3 duration:.4f],[SKAction scaleTo:1.0f duration:.2f]]]];
+        [self.star runAction:[SKAction sequence:@[[SKAction scaleTo:1.2 duration:.4f],[SKAction scaleTo:1.0f duration:.2f]]]];
     }];
 }
 
@@ -83,9 +99,10 @@ NSString * const LEFT_BUTTON_KEY  = @"LeftButtonKey";
 
 - (void)_layoutStarProgressNodes
 {
-    CGPathRef middleStarPath = [HDHelper starPathForBounds:CGRectMake(0.0f, 0.0, 140.0f, 140.0f)];
+    const CGFloat kStarSize = CGRectGetHeight(self.frame)/4.5f;
+    CGPathRef middleStarPath = [HDHelper starPathForBounds:CGRectMake(0.0f, 0.0, kStarSize, kStarSize)];
     self.star = [SKShapeNode shapeNodeWithPath:middleStarPath centered:YES];
-    [self.star setPosition:CGPointMake(0.0f, 90.0f)];
+    [self.star setPosition:CGPointMake(0.0f, CGRectGetHeight(self.container.frame)/5.25)];
     [self.star setStrokeColor:[SKColor flatEmeraldColor]];
     [self.star setScale:0.0f];
     [self.star setLineWidth:2.0f];
@@ -114,46 +131,42 @@ NSString * const LEFT_BUTTON_KEY  = @"LeftButtonKey";
 
 - (void)_layoutDisplayBar
 {
-    CGPoint stripePosition = CGPointMake(0.0f, CGRectGetMaxY(self.rightButton.frame) + 45.0f);
+    const CGFloat kStripeHeight = CGRectGetHeight(self.container.frame) / 6.5f;
+    CGPoint stripePosition = CGPointMake(0.0f, CGRectGetMaxY(self.rightButton.frame) + kStripeHeight/2);
     self.stripe = [SKSpriteNode spriteNodeWithColor:[SKColor flatAsbestosColor]
-                                               size:CGSizeMake(CGRectGetWidth(self.container.frame), 90.0f)];
+                                               size:CGSizeMake(CGRectGetWidth(self.container.frame), kStripeHeight)];
     [self.stripe setName:LEFT_BUTTON_KEY];
     [self.stripe setPosition:stripePosition];
     [self.container addChild:self.stripe];
     
-     self.button = [SKShapeNode shapeNodeWithRectOfSize:CGSizeMake(200.0f, 46.0f) cornerRadius:20.0f];
-    [self.button setFillColor:[SKColor flatMidnightBlueColor]];
-    [self.button setName:@"activityButton"];
-    [self.button setLineWidth:0.0f];
-    [self.button setPosition:CGPointMake(0.0, 0.0f)];
-    [self.stripe addChild:self.button];
-    
-    CGPoint descriptionCenter = CGPointMake(0.0f, 0.0);
-     self.activityLabel = [SKLabelNode labelNodeWithText:@"Leave a Review"];
-    [self.activityLabel setName:@"activityButton"];
-    [self.activityLabel setHorizontalAlignmentMode:SKLabelHorizontalAlignmentModeCenter];
-    [self.activityLabel setVerticalAlignmentMode:SKLabelVerticalAlignmentModeCenter];
-    [self.activityLabel setFontColor:[SKColor whiteColor]];
-    [self.activityLabel setFontName:@"GillSans-Light"];
-    [self.activityLabel setFontSize:20.0f];
-    [self.activityLabel setPosition:descriptionCenter];
-    [self.button addChild:self.activityLabel];
+    const CGFloat kMargin   = CGRectGetWidth(self.stripe.frame) / 5;
+    for (int column = 0; column < 4; column++) {
+        
+        NSString *imagePath = [@[SHAREIMAGE, LEADERBOARDIMAGE, ACHIEVEMENTS, RATEIMAGE] objectAtIndex:column];
+        
+        CGPoint nodePosition = CGPointMake((-kMargin * 1.5f) + (column * kMargin), 0.0f);
+        SKSpriteNode *node = [SKSpriteNode spriteNodeWithImageNamed:imagePath];
+        [node setName:imagePath];
+        [node setAnchorPoint:CGPointMake(.5f, .5f)];
+        [node setPosition:nodePosition];
+        [self.stripe addChild:node];
+    }
 }
 
 - (void)_layoutLabels
 {
     CGPoint descriptionCenter = CGPointMake(0.0f, CGRectGetMaxY(self.stripe.frame) + 12.0f);
-    self.descriptionLabel = [SKLabelNode labelNodeWithText:@"Amazing job!"];
+    self.descriptionLabel = [SKLabelNode labelNodeWithText:[_descriptionArray objectAtIndex:arc4random() % _descriptionArray.count]];
     [self.descriptionLabel setHorizontalAlignmentMode:SKLabelHorizontalAlignmentModeCenter];
     [self.descriptionLabel setVerticalAlignmentMode:SKLabelVerticalAlignmentModeCenter];
     [self.descriptionLabel setFontColor:[SKColor flatMidnightBlueColor]];
-    [self.descriptionLabel setFontName:@"GillSans-Light"];
+    [self.descriptionLabel setFontName:@"GillSans"];
     [self.descriptionLabel setFontSize:18.0f];
     [self.descriptionLabel setPosition:descriptionCenter];
     [self.container addChild:self.descriptionLabel];
     
     self.levelLabel = [[SKLabelNode alloc] initWithFontNamed:@"GillSans-Light"];
-    [self.levelLabel setPosition:CGPointMake(0.0f, CGRectGetHeight(self.container.frame) / 2.5)];
+    [self.levelLabel setPosition:CGPointMake(0.0f, CGRectGetHeight(self.container.frame) / 2.5f)];
     [self.levelLabel setFontSize:28.0f];
     [self.levelLabel setFontColor:[SKColor flatMidnightBlueColor]];
     [self.levelLabel setHorizontalAlignmentMode:SKLabelHorizontalAlignmentModeCenter];
@@ -174,7 +187,7 @@ NSString * const LEFT_BUTTON_KEY  = @"LeftButtonKey";
                                        0.0f,
                                        0.0f,
                                        CGRectGetWidth(self.container.frame) / 3,
-                                       100.0f
+                                       CGRectGetHeight(self.container.frame) / 4.25f
                                        );
         
         UIGraphicsBeginImageContextWithOptions(imageFrame.size, NO, [[UIScreen mainScreen] scale]);
@@ -184,7 +197,28 @@ NSString * const LEFT_BUTTON_KEY  = @"LeftButtonKey";
                                                      byRoundingCorners:UIRectCornerBottomLeft
                                                            cornerRadii:CGSizeMake(15.0f, 15.0f)];
         [button addClip];
-
+        
+        [[UIColor flatEmeraldColor] setStroke];
+        [[UIColor flatEmeraldColor] setFill];
+        
+        const CGFloat lineWidth = 8.0f;
+        const CGFloat offset = CGRectGetHeight(imageFrame)/4;
+        
+        UIBezierPath *arrow  = [UIBezierPath bezierPath];
+        UIBezierPath *circle = [UIBezierPath bezierPathWithArcCenter:CGPointMake(CGRectGetWidth(imageFrame)/2, CGRectGetHeight(imageFrame)/2)
+                                                              radius:offset
+                                                          startAngle:DEGREES_RADIANS(10.0f)
+                                                            endAngle:DEGREES_RADIANS(320.0f)
+                                                           clockwise:YES];
+        [circle setLineCapStyle:kCGLineCapRound];
+        [circle setLineWidth:lineWidth];
+        [arrow moveToPoint:CGPointMake(CGRectGetWidth(imageFrame) - 25.0f, 25.0f)];
+        [arrow addLineToPoint:CGPointMake(CGRectGetWidth(imageFrame)/2 + 8.0f, CGRectGetHeight(imageFrame)/2 - 8.0f)];
+        [arrow addLineToPoint:CGPointMake(CGRectGetWidth(imageFrame) - 25.0f, CGRectGetHeight(imageFrame)/2 - 8.0f)];
+        [arrow closePath];
+        [circle stroke];
+        [arrow fill];
+        
         menuButton = UIGraphicsGetImageFromCurrentImageContext();
         UIGraphicsEndImageContext();
     });
@@ -201,7 +235,7 @@ NSString * const LEFT_BUTTON_KEY  = @"LeftButtonKey";
                                        0.0f,
                                        0.0f,
                                        CGRectGetWidth(self.container.frame) / 1.5,
-                                       100.0f
+                                       CGRectGetHeight(self.container.frame) / 4.25f
                                        );
         
         UIGraphicsBeginImageContextWithOptions(imageFrame.size, NO, [[UIScreen mainScreen] scale]);
@@ -213,31 +247,29 @@ NSString * const LEFT_BUTTON_KEY  = @"LeftButtonKey";
         [button fill];
         [button addClip];
         
+        const CGFloat startPoint = CGRectGetWidth(imageFrame)/2 - CGRectGetWidth(imageFrame)/6;
+        const CGFloat endPoint   = CGRectGetWidth(imageFrame)/2 + CGRectGetWidth(imageFrame)/6;
+        const CGFloat offset     = CGRectGetHeight(imageFrame)/4;
+        
         [[UIColor whiteColor] setStroke];
         
-        CGFloat kPointX[2];
-        kPointX[0] = 90.0f;
-        kPointX[1] = 105.0f;
+        UIBezierPath *rightArrow = [UIBezierPath bezierPath];
+        [rightArrow setLineWidth:8.0f];
+        [rightArrow setLineCapStyle:kCGLineCapRound];
         
-        CGFloat kPoint1X[2];
-        kPoint1X[0] = 115.0f;
-        kPoint1X[1] = 130.0f;
+        [rightArrow moveToPoint:CGPointMake(startPoint,  CGRectGetHeight(imageFrame)/2)];
+        [rightArrow addLineToPoint:CGPointMake(endPoint, CGRectGetHeight(imageFrame)/2)];
         
-        for (int i = 0; i < 2; i++) {
-            
-            UIBezierPath *rightArrow = [UIBezierPath bezierPath];
-            [rightArrow setLineWidth:8.0f];
-            [rightArrow setLineCapStyle:kCGLineCapRound];
-            [rightArrow moveToPoint:   CGPointMake(kPointX[i], 30.0f)];
-            [rightArrow addLineToPoint:CGPointMake(kPoint1X[i], CGRectGetHeight(imageFrame)/2)];
-            [rightArrow addLineToPoint:CGPointMake(kPointX[i],  CGRectGetHeight(imageFrame) - 30.0f)];
-            [rightArrow stroke];
-            
-        }
+        [rightArrow moveToPoint:   CGPointMake(endPoint - offset, offset)];
+        [rightArrow addLineToPoint:CGPointMake(endPoint, CGRectGetHeight(imageFrame)/2)];
+        [rightArrow addLineToPoint:CGPointMake(endPoint - offset, CGRectGetHeight(imageFrame) - offset)];
+        
+        [rightArrow stroke];
         
         nextLevel = UIGraphicsGetImageFromCurrentImageContext();
         UIGraphicsEndImageContext();
     });
+    
     return nextLevel;
 }
 
@@ -250,23 +282,26 @@ NSString * const LEFT_BUTTON_KEY  = @"LeftButtonKey";
     CGPoint location = [touch locationInNode:self];
     
     SKNode *node = [self nodeAtPoint:location];
-
+    
     if (self.delegate && [self.delegate respondsToSelector:@selector(alertNode:clickedButtonAtIndex:)]) {
         if ([node.name isEqualToString:RIGHT_BUTTON_KEY]) {
-            [self setName:RIGHT_BUTTON_KEY];
             [self.delegate alertNodeWillDismiss:self];
             [self dismissWithCompletion:^{
-                 [self.delegate alertNode:self clickedButtonAtIndex:0];
+                [self.delegate alertNode:self clickedButtonAtIndex:0];
             }];
         } else if ([node.name isEqualToString:LEFT_BUTTON_KEY]) {
-            [self setName:LEFT_BUTTON_KEY];
             [self.delegate alertNodeWillDismiss:self];
             [self dismissWithCompletion:^{
-                 [self.delegate alertNode:self clickedButtonAtIndex:1];
+                [self.delegate alertNode:self clickedButtonAtIndex:1];
             }];
-        } else if ([node.name isEqualToString:@"activityButton"]) {
-            [self setName:@"activityButton"];
-            [self.delegate alertNode:self clickedButtonAtIndex:2];
+        } else if ([node.name isEqualToString:SHAREIMAGE]) {
+            [ADelegate presentShareViewController];
+        } else if ([node.name isEqualToString:LEADERBOARDIMAGE]) {
+            [ADelegate presentGameCenterControllerForState:GKGameCenterViewControllerStateAchievements];
+        } else if ([node.name isEqualToString:LEADERBOARDIMAGE]) {
+            [ADelegate presentGameCenterControllerForState:GKGameCenterViewControllerStateLeaderboards];
+        } else if ([node.name isEqualToString:RATEIMAGE]) {
+            [ADelegate rateHEXUS];
         }
     }
 }

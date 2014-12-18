@@ -11,6 +11,7 @@
 #import "HDSwitch.h"
 
 static const CGFloat kPadding = 5.0f;
+
 @interface HDSwitch ()
 
 @property (nonatomic, strong) UILabel *onLabel;
@@ -51,6 +52,7 @@ static const CGFloat kPadding = 5.0f;
         
         CALayer *layer = [self layer];
         [layer setCornerRadius:5.0f];
+        
     }
     return self;
 }
@@ -72,12 +74,12 @@ static const CGFloat kPadding = 5.0f;
     
     CGRect onLabelFrame = CGRectMake(0.0f, 0.0f, CGRectGetWidth(self.bounds)/1.5f - kPadding, CGRectGetHeight(self.bounds));
      self.onLabel = [[UILabel alloc] initWithFrame:onLabelFrame];
-    [self.onLabel setText:@"ON"];
+    [self.onLabel setText:NSLocalizedString(@"ON", nil)];
     [self.onLabel setAlpha:1.0f];
     
     CGRect offLabelFrame = CGRectMake(CGRectGetWidth(self.bounds)/3.0f + kPadding, 0.0f, CGRectGetWidth(self.bounds)/1.5f - kPadding, CGRectGetHeight(self.bounds));
      self.offLabel = [[UILabel alloc] initWithFrame:offLabelFrame];
-    [self.offLabel setText:@"OFF"];
+    [self.offLabel setText:NSLocalizedString(@"OFF", nil)];
     [self.offLabel setAlpha:0.0f];
     
     for (UILabel *label in @[self.onLabel, self.offLabel]) {
@@ -93,7 +95,13 @@ static const CGFloat kPadding = 5.0f;
     
     if (!_animating) {
     
-        [self.offLabel setFrame:CGRectMake(CGRectGetWidth(self.bounds)/3, 0.f, CGRectGetWidth(self.bounds)/1.5f, CGRectGetHeight(self.bounds))];
+        [self.offLabel setFrame:CGRectMake(
+                                           CGRectGetWidth(self.bounds)/3,
+                                           0.0f,
+                                           CGRectGetWidth(self.bounds)/1.5f,
+                                           CGRectGetHeight(self.bounds)
+                                           )];
+        
         [self.onLabel setFrame:CGRectMake(0.0f, 0.0f, CGRectGetWidth(self.bounds)/1.5f, CGRectGetHeight(self.bounds))];
         
         if (self.isON) {
@@ -101,7 +109,8 @@ static const CGFloat kPadding = 5.0f;
                                                  CGRectGetWidth(self.bounds) - (CGRectGetWidth(self.slidingView.bounds) + kPadding),
                                                  kPadding,
                                                  CGRectGetWidth(self.bounds)/3,
-                                                 CGRectGetHeight(self.bounds)-(kPadding*2));
+                                                 CGRectGetHeight(self.bounds)-(kPadding*2)
+                                                 );
             [self.slidingView setFrame:slidingViewFrame];
         } else {
            [self.slidingView setFrame:CGRectMake(kPadding, kPadding, CGRectGetWidth(self.bounds)/3, CGRectGetHeight(self.bounds)-(kPadding*2))];

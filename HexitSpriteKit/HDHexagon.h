@@ -21,7 +21,8 @@ typedef enum {
     HDHexagonTypeFour    = 7,
     HDHexagonTypeFive    = 8,
     HDHexagonTypeStarter = 9,
-    HDHexagonTypeNone    = 10
+    HDHexagonTypeNone    = 10,
+    HDHexagonTypeEnd     = 11
 } HDHexagonType;
 
 typedef enum {
@@ -53,8 +54,8 @@ static const NSInteger NumberOfColumns = 9;
 @property (nonatomic, assign) HDHexagonState state;
 @property (nonatomic, assign) HDHexagonType type;
 
-@property (nonatomic, assign) NSInteger column;
-@property (nonatomic, assign) NSInteger row;
+@property (nonatomic, readonly) NSInteger column;
+@property (nonatomic, readonly) NSInteger row;
 
 - (instancetype)initWithRow:(NSInteger)row column:(NSInteger)column NS_DESIGNATED_INITIALIZER;
 
@@ -65,5 +66,5 @@ static const NSInteger NumberOfColumns = 9;
 
 @protocol HDHexagonDelegate <NSObject>
 @optional
-- (void)unlockFollowingHexagonType:(HDHexagonType)type;
+- (void)unlockCountTileAfterHexagon:(HDHexagonType)type;
 @end

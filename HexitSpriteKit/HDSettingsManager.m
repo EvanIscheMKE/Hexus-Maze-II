@@ -10,13 +10,27 @@
 
 @implementation HDSettingsManager
 
+#pragma mark -
+#pragma mark - configure
+
+- (void)configureSettingsForFirstRun
+{
+    [[NSUserDefaults standardUserDefaults] setBool:YES forKey:HDVibrationKey];
+    [[NSUserDefaults standardUserDefaults] setBool:YES forKey:HDEffectsKey];
+    [[NSUserDefaults standardUserDefaults] setBool:YES forKey:HDSoundkey];
+    [[NSUserDefaults standardUserDefaults] setBool:YES forKey:HDFirstRunKey];
+}
+
+#pragma mark -
+#pragma mark - initalizer
+
 - (instancetype)init
 {
     if (self = [super init]) {
-        [self setSound:    [[NSUserDefaults standardUserDefaults] boolForKey:HDSoundkey]];
-        [self setVibration:[[NSUserDefaults standardUserDefaults] boolForKey:HDVibrationKey]];
-        [self setSpace:    [[NSUserDefaults standardUserDefaults] boolForKey:HDEffectsKey]];
-        [self setGuide:    [[NSUserDefaults standardUserDefaults] boolForKey:HDGuideKey]];
+        [self setVibe: [[NSUserDefaults standardUserDefaults] boolForKey:HDVibrationKey]];
+        [self setFx:   [[NSUserDefaults standardUserDefaults] boolForKey:HDEffectsKey]];
+        [self setSound:[[NSUserDefaults standardUserDefaults] boolForKey:HDSoundkey]];
+        [self setMusic:YES];
     }
     return self;
 }
@@ -29,6 +43,27 @@
         manager = [[HDSettingsManager alloc] init];
     });
     return manager;
+}
+
+#pragma mark -
+#pragma mark - Override Setters
+
+- (void)setFx:(BOOL)fx
+{
+    _fx = fx;
+    [[NSUserDefaults standardUserDefaults] setBool:_fx forKey:HDEffectsKey];
+}
+
+- (void)setSound:(BOOL)sound
+{
+    _sound = sound;
+    [[NSUserDefaults standardUserDefaults] setBool:_sound forKey:HDSoundkey];
+}
+
+- (void)setVibe:(BOOL)vibe
+{
+    _vibe = vibe;
+    [[NSUserDefaults standardUserDefaults] setBool:_vibe forKey:HDVibrationKey];
 }
 
 @end

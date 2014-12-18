@@ -124,9 +124,8 @@ typedef void(^CallbackBlock)(NSDictionary *dictionary, NSError *error);
         }
     }
     
-    NSString *path = [[NSBundle mainBundle] pathForResource:filename ofType:@"json"];
-    
     NSError *error = nil;
+    NSString *path = [[NSBundle mainBundle] pathForResource:filename ofType:@"json"];
     NSData *data = [NSData dataWithContentsOfFile:path options:0 error:&error];
     if (data == nil) {
         if (callback) {

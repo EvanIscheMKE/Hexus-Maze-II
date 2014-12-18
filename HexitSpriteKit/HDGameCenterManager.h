@@ -11,7 +11,7 @@
 @interface HDGameCenterManager : NSObject
 
 + (HDGameCenterManager *)sharedManager;
-- (void)authenticateForGameCenter;
+- (void)authenticateGameCenter;
 - (void)reportLevelCompletion:(int64_t)level;
 - (void)submitAchievementWithIdentifier:(NSString *)identifier;
 

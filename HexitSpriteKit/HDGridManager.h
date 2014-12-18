@@ -10,7 +10,9 @@
 
 @class HDHexagon;
 @interface HDGridManager : NSObject
+
 @property (nonatomic, readonly) NSArray *hexagons;
+
 - (HDHexagon *)hexagonAtRow:(NSInteger)row column:(NSInteger)column;
 - (NSInteger)hexagonTypeAtRow:(NSInteger)row column:(NSInteger)column;
 

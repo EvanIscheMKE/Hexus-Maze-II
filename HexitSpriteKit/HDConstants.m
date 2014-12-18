@@ -30,4 +30,5 @@ NSString * const HDSoundkey          = @"soundKey";
 NSString * const HDVibrationKey      = @"vibrationKey";
 
 // Sound Keys
+NSString * const HDButtonSound    = @"D4.m4a";
 NSString * const hdBubbleSoundKey = @"104947__glaneur-de-sons__bubble-8.wav";

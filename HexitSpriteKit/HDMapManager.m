@@ -10,11 +10,10 @@
 #import "HDMapManager.h"
 #import "HDGameCenterManager.h"
 
+static const NSInteger MAX_LEVELS = 150;
+
 @interface HDMapManager ()
-
-@property (nonatomic, assign) NSUInteger totalNumberOfLevels;
-@property (nonatomic, assign) NSUInteger numberOfSections;
-
+@property (nonatomic, readonly) NSArray *levels;
 @end
 
 @implementation HDMapManager{
@@ -24,8 +23,7 @@
 - (instancetype)init
 {
     if (self = [super init]) {
-        self.totalNumberOfLevels = 75;
-        self.numberOfSections = self.totalNumberOfLevels / LEVELS_PER_PAGE;
+   
     }
     return self;
 }
@@ -56,12 +54,12 @@
     return _levels;
 }
 
-- (void)configureLevelDataForFirstRun
+- (void)configureDataBaseForFirstRun
 {
     NSMutableArray *levels = [NSMutableArray array];
     
-    for (int i = 1; i < self.totalNumberOfLevels + 1; i++) {
-        HDLevel *level = [HDLevel levelUnlocked:(i == 1) index:i completed:NO];
+    for (int i = 0; i < MAX_LEVELS; i++) {
+        HDLevel *level = [HDLevel levelUnlocked:(i == 0) index:i completed:NO];
         
         NSData *levelData = [NSKeyedArchiver archivedDataWithRootObject:level];
         [levels addObject:levelData];
@@ -74,38 +72,37 @@
     return [self.levels objectAtIndex:index];
 }
 
+- (NSInteger)indexOfCurrentLevel
+{
+    for (HDLevel *level in self.levels) {
+        if (!level.completed && level.unlocked) {
+            return level.levelIndex + 1;
+        }
+    }
+    return 1;
+}
+
 - (void)completedLevelAtIndex:(NSInteger)index
 {
-    [[HDGameCenterManager sharedManager] reportLevelCompletion:index];
-//    
-//    if (index % 15 == 0) {
-//        
-//    }
-//
-//    [[HDGameCenterManager sharedManager] submitAchievementWithIdentifier:];
+    [[HDGameCenterManager sharedManager] reportLevelCompletion:index + 1];
     
-    [[NSUserDefaults standardUserDefaults] removeObjectForKey:HDDefaultLevelKey];
+    HDLevel *currentLevel = [self levelAtIndex:MAX(index, 0)];
+    HDLevel *nextLevel    = [self levelAtIndex:MIN(index + 1, MAX_LEVELS - 1)];
     
-    HDLevel *thisLevel = [self levelAtIndex:index - 1];
-    HDLevel *nextLevel = [self levelAtIndex:MIN(index, self.totalNumberOfLevels - 1)];
+    if (currentLevel.completed) {
+        return;
+    }
     
-    [thisLevel setCompleted:YES];
+    [currentLevel setCompleted:YES];
     [nextLevel setUnlocked:YES];
     
     NSMutableArray *levels = [NSMutableArray array];
-    
-    for (HDLevel *level in _levels) {
+    for (HDLevel *level in self.levels) {
         NSData *levelData = [NSKeyedArchiver archivedDataWithRootObject:level];
         [levels addObject:levelData];
     }
     
     [[NSUserDefaults standardUserDefaults] setObject:levels forKey:HDDefaultLevelKey];
 }
-
-- (NSUInteger)numberOfLevelsInSection
-{
-    return self.totalNumberOfLevels / self.numberOfSections;
-}
-
 
 @end

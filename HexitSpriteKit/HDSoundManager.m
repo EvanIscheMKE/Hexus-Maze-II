@@ -6,6 +6,7 @@
 //  Copyright (c) 2014 Evan William Ische. All rights reserved.
 //
 
+#import "HDSettingsManager.h"
 #import "HDSoundManager.h"
 
 @implementation HDSoundManager
@@ -39,10 +40,9 @@
 - (void)playSound:(NSString *)soundName
 {
     AVAudioPlayer *player = (AVAudioPlayer *)_sounds[soundName];
-   // if ([[NSUserDefaults standardUserDefaults] boolForKey:HDSoundkey]) {
+    if ([[HDSettingsManager sharedManager] sound]) {
         [player play];
-   // }
+    }
 }
-
 
 @end

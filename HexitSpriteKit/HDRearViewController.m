@@ -37,9 +37,7 @@ static const CGFloat MINIMUM_MENU_OFFSET_X = 228.0f;
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    [self.view setBackgroundColor:[UIColor flatAsbestosColor]];
-    
-    [self _layoutTitle];
+    [self.view setBackgroundColor:[UIColor flatGreenSeaColor]];
     [self _layoutSideMenu];
 }
 
@@ -59,16 +57,16 @@ static const CGFloat MINIMUM_MENU_OFFSET_X = 228.0f;
 
 - (IBAction)openAcheivementsController:(id)sender
 {
-    [[HDSoundManager sharedManager] playSound:@"menuClicked.wav"];
+    [[HDSoundManager sharedManager] playSound:HDButtonSound];
     
     HDContainerViewController *container = self.containerViewController;
     [container toggleHDMenuViewController];
-    [ADelegate openAchievementsViewController];
+    [ADelegate presentGameCenterControllerForState:GKGameCenterViewControllerStateAchievements];
 }
 
 - (IBAction)popToRootViewController:(id)sender
 {
-    [[HDSoundManager sharedManager] playSound:@"menuClicked.wav"];
+    [[HDSoundManager sharedManager] playSound:HDButtonSound];
     
     [self.parentViewController dismissViewControllerAnimated:YES completion:nil];
 }
@@ -84,7 +82,14 @@ static const CGFloat MINIMUM_MENU_OFFSET_X = 228.0f;
             [manager setSound:!manager.sound];
             break;
         case 1:
-            [manager setVibration:!manager.vibration];
+            [manager setMusic:!manager.music];
+            [ADelegate setPlayLoop:manager.music];
+            break;
+        case 2:
+            [manager setVibe:!manager.vibe];
+            break;
+        case 3:
+            [manager setFx:!manager.fx];
             break;
         default:
             NSAssert(NO, @"TagIndex is outside of 0-3 %@",NSStringFromSelector(_cmd));
@@ -112,39 +117,11 @@ static const CGFloat MINIMUM_MENU_OFFSET_X = 228.0f;
     [self.retry setTitle:@"Restart" forState:UIControlStateNormal];
     [self.map   setTitle:@"Back to Map" forState:UIControlStateNormal];
     
-    [self.retry addTarget:ADelegate action:@selector(restartCurrentLevel) forControlEvents:UIControlEventTouchUpInside];
-    [self.map   addTarget:ADelegate action:@selector(navigateToLevelController)  forControlEvents:UIControlEventTouchUpInside];
-    
     [self.retry removeTarget:self action:@selector(openAcheivementsController:) forControlEvents:UIControlEventTouchUpInside];
     [self.map   removeTarget:self action:@selector(popToRootViewController:)    forControlEvents:UIControlEventTouchUpInside];
-}
-
-- (void)_layoutTitle
-{
-    UILabel *title = [[UILabel alloc] init];
-    [title setTranslatesAutoresizingMaskIntoConstraints:NO];
-    [title setTextAlignment:NSTextAlignmentLeft];
-    [title setText:@"HEXUS"];
-    [title setFont:GILLSANS(24.0f)];
-    [title setTextColor:[UIColor whiteColor]];
-    [self.view addSubview:title];
     
-    NSDictionary *views   = NSDictionaryOfVariableBindings(title);
-    NSDictionary *metrics = @{ @"inset" : @(5.0f) };
-    
-    NSArray *titleXAxis = [NSLayoutConstraint constraintsWithVisualFormat:@"H:|-10-[title]"
-                                                                  options:0
-                                                                  metrics:metrics
-                                                                    views:views];
-    
-    NSArray *titleYAxis = [NSLayoutConstraint constraintsWithVisualFormat:@"V:[title]-inset-|"
-                                                                  options:0
-                                                                  metrics:metrics
-                                                                    views:views];
-    
-    for (NSArray *layout in @[titleXAxis, titleYAxis]) {
-        [self.view addConstraints:layout];
-    }
+    [self.retry addTarget:ADelegate action:@selector(restartCurrentLevel) forControlEvents:UIControlEventTouchUpInside];
+    [self.map   addTarget:ADelegate action:@selector(navigateToLevelController)  forControlEvents:UIControlEventTouchUpInside];
 }
 
 - (UIView *)layoutContainerWithToggleSwitches
@@ -153,13 +130,21 @@ static const CGFloat MINIMUM_MENU_OFFSET_X = 228.0f;
     UIView *container = [[UIView alloc] initWithFrame:containerBounds];
     [container setTranslatesAutoresizingMaskIntoConstraints:NO];
     
-    HDSwitch *buttonOne = [[HDSwitch alloc] initWithOnColor:[UIColor flatEmeraldColor] offColor:[UIColor flatMidnightBlueColor]];
-    [buttonOne setOn:[[HDSettingsManager sharedManager] sound]];
-    [buttonOne setTag:0];
+    HDSwitch *sound = [[HDSwitch alloc] initWithOnColor:[UIColor flatPeterRiverColor] offColor:[UIColor flatMidnightBlueColor]];
+    [sound setOn:[[HDSettingsManager sharedManager] sound]];
+    [sound setTag:0];
     
-    HDSwitch *buttonTwo = [[HDSwitch alloc] initWithOnColor:[UIColor flatEmeraldColor]  offColor:[UIColor flatMidnightBlueColor]];
-    [buttonTwo setOn:[[HDSettingsManager sharedManager] space]];
-    [buttonTwo setTag:1];
+    HDSwitch *music = [[HDSwitch alloc] initWithOnColor:[UIColor flatPeterRiverColor]  offColor:[UIColor flatMidnightBlueColor]];
+    [music setOn:[[HDSettingsManager sharedManager] music]];
+    [music setTag:1];
+    
+    HDSwitch *vibe = [[HDSwitch alloc] initWithOnColor:[UIColor flatPeterRiverColor] offColor:[UIColor flatMidnightBlueColor]];
+    [vibe setOn:[[HDSettingsManager sharedManager] vibe]];
+    [vibe setTag:2];
+    
+    HDSwitch *fx = [[HDSwitch alloc] initWithOnColor:[UIColor flatPeterRiverColor]  offColor:[UIColor flatMidnightBlueColor]];
+    [fx setOn:[[HDSettingsManager sharedManager] fx]];
+    [fx setTag:3];
     
     UILabel *labelOne   = [[UILabel alloc] init];
     [labelOne setText:@"Sound"];
@@ -167,22 +152,28 @@ static const CGFloat MINIMUM_MENU_OFFSET_X = 228.0f;
     UILabel *labelTwo   = [[UILabel alloc] init];
     [labelTwo setText:@"Music"];
     
-    for (UILabel *label in @[labelOne, labelTwo]) {
+    UILabel *labelThree = [[UILabel alloc] init];
+    [labelThree setText:@"Vibe"];
+    
+    UILabel *labelFour  = [[UILabel alloc] init];
+    [labelFour setText:@"Fx"];
+    
+    for (UILabel *label in @[labelOne, labelTwo, labelThree, labelFour]) {
         [label setTranslatesAutoresizingMaskIntoConstraints:NO];
-        [label setTextColor:[UIColor whiteColor]];
+        [label setTextColor:[UIColor flatMidnightBlueColor]];
         [label setTextAlignment:NSTextAlignmentCenter];
         [label setFont:GILLSANS_LIGHT(14.0f)];
         [container addSubview:label];
     }
     
-    for (UIButton *toggleButton in @[buttonOne, buttonTwo]) {
+    for (UIButton *toggleButton in @[sound, music, vibe, fx]) {
         [toggleButton addTarget:self action:@selector(updateToggleButtonAtTag:) forControlEvents:UIControlEventValueChanged];
         [toggleButton setTranslatesAutoresizingMaskIntoConstraints:NO];
         [self.arrayOfButtons addObject:toggleButton];
         [container addSubview:toggleButton];
     }
     
-    NSDictionary *views = NSDictionaryOfVariableBindings(buttonOne, buttonTwo, labelOne, labelTwo);
+    NSDictionary *views = NSDictionaryOfVariableBindings(sound, music, vibe, fx, labelOne, labelTwo, labelThree, labelFour);
     
     NSDictionary *metrics = @{ @"space"       : @(4.0f),
                                @"buttonHeight": @(35.0f),
@@ -192,25 +183,27 @@ static const CGFloat MINIMUM_MENU_OFFSET_X = 228.0f;
                                @"buttonWidth" : @(75.0f) };
     
     
-    NSArray *verticalConstraint = [NSLayoutConstraint constraintsWithVisualFormat:@"V:|[buttonOne(buttonHeight)][labelOne(labelHeight)]"
+    NSString *constraintVerticalLeft = @"V:|[sound(buttonHeight)][labelOne(labelHeight)]-inset-[vibe(buttonHeight)][labelThree(labelHeight)]";
+    NSArray *verticalConstraint = [NSLayoutConstraint constraintsWithVisualFormat:constraintVerticalLeft
                                                                           options:0
                                                                           metrics:metrics
                                                                             views:views];
     [container addConstraints:verticalConstraint];
     
-    NSArray *vertical2Constraint = [NSLayoutConstraint constraintsWithVisualFormat:@"V:|[buttonTwo(buttonHeight)][labelTwo(labelHeight)]"
+    NSString *constraintVerticalRight = @"V:|[music(buttonHeight)][labelTwo(labelHeight)]-inset-[fx(buttonHeight)][labelFour(labelHeight)]";
+    NSArray *vertical2Constraint = [NSLayoutConstraint constraintsWithVisualFormat:constraintVerticalRight
                                                                            options:0
                                                                            metrics:metrics
                                                                              views:views];
     [container addConstraints:vertical2Constraint];
     
-    NSArray *horizontal1Spacing = [NSLayoutConstraint constraintsWithVisualFormat:@"H:|-inset-[buttonOne(buttonWidth)]"
+    NSArray *horizontal1Spacing = [NSLayoutConstraint constraintsWithVisualFormat:@"H:|-inset-[sound(buttonWidth)]"
                                                                           options:0
                                                                           metrics:metrics
                                                                             views:views];
     [container addConstraints:horizontal1Spacing];
     
-    NSArray *horizontal2Spacing = [NSLayoutConstraint constraintsWithVisualFormat:@"H:[buttonTwo(buttonWidth)]-inset-|"
+    NSArray *horizontal2Spacing = [NSLayoutConstraint constraintsWithVisualFormat:@"H:[music(buttonWidth)]-inset-|"
                                                                           options:0
                                                                           metrics:metrics
                                                                             views:views];
@@ -228,6 +221,32 @@ static const CGFloat MINIMUM_MENU_OFFSET_X = 228.0f;
                                                                             views:views];
     [container addConstraints:horizontal5Spacing];
     
+    //
+    NSArray *vibeSpacing = [NSLayoutConstraint constraintsWithVisualFormat:@"H:|-inset-[vibe(buttonWidth)]"
+                                                                          options:0
+                                                                          metrics:metrics
+                                                                            views:views];
+    [container addConstraints:vibeSpacing];
+    
+    NSArray *fxSpacing = [NSLayoutConstraint constraintsWithVisualFormat:@"H:[fx(buttonWidth)]-inset-|"
+                                                                          options:0
+                                                                          metrics:metrics
+                                                                            views:views];
+    [container addConstraints:fxSpacing];
+    
+    //
+    NSArray *horizontal8Spacing  = [NSLayoutConstraint constraintsWithVisualFormat:@"H:|-inset-[labelThree(buttonWidth)]"
+                                                                           options:0
+                                                                           metrics:metrics
+                                                                             views:views];
+    [container addConstraints:horizontal8Spacing];
+    
+    NSArray *horizontal9Spacing = [NSLayoutConstraint constraintsWithVisualFormat:@"H:[labelFour(buttonWidth)]-inset-|"
+                                                                          options:0
+                                                                          metrics:metrics
+                                                                            views:views];
+    [container addConstraints:horizontal9Spacing];
+    
     return container;
 }
 
@@ -242,7 +261,7 @@ static const CGFloat MINIMUM_MENU_OFFSET_X = 228.0f;
     [self.retry addTarget:self action:@selector(openAcheivementsController:) forControlEvents:UIControlEventTouchUpInside];
     
     self.map = [UIButton buttonWithType:UIButtonTypeCustom];
-    [self.map setBackgroundColor:[UIColor flatEmeraldColor]];
+    [self.map setBackgroundColor:[UIColor flatPeterRiverColor]];
     [self.map setTitle:@"Main Menu" forState:UIControlStateNormal];
     [self.map addTarget:self action:@selector(popToRootViewController:) forControlEvents:UIControlEventTouchUpInside];
     
@@ -267,30 +286,30 @@ static const CGFloat MINIMUM_MENU_OFFSET_X = 228.0f;
                   @"containerHeight"  : @280.0f,
                   @"containerOriginX" : @50.0f };
     
-    NSArray *verticalConstraint = [NSLayoutConstraint constraintsWithVisualFormat:
-                                   @"V:|-originYAxis-[retry(buttonHeight)]-inset-[map(==retry)]-50-[container(containerHeight)]"
+    NSString *visualFormatString = @"V:|-originYAxis-[retry(buttonHeight)]-inset-[map(==retry)]-40-[container(containerHeight)]";
+    NSArray *verticalConstraint = [NSLayoutConstraint constraintsWithVisualFormat:visualFormatString
                                                                           options:0
                                                                           metrics:_metrics
                                                                             views:_views];
     [self.view addConstraints:verticalConstraint];
     
-    NSArray *hMConstraint = [NSLayoutConstraint constraintsWithVisualFormat:@"H:|-inset-[map(buttonWidth)]"
-                                                                    options:0
-                                                                    metrics:_metrics
-                                                                      views:_views];
-    [self.view addConstraints:hMConstraint];
+    NSArray *horizontalMapConstraint = [NSLayoutConstraint constraintsWithVisualFormat:@"H:|-inset-[map(buttonWidth)]"
+                                                                               options:0
+                                                                               metrics:_metrics
+                                                                                 views:_views];
+    [self.view addConstraints:horizontalMapConstraint];
     
-    NSArray *hRConstraint = [NSLayoutConstraint constraintsWithVisualFormat:@"H:|-inset-[retry(==map)]"
-                                                                    options:0
-                                                                    metrics:_metrics
-                                                                      views:_views];
-    [self.view addConstraints:hRConstraint];
+    NSArray *horizontalRetryConstraint = [NSLayoutConstraint constraintsWithVisualFormat:@"H:|-inset-[retry(==map)]"
+                                                                                 options:0
+                                                                                 metrics:_metrics
+                                                                                   views:_views];
+    [self.view addConstraints:horizontalRetryConstraint];
     
-    NSArray *hCConstraint = [NSLayoutConstraint constraintsWithVisualFormat:@"H:|-inset-[container(==map)]"
-                                                                    options:0
-                                                                    metrics:_metrics
-                                                                      views:_views];
-    [self.view addConstraints:hCConstraint];
+    NSArray *horizontalContainerConstraint = [NSLayoutConstraint constraintsWithVisualFormat:@"H:|-inset-[container(==map)]"
+                                                                                     options:0
+                                                                                     metrics:_metrics
+                                                                                       views:_views];
+    [self.view addConstraints:horizontalContainerConstraint];
 }
 
 - (void)didReceiveMemoryWarning

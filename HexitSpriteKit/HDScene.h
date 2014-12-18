@@ -11,11 +11,12 @@
 @class HDGridManager;
 @interface HDScene : SKScene
 
-@property (nonatomic, assign) NSUInteger levelIndex;
+@property (nonatomic, assign) NSInteger levelIndex;
 @property (nonatomic, strong) HDGridManager *gridManager;
 
 - (void)layoutNodesWithGrid:(NSArray *)grid;
-- (void)addUnderlyingIndicatorTiles;
+- (void)layoutIndicatorTiles;
 - (void)restart;
 
 @end
+

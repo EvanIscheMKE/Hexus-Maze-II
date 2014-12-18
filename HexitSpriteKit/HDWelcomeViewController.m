@@ -9,7 +9,6 @@
 @import iAd;
 @import QuartzCore;
 
-#import "HDContainerView.h"
 #import "HDWelcomeViewController.h"
 #import "UIColor+FlatColors.h"
 
@@ -19,21 +18,16 @@
 
 @implementation HDWelcomeViewController
 
-- (void)loadView
-{
-    HDContainerView *space = [[HDContainerView alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
-    [self setView:space];
-}
-
 - (void)viewDidLoad
 {
     [super viewDidLoad];
     [self setCanDisplayBannerAds:YES];
+    [self.view setBackgroundColor:[UIColor flatMidnightBlueColor]];
     
     UILabel *title = [[UILabel alloc] init];
     [title setTextAlignment:NSTextAlignmentCenter];
     [title setTextColor:[UIColor whiteColor]];
-    [title setText:@"HEXUS"];
+    [title setText:NSLocalizedString(@"HEXUS", nil)];
     [title setFont:GILLSANS_LIGHT(120.0f)];
     [title setMinimumScaleFactor:.25f];
     [title setAdjustsFontSizeToFitWidth:YES];
@@ -43,7 +37,7 @@
     [self.beginGame setBackgroundColor:[UIColor flatPeterRiverColor]];
     [[self.beginGame titleLabel] setTextAlignment:NSTextAlignmentCenter];
     [[self.beginGame titleLabel] setFont:GILLSANS_LIGHT(22.0f)];
-    [self.beginGame setTitle:@"Start" forState:UIControlStateNormal];
+    [self.beginGame setTitle:NSLocalizedString(@"START", nil) forState:UIControlStateNormal];
     [self.beginGame setTitleColor:[UIColor flatMidnightBlueColor] forState:UIControlStateNormal];
     [self.beginGame.layer setCornerRadius:17.5f];
     

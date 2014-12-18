@@ -9,24 +9,44 @@
 
 
 #import "HDLevel.h"
+#import "HDHelper.h"
 #import "HDMapManager.h"
+#import "HDHexagonControl.h"
 #import "HDSoundManager.h"
-#import "HDLevelViewCell.h"
+#import "HDHexagonView.h"
 #import "UIColor+FlatColors.h"
 #import "HDGridViewController.h"
-#import "HDCollectionViewCell.h"
+#import "HDContainerViewController.h"
 
 static NSString * const title = @"Locked";
 static NSString * const cellReuseIdentifer = @"identifier";
 
-static const NSUInteger COLLECTION_VIEW_TAG = 100;
-static const CGFloat CV_OFFSET = 60.0f;
+static const NSUInteger numberOfRows    = 7;
+static const NSUInteger numberOfColumns = 4;
+static const NSUInteger numberOfPages   = 3;
 
-@interface HDGridViewController ()<UICollectionViewDataSource, UICollectionViewDelegate, UIScrollViewDelegate>
-@property (nonatomic, strong) UICollectionView *collectionView;
+static const CGFloat kPadding = 4.0f; //
+
+static const CGFloat TILESIZE = 60.0f;
+static const CGFloat kTileHeightInsetMultiplier = .845f;
+
+@interface HDGridViewController () <UIScrollViewDelegate>
+
+@property (nonatomic, strong) HDHexagonControl *control;
+
+@property (nonatomic, assign) BOOL navigationBarHidden;
+
+@property (nonatomic, strong) UIView *container;
+
+@property (nonatomic, strong) UIButton *toggleButton;
+@property (nonatomic, strong) UIButton *play;
+
 @end
 
 @implementation HDGridViewController {
+    NSDictionary *_metrics;
+    NSDictionary *_views;
+    
     NSInteger _previousPage;
 }
 
@@ -34,101 +54,231 @@ static const CGFloat CV_OFFSET = 60.0f;
 {
     [super viewDidLoad];
     [self.view setBackgroundColor:[UIColor flatMidnightBlueColor]];
+    [self.view setClipsToBounds:YES];
     
-    UICollectionViewFlowLayout *layout = [[UICollectionViewFlowLayout alloc] init];
-    [layout setScrollDirection:UICollectionViewScrollDirectionHorizontal];
-    [layout setMinimumInteritemSpacing:0];
-    [layout setMinimumLineSpacing:0];
-    [layout setItemSize:CGSizeMake(CGRectGetWidth(self.view.bounds), CGRectGetHeight(self.view.bounds) - CV_OFFSET)];
+    CGRect scrollViewRect = CGRectInset(self.view.bounds, 50.0f, 90.0f);
+    UIScrollView *scrollView = [[UIScrollView alloc] initWithFrame:scrollViewRect];
+    [scrollView setContentSize:CGSizeMake(CGRectGetWidth(scrollView.bounds)*3, CGRectGetHeight(scrollView.bounds))];
+    [scrollView setShowsHorizontalScrollIndicator:NO];
+    [scrollView setPagingEnabled:YES];
+    [scrollView setClipsToBounds:NO];
+    [scrollView setDelegate:self];
+    [self.view addSubview:scrollView];
     
-    CGRect collectionViewRect = CGRectMake(0.0, CV_OFFSET, CGRectGetWidth(self.view.bounds), CGRectGetHeight(self.view.bounds) - CV_OFFSET);
-     self.collectionView = [[UICollectionView alloc] initWithFrame:collectionViewRect collectionViewLayout:layout];
-    [self.collectionView registerClass:[HDCollectionViewCell class] forCellWithReuseIdentifier:cellReuseIdentifer];
-    [self.collectionView setAutoresizingMask:UIViewAutoresizingFlexibleWidth|UIViewAutoresizingFlexibleHeight];
-    [self.collectionView setShowsHorizontalScrollIndicator:NO];
-    [self.collectionView setDelegate:self];
-    [self.collectionView setDataSource:self];
-    [self.collectionView setPagingEnabled:YES];
-    [self.collectionView setTag:COLLECTION_VIEW_TAG];  // Set it high enough that it will never collide with grid tag
-    [self.collectionView setBackgroundColor:[UIColor clearColor]];
-    [self.view addSubview:self.collectionView];
-}
-
-- (NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section
-{
-    if (collectionView.tag == COLLECTION_VIEW_TAG) {
-        return [[HDMapManager sharedManager] numberOfSections];
+    NSUInteger tagIndex = 1;
+    for (int page = 0; page < numberOfPages; page++) {
+        
+        CGPoint center  = CGPointMake(
+                                      page * CGRectGetWidth(scrollView.bounds) + CGRectGetWidth(scrollView.bounds)/2,
+                                      CGRectGetHeight(scrollView.bounds)/2
+                                      );
+        
+        CGRect containerFrame = CGRectMake(
+                                           0.0f,
+                                           0.0f,
+                                           TILESIZE * (numberOfColumns - 1),
+                                           TILESIZE*kTileHeightInsetMultiplier * (numberOfRows - 1)
+                                           );
+        UIView *container = [[UIView alloc] initWithFrame:containerFrame];
+        [container setCenter:center];
+        [scrollView addSubview:container];
+        
+        
+        for (int row = 0; row < numberOfRows; row++) {
+            for (int column = 0; column < numberOfColumns; column++) {
+                
+                HDLevel *level = [[HDMapManager sharedManager] levelAtIndex:tagIndex - 1];
+                
+                CGRect bounds = CGRectMake(0.0f, 0.0f, TILESIZE - kPadding, TILESIZE - kPadding);
+                HDHexagonView *hexagon = [[HDHexagonView alloc] initWithFrame:bounds strokeColor:[UIColor flatPeterRiverColor]];
+                [hexagon setTag:tagIndex];
+                [[hexagon titleLabel] setTextAlignment:NSTextAlignmentCenter];
+                [[hexagon titleLabel] setFont:GILLSANS(CGRectGetHeight(hexagon.bounds)/3.5f)];
+                [hexagon addTarget:self action:@selector(beginGame:) forControlEvents:UIControlEventTouchUpInside];
+                [hexagon setCenter:[self _pointForColumn:column row:row]];
+                [container addSubview:hexagon];
+                
+                if (level.completed) {
+                    [(CAShapeLayer *)hexagon.layer setFillColor:[[UIColor flatPeterRiverColor] CGColor]];
+                    [hexagon setTitleColor:[UIColor flatMidnightBlueColor] forState:UIControlStateNormal];
+                    [hexagon setTitle:[NSString stringWithFormat:@"%lu",tagIndex] forState:UIControlStateNormal];
+                } else if (!level.completed && level.isUnlocked) {
+                    [(CAShapeLayer *)hexagon.layer setStrokeColor:[[UIColor whiteColor] CGColor]];
+                    [hexagon setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
+                    [hexagon setTitle:[NSString stringWithFormat:@"%lu",tagIndex] forState:UIControlStateNormal];
+                } else {
+                    [hexagon setImage:[UIImage imageNamed:@"WhiteLock"] forState:UIControlStateNormal];
+                }
+                
+                tagIndex++;
+            }
+        }
     }
-    return [[HDMapManager sharedManager] numberOfLevelsInSection];
+    [self _layoutNavigationButtons];
+    
+    CGRect controlRect = CGRectMake(0.0f, 0.0f, CGRectGetWidth(self.view.bounds), 50.0f);
+     self.control = [[HDHexagonControl alloc] initWithFrame:controlRect];
+    [self.control setNumberOfPages:3];
+    [self.control setCurrentPage:0];
+    [self.control setCenter:CGPointMake(CGRectGetMidX(self.view.bounds), CGRectGetHeight(self.view.bounds) + 25.0f)];
+    [self.view addSubview:self.control];
 }
 
-- (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath
+- (void)setNavigationBarHidden:(BOOL)navigationBarHidden
 {
-    if (collectionView.tag == COLLECTION_VIEW_TAG) {
-      // Container CollectionView
-        HDCollectionViewCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:cellReuseIdentifer forIndexPath:indexPath];
-        
-        [cell setTag:indexPath.item];
-        [cell.gridCollectionView setDelegate:self];
-        [cell.gridCollectionView setDataSource:self];
-        [cell.gridCollectionView reloadData];
-
-        return cell;
-        
+    _navigationBarHidden = navigationBarHidden;
+    
+    if (_navigationBarHidden) {
+        [self hideAnimated:YES];
     } else {
-        // Grid CollectionView
-        HDLevelViewCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:levelCellReuseIdentifer forIndexPath:indexPath];
-        
-        NSInteger levelIndex  = (indexPath.item) + (collectionView.tag * LEVELS_PER_PAGE);
-        
-        HDLevel *level = [[HDMapManager sharedManager] levelAtIndex:levelIndex];
-        
-        [cell setCompleted:level.isCompleted];
-        [cell setAnimate:(!level.completed && level.unlocked)];
-        [cell.indexLabel setText:[NSString stringWithFormat:@"%ld", levelIndex + 1]];
-        
-        return cell;
+        [self showAnimated:YES];
     }
-    return nil;
 }
 
-- (void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath
+- (void)hideAnimated:(BOOL)animated
 {
-    NSInteger levelIndex  = (indexPath.item) + (collectionView.tag * LEVELS_PER_PAGE);
-    NSInteger levelNumber = levelIndex + 1;
+    dispatch_block_t animate = ^{
+        CGRect rect = self.container.frame;
+        rect.origin.y = -70.0f;
+        [self.container setFrame:rect];
+        
+        CGPoint center = self.control.center;
+        center.y =  CGRectGetHeight(self.view.bounds) + 25.0f;
+        [self.control setCenter:center];
+    };
     
-    HDLevel *level = [[HDMapManager sharedManager] levelAtIndex:levelIndex];
+    if (!animated) {
+        animate();
+    } else {
+        [UIView animateWithDuration:.3f animations:animate];
+    }
+}
+
+- (void)showAnimated:(BOOL)animated
+{
+    dispatch_block_t animate = ^{
+        CGRect rect = self.container.frame;
+        rect.origin.y = 0.0f;
+        [self.container setFrame:rect];
+        
+        CGPoint center = self.control.center;
+        center.y = CGRectGetHeight(self.view.bounds) - 45.0f;
+        [self.control setCenter:center];
+    };
     
-  //  if (level.isUnlocked) {
-        [[HDSoundManager sharedManager] playSound:@"menuClicked.wav"];
-        [ADelegate navigateToNewLevel:levelNumber];
-  //  } else {
-        HDLevelViewCell *cell = (HDLevelViewCell *)[collectionView cellForItemAtIndexPath:indexPath];
-        [UIView animateWithDuration:.3f delay:0.0f
-                            options:UIViewAnimationOptionAutoreverse
-                         animations:^{
-                             [cell setTransform:CGAffineTransformScale(cell.transform, .9f, .9f)];
-                         } completion:^(BOOL finished) {
-                             if (finished) {
-                                 [cell setTransform:CGAffineTransformIdentity];
-                                 [cell.layer removeAllAnimations];
-                             }
-                         }];
-   // }
+    if (!animated) {
+        animate();
+    } else {
+        [UIView animateWithDuration:.3f animations:animate];
+    }
+}
+
+- (CGPoint)_pointForColumn:(NSInteger)column row:(NSInteger)row
+{
+    const CGFloat kOriginY = ((row * (TILESIZE * kTileHeightInsetMultiplier)) );
+    const CGFloat kOriginX = -TILESIZE/4 + ((column * TILESIZE));
+    const CGFloat kAlternateOffset = (row % 2 == 0) ? TILESIZE/2 : 0.0f;
+    
+    return CGPointMake(kAlternateOffset + kOriginX, kOriginY);
+}
+
+- (void)_beginLastUnlockedLevel
+{
+    [self beginLevel:[[HDMapManager sharedManager] indexOfCurrentLevel]];
+}
+
+- (void)beginGame:(id)sender
+{
+    UIButton *button = (UIButton *)sender;
+    [self beginLevel:button.tag];
+}
+
+- (void)beginLevel:(NSInteger)level
+{
+    HDLevel *gamelevel = [[HDMapManager sharedManager] levelAtIndex:(NSInteger)level - 1];
+    
+    if (gamelevel.isUnlocked) {
+        
+        [self setNavigationBarHidden:YES];
+        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(.3f * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+            [[HDSoundManager sharedManager] playSound:HDButtonSound];
+            [ADelegate navigateToNewLevel:(NSInteger)level];
+        });
+    }
+}
+
+- (void)_layoutNavigationButtons
+{
+    HDContainerViewController *container = self.containerViewController;
+    
+    CGRect containerFrame = CGRectMake(0.0f, -70.0f, CGRectGetWidth(self.view.bounds), 70.0f);
+    self.container = [[UIView alloc] initWithFrame:containerFrame];
+    [self.container setBackgroundColor:[UIColor clearColor]];
+    [self.view addSubview:self.container];
+    
+    self.toggleButton = [UIButton buttonWithType:UIButtonTypeCustom];
+    [self.toggleButton setImage:[UIImage imageNamed:@"Grid@2x"] forState:UIControlStateNormal];
+    [self.toggleButton addTarget:container action:@selector(toggleHDMenuViewController) forControlEvents:UIControlEventTouchUpInside];
+    
+    self.play = [UIButton buttonWithType:UIButtonTypeCustom];
+    [self.play setImage:[UIImage imageNamed:@"Play"] forState:UIControlStateNormal];
+    [self.play addTarget:self action:@selector(_beginLastUnlockedLevel) forControlEvents:UIControlEventTouchUpInside];
+    
+    for (UIButton *button in @[self.toggleButton, self.play]) {
+        [button setTranslatesAutoresizingMaskIntoConstraints:NO];
+        [self.container addSubview:button];
+    }
+    
+    UIButton *toggle = self.toggleButton;
+    UIButton *play   = self.play;
+    
+    _views = NSDictionaryOfVariableBindings(toggle, play);
+    
+    _metrics = @{ @"buttonHeight" : @42.0f, @"inset" : @20.0f };
+    
+    NSArray *toggleHorizontalConstraint = [NSLayoutConstraint constraintsWithVisualFormat:@"H:|-inset-[toggle(buttonHeight)]"
+                                                                                  options:0
+                                                                                  metrics:_metrics
+                                                                                    views:_views];
+    [self.view addConstraints:toggleHorizontalConstraint];
+    
+    NSArray *toggleVerticalConstraint   = [NSLayoutConstraint constraintsWithVisualFormat:@"V:|-inset-[toggle(buttonHeight)]"
+                                                                                  options:0
+                                                                                  metrics:_metrics
+                                                                                    views:_views];
+    [self.view addConstraints:toggleVerticalConstraint];
+    
+    NSArray *shareHorizontalConstraint = [NSLayoutConstraint constraintsWithVisualFormat:@"H:[play(buttonHeight)]-inset-|"
+                                                                                 options:0
+                                                                                 metrics:_metrics
+                                                                                   views:_views];
+    [self.view addConstraints:shareHorizontalConstraint];
+    
+    NSArray *shareVerticalConstraint   = [NSLayoutConstraint constraintsWithVisualFormat:@"V:|-inset-[play(buttonHeight)]"
+                                                                                 options:0
+                                                                                 metrics:_metrics
+                                                                                   views:_views];
+    [self.view addConstraints:shareVerticalConstraint];
 }
 
 #pragma mark -
 #pragma mark - <UIScrollViewDelegate>
+
+- (void)scrollViewDidScroll:(UIScrollView *)scrollView
+{
+    NSUInteger page = (NSUInteger)floorf(scrollView.contentOffset.x / CGRectGetWidth(scrollView.bounds));
+    [self.control setCurrentPage:MIN(page, 2)];
+}
 
 - (void)scrollViewWillBeginDragging:(UIScrollView *)scrollView
 {
     [[HDSoundManager sharedManager] playSound:@"Swooshed.mp3"];
 }
 
-- (void)viewWillAppear:(BOOL)animated
+- (void)viewDidAppear:(BOOL)animated
 {
-    [super viewWillAppear:animated];
-    [self.collectionView reloadData];
+    [super viewDidAppear:animated];
+    [self setNavigationBarHidden:NO];
 }
 
 - (void)didReceiveMemoryWarning

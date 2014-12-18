@@ -32,9 +32,11 @@ extern NSString * const HDBackgroundDate;
 extern NSString * const HDBubbleSoundKey;
 extern NSString * const HDHexGridKey;
 
+extern NSString * const HDButtonSound;
+
 #define GILLSANS(x)       [UIFont fontWithName:@"GillSans" size:x]
 #define GILLSANS_LIGHT(x) [UIFont fontWithName:@"GillSans-Light" size:x]
 
 #define LEVEL_URL(x) [NSString stringWithFormat:@"Grid-%ld",x]
 
-#define SOUNDS_TO_PRELOAD @[@"menuClicked.wav",@"Swooshed.mp3"]
+#define SOUNDS_TO_PRELOAD @[HDButtonSound,@"Swooshed.mp3"]

@@ -10,7 +10,7 @@
 #import "HDHexagonNode.h"
 #import "SKColor+HDColor.h"
 
-static const CGFloat kHexagonInset = 6.0f;
+static const CGFloat kHexagonInset = 9.0f;
 
 static NSString * const DOUBLE_KEY = @"double";
 static NSString * const TRIPLE_KEY = @"triple";
@@ -24,35 +24,21 @@ static NSString * const TRIPLE_KEY = @"triple";
 - (instancetype)init
 {
     if (self = [super init]) {
-        [self setLineWidth:4.0f];
+        [self setLineWidth:6.0f];
     }
     return self;
-}
-
-- (void)updateLabelWithText:(NSString *)text
-{
-    [self updateLabelWithText:text color:[SKColor flatEmeraldColor]];
-}
-
-- (void)updateLabelWithText:(NSString *)text color:(UIColor *)color
-{
-    if (!self.label) {
-         self.label = [self _makeDropShadowString:text color:color];
-        [self addChild:self.label];
-    } else {
-        for (id label in self.children) {
-            if ([label isKindOfClass:[SKLabelNode class]]) {
-                [label setText:text];
-                [label setFontColor:color];
-            }
-        }
-    }
 }
 
 - (void)setStrokeColor:(UIColor *)strokeColor fillColor:(UIColor *)fillColor
 {
     [self setStrokeColor:strokeColor];
     [self setFillColor:fillColor];
+}
+
+- (void)endTile
+{
+    SKSpriteNode *lock = [SKSpriteNode spriteNodeWithImageNamed:@"Flag"];
+    [self addChild:lock];
 }
 
 - (void)setLocked:(BOOL)locked
@@ -64,44 +50,17 @@ static NSString * const TRIPLE_KEY = @"triple";
     _locked = locked;
     
     if (locked) {
+        // Add lock png
         SKSpriteNode *lock = [SKSpriteNode spriteNodeWithImageNamed:@"Locked.png"];
         [self addChild:lock];
-        [self.label setHidden:YES];
     } else {
+        // Remove Lock png
         for (id nodes in self.children) {
             if ([nodes isKindOfClass:[SKSpriteNode class]]) {
                 [nodes removeFromParent];
             }
         }
-        [self.label setHidden:NO];
     }
-}
-
-#pragma mark -
-#pragma mark - <PRIVATE>
-
-- (SKLabelNode *)_makeDropShadowString:(NSString *)labelText color:(UIColor *)color
-{
-    const CGFloat kOffset = 1.0f;
-    
-    SKLabelNode *completedString = [SKLabelNode labelNodeWithFontNamed:@"GillSans-Light"];
-    [completedString setFontColor:color];
-    
-    SKLabelNode *dropShadow = [SKLabelNode labelNodeWithFontNamed:@"GillSans-Light"];
-    [dropShadow setFontSize:CGRectGetHeight(self.frame) / 3];
-    [dropShadow setFontColor:[SKColor blackColor]];
-    [dropShadow setZPosition:completedString.zPosition - 1];
-    [dropShadow setPosition:CGPointMake(dropShadow.position.x - kOffset, dropShadow.position.y - kOffset)];
-    [completedString addChild:dropShadow];
-    
-    for (SKLabelNode *label in @[completedString, dropShadow]) {
-        [label setHorizontalAlignmentMode:SKLabelHorizontalAlignmentModeCenter];
-        [label setVerticalAlignmentMode:SKLabelVerticalAlignmentModeCenter];
-        [label setFontSize:CGRectGetHeight(self.frame) / 3];
-        [label setText:labelText];
-    }
-    
-    return completedString;
 }
 
 - (void)addDoubleNodeWithStroke:(UIColor *)stroke fill:(UIColor *)fill
