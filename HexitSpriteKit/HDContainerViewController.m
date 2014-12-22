@@ -88,7 +88,7 @@ static const CGFloat MINIMUM_MENU_OFFSET_X = 228.0f;
         
         if (self.delegate && [self.delegate respondsToSelector:@selector(container:transitionedFromController:toController:)]) {
             [self.delegate container:self transitionedFromController:oldController toController:self.frontViewController];
-        }
+        } 
     };
     
     dispatch_block_t animation = ^{
@@ -110,7 +110,7 @@ static const CGFloat MINIMUM_MENU_OFFSET_X = 228.0f;
     if (animated) {
         [self transitionFromViewController:oldController
                           toViewController:self.frontViewController
-                                  duration:.3f
+                                  duration:.5f
                                    options:UIViewAnimationOptionTransitionFlipFromRight
                                 animations:animation
                                 completion:completionBlock];
@@ -135,12 +135,20 @@ static const CGFloat MINIMUM_MENU_OFFSET_X = 228.0f;
     }
 }
 
-- (void)toggleHDMenuViewController
+- (void)toggleMenuViewControllerWithCompletion:(dispatch_block_t)completion
+{
+    [self toggleMenuViewController];
+    
+    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(.3f * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+        if (completion) {
+            completion();
+        }
+    });
+}
+
+- (void)toggleMenuViewController
 {
     [self setExpanded:!self.isExpanded];
-    if ([self.frontViewController isKindOfClass:[HDGameViewController class]]) {
-        [(HDGameViewController *)self.frontViewController setExpanded:self.isExpanded];
-    }
 }
 
 - (void)_closeAnimated:(BOOL)animated
@@ -168,7 +176,7 @@ static const CGFloat MINIMUM_MENU_OFFSET_X = 228.0f;
 {
     dispatch_block_t expandAnimation = ^{
         CGRect rect = self.frontViewController.view.frame;
-        rect.origin.x += MAX(ceilf(kAnimationOffsetX), MINIMUM_MENU_OFFSET_X);
+        rect.origin.x = MAX(ceilf(kAnimationOffsetX), MINIMUM_MENU_OFFSET_X);
         [self.frontViewController.view setFrame:rect];
     };
     

@@ -47,48 +47,47 @@ NSString * const iOS8AppStoreURLFormat = @"itms-apps://itunes.apple.com/app/id%d
     return YES;
 }
 
-- (void)presentLevelViewController
+- (void)presentContainerViewController
 {
-    [[HDSoundManager sharedManager] playSound:HDButtonSound];
-    
     HDRearViewController *rearViewController  = [[HDRearViewController alloc] init];
     HDGridViewController *frontViewController = [[HDGridViewController alloc] init];
+    
     self.containerController = [[HDContainerViewController alloc] initWithGameViewController:frontViewController
                                                                           rearViewController:rearViewController];
-    [self.containerController setModalTransitionStyle:UIModalTransitionStyleFlipHorizontal];
     [self.containerController setDelegate:self];
     
-    [self.window.rootViewController presentViewController:self.containerController animated:YES completion:nil];
+    [self.window.rootViewController presentViewController:self.containerController animated:NO completion:nil];
 }
 
 - (void)presentGameCenterControllerForState:(GKGameCenterViewControllerState)state
 {
     GKGameCenterViewController *controller = [[GKGameCenterViewController alloc] init];
     [controller setGameCenterDelegate:self];
-    [controller setLeaderboardIdentifier:@""];
+    [controller setLeaderboardIdentifier:@"LevelLeaderboard"];
     [controller setViewState:state];
     [self.containerController presentViewController:controller animated:YES completion:nil];
 }
 
 - (void)navigateToLevelController
 {
-    [[HDSoundManager sharedManager] playSound:HDButtonSound];
-    
-    HDGridViewController *frontViewController = [[HDGridViewController alloc] init];
-    [self.containerController setFrontViewController:frontViewController animated:YES];
+    [self.containerController setFrontViewController:[[HDGridViewController alloc] init] animated:NO];
 }
 
 - (void)restartCurrentLevel
 {
     [[HDSoundManager sharedManager] playSound:HDButtonSound];
-    [self.containerController toggleHDMenuViewController];
-    [(HDGameViewController *)self.containerController.frontViewController restartGame];
+    
+    if (self.containerController.isExpanded) {
+        [self.containerController toggleMenuViewControllerWithCompletion:^{
+             [(HDGameViewController *)self.containerController.frontViewController restartGame];
+        }];
+    }
 }
 
 - (void)navigateToNewLevel:(NSInteger)level
 {
     HDGameViewController *controller = [[HDGameViewController alloc] initWithLevel:level];
-    [self.containerController setFrontViewController:controller animated:YES];
+    [self.containerController setFrontViewController:controller animated:NO];
 }
 
 //- (void)navigateToRandomlyGeneratedLevel
@@ -99,6 +98,10 @@ NSString * const iOS8AppStoreURLFormat = @"itms-apps://itunes.apple.com/app/id%d
 
 - (void)_prepareSoundLoop
 {
+    NSError *sessionError = nil;
+    [[AVAudioSession sharedInstance] setCategory:AVAudioSessionCategoryAmbient error:&sessionError];
+    [[AVAudioSession sharedInstance] setActive:YES error:&sessionError];
+    
     NSError *error = nil;
     NSString *path = [[NSBundle mainBundle] pathForResource:@"Mellowtron" ofType:@"mp3"];
     self.loop = [[AVAudioPlayer alloc] initWithContentsOfURL:[NSURL URLWithString:path] error:&error];

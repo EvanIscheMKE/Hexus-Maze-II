@@ -34,11 +34,10 @@ typedef enum {
 extern NSString * const DOUBLE_KEY;
 extern NSString * const TRIPLE_KEY;
 
-@class HDHexagonNode;
-
 static const NSInteger NumberOfRows    = 18;
 static const NSInteger NumberOfColumns = 9;
 
+@class HDHexagonNode;
 @protocol HDHexagonDelegate;
 @interface HDHexagon : NSObject
 

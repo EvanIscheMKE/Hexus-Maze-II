@@ -41,8 +41,6 @@ static const CGFloat kPageSpacing        = 34.0f;
 
 - (void)drawRect:(CGRect)rect
 {
-    [super drawRect:rect];
-    
     const CGFloat kStartOriginX = ceilf(CGRectGetMidX(self.bounds) - ((self.numberOfPages - 1)/2) * kPageSpacing);
     for (NSInteger page = 0; page < self.numberOfPages; page++) {
         

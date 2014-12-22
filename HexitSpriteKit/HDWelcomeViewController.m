@@ -9,14 +9,23 @@
 @import iAd;
 @import QuartzCore;
 
+#import "HDSoundManager.h"
 #import "HDWelcomeViewController.h"
+#import "HDHexagonView.h"
 #import "UIColor+FlatColors.h"
 
+static const CGFloat kPadding  = 4.0f;
+static const CGFloat kHexaSize = 100.0f;
+
+static const NSUInteger kHexaCount = 4;
+
 @interface HDWelcomeViewController ()
-@property (nonatomic, strong) UIButton *beginGame;
+@property (nonatomic, strong) UIView *tapLabelsContainer;
 @end
 
-@implementation HDWelcomeViewController
+@implementation HDWelcomeViewController {
+    NSArray *_hexaArray;
+}
 
 - (void)viewDidLoad
 {
@@ -24,112 +33,204 @@
     [self setCanDisplayBannerAds:YES];
     [self.view setBackgroundColor:[UIColor flatMidnightBlueColor]];
     
-    UILabel *title = [[UILabel alloc] init];
-    [title setTextAlignment:NSTextAlignmentCenter];
-    [title setTextColor:[UIColor whiteColor]];
-    [title setText:NSLocalizedString(@"HEXUS", nil)];
-    [title setFont:GILLSANS_LIGHT(120.0f)];
-    [title setMinimumScaleFactor:.25f];
-    [title setAdjustsFontSizeToFitWidth:YES];
-    
-     self.beginGame = [UIButton buttonWithType:UIButtonTypeCustom];
-    [self.beginGame addTarget:ADelegate action:@selector(presentLevelViewController) forControlEvents:UIControlEventTouchUpInside];
-    [self.beginGame setBackgroundColor:[UIColor flatPeterRiverColor]];
-    [[self.beginGame titleLabel] setTextAlignment:NSTextAlignmentCenter];
-    [[self.beginGame titleLabel] setFont:GILLSANS_LIGHT(22.0f)];
-    [self.beginGame setTitle:NSLocalizedString(@"START", nil) forState:UIControlStateNormal];
-    [self.beginGame setTitleColor:[UIColor flatMidnightBlueColor] forState:UIControlStateNormal];
-    [self.beginGame.layer setCornerRadius:17.5f];
-    
-    for (UIView *subView in @[title, self.beginGame]) {
-        [subView setTranslatesAutoresizingMaskIntoConstraints:NO];
-        [self.view addSubview:subView];
+    NSMutableArray *hexaArray = [NSMutableArray arrayWithCapacity:kHexaCount];
+
+    const CGFloat startingPositionY = CGRectGetMidY(self.view.bounds) - ((CGFloat)kHexaCount - 1) / 2 * kHexaSize;
+    for (int i = 0; i < kHexaCount; i++) {
+        
+        CGPoint centerPoint = CGPointMake(
+                                          CGRectGetMidX(self.view.bounds),
+                                          startingPositionY + (i * kHexaSize)
+                                          );
+        
+        CGRect hexaBounds = CGRectMake(0.0f, 0.0f, kHexaSize - kPadding, kHexaSize -kPadding);
+        HDHexagonView *hexagon = [[HDHexagonView alloc] initWithFrame:hexaBounds
+                                                                 type:HDHexagonTypeFlat
+                                                          strokeColor:[UIColor whiteColor]];
+        [hexagon setTag:i];
+        [hexagon setEnabled:(i == 0)];
+        [hexagon setCenter:centerPoint];
+        [hexaArray addObject:hexagon];
+        [self.view addSubview:hexagon];
+        
+        CAShapeLayer *hexaLayer = (CAShapeLayer *)hexagon.layer;
+        [hexaLayer setLineWidth:hexaLayer.lineWidth + kPadding];//Subtact above, then add here, increase line width without changing bound size
     }
     
-    // Title Label Width
-    NSLayoutConstraint *constraintTitle = [NSLayoutConstraint constraintWithItem:title
-                                                                       attribute:NSLayoutAttributeWidth
-                                                                       relatedBy:NSLayoutRelationEqual
-                                                                          toItem:nil
-                                                                       attribute:NSLayoutAttributeNotAnAttribute
-                                                                      multiplier:1.0f
-                                                                        constant:CGRectGetWidth(CGRectInset(self.view.bounds, 15.0f, 0.0f))];
-    [title addConstraint:constraintTitle];
+    _hexaArray = hexaArray;
     
-    // Title Label Center X
-    NSLayoutConstraint *centerTitleX =  [NSLayoutConstraint constraintWithItem:title
-                                                                     attribute:NSLayoutAttributeCenterX
-                                                                     relatedBy:NSLayoutRelationEqual
-                                                                        toItem:self.view
-                                                                     attribute:NSLayoutAttributeCenterX
-                                                                    multiplier:1
-                                                                      constant:0];
-    [self.view addConstraint:centerTitleX];
-    
-    // Title Label Center Y
-    NSLayoutConstraint *centerTitleY = [NSLayoutConstraint constraintWithItem:title
-                                                                     attribute:NSLayoutAttributeCenterY
-                                                                     relatedBy:NSLayoutRelationEqual
-                                                                        toItem:self.view
-                                                                     attribute:NSLayoutAttributeCenterY
-                                                                    multiplier:.8f
-                                                                      constant:0];
-    [self.view addConstraint:centerTitleY];
+    [self _setup];
+}
 
-    // Begin button width
-    NSLayoutConstraint *constraintWidth = [NSLayoutConstraint constraintWithItem:self.beginGame
-                                                                       attribute:NSLayoutAttributeWidth
-                                                                       relatedBy:NSLayoutRelationEqual
-                                                                          toItem:nil
-                                                                       attribute:NSLayoutAttributeNotAnAttribute
-                                                                      multiplier:1.0f
-                                                                        constant:CGRectGetWidth(self.view.bounds)/2.5f];
-    [self.beginGame addConstraint:constraintWidth];
+- (void)_setup
+{
+    // Create a container view to contain the 'tap' labels, animate this down screen instead of multiple labels
+    CGRect  tapFrame  = CGRectMake(0.0f, 0.0f, CGRectGetMidX(self.view.bounds), 2.0f);
+    self.tapLabelsContainer = [[UIView alloc] initWithFrame:tapFrame];
+    [self.tapLabelsContainer setBackgroundColor:[UIColor clearColor]];
+    [self.view addSubview:self.tapLabelsContainer];
     
-    // Begin button height
-    NSLayoutConstraint *constraintHeight = [NSLayoutConstraint constraintWithItem:self.beginGame
-                                                                        attribute:NSLayoutAttributeHeight
-                                                                        relatedBy:NSLayoutRelationEqual
-                                                                           toItem:nil
-                                                                        attribute:NSLayoutAttributeNotAnAttribute
-                                                                       multiplier:1.0f constant:35.0f];
-    [self.beginGame addConstraint:constraintHeight];
+    //Create two labels, one positioned on each side of the hexagon that needs to be 'tappped'
+    for (int i = 0; i < 2; i++) {
     
-    // Begin button center C
-    NSLayoutConstraint *centerButtonX =  [NSLayoutConstraint constraintWithItem:self.beginGame
-                                                                     attribute:NSLayoutAttributeCenterX
-                                                                     relatedBy:NSLayoutRelationEqual
-                                                                        toItem:self.view
-                                                                     attribute:NSLayoutAttributeCenterX
-                                                                    multiplier:1
-                                                                      constant:0];
-    [self.view addConstraint:centerButtonX];
+        CGPoint tapLabelPosition = CGPointMake(
+                                               (i == 0) ? 0.0f : CGRectGetWidth(self.tapLabelsContainer.bounds),
+                                               CGRectGetMidY(self.tapLabelsContainer.bounds)
+                                               );
+        
+        UILabel *tap = [[UILabel alloc] init];
+        [tap setTextAlignment:NSTextAlignmentCenter];
+        [tap setTextColor:[UIColor whiteColor]];
+        [tap setText:NSLocalizedString(@"TAP", nil)];
+        [tap setFont:GILLSANS(26.0f)];
+        [tap sizeToFit];
+        [tap setCenter:tapLabelPosition];
+        [self.tapLabelsContainer addSubview:tap];
+    }
+}
+
+- (void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event
+{
+    [self touchesMoved:touches withEvent:event];
+}
+
+- (void)touchesMoved:(NSSet *)touches withEvent:(UIEvent *)event
+{
+    UITouch *touch   = [[touches allObjects] lastObject];
+    CGPoint location = [touch locationInView:self.view];
     
-    // Begin button center x
-    NSLayoutConstraint *centerButtonY = [NSLayoutConstraint constraintWithItem:self.beginGame
-                                                                    attribute:NSLayoutAttributeCenterY
-                                                                    relatedBy:NSLayoutRelationEqual
-                                                                       toItem:self.view
-                                                                    attribute:NSLayoutAttributeCenterY
-                                                                   multiplier:1.1f
-                                                                     constant:0];
-    [self.view addConstraint:centerButtonY];
+    // Loop through all possible targets, find which view contains the current point
+    HDHexagonView *_hexaView;
+    for (HDHexagonView *hexaView in _hexaArray) {
+        if (CGRectContainsPoint(hexaView.frame, location) && hexaView.isEnabled) {
+            _hexaView = hexaView;
+        }
+    }
+    
+    // If the current point's location isnt in any view's frame, return
+    if (!_hexaView) {
+        return;
+    }
+    
+    [_hexaView setEnabled:NO];
+    
+    CAShapeLayer *hexaLayer = (CAShapeLayer *)_hexaView.layer;
+    
+    CABasicAnimation *scale = [CABasicAnimation animationWithKeyPath:@"transform.scale"];
+    [scale setFromValue:@1.0f];
+    [scale setToValue:@.9f];
+    [scale setDuration:.15f];
+    [scale setAutoreverses:YES];
+    [hexaLayer addAnimation:scale forKey:@"scale"];
+    
+    [hexaLayer setFillColor:hexaLayer.strokeColor];
+    
+    switch (_hexaView.tag) {
+        case 0:
+            [self _animateTapLabelPosition];
+            [[HDSoundManager sharedManager] playSound:HDC3];
+            [[_hexaArray objectAtIndex:1] setEnabled:YES];
+            break;
+        case 1: {
+            
+            [[_hexaArray objectAtIndex:2] setEnabled:YES];
+            [[HDSoundManager sharedManager] playSound:HDD3];
+            
+            HDHexagonView *hexa = [_hexaArray lastObject];
+            [self _performRotationOnView:hexa];
+            [self _animateTapLabelPosition];
+            
+            AudioServicesPlaySystemSound(kSystemSoundID_Vibrate);
+            dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(.15f * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+                [hexa.imageView setImage:nil];
+            });
+            
+        }  break;
+        case 2:
+            [[HDSoundManager sharedManager] playSound:HDE3];
+            [[_hexaArray objectAtIndex:3] setEnabled:YES];
+            [self _animateTapLabelPosition];
+            break;
+        case 3:
+            AudioServicesPlaySystemSound(kSystemSoundID_Vibrate);
+            [[HDSoundManager sharedManager] playSound:HDF3];
+            [ADelegate performSelector:@selector(presentContainerViewController) withObject:nil afterDelay:.3f];
+            break;
+    }
+    [_hexaView setUserInteractionEnabled:NO];
+}
+
+- (void)_performRotationOnView:(UIView *)view
+{
+    CABasicAnimation *rotate = [CABasicAnimation animationWithKeyPath:@"transform.rotation.z"];
+    [rotate setDuration:.3];
+    [rotate setFromValue:@0];
+    [rotate setToValue:@(M_PI * 4)];
+    [view.layer addAnimation:rotate forKey:@"rotate"];
+}
+
+- (void)_animateTapLabelPosition
+{
+    [UIView animateWithDuration:.3f
+                     animations:^{
+                         CGRect tapRect = self.tapLabelsContainer.frame;
+                         tapRect.origin.y += kHexaSize;
+                         [self.tapLabelsContainer setFrame:tapRect];
+                     }];
 }
 
 - (void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
-    [self.beginGame setAlpha:0.0f];
+    
+    CGPoint tapCenter = CGPointMake(
+                                    CGRectGetMidX(self.view.bounds),
+                                    CGRectGetMidY(self.view.bounds) - ((CGFloat)kHexaCount - 1) / 2 * kHexaSize
+                                    );
+    [self.tapLabelsContainer setCenter:tapCenter];
+    
+    // Since this is the root VC, return to default state before view shown, view will never be set to nil
+    NSUInteger index = 0;
+    for (HDHexagonView *hexa in _hexaArray) {
+        
+        [hexa setEnabled:(index == 0)];
+        [hexa setUserInteractionEnabled:YES];
+        
+        CAShapeLayer *hexaLayer = (CAShapeLayer *)hexa.layer;
+        [hexaLayer setFillColor:[[UIColor flatMidnightBlueColor] CGColor]];
+        
+        switch (index) {
+            case 0:
+                [hexaLayer setStrokeColor:[[UIColor whiteColor] CGColor]];
+                break;
+            case 1:
+                [hexaLayer setStrokeColor:[[UIColor flatEmeraldColor] CGColor]];
+                break;
+            case 2:
+                [hexaLayer setStrokeColor:[[UIColor flatPeterRiverColor] CGColor]];
+                break;
+            case 3:
+                [hexaLayer setStrokeColor:[[UIColor flatEmeraldColor] CGColor]];
+                [hexa.imageView setImage:[UIImage imageNamed:@"Lock45"]];
+                break;
+        }
+        index++;
+    }
 }
 
 - (void)viewDidAppear:(BOOL)animated
 {
     [super viewDidAppear:animated];
     
-    dispatch_block_t animateStart = ^{
-        [self.beginGame setAlpha:1.0f];
-    };
-    [UIView animateWithDuration:.5f animations:animateStart];
+    for (UILabel *label in self.tapLabelsContainer.subviews) {
+        CABasicAnimation *scale = [CABasicAnimation animationWithKeyPath:@"transform.scale.x"];
+        [scale setByValue:@.3f];
+        [scale setToValue:@1.3f];
+        [scale setDuration:.4f];
+        [scale setRepeatCount:MAXFLOAT];
+        [scale setAutoreverses:YES];
+        [label.layer addAnimation:scale forKey:@"scale"];
+    }
 }
 
 - (void)didReceiveMemoryWarning

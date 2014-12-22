@@ -116,7 +116,7 @@ NSString * const TRIPLE_KEY = @"triple";
         case HDHexagonTypeDouble:
             switch (_recievedTouchesCount) {
                 case 1:{
-                    [[NSNotificationCenter defaultCenter] postNotificationName:@"transform" object:nil];
+                    [[NSNotificationCenter defaultCenter] postNotificationName:HDAnimateLabelNotification object:nil];
                     SKShapeNode *shapeNode = (SKShapeNode *)[self.node childNodeWithName:DOUBLE_KEY];
                     [shapeNode removeFromParent];
                 } break;
@@ -127,11 +127,11 @@ NSString * const TRIPLE_KEY = @"triple";
         case HDHexagonTypeTriple:
             switch (_recievedTouchesCount) {
                 case 1:
-                    [[NSNotificationCenter defaultCenter] postNotificationName:@"transform" object:nil];
+                    [[NSNotificationCenter defaultCenter] postNotificationName:HDAnimateLabelNotification object:nil];
                     [[[(SKShapeNode *)[[self.node children] lastObject] children] firstObject] removeFromParent];
                     break;
                 case 2:
-                    [[NSNotificationCenter defaultCenter] postNotificationName:@"transform" object:nil];
+                    [[NSNotificationCenter defaultCenter] postNotificationName:HDAnimateLabelNotification object:nil];
                     [self.node removeAllChildren];
                     break;
                 case 3:
@@ -165,7 +165,7 @@ NSString * const TRIPLE_KEY = @"triple";
     
     if (selected) {
         
-        [[NSNotificationCenter defaultCenter] postNotificationName:@"UpdateCompletedTileCountNotification" object:nil];
+        [[NSNotificationCenter defaultCenter] postNotificationName:HDCompletedTileCountNotification object:nil];
         
         switch (self.type) {
             case HDHexagonTypeRegular:

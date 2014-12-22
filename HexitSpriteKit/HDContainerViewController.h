@@ -25,13 +25,15 @@
 @property (nonatomic, readonly) UIViewController *frontViewController;
 @property (nonatomic, readonly) UIViewController *rearViewController;
 
-@property (nonatomic, assign) BOOL navigationBarHidden;
+@property (nonatomic, readonly) BOOL isExpanded;
+@property (nonatomic, getter=isNavigationBarHidden, assign) BOOL navigationBarHidden;
 
 - (instancetype)initWithGameViewController:(UIViewController *)gameController
                         rearViewController:(UIViewController *)rearController NS_DESIGNATED_INITIALIZER;
 
 - (void)setFrontViewController:(UIViewController *)controller animated:(BOOL)animated;
-- (void)toggleHDMenuViewController;
+- (void)toggleMenuViewControllerWithCompletion:(dispatch_block_t)completion;
+- (void)toggleMenuViewController;
 
 @end
 

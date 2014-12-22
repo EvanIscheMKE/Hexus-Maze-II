@@ -14,6 +14,7 @@
 @property (nonatomic, assign) NSInteger levelIndex;
 @property (nonatomic, strong) HDGridManager *gridManager;
 
+- (void)performExitAnimationsWithCompletion:(dispatch_block_t)completion;
 - (void)layoutNodesWithGrid:(NSArray *)grid;
 - (void)layoutIndicatorTiles;
 - (void)restart;

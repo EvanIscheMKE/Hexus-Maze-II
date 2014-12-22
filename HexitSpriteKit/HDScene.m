@@ -25,8 +25,6 @@
 
 #define HEXAGON_TITLE(x) [NSString stringWithFormat:@"HEXAGON%ld",x]
 
-#define kBackgroundHexSize [[UIScreen mainScreen] bounds].size.width / 3
-
 #define kTileSize [[UIScreen mainScreen] bounds].size.width / (NumberOfColumns - 1)
 
 NSString * const HDSoundActionKey = @"SOUND_KEY";
@@ -212,7 +210,11 @@ static const CGFloat kTileHeightInsetMultiplier = .845f;
         [hexagon recievedTouches];
         
         HDSpriteNode *sprite = [self indicatorTileUnderHexagon:hexagon];
-        [sprite addChild:[SKEmitterNode hexaEmitterWithColor:hexagon.node.strokeColor scale:hexagon.selected ? .9f : .5f]];
+        
+        // Check if FX are on before adding emitter effects
+        if ([[HDSettingsManager sharedManager] fx]) {
+             [sprite addChild:[SKEmitterNode hexaEmitterWithColor:hexagon.node.strokeColor scale:hexagon.selected ? .9f : .5f]];
+        }
         
         [self _checkGameState:hexagon];
         [self _playSoundForHexagon:hexagon withVibration:YES];
@@ -293,6 +295,7 @@ static const CGFloat kTileHeightInsetMultiplier = .845f;
     if ([self _checkIfAllHexagonsAreSelected] == 0) {
         
         [self setAnimating:YES];
+        
         [[NSNotificationCenter defaultCenter] postNotificationName:HDToggleControlsNotification object:nil];
         
         if ([[HDSettingsManager sharedManager] vibe]) {
@@ -309,6 +312,7 @@ static const CGFloat kTileHeightInsetMultiplier = .845f;
         __block NSInteger count = 0;
         for (HDHexagon *hexagon in shuffle) {
             
+            // Setup Actions
             SKAction *scaleUp  = [SKAction scaleTo:1.15f duration:.10f];
             SKAction *scale    = [SKAction scaleTo:0.0f duration:0.10f];
             SKAction *wait     = [SKAction waitForDuration:delay];
@@ -421,7 +425,7 @@ static const CGFloat kTileHeightInsetMultiplier = .845f;
 {
     self.countDownForSoundIndex = NO;
     
-    [[NSNotificationCenter defaultCenter] postNotificationName:@"clearCompletedTileCountNotification" object:nil];
+    [[NSNotificationCenter defaultCenter] postNotificationName:HDClearTileCountNotification object:nil];
     
     // Return used starting tile count to ZERO
     _soundIndex = 0;
@@ -481,6 +485,21 @@ static const CGFloat kTileHeightInsetMultiplier = .845f;
             [self setAnimating:NO];
         }];
     }];
+}
+
+- (void)performExitAnimationsWithCompletion:(dispatch_block_t)completion
+{
+    // Clear out lower indicator layer
+    for (HDSpriteNode *hexagonSprite in self.tileLayer.children) {
+        [hexagonSprite updateTextureFromHexagonType:HDHexagonTypeNone];
+    }
+    
+    // Create a new array of shuffled _hexagons objects
+    __block NSMutableArray *shuffledTiles = [_hexagons mutableCopy];
+    [shuffledTiles shuffle];
+    
+    // Animate out
+    [HDHelper completionAnimationWithTiles:shuffledTiles completion:completion];
 }
 
 #pragma mark -

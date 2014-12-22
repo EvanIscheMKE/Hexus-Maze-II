@@ -11,6 +11,11 @@ static inline CGFloat DEGREES_RADIANS(CGFloat degrees){
 }
 
 //keys
+extern NSString * const HDIntroAnimationNotification;
+extern NSString * const HDAnimateLabelNotification;
+extern NSString * const HDCompletedTileCountNotification;
+extern NSString * const HDClearTileCountNotification;
+
 extern NSString * const HDNextLevelNotification;
 extern NSString * const HDToggleControlsNotification;
 extern NSString * const HDSoundNotification;
@@ -33,10 +38,15 @@ extern NSString * const HDBubbleSoundKey;
 extern NSString * const HDHexGridKey;
 
 extern NSString * const HDButtonSound;
+extern NSString * const HDSwipeSound;
+extern NSString * const HDC3;
+extern NSString * const HDD3;
+extern NSString * const HDE3;
+extern NSString * const HDF3;
 
 #define GILLSANS(x)       [UIFont fontWithName:@"GillSans" size:x]
 #define GILLSANS_LIGHT(x) [UIFont fontWithName:@"GillSans-Light" size:x]
 
 #define LEVEL_URL(x) [NSString stringWithFormat:@"Grid-%ld",x]
 
-#define SOUNDS_TO_PRELOAD @[HDButtonSound,@"Swooshed.mp3"]
+#define SOUNDS_TO_PRELOAD @[HDButtonSound, HDSwipeSound, HDC3, HDD3, HDE3, HDF3]

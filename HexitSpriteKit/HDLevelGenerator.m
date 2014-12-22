@@ -129,7 +129,7 @@
         _HDHexaNode *rootNode = [_HDHexaNode new];
         rootNode.indexPath = [NSIndexPath indexPathForRow:4 inSection:9];
         nodeMap[rootNode.indexPath] = rootNode;
-        rootNode.numberOfHitsNeeded = 9;
+        rootNode.numberOfHitsNeeded = 2;
         
         _HDHexaNode *currentNode = rootNode;
         

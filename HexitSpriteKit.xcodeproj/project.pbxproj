@@ -49,10 +49,10 @@
 		386CF62D1A3A250D006A8381 /* Mellowtron.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 386CF62C1A3A250D006A8381 /* Mellowtron.mp3 */; };
 		386CF62F1A3B6FA5006A8381 /* win.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 386CF62E1A3B6FA5006A8381 /* win.mp3 */; };
 		3874B9A61A20736000400CEB /* HDAlertNode.m in Sources */ = {isa = PBXBuildFile; fileRef = 3874B9A51A20736000400CEB /* HDAlertNode.m */; };
+		389E94F01A44A2F000F2DF05 /* HDGridScrollView.m in Sources */ = {isa = PBXBuildFile; fileRef = 389E94EF1A44A2F000F2DF05 /* HDGridScrollView.m */; };
+		389E94F41A45618B00F2DF05 /* Reset@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 389E94F31A45618B00F2DF05 /* Reset@2x.png */; };
 		38ABD5F21A4153A800C4321D /* HDHexagonView.m in Sources */ = {isa = PBXBuildFile; fileRef = 38ABD5F11A4153A800C4321D /* HDHexagonView.m */; };
 		38ABD5F71A420A3500C4321D /* HDHexagonControl.m in Sources */ = {isa = PBXBuildFile; fileRef = 38ABD5F61A420A3500C4321D /* HDHexagonControl.m */; };
-		38ABD5FB1A422B0900C4321D /* Share@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 38ABD5FA1A422B0900C4321D /* Share@2x.png */; };
-		38ABD5FF1A422CAA00C4321D /* Achievements@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 38ABD5FE1A422CAA00C4321D /* Achievements@2x.png */; };
 		38BAF5281A1FE10B004D5660 /* GameKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 38BAF5271A1FE10B004D5660 /* GameKit.framework */; };
 		38BAF5411A1FFC64004D5660 /* HDGridViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 38BAF5401A1FFC64004D5660 /* HDGridViewController.m */; };
 		38BDDCBF1A20F93A005035EE /* Grid-31.json in Resources */ = {isa = PBXBuildFile; fileRef = 38BDDCBE1A20F93A005035EE /* Grid-31.json */; };
@@ -219,12 +219,13 @@
 		386CF62E1A3B6FA5006A8381 /* win.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = win.mp3; sourceTree = "<group>"; };
 		3874B9A41A20736000400CEB /* HDAlertNode.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HDAlertNode.h; sourceTree = "<group>"; };
 		3874B9A51A20736000400CEB /* HDAlertNode.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HDAlertNode.m; sourceTree = "<group>"; };
+		389E94EE1A44A2F000F2DF05 /* HDGridScrollView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HDGridScrollView.h; sourceTree = "<group>"; };
+		389E94EF1A44A2F000F2DF05 /* HDGridScrollView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HDGridScrollView.m; sourceTree = "<group>"; };
+		389E94F31A45618B00F2DF05 /* Reset@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Reset@2x.png"; sourceTree = "<group>"; };
 		38ABD5F01A4153A800C4321D /* HDHexagonView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HDHexagonView.h; sourceTree = "<group>"; };
 		38ABD5F11A4153A800C4321D /* HDHexagonView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HDHexagonView.m; sourceTree = "<group>"; };
 		38ABD5F51A420A3500C4321D /* HDHexagonControl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HDHexagonControl.h; sourceTree = "<group>"; };
 		38ABD5F61A420A3500C4321D /* HDHexagonControl.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HDHexagonControl.m; sourceTree = "<group>"; };
-		38ABD5FA1A422B0900C4321D /* Share@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Share@2x.png"; sourceTree = "<group>"; };
-		38ABD5FE1A422CAA00C4321D /* Achievements@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Achievements@2x.png"; sourceTree = "<group>"; };
 		38BAF5271A1FE10B004D5660 /* GameKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = GameKit.framework; path = System/Library/Frameworks/GameKit.framework; sourceTree = SDKROOT; };
 		38BAF53F1A1FFC64004D5660 /* HDGridViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HDGridViewController.h; sourceTree = "<group>"; };
 		38BAF5401A1FFC64004D5660 /* HDGridViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HDGridViewController.m; sourceTree = "<group>"; };
@@ -573,8 +574,7 @@
 		38C0A8351A07251600C552F1 = {
 			isa = PBXGroup;
 			children = (
-				38ABD5FE1A422CAA00C4321D /* Achievements@2x.png */,
-				38ABD5FA1A422B0900C4321D /* Share@2x.png */,
+				389E94F31A45618B00F2DF05 /* Reset@2x.png */,
 				38C0A8401A07251700C552F1 /* HexitSpriteKit */,
 				38C0A85A1A07251700C552F1 /* HexitSpriteKitTests */,
 				38C0A8671A07252E00C552F1 /* Frameworks */,
@@ -724,6 +724,8 @@
 				38ABD5F11A4153A800C4321D /* HDHexagonView.m */,
 				38ABD5F51A420A3500C4321D /* HDHexagonControl.h */,
 				38ABD5F61A420A3500C4321D /* HDHexagonControl.m */,
+				389E94EE1A44A2F000F2DF05 /* HDGridScrollView.h */,
+				389E94EF1A44A2F000F2DF05 /* HDGridScrollView.m */,
 			);
 			name = Views;
 			sourceTree = "<group>";
@@ -896,6 +898,7 @@
 				386CF60A1A383C38006A8381 /* E6.m4a in Resources */,
 				38BDDCF61A20FBA2005035EE /* Grid-57.json in Resources */,
 				386CF6131A383C38006A8381 /* C5.m4a in Resources */,
+				389E94F41A45618B00F2DF05 /* Reset@2x.png in Resources */,
 				38BDDCC51A20F965005035EE /* Grid-34.json in Resources */,
 				38BDDCF21A20FB80005035EE /* Grid-55.json in Resources */,
 				38BDDCBF1A20F93A005035EE /* Grid-31.json in Resources */,
@@ -948,7 +951,6 @@
 				38BDDCF81A20FBAA005035EE /* Grid-58.json in Resources */,
 				38C67D171A0AE3C10038526C /* Grid-23.json in Resources */,
 				386CF6051A383C38006A8381 /* C2.m4a in Resources */,
-				38ABD5FB1A422B0900C4321D /* Share@2x.png in Resources */,
 				386CF60E1A383C38006A8381 /* A5.m4a in Resources */,
 				38BDDCCD1A20F9B1005035EE /* Grid-38.json in Resources */,
 				38C67D311A0B149F0038526C /* 104947__glaneur-de-sons__bubble-8.wav in Resources */,
@@ -972,7 +974,6 @@
 				38BDDCEC1A20FB67005035EE /* Grid-52.json in Resources */,
 				38C67D051A0ACE620038526C /* Grid-14.json in Resources */,
 				38BDDCDF1A20FA29005035EE /* Grid-47.json in Resources */,
-				38ABD5FF1A422CAA00C4321D /* Achievements@2x.png in Resources */,
 				38BDDCD31A20F9D2005035EE /* Grid-41.json in Resources */,
 				386CF60B1A383C38006A8381 /* D6.m4a in Resources */,
 				38C122411A2C2EDE00224B33 /* Swooshed.mp3 in Resources */,
@@ -1014,6 +1015,7 @@
 				38C0A8721A07348400C552F1 /* SKColor+HDColor.m in Sources */,
 				38F9191B1A37847900249361 /* UIBezierPath+HDBezierPath.m in Sources */,
 				38F5A6BD1A08014F0036750A /* HDHexagon.m in Sources */,
+				389E94F01A44A2F000F2DF05 /* HDGridScrollView.m in Sources */,
 				38C67CE31A0ABD050038526C /* HDHelper.m in Sources */,
 				38C67D281A0AEA490038526C /* HDMapManager.m in Sources */,
 				38521F3D1A19A20600484830 /* HDSpriteNode.m in Sources */,
@@ -1126,8 +1128,8 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				CODE_SIGN_IDENTITY = "iPhone Developer";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				CODE_SIGN_IDENTITY = "iPhone Developer: Evan Ische (WTTNRX49WX)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Evan Ische (WTTNRX49WX)";
 				GCC_PREFIX_HEADER = "HexitSpriteKit/Hexit-Prefix.pch";
 				INFOPLIST_FILE = HexitSpriteKit/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
@@ -1141,8 +1143,8 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				CODE_SIGN_IDENTITY = "iPhone Developer";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				CODE_SIGN_IDENTITY = "iPhone Distribution: Evan Ische (4AUVF6937L)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: Evan Ische (4AUVF6937L)";
 				GCC_PREFIX_HEADER = "HexitSpriteKit/Hexit-Prefix.pch";
 				INFOPLIST_FILE = HexitSpriteKit/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 7.0;

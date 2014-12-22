@@ -23,7 +23,7 @@
 
 - (void)navigateToNewLevel:(NSInteger)level;
 
-- (void)presentLevelViewController;
+- (void)presentContainerViewController;
 
 - (void)navigateToLevelController;
 

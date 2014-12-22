@@ -296,7 +296,7 @@ NSString * const ACHIEVEMENTS      = @"Achievements";
             }];
         } else if ([node.name isEqualToString:SHAREIMAGE]) {
             [ADelegate presentShareViewController];
-        } else if ([node.name isEqualToString:LEADERBOARDIMAGE]) {
+        } else if ([node.name isEqualToString:ACHIEVEMENTS]) {
             [ADelegate presentGameCenterControllerForState:GKGameCenterViewControllerStateAchievements];
         } else if ([node.name isEqualToString:LEADERBOARDIMAGE]) {
             [ADelegate presentGameCenterControllerForState:GKGameCenterViewControllerStateLeaderboards];

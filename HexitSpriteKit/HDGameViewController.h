@@ -10,8 +10,6 @@
 
 @interface HDGameViewController : UIViewController
 
-@property (nonatomic, getter=isExpanded, assign) BOOL expanded;
-
 - (instancetype)initWithLevel:(NSInteger)level;
 - (instancetype)initWithRandomlyGeneratedLevel;
 

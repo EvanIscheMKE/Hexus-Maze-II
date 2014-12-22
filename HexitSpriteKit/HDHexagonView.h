@@ -8,6 +8,23 @@
 
 #import <UIKit/UIKit.h>
 
-@interface HDHexagonView : UIButton
-- (id)initWithFrame:(CGRect)frame strokeColor:(UIColor *)strokeColor;
+typedef NS_ENUM(NSUInteger, HDHexagonType) {
+    HDHexagonTypeFlat  = 0,
+    HDHexagonTypePoint = 1,
+};
+
+typedef NS_ENUM(NSUInteger, HDHexagonState) {
+    HDHexagonStateLocked   = 0,
+    HDHexagonStateUnlocked  = 1,
+    HDHexagonStateCompleted = 2,
+};
+
+@interface HDHexagonView : UIView
+@property (nonatomic, getter=isEnabled, assign) BOOL enabled;
+
+@property (nonatomic, strong) UIView *container;
+@property (nonatomic, strong) UILabel *indexLabel;
+@property (nonatomic, strong) UIImageView *imageView;
+- (void)setState:(HDHexagonState)state index:(NSInteger)index;
+- (instancetype)initWithFrame:(CGRect)frame type:(HDHexagonType)type strokeColor:(UIColor *)strokeColor;
 @end

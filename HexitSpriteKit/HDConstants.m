@@ -8,6 +8,11 @@
 
 
 // Notification Keys
+NSString * const HDIntroAnimationNotification     = @"performIntroAnimations";
+NSString * const HDAnimateLabelNotification       = @"animateCompletedCountLabelY";
+NSString * const HDCompletedTileCountNotification = @"UpdateCompletedTileCountNotification";
+NSString * const HDClearTileCountNotification     = @"clearCompletedTileCountNotification";
+
 NSString * const HDNextLevelNotification      = @"NextLevelNotification";
 NSString * const HDToggleControlsNotification = @"ToggleControlsNotification";
 NSString * const HDSoundNotification          = @"TileWasSoundNotification";
@@ -30,5 +35,9 @@ NSString * const HDSoundkey          = @"soundKey";
 NSString * const HDVibrationKey      = @"vibrationKey";
 
 // Sound Keys
-NSString * const HDButtonSound    = @"D4.m4a";
-NSString * const hdBubbleSoundKey = @"104947__glaneur-de-sons__bubble-8.wav";
+NSString * const HDButtonSound = @"D4.m4a";
+NSString * const HDSwipeSound  = @"Swooshed.mp3";
+NSString * const HDC3         = @"C3.m4a";
+NSString * const HDD3         = @"D3.m4a";
+NSString * const HDE3         = @"E3.m4a";
+NSString * const HDF3         = @"F3.m4a";
