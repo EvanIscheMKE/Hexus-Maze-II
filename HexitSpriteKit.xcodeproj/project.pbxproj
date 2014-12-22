@@ -51,6 +51,15 @@
 		3874B9A61A20736000400CEB /* HDAlertNode.m in Sources */ = {isa = PBXBuildFile; fileRef = 3874B9A51A20736000400CEB /* HDAlertNode.m */; };
 		389E94F01A44A2F000F2DF05 /* HDGridScrollView.m in Sources */ = {isa = PBXBuildFile; fileRef = 389E94EF1A44A2F000F2DF05 /* HDGridScrollView.m */; };
 		389E94F41A45618B00F2DF05 /* Reset@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 389E94F31A45618B00F2DF05 /* Reset@2x.png */; };
+		389E94F61A47DE7F00F2DF05 /* CoreMotion.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 389E94F51A47DE7F00F2DF05 /* CoreMotion.framework */; };
+		389E94F81A488D5100F2DF05 /* Grid-76.json in Resources */ = {isa = PBXBuildFile; fileRef = 389E94F71A488D5100F2DF05 /* Grid-76.json */; };
+		389E94FA1A488D5A00F2DF05 /* Grid-77.json in Resources */ = {isa = PBXBuildFile; fileRef = 389E94F91A488D5A00F2DF05 /* Grid-77.json */; };
+		389E94FC1A488D6300F2DF05 /* Grid-78.json in Resources */ = {isa = PBXBuildFile; fileRef = 389E94FB1A488D6300F2DF05 /* Grid-78.json */; };
+		389E94FE1A488D6E00F2DF05 /* Grid-79.json in Resources */ = {isa = PBXBuildFile; fileRef = 389E94FD1A488D6E00F2DF05 /* Grid-79.json */; };
+		389E95001A488D7800F2DF05 /* Grid-80.json in Resources */ = {isa = PBXBuildFile; fileRef = 389E94FF1A488D7800F2DF05 /* Grid-80.json */; };
+		389E95021A488D8300F2DF05 /* Grid-81.json in Resources */ = {isa = PBXBuildFile; fileRef = 389E95011A488D8300F2DF05 /* Grid-81.json */; };
+		389E95041A488D8B00F2DF05 /* Grid-82.json in Resources */ = {isa = PBXBuildFile; fileRef = 389E95031A488D8B00F2DF05 /* Grid-82.json */; };
+		389E95061A488D9800F2DF05 /* Grid-83.json in Resources */ = {isa = PBXBuildFile; fileRef = 389E95051A488D9800F2DF05 /* Grid-83.json */; };
 		38ABD5F21A4153A800C4321D /* HDHexagonView.m in Sources */ = {isa = PBXBuildFile; fileRef = 38ABD5F11A4153A800C4321D /* HDHexagonView.m */; };
 		38ABD5F71A420A3500C4321D /* HDHexagonControl.m in Sources */ = {isa = PBXBuildFile; fileRef = 38ABD5F61A420A3500C4321D /* HDHexagonControl.m */; };
 		38BAF5281A1FE10B004D5660 /* GameKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 38BAF5271A1FE10B004D5660 /* GameKit.framework */; };
@@ -158,7 +167,6 @@
 		38F5A6B61A076B960036750A /* HDLevel.m in Sources */ = {isa = PBXBuildFile; fileRef = 38F5A6B51A076B960036750A /* HDLevel.m */; };
 		38F5A6B91A07F2FA0036750A /* Grid-1.json in Resources */ = {isa = PBXBuildFile; fileRef = 38F5A6B71A07F2FA0036750A /* Grid-1.json */; };
 		38F5A6BD1A08014F0036750A /* HDHexagon.m in Sources */ = {isa = PBXBuildFile; fileRef = 38F5A6BC1A08014F0036750A /* HDHexagon.m */; };
-		38F9191B1A37847900249361 /* UIBezierPath+HDBezierPath.m in Sources */ = {isa = PBXBuildFile; fileRef = 38F9191A1A37847900249361 /* UIBezierPath+HDBezierPath.m */; };
 		38F919251A37BF6A00249361 /* iAd.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 38F919241A37BF6A00249361 /* iAd.framework */; };
 		38FDF9B51A1BEF1F005CCFE1 /* HDSettingsManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 38FDF9B41A1BEF1F005CCFE1 /* HDSettingsManager.m */; };
 /* End PBXBuildFile section */
@@ -222,6 +230,15 @@
 		389E94EE1A44A2F000F2DF05 /* HDGridScrollView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HDGridScrollView.h; sourceTree = "<group>"; };
 		389E94EF1A44A2F000F2DF05 /* HDGridScrollView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HDGridScrollView.m; sourceTree = "<group>"; };
 		389E94F31A45618B00F2DF05 /* Reset@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Reset@2x.png"; sourceTree = "<group>"; };
+		389E94F51A47DE7F00F2DF05 /* CoreMotion.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreMotion.framework; path = System/Library/Frameworks/CoreMotion.framework; sourceTree = SDKROOT; };
+		389E94F71A488D5100F2DF05 /* Grid-76.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = "Grid-76.json"; sourceTree = "<group>"; };
+		389E94F91A488D5A00F2DF05 /* Grid-77.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = "Grid-77.json"; sourceTree = "<group>"; };
+		389E94FB1A488D6300F2DF05 /* Grid-78.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = "Grid-78.json"; sourceTree = "<group>"; };
+		389E94FD1A488D6E00F2DF05 /* Grid-79.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = "Grid-79.json"; sourceTree = "<group>"; };
+		389E94FF1A488D7800F2DF05 /* Grid-80.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = "Grid-80.json"; sourceTree = "<group>"; };
+		389E95011A488D8300F2DF05 /* Grid-81.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = "Grid-81.json"; sourceTree = "<group>"; };
+		389E95031A488D8B00F2DF05 /* Grid-82.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = "Grid-82.json"; sourceTree = "<group>"; };
+		389E95051A488D9800F2DF05 /* Grid-83.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = "Grid-83.json"; sourceTree = "<group>"; };
 		38ABD5F01A4153A800C4321D /* HDHexagonView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HDHexagonView.h; sourceTree = "<group>"; };
 		38ABD5F11A4153A800C4321D /* HDHexagonView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HDHexagonView.m; sourceTree = "<group>"; };
 		38ABD5F51A420A3500C4321D /* HDHexagonControl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HDHexagonControl.h; sourceTree = "<group>"; };
@@ -357,8 +374,6 @@
 		38F5A6B71A07F2FA0036750A /* Grid-1.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = "Grid-1.json"; sourceTree = "<group>"; };
 		38F5A6BB1A08014F0036750A /* HDHexagon.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HDHexagon.h; sourceTree = "<group>"; };
 		38F5A6BC1A08014F0036750A /* HDHexagon.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HDHexagon.m; sourceTree = "<group>"; };
-		38F919191A37847900249361 /* UIBezierPath+HDBezierPath.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIBezierPath+HDBezierPath.h"; sourceTree = "<group>"; };
-		38F9191A1A37847900249361 /* UIBezierPath+HDBezierPath.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIBezierPath+HDBezierPath.m"; sourceTree = "<group>"; };
 		38F919241A37BF6A00249361 /* iAd.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = iAd.framework; path = System/Library/Frameworks/iAd.framework; sourceTree = SDKROOT; };
 		38FDF9B31A1BEF1F005CCFE1 /* HDSettingsManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HDSettingsManager.h; sourceTree = "<group>"; };
 		38FDF9B41A1BEF1F005CCFE1 /* HDSettingsManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HDSettingsManager.m; sourceTree = "<group>"; };
@@ -369,6 +384,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				389E94F61A47DE7F00F2DF05 /* CoreMotion.framework in Frameworks */,
 				386CF5D91A383A98006A8381 /* AudioToolbox.framework in Frameworks */,
 				38F919251A37BF6A00249361 /* iAd.framework in Frameworks */,
 				38C122481A2C519D00224B33 /* QuartzCore.framework in Frameworks */,
@@ -640,6 +656,7 @@
 		38C0A8671A07252E00C552F1 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				389E94F51A47DE7F00F2DF05 /* CoreMotion.framework */,
 				386CF5D81A383A98006A8381 /* AudioToolbox.framework */,
 				38F919241A37BF6A00249361 /* iAd.framework */,
 				38C122471A2C519D00224B33 /* QuartzCore.framework */,
@@ -660,8 +677,6 @@
 				38C67CDC1A0AB9350038526C /* UIColor+FlatColors.m */,
 				38C0A8701A07348400C552F1 /* SKColor+HDColor.h */,
 				38C0A8711A07348400C552F1 /* SKColor+HDColor.m */,
-				38F919191A37847900249361 /* UIBezierPath+HDBezierPath.h */,
-				38F9191A1A37847900249361 /* UIBezierPath+HDBezierPath.m */,
 				386CF6271A3982BA006A8381 /* SKEmitterNode+EmitterAdditions.h */,
 				386CF6281A3982BA006A8381 /* SKEmitterNode+EmitterAdditions.m */,
 			);
@@ -686,6 +701,14 @@
 				38C122351A2C1CBD00224B33 /* Grid-73.json */,
 				38C122371A2C1CC300224B33 /* Grid-74.json */,
 				38C122391A2C1CCB00224B33 /* Grid-75.json */,
+				389E94F71A488D5100F2DF05 /* Grid-76.json */,
+				389E94F91A488D5A00F2DF05 /* Grid-77.json */,
+				389E94FB1A488D6300F2DF05 /* Grid-78.json */,
+				389E94FD1A488D6E00F2DF05 /* Grid-79.json */,
+				389E94FF1A488D7800F2DF05 /* Grid-80.json */,
+				389E95011A488D8300F2DF05 /* Grid-81.json */,
+				389E95031A488D8B00F2DF05 /* Grid-82.json */,
+				389E95051A488D9800F2DF05 /* Grid-83.json */,
 			);
 			name = "EXTENDED TRIPLE";
 			sourceTree = "<group>";
@@ -876,8 +899,10 @@
 				38BDDCDB1A20FA07005035EE /* Grid-45.json in Resources */,
 				38C67D211A0AE3FD0038526C /* Grid-28.json in Resources */,
 				386CF6021A383C38006A8381 /* F2.m4a in Resources */,
+				389E94FC1A488D6300F2DF05 /* Grid-78.json in Resources */,
 				386CF61F1A383C38006A8381 /* E3.m4a in Resources */,
 				38C67CF11A0ACE150038526C /* Grid-4.json in Resources */,
+				389E95001A488D7800F2DF05 /* Grid-80.json in Resources */,
 				386CF6071A383C38006A8381 /* A6.m4a in Resources */,
 				386CF6191A383C38006A8381 /* D4.m4a in Resources */,
 				386CF62D1A3A250D006A8381 /* Mellowtron.mp3 in Resources */,
@@ -888,15 +913,18 @@
 				386CF6211A383C38006A8381 /* C3.m4a in Resources */,
 				38C67D0B1A0AE3890038526C /* Grid-17.json in Resources */,
 				38BDDCE51A20FA50005035EE /* Grid-50.json in Resources */,
+				389E94FA1A488D5A00F2DF05 /* Grid-77.json in Resources */,
 				38C122301A2C1CA200224B33 /* Grid-70.json in Resources */,
 				38C67CFF1A0ACE4D0038526C /* Grid-11.json in Resources */,
 				38C67D1F1A0AE3F30038526C /* Grid-27.json in Resources */,
 				38C122201A2C1C3D00224B33 /* Grid-62.json in Resources */,
 				38C67CF31A0ACE1D0038526C /* Grid-5.json in Resources */,
+				389E95061A488D9800F2DF05 /* Grid-83.json in Resources */,
 				38BDDCD51A20F9E4005035EE /* Grid-42.json in Resources */,
 				38C122341A2C1CB500224B33 /* Grid-72.json in Resources */,
 				386CF60A1A383C38006A8381 /* E6.m4a in Resources */,
 				38BDDCF61A20FBA2005035EE /* Grid-57.json in Resources */,
+				389E95021A488D8300F2DF05 /* Grid-81.json in Resources */,
 				386CF6131A383C38006A8381 /* C5.m4a in Resources */,
 				389E94F41A45618B00F2DF05 /* Reset@2x.png in Resources */,
 				38BDDCC51A20F965005035EE /* Grid-34.json in Resources */,
@@ -939,6 +967,7 @@
 				386CF61A1A383C38006A8381 /* C4.m4a in Resources */,
 				38C67CF51A0ACE230038526C /* Grid-6.json in Resources */,
 				38BDDCC11A20F943005035EE /* Grid-32.json in Resources */,
+				389E95041A488D8B00F2DF05 /* Grid-82.json in Resources */,
 				38C1222E1A2C1C9400224B33 /* Grid-69.json in Resources */,
 				38C122281A2C1C6000224B33 /* Grid-66.json in Resources */,
 				386CF6111A383C38006A8381 /* E5.m4a in Resources */,
@@ -972,9 +1001,11 @@
 				386CF6181A383C38006A8381 /* E4.m4a in Resources */,
 				386CF6121A383C38006A8381 /* D5.m4a in Resources */,
 				38BDDCEC1A20FB67005035EE /* Grid-52.json in Resources */,
+				389E94F81A488D5100F2DF05 /* Grid-76.json in Resources */,
 				38C67D051A0ACE620038526C /* Grid-14.json in Resources */,
 				38BDDCDF1A20FA29005035EE /* Grid-47.json in Resources */,
 				38BDDCD31A20F9D2005035EE /* Grid-41.json in Resources */,
+				389E94FE1A488D6E00F2DF05 /* Grid-79.json in Resources */,
 				386CF60B1A383C38006A8381 /* D6.m4a in Resources */,
 				38C122411A2C2EDE00224B33 /* Swooshed.mp3 in Resources */,
 				38C122381A2C1CC300224B33 /* Grid-74.json in Resources */,
@@ -1013,7 +1044,6 @@
 				38C67D2F1A0AF3960038526C /* NSMutableArray+UniqueAdditions.m in Sources */,
 				38C0A8441A07251700C552F1 /* main.m in Sources */,
 				38C0A8721A07348400C552F1 /* SKColor+HDColor.m in Sources */,
-				38F9191B1A37847900249361 /* UIBezierPath+HDBezierPath.m in Sources */,
 				38F5A6BD1A08014F0036750A /* HDHexagon.m in Sources */,
 				389E94F01A44A2F000F2DF05 /* HDGridScrollView.m in Sources */,
 				38C67CE31A0ABD050038526C /* HDHelper.m in Sources */,

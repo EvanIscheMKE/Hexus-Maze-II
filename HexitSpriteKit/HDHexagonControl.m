@@ -41,7 +41,7 @@ static const CGFloat kPageSpacing        = 34.0f;
 
 - (void)drawRect:(CGRect)rect
 {
-    const CGFloat kStartOriginX = ceilf(CGRectGetMidX(self.bounds) - ((self.numberOfPages - 1)/2) * kPageSpacing);
+    const CGFloat kStartOriginX = ceilf(CGRectGetMidX(self.bounds) - (((CGFloat)self.numberOfPages - 1)/2) * kPageSpacing);
     for (NSInteger page = 0; page < self.numberOfPages; page++) {
         
         CGPoint point = CGPointMake(kStartOriginX + (page * kPageSpacing), CGRectGetMidY(self.bounds));

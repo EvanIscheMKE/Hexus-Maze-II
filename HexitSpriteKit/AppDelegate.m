@@ -31,6 +31,10 @@ NSString * const iOS8AppStoreURLFormat = @"itms-apps://itunes.apple.com/app/id%d
 {
     [application setStatusBarHidden:YES];
     
+    NSError *sessionError = nil;
+    [[AVAudioSession sharedInstance] setCategory:AVAudioSessionCategoryAmbient error:&sessionError];
+    [[AVAudioSession sharedInstance] setActive:YES error:&sessionError];
+    
      self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
     [self.window setRootViewController:[HDWelcomeViewController new]];
     [self.window makeKeyAndVisible];
@@ -96,41 +100,17 @@ NSString * const iOS8AppStoreURLFormat = @"itms-apps://itunes.apple.com/app/id%d
 //    [self.containerController setFrontViewController:controller animated:YES];
 //}
 
+#pragma mark -
+#pragma mark - < SOUND LOOP >
+
 - (void)_prepareSoundLoop
 {
-    NSError *sessionError = nil;
-    [[AVAudioSession sharedInstance] setCategory:AVAudioSessionCategoryAmbient error:&sessionError];
-    [[AVAudioSession sharedInstance] setActive:YES error:&sessionError];
-    
     NSError *error = nil;
     NSString *path = [[NSBundle mainBundle] pathForResource:@"Mellowtron" ofType:@"mp3"];
     self.loop = [[AVAudioPlayer alloc] initWithContentsOfURL:[NSURL URLWithString:path] error:&error];
     [self.loop setNumberOfLoops:-1];
     [self.loop setVolume:.3f];
     [self.loop prepareToPlay];
-    [self.loop play];
-}
-
-#pragma mark -
-#pragma mark - <GKGameCenterControllerDelegate>
-
-- (void)gameCenterViewControllerDidFinish:(GKGameCenterViewController *)gameCenterViewController
-{
-    [self.containerController dismissViewControllerAnimated:YES completion:nil];
-}
-
-#pragma mark -
-#pragma mark - <HDContainerViewControllerDelegate>
-
-- (void)container:(HDContainerViewController *)container
-       transitionedFromController:(UIViewController *)fromController
-                     toController:(UIViewController *)toController
-{
-    if ([fromController isKindOfClass:[HDGridViewController class]] && [toController isKindOfClass:[HDGameViewController class]]) {
-        [(HDRearViewController *)self.containerController.rearViewController setGameInterfaceHidden:NO];
-    } else if ([toController isKindOfClass:[HDGridViewController class]] && [fromController isKindOfClass:[HDGameViewController class]]) {
-        [(HDRearViewController *)self.containerController.rearViewController setGameInterfaceHidden:YES];
-    }
 }
 
 - (void)setPlayLoop:(BOOL)playLoop
@@ -144,11 +124,17 @@ NSString * const iOS8AppStoreURLFormat = @"itms-apps://itunes.apple.com/app/id%d
     }
 }
 
+#pragma mark -
+#pragma mark - < RATE >
+
 - (void)rateHEXUS
 {
     NSURL *url = [NSURL URLWithString:iOS8AppStoreURLFormat];
     [[UIApplication sharedApplication] openURL:url];
 }
+
+#pragma mark -
+#pragma mark - < SHARE >
 
 - (void)presentShareViewController
 {
@@ -180,6 +166,28 @@ NSString * const iOS8AppStoreURLFormat = @"itms-apps://itunes.apple.com/app/id%d
     UIGraphicsEndImageContext();
     
     return screenShot;
+}
+
+#pragma mark -
+#pragma mark - <GKGameCenterControllerDelegate>
+
+- (void)gameCenterViewControllerDidFinish:(GKGameCenterViewController *)gameCenterViewController
+{
+    [self.containerController dismissViewControllerAnimated:YES completion:nil];
+}
+
+#pragma mark -
+#pragma mark - <HDContainerViewControllerDelegate>
+
+- (void)container:(HDContainerViewController *)container
+transitionedFromController:(UIViewController *)fromController
+     toController:(UIViewController *)toController
+{
+    if ([fromController isKindOfClass:[HDGridViewController class]] && [toController isKindOfClass:[HDGameViewController class]]) {
+        [(HDRearViewController *)self.containerController.rearViewController setGameInterfaceHidden:NO];
+    } else if ([toController isKindOfClass:[HDGridViewController class]] && [fromController isKindOfClass:[HDGameViewController class]]) {
+        [(HDRearViewController *)self.containerController.rearViewController setGameInterfaceHidden:YES];
+    }
 }
 
 

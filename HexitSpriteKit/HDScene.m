@@ -29,6 +29,7 @@
 
 NSString * const HDSoundActionKey = @"SOUND_KEY";
 
+static const CGFloat kPadding = 2.0f;
 static const CGFloat kTileHeightInsetMultiplier = .845f;
 @interface HDScene ()<HDHexagonDelegate, HDAlertnodeDelegate>
 
@@ -76,7 +77,7 @@ static const CGFloat kTileHeightInsetMultiplier = .845f;
         
         _selectedHexagons = [NSMutableArray array];
         
-        _sounds = [self _preloadSounds];
+        _sounds = [self _preloadedGameSounds];
         
         self.tileLayer = [SKNode node];
         [self addChild:self.tileLayer];
@@ -84,31 +85,24 @@ static const CGFloat kTileHeightInsetMultiplier = .845f;
         self.gameLayer = [SKNode node];
         [self addChild:self.gameLayer];
         
-        _minCenterX = MAXFLOAT;
-        _maxCenterX = 0.0f;
-        _minCenterY = MAXFLOAT;
-        _maxCenterY = 0.0f;
-        
     }
     return self;
 }
 
 - (void)layoutNodesWithGrid:(NSArray *)grid
 {
-    _soundIndex = 0;
-    _startingTileCount = 0;
-    _startingTilesUsed = 0;
+    [self _setup];
     
     _finishedTileCount = grid.count;
     
     _hexagons = [NSArray arrayWithArray:grid];
 
-    CGPathRef pathRef = [HDHelper hexagonPathForBounds:CGRectMake(0.0f, 0.0f, kTileSize - 2.0f, kTileSize - 2.0f)];
+    CGPathRef pathRef = [HDHelper hexagonPathForBounds:CGRectMake(0.0f, 0.0f, kTileSize - kPadding, kTileSize - kPadding)];
     
     NSInteger index = 0;
     for (HDHexagon *hexagon in grid) {
     
-        // Create
+        // For each each hexagon model, create a shapenode and assign it to the model
         CGPoint center = [self _pointForColumn:hexagon.column row:hexagon.row];
         HDHexagonNode *shapeNode = [HDHexagonNode shapeNodeWithPath:pathRef centered:YES];
         [shapeNode setHidden:YES];
@@ -146,6 +140,18 @@ static const CGFloat kTileHeightInsetMultiplier = .845f;
     }];
 }
 
+- (void)_setup
+{
+    // initalize varibles here instead of initWithSize, so when new levels laid out they're set to zero
+    _soundIndex        = 0;
+    _startingTileCount = 0;
+    _startingTilesUsed = 0;
+    _minCenterX        = MAXFLOAT;
+    _maxCenterX        = 0.0f;
+    _minCenterY        = MAXFLOAT;
+    _maxCenterY        = 0.0f;
+}
+
 - (void)layoutIndicatorTiles
 {
     // Loop through possible nodes, if a node exists create a layer underneath it to display indicator
@@ -165,6 +171,7 @@ static const CGFloat kTileHeightInsetMultiplier = .845f;
 
 - (HDSpriteNode *)indicatorTileUnderHexagon:(HDHexagon *)hexagon
 {
+    // find the tile on the tileLayer that has same position as selected hexagon
     for (HDSpriteNode *indicator in self.tileLayer.children) {
         if (indicator.row == hexagon.row && hexagon.column == indicator.column) {
             return indicator;
@@ -343,7 +350,7 @@ static const CGFloat kTileHeightInsetMultiplier = .845f;
             }];
             delay += .1f;
         }
-        return;
+        
     } else if ([self _checkIfAllHexagonsAreSelected] == 1 && self.includeEndTile) {
         for (HDHexagon *hexagon in _hexagons) {
             if (hexagon.type == HDHexagonTypeEnd) {
@@ -399,10 +406,6 @@ static const CGFloat kTileHeightInsetMultiplier = .845f;
 
 - (void)_nextLevel
 {
-    _minCenterX = MAXFLOAT;
-    _maxCenterX = 0.0f;
-    _minCenterY = MAXFLOAT;
-    _maxCenterY = 0.0f;
     
     // Clear out Arrays
     [_selectedHexagons removeAllObjects];
@@ -548,7 +551,7 @@ static const CGFloat kTileHeightInsetMultiplier = .845f;
     }
 }
 
-- (NSArray *)_preloadSounds
+- (NSArray *)_preloadedGameSounds
 {
     //Preload any sounds that are going to be played throughout the game
     self.loop = [SKAction playSoundFileNamed:@"C4.m4a" waitForCompletion:YES];

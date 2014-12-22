@@ -11,7 +11,8 @@
 
 static const NSUInteger numberOfRows    = 7;
 static const NSUInteger numberOfColumns = 4;
-static const NSUInteger numberOfPages   = 3;
+static const NSUInteger numberOfPages   = 4;
+static const NSUInteger numberOfLocked  = 1;
 
 @protocol HDGridScrollViewDelegate;
 @interface HDGridScrollView : UIScrollView
