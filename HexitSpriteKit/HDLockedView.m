@@ -70,14 +70,14 @@ static const CGFloat kPadding = 4.0f;
     
     UIImageView *pictureFrame = [[UIImageView alloc] initWithImage:[self _levelsComingSoonSign]];
     [pictureFrame setCenter:CGPointMake(CGRectGetMidX(self.bounds), CGRectGetHeight(self.bounds)/3)];
-    pictureFrame.layer.borderWidth = 1.0f;
+    pictureFrame.layer.borderWidth = 10.0f;
     pictureFrame.layer.borderColor = [[UIColor clearColor] CGColor];
     [self addSubview:pictureFrame];
     
     self.gravityBehavior = [[UIGravityBehavior alloc] initWithItems:@[pictureFrame]];
     
     self.collisionBehavior = [[UICollisionBehavior alloc] initWithItems:@[pictureFrame]];
-    [self.collisionBehavior setTranslatesReferenceBoundsIntoBoundary:YES];
+    self.collisionBehavior.translatesReferenceBoundsIntoBoundary = YES;
     [self.animator addBehavior:self.collisionBehavior];
     
     self.attachmentBehavior = [[UIAttachmentBehavior alloc] initWithItem:pictureFrame
@@ -86,9 +86,9 @@ static const CGFloat kPadding = 4.0f;
                                                                                      CGRectGetMidX(self.bounds),
                                                                                      CGRectGetHeight(self.bounds)/5
                                                                                      )];
-    [self.attachmentBehavior setDamping:0.2f];
-    [self.attachmentBehavior setLength:0];
-    [self.attachmentBehavior setFrequency:0];
+    self.attachmentBehavior.damping   = 0;
+    self.attachmentBehavior.length    = 0;
+    self.attachmentBehavior.frequency = 0;
     [self.animator addBehavior:self.attachmentBehavior];
     
     self.floatingAnchorBehavior = [[UIAttachmentBehavior alloc] initWithItem:pictureFrame
@@ -97,9 +97,9 @@ static const CGFloat kPadding = 4.0f;
                                                                                          CGRectGetWidth(self.bounds),
                                                                                          CGRectGetHeight(self.bounds)
                                                                                          )];
-    [self.floatingAnchorBehavior setDamping:.2f];
-    [self.floatingAnchorBehavior setLength:0];
-    [self.floatingAnchorBehavior setFrequency:1];
+    self.floatingAnchorBehavior.damping   = .2f;
+    self.floatingAnchorBehavior.length    = 0;
+    self.floatingAnchorBehavior.frequency = 1;
     [self.animator addBehavior:self.floatingAnchorBehavior];
 
 //    UIDynamicItemBehavior *itemBehavior = [[UIDynamicItemBehavior alloc] initWithItems:@[pictureFrame]];
@@ -145,14 +145,14 @@ static const CGFloat kPadding = 4.0f;
         [rightString addLineToPoint:CGPointMake(imageSize.width/1.5f, imageSize.height/3.25)];
         
         for (UIBezierPath *path in @[leftString, rightString]) {
-            [path setLineWidth:5.0f];
+            path.lineWidth = 5.0f;
             [path stroke];
         }
         
         [[UIColor flatEmeraldColor] setStroke];
         
         UIBezierPath *signPath = [UIBezierPath bezierPathWithRoundedRect:signFrame cornerRadius:10.0f];
-        [signPath setLineWidth:8.0f];
+        signPath.lineWidth = 8.0f;
         [signPath stroke];
         
         UIBezierPath *nail = [UIBezierPath bezierPathWithOvalInRect:nailFrame];
