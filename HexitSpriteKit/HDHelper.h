@@ -26,4 +26,6 @@
 
 + (NSArray *)possibleMovesForHexagon:(HDHexagon *)hexagon inArray:(NSArray *)array;
 
++ (CGPoint)pointForColumn:(NSInteger)column row:(NSInteger)row numberOfColumns:(NSUInteger)numberOfColumns numberOfRows:(NSUInteger)numberOfRows;
+
 @end

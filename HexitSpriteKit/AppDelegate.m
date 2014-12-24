@@ -44,7 +44,6 @@ NSString * const iOS8AppStoreURLFormat = @"itms-apps://itunes.apple.com/app/id%d
     [self _prepareSoundLoop];
     
     if (![[NSUserDefaults standardUserDefaults] boolForKey:HDFirstRunKey]) {
-        [[HDMapManager sharedManager] configureDataBaseForFirstRun];
         [[HDSettingsManager sharedManager] configureSettingsForFirstRun];
     }
     

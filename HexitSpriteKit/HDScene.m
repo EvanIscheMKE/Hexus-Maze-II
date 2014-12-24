@@ -17,7 +17,6 @@
 #import "HDSettingsManager.h"
 #import "SKEmitterNode+EmitterAdditions.h"
 #import "NSMutableArray+UniqueAdditions.h"
-#import "UIBezierPath+HDBezierPath.h"
 #import "HDMapManager.h"
 #import "HDHexagonNode.h"
 #import "HDGridManager.h"

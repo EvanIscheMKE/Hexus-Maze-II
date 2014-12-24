@@ -281,5 +281,19 @@
     return hexagons;
 }
 
++ (CGPoint)pointForColumn:(NSInteger)column
+                      row:(NSInteger)row
+          numberOfColumns:(NSUInteger)numberOfColumns
+             numberOfRows:(NSUInteger)numberOfRows
+{
+    const CGFloat kTileHeightInsetMultiplier = .855f;
+    const CGFloat tileSize = [[UIScreen mainScreen] bounds].size.width / (numberOfColumns - 1);
+    const CGFloat kOriginY = ((row * (tileSize * kTileHeightInsetMultiplier)) );
+    const CGFloat kOriginX = ((column * tileSize));
+    const CGFloat kAlternateOffset = (row % 2 == 0) ? tileSize/2 : 0.0f;
+    
+    return CGPointMake(kAlternateOffset + kOriginX, kOriginY);
+}
+
 
 @end

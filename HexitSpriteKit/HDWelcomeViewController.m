@@ -20,7 +20,7 @@ static const CGFloat kHexaSize = 100.0f;
 static const NSUInteger kHexaCount = 4;
 
 @interface HDWelcomeViewController ()
-@property (nonatomic, strong) UIView *tapLabelsContainer;
+@property (nonatomic, strong) UIView *labelContainer;
 @end
 
 @implementation HDWelcomeViewController {
@@ -68,16 +68,16 @@ static const NSUInteger kHexaCount = 4;
     
     // Create a container view to contain the 'tap' labels, animate this down screen instead of multiple labels
     CGRect  tapFrame  = CGRectMake(0.0f, 0.0f, CGRectGetMidX(self.view.bounds), 2.0f);
-    self.tapLabelsContainer = [[UIView alloc] initWithFrame:tapFrame];
-    [self.tapLabelsContainer setBackgroundColor:[UIColor clearColor]];
-    [self.view addSubview:self.tapLabelsContainer];
+    self.labelContainer = [[UIView alloc] initWithFrame:tapFrame];
+    [self.labelContainer setBackgroundColor:[UIColor clearColor]];
+    [self.view addSubview:self.labelContainer];
     
     //Create two labels, one positioned on each side of the hexagon that needs to be 'tappped'
     for (int i = 0; i < 2; i++) {
     
         CGPoint tapLabelPosition = CGPointMake(
-                                               (i == 0) ? 0.0f : CGRectGetWidth(self.tapLabelsContainer.bounds),
-                                               CGRectGetMidY(self.tapLabelsContainer.bounds)
+                                               (i == 0) ? 0.0f : CGRectGetWidth(self.labelContainer.bounds),
+                                               CGRectGetMidY(self.labelContainer.bounds)
                                                );
         
         UILabel *tap = [[UILabel alloc] init];
@@ -87,7 +87,7 @@ static const NSUInteger kHexaCount = 4;
         [tap setFont:GILLSANS(26.0f)];
         [tap sizeToFit];
         [tap setCenter:tapLabelPosition];
-        [self.tapLabelsContainer addSubview:tap];
+        [self.labelContainer addSubview:tap];
     }
 }
 
@@ -163,7 +163,7 @@ static const NSUInteger kHexaCount = 4;
             [ADelegate performSelector:@selector(presentContainerViewController) withObject:nil afterDelay:.3f];
             
             [UIView animateWithDuration:.3f animations:^{
-                [self.tapLabelsContainer setAlpha:0.0f];
+                [self.labelContainer setAlpha:0.0f];
             }];
             
             break;
@@ -184,9 +184,9 @@ static const NSUInteger kHexaCount = 4;
 {
     [UIView animateWithDuration:.3f
                      animations:^{
-                         CGRect tapRect = self.tapLabelsContainer.frame;
+                         CGRect tapRect = self.labelContainer.frame;
                          tapRect.origin.y += kHexaSize;
-                         [self.tapLabelsContainer setFrame:tapRect];
+                         [self.labelContainer setFrame:tapRect];
                      }];
 }
 
@@ -197,8 +197,8 @@ static const NSUInteger kHexaCount = 4;
                                     CGRectGetMidY(self.view.bounds) - ((CGFloat)kHexaCount - 1) / 2 * kHexaSize
                                     );
     
-    [self.tapLabelsContainer setCenter:tapCenter];
-    [self.tapLabelsContainer setAlpha:0.0f];
+    [self.labelContainer setCenter:tapCenter];
+    [self.labelContainer setAlpha:0.0f];
     
     NSUInteger index = 0;
     for (HDHexagonView *hexa in _hexaArray) {
@@ -274,10 +274,10 @@ static const NSUInteger kHexaCount = 4;
     dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(delay * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
         
         [UIView animateWithDuration:.3f animations:^{
-            [self.tapLabelsContainer setAlpha:1.0f];
+            [self.labelContainer setAlpha:1.0f];
         }];
         
-        for (UILabel *label in self.tapLabelsContainer.subviews) {
+        for (UILabel *label in self.labelContainer.subviews) {
             CABasicAnimation *scale = [CABasicAnimation animationWithKeyPath:@"transform.scale.x"];
             [scale setByValue:@.3f];
             [scale setToValue:@1.3f];

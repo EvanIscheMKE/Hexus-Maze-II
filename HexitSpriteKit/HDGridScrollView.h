@@ -9,16 +9,15 @@
 #import <UIKit/UIKit.h>
 #import "HDMapManager.h"
 
-static const NSUInteger numberOfRows    = 7;
-static const NSUInteger numberOfColumns = 4;
-static const NSUInteger numberOfPages   = 4;
-static const NSUInteger numberOfLocked  = 1;
-
 @protocol HDGridScrollViewDelegate;
+@protocol HDGridScrollViewDatasource;
+@protocol HDGridScrollViewChild;
+
 @interface HDGridScrollView : UIScrollView
-- (instancetype)initWithFrame:(CGRect)frame
-                      manager:(HDMapManager *)manager
-                     delegate:(id<HDGridScrollViewDelegate>)delegate;
+
+@property (nonatomic, weak) id <HDGridScrollViewDelegate> delegate;
+@property (nonatomic, weak) id <HDGridScrollViewDatasource> datasource;
+@property (nonatomic, readonly) NSUInteger numberOfPages;
 
 - (void)performIntroAnimationWithCompletion:(dispatch_block_t)completion;
 - (void)performOutroAnimationWithCompletion:(dispatch_block_t)completion;
@@ -28,5 +27,18 @@ static const NSUInteger numberOfLocked  = 1;
 @required
 
 - (void)beginGameAtLevelIndex:(NSUInteger)levelIndex;
+- (void)gridScrollView:(HDGridScrollView *)gridScrollView selectedLevelAtIndex:(NSUInteger)levelIndex;
 
+@end
+
+
+@protocol HDGridScrollViewDatasource <NSObject>
+@required
+//All views should correspond to HDScrollViewChild protocol
+- (NSArray *)pageViewsForGridScrollView:(HDGridScrollView *)gridScrollView;
+@end
+
+@protocol HDGridScrollViewChild <NSObject>
+- (void)performIntroAnimationWithCompletion:(dispatch_block_t)completion;
+- (void)performOutroAnimationWithCompletion:(dispatch_block_t)completion;
 @end

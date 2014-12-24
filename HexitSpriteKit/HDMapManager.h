@@ -10,8 +10,9 @@
 
 @class HDLevel;
 @interface HDMapManager : NSObject
+@property (nonatomic, readonly) NSUInteger numberOfLevels;
+
 + (HDMapManager *)sharedManager;
-- (void)configureDataBaseForFirstRun;
 - (void)completedLevelAtIndex:(NSInteger)index;
 
 - (HDLevel *)levelAtIndex:(NSInteger)index;

@@ -18,14 +18,15 @@
 #import "UIColor+FlatColors.h"
 #import "HDGridViewController.h"
 #import "HDContainerViewController.h"
-
+#import "HDLevelsViewController.h"
+#import "HDLockedViewController.h"
 static const CGFloat kDefaultContainerHeight   = 70.0f;
 static const CGFloat kDefaultPageControlHeight = 50.0f;
 
 static const CGFloat kButtonSize = 42.0f;
 static const CGFloat kInset      = 20.0f;
 
-@interface HDGridViewController () <UIScrollViewDelegate,HDGridScrollViewDelegate>
+@interface HDGridViewController () <UIScrollViewDelegate,HDGridScrollViewDelegate, HDLevelsViewControllerDelegate, HDGridScrollViewDatasource>
 
 @property (nonatomic, strong) HDGridScrollView *scrollView;
 @property (nonatomic, strong) HDHexagonControl *control;
@@ -42,6 +43,7 @@ static const CGFloat kInset      = 20.0f;
 @implementation HDGridViewController {
     NSDictionary *_metrics;
     NSDictionary *_views;
+    NSMutableArray *_pageViews;
     
     NSInteger _previousPage;
 }
@@ -61,6 +63,11 @@ static const CGFloat kInset      = 20.0f;
 
 #pragma mark -
 #pragma mark - < PUBLIC >
+
+- (void)levelsViewController:(HDLevelsViewController *)viewController didSelectLevel:(NSUInteger)level
+{
+    [self beginLevel:level];
+}
 
 - (void)beginLevel:(NSInteger)level
 {
@@ -98,16 +105,17 @@ static const CGFloat kInset      = 20.0f;
 
 - (void)_setup
 {
+    NSUInteger numberOfPages = [self pageViewsForGridScrollView:self.scrollView].count;
+    
     CGRect scrollViewRect = CGRectInset(self.view.bounds, 0.0f, CGRectGetHeight(self.view.bounds) / 7.4f);
-    self.scrollView = [[HDGridScrollView alloc] initWithFrame:scrollViewRect
-                                                                   manager:[HDMapManager sharedManager]
-                                                                  delegate:self];
-    [self.scrollView setDelegate:self];
+    self.scrollView = [[HDGridScrollView alloc] initWithFrame:scrollViewRect];
+    self.scrollView.delegate = self;
+    self.scrollView.datasource = self;
     [self.view addSubview:self.scrollView];
     
     CGRect controlRect = CGRectMake(0.0f, 0.0f, CGRectGetWidth(self.view.bounds), kDefaultPageControlHeight);
     self.control = [[HDHexagonControl alloc] initWithFrame:controlRect];
-    [self.control setNumberOfPages:numberOfPages];
+    [self.control setNumberOfPages:self.scrollView.numberOfPages];
     [self.control setCurrentPage:0];
     [self.control setCenter:CGPointMake(
                                         CGRectGetMidX(self.view.bounds),
@@ -237,10 +245,51 @@ static const CGFloat kInset      = 20.0f;
     [self beginLevel:levelIndex];
 }
 
+- (NSArray *)pageViewsForGridScrollView:(HDGridScrollView *)gridScrollView
+{
+    if (_pageViews) {
+        return _pageViews;
+    }
+    _pageViews = [NSMutableArray array];
+    HDMapManager *mapManager = [HDMapManager sharedManager];
+    const NSUInteger numberOfLevels = mapManager.numberOfLevels;
+    const NSUInteger numberOfLevelsPerPage = 28;
+    const NSUInteger numberOfPages = ceilf((float)numberOfLevels / (float)numberOfLevelsPerPage) + 1 /* 1 for the "locked" screen*/;
+    
+    NSUInteger displayedLevels = 0;
+    NSUInteger remainingNumberOfLevels = numberOfLevels;
+    for (NSUInteger i = 0; i < numberOfPages - 1; i++) {
+        NSRange levelRange = NSMakeRange(displayedLevels, numberOfLevelsPerPage);
+        
+        HDLevelsViewController *viewController = [[HDLevelsViewController alloc] init];
+        viewController.delegate = self;
+        viewController.rows = 7;
+        viewController.columns = 4;
+        viewController.levelRange = levelRange;
+        
+        displayedLevels += numberOfLevelsPerPage;
+        remainingNumberOfLevels -= numberOfLevelsPerPage;
+        
+        [viewController willMoveToParentViewController:self];
+        [self addChildViewController:viewController];
+        [viewController didMoveToParentViewController:self];
+        
+        [_pageViews addObject:viewController.view];
+    }
+    
+    HDLockedViewController *lockedViewController = [HDLockedViewController new];
+    [lockedViewController willMoveToParentViewController:self];
+    [self addChildViewController:lockedViewController];
+    [_pageViews addObject:lockedViewController.view];
+    [lockedViewController didMoveToParentViewController:self];
+    
+    return _pageViews;
+}
+
 #pragma mark -
 #pragma mark - <UIScrollViewDelegate>
 
-- (void)scrollViewDidScroll:(UIScrollView *)scrollView
+- (void)scrollViewDidScroll:(HDGridScrollView *)scrollView
 {
     CGFloat percent = ((int)(scrollView.contentOffset.x) % (int)(scrollView.frame.size.width)) / scrollView.frame.size.width;
     if (percent > 0.0 && percent < 1.0) {
@@ -255,7 +304,7 @@ static const CGFloat kInset      = 20.0f;
     
     if (page != _previousPage) {
         
-        [self.control setCurrentPage:MIN(page, numberOfPages - 1)];
+        [self.control setCurrentPage:MIN(page, scrollView.numberOfPages - 1)];
         
         _previousPage = page;
     }
