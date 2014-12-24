@@ -55,11 +55,7 @@ static NSString * const TRIPLE_KEY = @"triple";
         [self addChild:lock];
     } else {
         // Remove Lock png
-        for (id nodes in self.children) {
-            if ([nodes isKindOfClass:[SKSpriteNode class]]) {
-                [nodes removeFromParent];
-            }
-        }
+        [self.children makeObjectsPerformSelector:@selector(removeFromParent)];
     }
 }
 

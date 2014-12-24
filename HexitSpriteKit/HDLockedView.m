@@ -40,8 +40,6 @@ static const CGFloat kPadding = 4.0f;
     [self.motionManager startDeviceMotionUpdatesToQueue:[NSOperationQueue mainQueue]
                                             withHandler:
      ^(CMDeviceMotion *motion, NSError *error) {
-         // NSLog(@"X:%f",motion.gravity.x);
-         // NSLog(@"Y:%f",motion.gravity.y);
          dispatch_async(dispatch_get_main_queue(), ^{
              double angle = atan2(CGVectorMake(-motion.gravity.x, -motion.gravity.y).dy,
                                   CGVectorMake( motion.gravity.x,  motion.gravity.y).dx);
@@ -71,7 +69,9 @@ static const CGFloat kPadding = 4.0f;
     self.animator = [[UIDynamicAnimator alloc] initWithReferenceView:self];
     
     UIImageView *pictureFrame = [[UIImageView alloc] initWithImage:[self _levelsComingSoonSign]];
-    [pictureFrame setCenter:CGPointMake(CGRectGetMidX(self.bounds), 100.0f)];
+    [pictureFrame setCenter:CGPointMake(CGRectGetMidX(self.bounds), CGRectGetHeight(self.bounds)/3)];
+    pictureFrame.layer.borderWidth = 1.0f;
+    pictureFrame.layer.borderColor = [[UIColor clearColor] CGColor];
     [self addSubview:pictureFrame];
     
     self.gravityBehavior = [[UIGravityBehavior alloc] initWithItems:@[pictureFrame]];
@@ -134,27 +134,26 @@ static const CGFloat kPadding = 4.0f;
         [[UIColor flatPeterRiverColor] setStroke];
         
         CGRect nailFrame = CGRectMake(imageSize.width/2 - kPadding*5/2, imageSize.height/20, kPadding*5, kPadding*5);
-        CGRect signFrame = CGRectMake(0.0, imageSize.height/3.25, imageSize.width, imageSize.height/1.5f);
+        CGRect signFrame = CGRectMake(3.0f, imageSize.height/3.25, imageSize.width - 6.0f, imageSize.height/1.5f);
         
         UIBezierPath *leftString  = [UIBezierPath bezierPath];
         [leftString moveToPoint:CGPointMake(CGRectGetMidX(nailFrame), CGRectGetMidY(nailFrame))];
         [leftString addLineToPoint:CGPointMake(imageSize.width/3.f, imageSize.height/3.25)];
-        [leftString stroke];
         
         UIBezierPath *rightString = [UIBezierPath bezierPath];
         [rightString moveToPoint:CGPointMake(CGRectGetMidX(nailFrame), CGRectGetMidY(nailFrame))];
         [rightString addLineToPoint:CGPointMake(imageSize.width/1.5f, imageSize.height/3.25)];
-        [rightString stroke];
         
         for (UIBezierPath *path in @[leftString, rightString]) {
             [path setLineWidth:5.0f];
             [path stroke];
         }
         
-        [[UIColor whiteColor] setStroke];
+        [[UIColor flatEmeraldColor] setStroke];
         
         UIBezierPath *signPath = [UIBezierPath bezierPathWithRoundedRect:signFrame cornerRadius:10.0f];
-        [signPath fill];
+        [signPath setLineWidth:8.0f];
+        [signPath stroke];
         
         UIBezierPath *nail = [UIBezierPath bezierPathWithOvalInRect:nailFrame];
         [nail fill];

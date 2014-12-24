@@ -16,38 +16,22 @@
 @interface HDGridScrollView ()
 @property (nonatomic, assign) NSUInteger numberOfPages;
 @property (nonatomic, strong) HDLockedView *container;
-@property (nonatomic, strong) UIDynamicAnimator *animator;
-@property (nonatomic, strong) UIAttachmentBehavior *attachment;
-@property (nonatomic, strong) UIGravityBehavior *gravity;
 @property (nonatomic, strong) HDMapManager *manager;
 @end
 
-@implementation HDGridScrollView {
-}
+@implementation HDGridScrollView
 
 - (instancetype)initWithFrame:(CGRect)frame
 {
     if (self = [super initWithFrame:frame]) {
         [self setShowsHorizontalScrollIndicator:NO];
         [self setPagingEnabled:YES];
-        [self setClipsToBounds:YES]; // Want to be able to see multiple pages, inform user they can scroll
         [self setManager:[HDMapManager sharedManager]];
     }
     return self;
 }
 
-#pragma mark - 
-#pragma mark - < PUBLIC >
-
-- (void)startMonitoringMotionUpdates
-{
-    [self.container stopMonitoringMotionUpdates];
-}
-
-- (void)stopMonitoringMotionUpdates
-{
-    [self.container stopMonitoringMotionUpdates];
-}
+#pragma mark - <PUBLIC>
 
 - (void)performIntroAnimationWithCompletion:(dispatch_block_t)completion
 {
@@ -83,7 +67,6 @@
     [CATransaction commit];
 }
 
-#pragma mark -
 #pragma mark - < PRIVATE >
 
 - (void)willMoveToSuperview:(UIView *)newSuperview
@@ -108,10 +91,12 @@
         
     NSUInteger pageIndex = 0;
     for (UIView *page in pages) {
-        CGRect containerFrame = CGRectMake(pageIndex * self.bounds.size.width,
+        CGRect containerFrame = CGRectMake(
+                                           pageIndex * self.bounds.size.width,
                                            0.0f,
                                            self.bounds.size.width,
-                                           self.bounds.size.height);
+                                           self.bounds.size.height
+                                           );
         page.frame = containerFrame;
         
         [self addSubview:page];
@@ -124,14 +109,5 @@
 {
     return;
 }
-
-- (void)_beginGame:(UIGestureRecognizer *)gesture
-{
-    UIButton *button = (UIButton *)gesture.view;
-    if (self.delegate && [self.delegate respondsToSelector:@selector(beginGameAtLevelIndex:)]) {
-        [self.delegate beginGameAtLevelIndex:button.tag];
-    }
-}
-
 
 @end

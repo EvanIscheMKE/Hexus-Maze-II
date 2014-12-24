@@ -25,7 +25,6 @@
 @property (nonatomic, assign) NSUInteger rows;
 @end
 
-
 @protocol HDLevelsViewControllerDelegate <NSObject>
 - (void)levelsViewController:(HDLevelsViewController *)controller didSelectLevel:(NSUInteger)level;
 @end

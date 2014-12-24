@@ -26,7 +26,6 @@
 @property (nonatomic, readonly) UIViewController *rearViewController;
 
 @property (nonatomic, readonly) BOOL isExpanded;
-@property (nonatomic, getter=isNavigationBarHidden, assign) BOOL navigationBarHidden;
 
 - (instancetype)initWithGameViewController:(UIViewController *)gameController
                         rearViewController:(UIViewController *)rearController NS_DESIGNATED_INITIALIZER;

@@ -31,23 +31,29 @@ NSString * const iOS8AppStoreURLFormat = @"itms-apps://itunes.apple.com/app/id%d
 {
     [application setStatusBarHidden:YES];
     
-    NSError *sessionError = nil;
-    [[AVAudioSession sharedInstance] setCategory:AVAudioSessionCategoryAmbient error:&sessionError];
-    [[AVAudioSession sharedInstance] setActive:YES error:&sessionError];
-    
      self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
     [self.window setRootViewController:[HDWelcomeViewController new]];
     [self.window makeKeyAndVisible];
     
+    [self _setup];
+    
+    return YES;
+}
+
+- (void)_setup
+{
+    NSError *sessionError = nil;
+    [[AVAudioSession sharedInstance] setCategory:AVAudioSessionCategoryAmbient error:&sessionError];
+    [[AVAudioSession sharedInstance] setActive:YES error:&sessionError];
+    
     [[HDSoundManager sharedManager] preloadSounds:SOUNDS_TO_PRELOAD];
     [[HDGameCenterManager sharedManager] authenticateGameCenter];
     [self _prepareSoundLoop];
+    [self setPlayLoop:YES];
     
     if (![[NSUserDefaults standardUserDefaults] boolForKey:HDFirstRunKey]) {
         [[HDSettingsManager sharedManager] configureSettingsForFirstRun];
     }
-    
-    return YES;
 }
 
 - (void)presentContainerViewController

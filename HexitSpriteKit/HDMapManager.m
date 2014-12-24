@@ -52,7 +52,6 @@
         HDLevel *level = (HDLevel *)[NSKeyedUnarchiver unarchiveObjectWithData:data];
         [_levels addObject:level];
     }
-    
     return _levels;
 }
 
@@ -113,11 +112,17 @@
     NSUInteger startIndex = levelsIKnowAbout.count == 0? 0 : levelsIKnowAbout.count - 1;
     for (NSUInteger newLevelIdx = startIndex; newLevelIdx < _numberOfLevels; newLevelIdx++) {
         HDLevel *level = [HDLevel levelUnlocked:(newLevelIdx == 0) index:newLevelIdx completed:NO];
-        
-        NSData *levelData = [NSKeyedArchiver archivedDataWithRootObject:level];
-        [levels addObject:levelData];
+        [levels addObject:level];
     }
-    [[NSUserDefaults standardUserDefaults] setObject:levels forKey:HDDefaultLevelKey];
+    
+    NSMutableArray *allLevels = [NSMutableArray array];
+    for (HDLevel *level in levels) {
+        NSData *levelData = [NSKeyedArchiver archivedDataWithRootObject:level];
+        [allLevels addObject:levelData];
+    }
+    
+    [[NSUserDefaults standardUserDefaults] setObject:allLevels forKey:HDDefaultLevelKey];
+    
     _levels = levels;
 }
 

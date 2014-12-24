@@ -62,11 +62,11 @@ static const CGFloat MINIMUM_MENU_OFFSET_X = 228.0f;
 {
     [super viewDidLoad];
     
-    [self.view addSubview:self.rearViewController.view];
-    [self.view addSubview:self.frontViewController.view];
-    
     [self addChildViewController:self.rearViewController];
     [self addChildViewController:self.frontViewController];
+    
+    [self.view addSubview:self.rearViewController.view];
+    [self.view addSubview:self.frontViewController.view];
     
     [self.rearViewController didMoveToParentViewController:self];
     [self.frontViewController didMoveToParentViewController:self];

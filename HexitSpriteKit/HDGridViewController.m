@@ -26,7 +26,7 @@ static const CGFloat kDefaultPageControlHeight = 50.0f;
 static const CGFloat kButtonSize = 42.0f;
 static const CGFloat kInset      = 20.0f;
 
-@interface HDGridViewController () <UIScrollViewDelegate,HDGridScrollViewDelegate, HDLevelsViewControllerDelegate, HDGridScrollViewDatasource>
+@interface HDGridViewController () <UIScrollViewDelegate ,HDGridScrollViewDelegate, HDLevelsViewControllerDelegate, HDGridScrollViewDatasource>
 
 @property (nonatomic, strong) HDGridScrollView *scrollView;
 @property (nonatomic, strong) HDHexagonControl *control;
@@ -250,7 +250,9 @@ static const CGFloat kInset      = 20.0f;
     if (_pageViews) {
         return _pageViews;
     }
+    
     _pageViews = [NSMutableArray array];
+    
     HDMapManager *mapManager = [HDMapManager sharedManager];
     const NSUInteger numberOfLevels = mapManager.numberOfLevels;
     const NSUInteger numberOfLevelsPerPage = 28;
@@ -293,7 +295,7 @@ static const CGFloat kInset      = 20.0f;
 {
     CGFloat percent = ((int)(scrollView.contentOffset.x) % (int)(scrollView.frame.size.width)) / scrollView.frame.size.width;
     if (percent > 0.0 && percent < 1.0) {
-        NSLog(@"%f",percent);
+
     }
     
     

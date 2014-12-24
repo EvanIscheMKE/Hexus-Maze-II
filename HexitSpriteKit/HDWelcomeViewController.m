@@ -19,77 +19,258 @@ static const CGFloat kHexaSize = 100.0f;
 
 static const NSUInteger kHexaCount = 4;
 
-@interface HDWelcomeViewController ()
+@interface HDWelcomeView ()
 @property (nonatomic, strong) UIView *labelContainer;
 @end
 
-@implementation HDWelcomeViewController {
+@implementation HDWelcomeView {
     NSArray *_hexaArray;
 }
 
-- (void)viewDidLoad
+- (instancetype)initWithFrame:(CGRect)frame
 {
-    [super viewDidLoad];
-    [self setCanDisplayBannerAds:YES];
-    [self.view setBackgroundColor:[UIColor flatMidnightBlueColor]];
-    [self _setup];
+    if (self = [super initWithFrame:frame]) {
+        [self _setup];
+    }
+    return self;
 }
+
+#pragma mark - Private
 
 - (void)_setup
 {
     NSMutableArray *hexaArray = [NSMutableArray arrayWithCapacity:kHexaCount];
     
-    //
-    const CGFloat startingPositionY = CGRectGetMidY(self.view.bounds) - ((CGFloat)kHexaCount - 1) / 2 * kHexaSize;
+    const CGFloat startingPositionY = CGRectGetMidY(self.bounds) - ((CGFloat)kHexaCount - 1) / 2 * kHexaSize;
     for (int i = 0; i < kHexaCount; i++) {
         
         CGPoint centerPoint = CGPointMake(
-                                          CGRectGetMidX(self.view.bounds),
+                                          CGRectGetMidX(self.bounds),
                                           startingPositionY + (i * kHexaSize)
                                           );
         
         CGRect hexaBounds = CGRectMake(0.0f, 0.0f, kHexaSize - kPadding, kHexaSize -kPadding);
         HDHexagonView *hexagon = [[HDHexagonView alloc] initWithFrame:hexaBounds
-                                                                 type:HDHexagonTypeFlat // Flat on top, instead of sitting up
+                                                                 type:HDHexagonTypeFlat /* Flat on top, instead of sitting up */
                                                           strokeColor:[UIColor whiteColor]];
-        [hexagon setTag:i];
-        [hexagon setEnabled:(i == 0)];
-        [hexagon setCenter:centerPoint];
-        [hexagon.indexLabel setTextColor:[UIColor flatMidnightBlueColor]];
-        [hexagon.indexLabel setFont:GILLSANS(CGRectGetMidX(hexagon.bounds))];
+        hexagon.tag     = i;
+        hexagon.enabled = (i == 0);
+        hexagon.center  = centerPoint;
+        hexagon.indexLabel.textColor = [UIColor flatMidnightBlueColor];
+        hexagon.indexLabel.font = GILLSANS(CGRectGetMidX(hexagon.bounds));
         [hexaArray addObject:hexagon];
-        [self.view addSubview:hexagon];
+        [self addSubview:hexagon];
         
         CAShapeLayer *hexaLayer = (CAShapeLayer *)hexagon.layer;
-        [hexaLayer setLineWidth:hexaLayer.lineWidth + kPadding];//Subtact above, then add here, increase line width without changing bound size
+        hexaLayer.lineWidth = hexaLayer.lineWidth + kPadding;//Subtact above, then add here, increase line width without changing bound size
     }
     
     _hexaArray = hexaArray;
     
     // Create a container view to contain the 'tap' labels, animate this down screen instead of multiple labels
-    CGRect  tapFrame  = CGRectMake(0.0f, 0.0f, CGRectGetMidX(self.view.bounds), 2.0f);
-    self.labelContainer = [[UIView alloc] initWithFrame:tapFrame];
-    [self.labelContainer setBackgroundColor:[UIColor clearColor]];
-    [self.view addSubview:self.labelContainer];
+    CGRect  containerFrame  = CGRectMake(0.0f, 0.0f, CGRectGetMidX(self.bounds), 2.0f);
+    self.labelContainer = [[UIView alloc] initWithFrame:containerFrame];
+    self.labelContainer.backgroundColor = [UIColor clearColor];
+    [self addSubview:self.labelContainer];
     
     //Create two labels, one positioned on each side of the hexagon that needs to be 'tappped'
     for (int i = 0; i < 2; i++) {
-    
+        
         CGPoint tapLabelPosition = CGPointMake(
                                                (i == 0) ? 0.0f : CGRectGetWidth(self.labelContainer.bounds),
                                                CGRectGetMidY(self.labelContainer.bounds)
                                                );
         
         UILabel *tap = [[UILabel alloc] init];
-        [tap setTextAlignment:NSTextAlignmentCenter];
-        [tap setTextColor:[UIColor whiteColor]];
-        [tap setText:NSLocalizedString(@"TAP", nil)];
-        [tap setFont:GILLSANS(26.0f)];
+        tap.textAlignment = NSTextAlignmentCenter;
+        tap.textColor = [UIColor whiteColor];
+        tap.text = NSLocalizedString(@"TAP", nil);
+        tap.font = GILLSANS(26.0f);
         [tap sizeToFit];
-        [tap setCenter:tapLabelPosition];
+        tap.center = tapLabelPosition;
         [self.labelContainer addSubview:tap];
     }
 }
+
+#pragma mark - Animations
+
++ (void)_performRotationOnView:(UIView *)view completion:(dispatch_block_t)completion
+{
+    [CATransaction begin];
+    [CATransaction setCompletionBlock:completion];
+    
+    CABasicAnimation *rotate = [CABasicAnimation animationWithKeyPath:@"transform.rotation.z"];
+    rotate.duration = .3f;
+    rotate.fromValue = @0;
+    rotate.toValue = @(M_PI * 4);
+    [view.layer addAnimation:rotate forKey:@"rotate"];
+    
+    [CATransaction commit];
+}
+
++ (void)_performScaleOnView:(UIView *)view
+{
+    CABasicAnimation *scale = [CABasicAnimation animationWithKeyPath:@"transform.scale"];
+    [scale setFromValue:@1.0f];
+    [scale setToValue:@.9f];
+    [scale setDuration:.15f];
+    [scale setAutoreverses:YES];
+    [view.layer addAnimation:scale forKey:@"scale"];
+}
+
+- (void)_animateTapLabelPosition
+{
+    [UIView animateWithDuration:.3f
+                     animations:^{
+                         CGRect tapRect = self.labelContainer.frame;
+                         tapRect.origin.y += kHexaSize;
+                         self.labelContainer.frame = tapRect;
+                     }];
+}
+
+- (void)prepareForIntroAnimations
+{
+    CGPoint tapCenter = CGPointMake(
+                                    CGRectGetMidX(self.bounds),
+                                    CGRectGetMidY(self.bounds) - ((CGFloat)kHexaCount - 1) / 2 * kHexaSize
+                                    );
+    
+    self.labelContainer.center = tapCenter;
+    self.labelContainer.alpha  = 0.0f;
+    
+    NSUInteger index = 0;
+    for (HDHexagonView *hexa in _hexaArray) {
+        
+        hexa.hidden = YES;
+        hexa.enabled = (index == 0);
+        hexa.userInteractionEnabled = YES;
+        
+        CAShapeLayer *hexaLayer = (CAShapeLayer *)hexa.layer;
+        hexaLayer.fillColor = [[UIColor flatMidnightBlueColor] CGColor];
+        
+        switch (index) {
+            case 0:
+                hexaLayer.strokeColor = [[UIColor whiteColor] CGColor];
+                break;
+            case 1:
+                hexaLayer.strokeColor = [[UIColor flatEmeraldColor] CGColor];
+                break;
+            case 2:
+                hexaLayer.strokeColor = [[UIColor flatPeterRiverColor] CGColor];
+                break;
+            case 3:
+                hexaLayer.strokeColor = [[UIColor flatEmeraldColor] CGColor];
+                hexa.imageView.image  = [UIImage imageNamed:@"Lock45"];
+                break;
+        }
+        index++;
+    }
+}
+
+- (void)performExitAnimationsWithCompletion:(dispatch_block_t)completion
+{
+    if (completion) {
+        completion();
+    }
+}
+
+- (void)performIntroAnimationsWithCompletion:(dispatch_block_t)completion
+{
+    dispatch_block_t finalAnimation = ^{
+        
+        [UIView animateWithDuration:.3f animations:^{
+            self.labelContainer.alpha = 1.0f;
+        } completion:^(BOOL finished) {
+            if (completion) {
+                 completion();
+            }
+        }];
+        
+        for (UILabel *label in self.labelContainer.subviews) {
+            CABasicAnimation *scale = [CABasicAnimation animationWithKeyPath:@"transform.scale.x"];
+            scale.byValue = @.3f;
+            scale.toValue = @1.3f;
+            scale.duration = .3f;
+            scale.repeatCount = MAXFLOAT;
+            scale.autoreverses = YES;
+            [label.layer addAnimation:scale forKey:@"scale"];
+        }
+    };
+    
+    dispatch_block_t fourthAnimation = ^{
+        
+        [CATransaction begin];
+        [CATransaction setCompletionBlock:finalAnimation];
+        
+        HDHexagonView *fourth = [_hexaArray objectAtIndex:1];
+        fourth.hidden = NO;
+        
+        CABasicAnimation *fourthAnimation = [CABasicAnimation animationWithKeyPath:@"position.x"];
+        fourthAnimation.toValue   = @(fourth.center.x);
+        fourthAnimation.fromValue = @(-kHexaSize/2);
+        fourthAnimation.duration  = .15f;
+        [fourth.layer addAnimation:fourthAnimation forKey:@"SecondTileAnimationKey"];
+        
+        [CATransaction commit];
+        
+    };
+    
+    dispatch_block_t thirdAnimation = ^{
+        
+        [CATransaction begin];
+        [CATransaction setCompletionBlock:fourthAnimation];
+        
+        HDHexagonView *third = [_hexaArray lastObject];
+        third.hidden = NO;
+        
+        CABasicAnimation *thirdAnimation = [CABasicAnimation animationWithKeyPath:@"position.y"];
+        thirdAnimation.toValue   = @(third.center.y);
+        thirdAnimation.fromValue = @(CGRectGetHeight(self.bounds)+kHexaSize/2);
+        thirdAnimation.duration  = .15f;
+        [third.layer addAnimation:thirdAnimation forKey:@"FourthTileAnimationKey"];
+        
+        [CATransaction commit];
+        
+    };
+    
+    dispatch_block_t secondAnimation = ^{
+        
+        [CATransaction begin];
+        [CATransaction setCompletionBlock:thirdAnimation];
+        
+        HDHexagonView *second = [_hexaArray firstObject];
+        second.hidden = NO;
+        
+        CABasicAnimation *secondAnimation = [CABasicAnimation animationWithKeyPath:@"position.y"];
+        secondAnimation.toValue = @(second.center.y);
+        secondAnimation.fromValue = @(-kHexaSize/2);
+        secondAnimation.duration = .15f;
+        [second.layer addAnimation:secondAnimation forKey:@"FirstTileAnimationKey"];
+        
+        [CATransaction commit];
+    };
+    
+    dispatch_block_t firstAnimation = ^{
+        
+        [CATransaction begin];
+        [CATransaction setCompletionBlock:secondAnimation];
+        
+        HDHexagonView *first = [_hexaArray objectAtIndex:2];
+        first.hidden = NO;
+        
+        CABasicAnimation *firstAnimation = [CABasicAnimation animationWithKeyPath:@"position.x"];
+        firstAnimation.toValue   = @(first.center.x);
+        firstAnimation.fromValue = @(CGRectGetWidth(self.bounds) + kHexaSize/2);
+        firstAnimation.duration  = .15f;
+        [first.layer addAnimation:firstAnimation forKey:@"ThirdTileAnimationKey"];
+        
+        [CATransaction commit];
+        
+    };
+    firstAnimation();
+}
+
+#pragma mark - UIResponder
 
 - (void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event
 {
@@ -99,212 +280,133 @@ static const NSUInteger kHexaCount = 4;
 - (void)touchesMoved:(NSSet *)touches withEvent:(UIEvent *)event
 {
     UITouch *touch   = [[touches allObjects] lastObject];
-    CGPoint location = [touch locationInView:self.view];
+    CGPoint location = [touch locationInView:self];
     
     // Loop through all possible targets, find which view contains the current point
     HDHexagonView *_hexaView;
     for (HDHexagonView *hexaView in _hexaArray) {
-        if (CGRectContainsPoint(hexaView.frame, location) && hexaView.isEnabled) {
-            _hexaView = hexaView;
+        if (CGRectContainsPoint(hexaView.frame, location)) {
+            _hexaView = hexaView.isEnabled && hexaView.userInteractionEnabled ? hexaView : nil;
+            break;
         }
     }
     
     // If the current point's location isnt in any view's frame, return
-    if (!_hexaView) {
-        return;
+    if (_hexaView) {
+        [self _updateStateForTile:_hexaView atIndex:_hexaView.tag];
+    }
+}
+
+- (void)_updateStateForTile:(HDHexagonView *)hexaView atIndex:(NSUInteger)index
+{
+    CAShapeLayer *hexaLayer = (CAShapeLayer *)hexaView.layer;
+    
+    hexaView.enabled = NO;
+    hexaView.userInteractionEnabled = NO;
+    hexaLayer.fillColor = hexaLayer.strokeColor;
+    
+    [self _animateTapLabelPosition];
+    [HDWelcomeView _performScaleOnView:hexaView];
+    [[_hexaArray objectAtIndex:MIN(index + 1, 3)] setEnabled:YES];
+    
+    if (self.delegate && [self.delegate respondsToSelector:@selector(welcomeView:playSoundAtIndex:)]) {
+        [self.delegate welcomeView:self playSoundAtIndex:index];
     }
     
-    [_hexaView setEnabled:NO];
-    
-    CAShapeLayer *hexaLayer = (CAShapeLayer *)_hexaView.layer;
-    
-    CABasicAnimation *scale = [CABasicAnimation animationWithKeyPath:@"transform.scale"];
-    [scale setFromValue:@1.0f];
-    [scale setToValue:@.9f];
-    [scale setDuration:.15f];
-    [scale setAutoreverses:YES];
-    [hexaLayer addAnimation:scale forKey:@"scale"];
-    
-    [hexaLayer setFillColor:hexaLayer.strokeColor];
-    
-    switch (_hexaView.tag) {
-        case 0:
-            [self _animateTapLabelPosition];
-            [_hexaView.indexLabel setText:@"E"];
-            [[HDSoundManager sharedManager] playSound:HDC3];
-            [[_hexaArray objectAtIndex:1] setEnabled:YES];
-            break;
-        case 1: {
-            
-            [_hexaView.indexLabel setText:@"X"];
-            [[_hexaArray objectAtIndex:2] setEnabled:YES];
-            [[HDSoundManager sharedManager] playSound:HDD3];
-            
-            HDHexagonView *hexa = [_hexaArray lastObject];
-            [self _performRotationOnView:hexa];
-            [self _animateTapLabelPosition];
-            
-            AudioServicesPlaySystemSound(kSystemSoundID_Vibrate);
-            dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(.15f * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-                [hexa.imageView setImage:nil];
-            });
-            
-        }  break;
-        case 2:
-            [_hexaView.indexLabel setText:@"U"];
-            [[HDSoundManager sharedManager] playSound:HDE3];
-            [[_hexaArray objectAtIndex:3] setEnabled:YES];
-            [self _animateTapLabelPosition];
-            break;
-        case 3:
-            [_hexaView.indexLabel setText:@"S"];
-            AudioServicesPlaySystemSound(kSystemSoundID_Vibrate);
-            [[HDSoundManager sharedManager] playSound:HDF3];
-            [ADelegate performSelector:@selector(presentContainerViewController) withObject:nil afterDelay:.3f];
-            
-            [UIView animateWithDuration:.3f animations:^{
-                [self.labelContainer setAlpha:0.0f];
+    switch (index) {
+        case 1:{
+            [HDWelcomeView _performRotationOnView:(HDHexagonView *)[_hexaArray lastObject] completion:^{
+                [[(HDHexagonView *)[_hexaArray lastObject] layer] removeAllAnimations];
+                [(HDHexagonView *)[_hexaArray lastObject] imageView].image = nil;
             }];
-            
+          } break;
+        case 3:
+            [UIView animateWithDuration:.3f animations:^{
+                self.labelContainer.alpha = 0.0f;
+            } completion:^(BOOL finished) {
+                if (self.delegate && [self.delegate respondsToSelector:@selector(welcomeView:dismissAnimated:)]) {
+                    [self.delegate welcomeView:self dismissAnimated:YES];
+                }
+            }];
             break;
     }
-    [_hexaView setUserInteractionEnabled:NO];
 }
 
-- (void)_performRotationOnView:(UIView *)view
+@end
+
+@interface HDWelcomeViewController ()<HDWelcomeViewDelegate>
+@property (nonatomic, strong) HDWelcomeView *welcomeView;
+@end
+
+@implementation HDWelcomeViewController
+
+- (void)loadView
 {
-    CABasicAnimation *rotate = [CABasicAnimation animationWithKeyPath:@"transform.rotation.z"];
-    [rotate setDuration:.3];
-    [rotate setFromValue:@0];
-    [rotate setToValue:@(M_PI * 4)];
-    [view.layer addAnimation:rotate forKey:@"rotate"];
+   CGRect welcomeViewFrame = [[UIScreen mainScreen] bounds];
+    self.welcomeView = [[HDWelcomeView alloc] initWithFrame:welcomeViewFrame];
+    self.welcomeView.delegate = self;
+    self.view = self.welcomeView;
 }
 
-- (void)_animateTapLabelPosition
+- (void)viewDidLoad
 {
-    [UIView animateWithDuration:.3f
-                     animations:^{
-                         CGRect tapRect = self.labelContainer.frame;
-                         tapRect.origin.y += kHexaSize;
-                         [self.labelContainer setFrame:tapRect];
-                     }];
-}
-
-- (void)_prepareForIntroAnimations
-{
-    CGPoint tapCenter = CGPointMake(
-                                    CGRectGetMidX(self.view.bounds),
-                                    CGRectGetMidY(self.view.bounds) - ((CGFloat)kHexaCount - 1) / 2 * kHexaSize
-                                    );
-    
-    [self.labelContainer setCenter:tapCenter];
-    [self.labelContainer setAlpha:0.0f];
-    
-    NSUInteger index = 0;
-    for (HDHexagonView *hexa in _hexaArray) {
-        
-        [hexa setHidden:YES];
-        [hexa setEnabled:(index == 0)];
-        [hexa setUserInteractionEnabled:YES];
-        
-        CAShapeLayer *hexaLayer = (CAShapeLayer *)hexa.layer;
-        [hexaLayer setFillColor:[[UIColor flatMidnightBlueColor] CGColor]];
-        
-        switch (index) {
-            case 0:
-                [hexaLayer setStrokeColor:[[UIColor whiteColor] CGColor]];
-                break;
-            case 1:
-                [hexaLayer setStrokeColor:[[UIColor flatEmeraldColor] CGColor]];
-                break;
-            case 2:
-                [hexaLayer setStrokeColor:[[UIColor flatPeterRiverColor] CGColor]];
-                break;
-            case 3:
-                [hexaLayer setStrokeColor:[[UIColor flatEmeraldColor] CGColor]];
-                [hexa.imageView setImage:[UIImage imageNamed:@"Lock45"]];
-                break;
-        }
-        index++;
-    }
-}
-
-- (void)_performIntroAnimations
-{
-    HDHexagonView *third = [_hexaArray objectAtIndex:2];
-    [third setHidden:NO];
-    
-    CABasicAnimation *thirdA = [CABasicAnimation animationWithKeyPath:@"position.x"];
-    [thirdA setToValue:@(third.center.x)];
-    [thirdA setFromValue:@(CGRectGetWidth(self.view.bounds) + kHexaSize/2)];
-    [thirdA setDuration:.5f];
-    [third.layer addAnimation:thirdA forKey:@"ThirdTileAnimationKey"];
-    
-    HDHexagonView *first = [_hexaArray firstObject];
-    [first performSelector:@selector(setHidden:) withObject:0 afterDelay:thirdA.duration];
-    
-    CABasicAnimation *firstA = [CABasicAnimation animationWithKeyPath:@"position.y"];
-    [firstA setToValue:@(first.center.y)];
-    [firstA setFromValue:@(-kHexaSize/2)];
-    [firstA setDuration:thirdA.duration];
-    [firstA setBeginTime:CACurrentMediaTime() + thirdA.duration];
-    [first.layer addAnimation:firstA forKey:@"FirstTileAnimationKey"];
-    
-    HDHexagonView *fourth = [_hexaArray lastObject];
-    [fourth performSelector:@selector(setHidden:) withObject:0 afterDelay:thirdA.duration + firstA.duration];
-    
-    CABasicAnimation *fourthA = [CABasicAnimation animationWithKeyPath:@"position.y"];
-    [fourthA setToValue:@(fourth.center.y)];
-    [fourthA setFromValue:@(CGRectGetHeight(self.view.bounds)+kHexaSize/2)];
-    [fourthA setDuration:thirdA.duration];
-    [fourthA setBeginTime:CACurrentMediaTime() + thirdA.duration + firstA.duration];
-    [fourth.layer addAnimation:fourthA forKey:@"FourthTileAnimationKey"];
-    
-    HDHexagonView *second = [_hexaArray objectAtIndex:1];
-    [second performSelector:@selector(setHidden:) withObject:0 afterDelay:thirdA.duration + firstA.duration + fourthA.duration];
-    
-    CABasicAnimation *secondA = [CABasicAnimation animationWithKeyPath:@"position.x"];
-    [secondA setToValue:@(second.center.x)];
-    [secondA setFromValue:@(-kHexaSize/2)];
-    [secondA setDuration:thirdA.duration];
-    [secondA setBeginTime:CACurrentMediaTime() + thirdA.duration + firstA.duration + fourthA.duration];
-    [second.layer addAnimation:secondA forKey:@"SecondTileAnimationKey"];
-    
-    NSTimeInterval delay = thirdA.duration + firstA.duration + fourthA.duration + secondA.duration;
-    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(delay * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-        
-        [UIView animateWithDuration:.3f animations:^{
-            [self.labelContainer setAlpha:1.0f];
-        }];
-        
-        for (UILabel *label in self.labelContainer.subviews) {
-            CABasicAnimation *scale = [CABasicAnimation animationWithKeyPath:@"transform.scale.x"];
-            [scale setByValue:@.3f];
-            [scale setToValue:@1.3f];
-            [scale setDuration:.4f];
-            [scale setRepeatCount:MAXFLOAT];
-            [scale setAutoreverses:YES];
-            [label.layer addAnimation:scale forKey:@"scale"];
-        }
-    });
+    [super viewDidLoad];
+    self.canDisplayBannerAds  = YES;
+    self.view.backgroundColor = [UIColor flatMidnightBlueColor];
 }
 
 - (void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
-    [self _prepareForIntroAnimations];
+    [self.welcomeView prepareForIntroAnimations];
 }
 
 - (void)viewDidAppear:(BOOL)animated
 {
     [super viewDidAppear:animated];
-    [self _performIntroAnimations];
+    [self.welcomeView performIntroAnimationsWithCompletion:nil];
 }
 
 - (void)didReceiveMemoryWarning
 {
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
+}
+
+#pragma mark - <HDWelcomeViewDelegate>
+
+- (void)welcomeView:(HDWelcomeView *)welcomeView dismissAnimated:(BOOL)animated
+{
+    if (animated) {
+        [self.welcomeView performExitAnimationsWithCompletion:^{
+            [ADelegate presentContainerViewController];
+        }];
+    } else {
+        [ADelegate presentContainerViewController];
+    }
+}
+
+- (void)welcomeView:(HDWelcomeView *)welcomeView playSoundAtIndex:(NSUInteger)index
+{
+    NSString *soundPath = nil;
+    switch (index) {
+        case 0:
+            soundPath = HDC3;
+            break;
+        case 1:
+            soundPath = HDD3;
+            break;
+        case 2:
+            soundPath = HDE3;
+            break;
+        case 3:
+            soundPath = HDF3;
+            break;
+        default:
+            NSAssert(NO, @"%@",NSStringFromSelector(_cmd));
+            break;
+    }
+    [[HDSoundManager sharedManager] playSound:soundPath];
 }
 
 @end

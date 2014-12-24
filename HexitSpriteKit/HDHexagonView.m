@@ -16,7 +16,10 @@
 @property (nonatomic, assign) HDHexagonState state;
 @end
 
-@implementation HDHexagonView
+@implementation HDHexagonView{
+    HDHexagonType _type;
+    UIColor *_hexaStroke;
+}
 
 + (Class)layerClass
 {
@@ -31,37 +34,49 @@
 - (id)initWithFrame:(CGRect)frame type:(HDHexagonType)type strokeColor:(UIColor *)strokeColor
 {
     if (self = [super initWithFrame:frame]) {
-        
-        [[self hexaLayer] setFillColor:[[UIColor flatMidnightBlueColor] CGColor]];
-        [[self hexaLayer] setPath:[[HDHelper roundedPolygonPathWithRect:self.bounds lineWidth:0 sides:6 cornerRadius:2.0f] CGPath]];
-        [[self hexaLayer] setStrokeColor:[strokeColor CGColor]];
-        [[self hexaLayer] setLineWidth:8.0f];
-        
-         self.container = [[UIView alloc] initWithFrame:self.bounds];
-        [self.container setUserInteractionEnabled:NO];
-        [self addSubview:self.container];
-        
-         self.imageView = [[UIImageView alloc] initWithFrame:self.bounds];
-        [self.imageView setUserInteractionEnabled:NO];
-        [self.imageView setContentMode:UIViewContentModeCenter];
-        [self.container addSubview:self.imageView];
-        
-         self.indexLabel = [[UILabel alloc] initWithFrame:self.bounds];
-        [self.indexLabel setUserInteractionEnabled:NO];
-        [self.indexLabel setFont:GILLSANS(CGRectGetWidth(self.bounds)/3)];
-        [self.indexLabel setTextAlignment:NSTextAlignmentCenter];
-        [self.indexLabel setTextColor:[UIColor whiteColor]];
-        [self.container addSubview:self.indexLabel];
-        
-        if (type == HDHexagonTypePoint) {
-            [self.container setTransform:CGAffineTransformMakeRotation(-M_PI_2)];
-            [self setTransform:CGAffineTransformMakeRotation(M_PI_2)];
-        }
+        _type = type;
+        _hexaStroke = strokeColor;
+        [self _setup];
     }
     return self;
 }
 
- - (void)setBackgroundColor:(UIColor *)backgroundColor
+- (void)_setup
+{
+    [[self hexaLayer] setFillColor:[[UIColor flatMidnightBlueColor] CGColor]];
+    [[self hexaLayer] setPath:[[HDHelper roundedPolygonPathWithRect:self.bounds lineWidth:0 sides:6 cornerRadius:2.0f] CGPath]];
+    [[self hexaLayer] setStrokeColor:[_hexaStroke CGColor]];
+    [[self hexaLayer] setLineWidth:8.0f];
+    
+    self.container = [[UIView alloc] initWithFrame:self.bounds];
+    self.container.userInteractionEnabled = NO;
+    [self addSubview:self.container];
+    
+    self.imageView = [[UIImageView alloc] initWithFrame:self.bounds];
+    self.imageView.userInteractionEnabled = NO;
+    self.imageView.contentMode = UIViewContentModeCenter;
+    [self.container addSubview:self.imageView];
+    
+    self.indexLabel = [[UILabel alloc] initWithFrame:self.bounds];
+    self.indexLabel.userInteractionEnabled = NO;
+    self.indexLabel.font = GILLSANS(CGRectGetWidth(self.bounds)/3);
+    self.indexLabel.textAlignment = NSTextAlignmentCenter;
+    self.indexLabel.textColor = [UIColor whiteColor];
+    [self.container addSubview:self.indexLabel];
+    
+    if (_type == HDHexagonTypePoint) {
+        self.container.transform = CGAffineTransformMakeRotation(-M_PI_2); 
+        self.transform = CGAffineTransformMakeRotation(M_PI_2);
+    }
+}
+
+- (void)setTag:(NSInteger)tag
+{
+    [super setTag:tag];
+    [self.container setTag:tag];
+}
+
+- (void)setBackgroundColor:(UIColor *)backgroundColor
 {
     NSAssert(NO, @"Use setFill and setStroke %@",NSStringFromSelector(_cmd));
 }
@@ -71,38 +86,31 @@
     [self setState:state];
     switch (state) {
         case HDHexagonStateLocked:
-            
-            // Setup for Locked
-            [[self hexaLayer] setStrokeColor:[[UIColor flatEmeraldColor] CGColor]];
-            [self.imageView setImage:[UIImage imageNamed:@"Locked"]];
-            
+            self.hexaLayer.strokeColor = [[UIColor flatEmeraldColor] CGColor];
+            self.imageView.image = [UIImage imageNamed:@"Locked"];
             break;
         case HDHexagonStateUnlocked:
-            
-            // Setup for Unlocked
-            [[self hexaLayer] setStrokeColor:[[UIColor whiteColor] CGColor]];
-            [self.indexLabel setTextColor:[UIColor whiteColor]];
-            [self.indexLabel setText:[NSString stringWithFormat:@"%lu", index]];
-            
+            self.hexaLayer.strokeColor = [[UIColor whiteColor] CGColor];
+            self.indexLabel.textColor  = [UIColor whiteColor];
+            self.indexLabel.text       = [NSString stringWithFormat:@"%lu", index];
             break;
         case HDHexagonStateCompleted:
-            
-            // Setup for completed
-            [[self hexaLayer] setFillColor:[[UIColor flatPeterRiverColor] CGColor]];
-            [self.indexLabel setTextColor:[UIColor flatMidnightBlueColor]];
-            [self.indexLabel setText:[NSString stringWithFormat:@"%lu", index]];
+            self.hexaLayer.fillColor  = [[UIColor flatPeterRiverColor] CGColor];
+            self.indexLabel.textColor = [UIColor flatMidnightBlueColor];
+            self.indexLabel.text      = [NSString stringWithFormat:@"%lu", index];
             
             // Move text down to make room for completion start
             CGPoint labelPosition = self.indexLabel.center;
             labelPosition.y = CGRectGetHeight(self.bounds) * .7f;
-            [self.indexLabel setCenter:labelPosition];
+            self.indexLabel.center = labelPosition;
             
             // Move imageviews center point up to make room for image
             CGPoint imagePosition = self.imageView.center;
             imagePosition.y = CGRectGetHeight(self.bounds) * .25f;
-            [self.imageView setCenter:imagePosition];
-            [self.imageView setImage:[self _star]];
-            [self.imageView setTransform:CGAffineTransformMakeRotation(M_PI)];
+            
+            self.imageView.center    = imagePosition;
+            self.imageView.image     = [self _star];
+            self.imageView.transform = CGAffineTransformMakeRotation(M_PI);
             
             break;
         default:

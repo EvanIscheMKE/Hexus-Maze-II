@@ -8,6 +8,16 @@
 
 #import <UIKit/UIKit.h>
 
-@interface HDWelcomeViewController : UIViewController
+@protocol HDWelcomeViewDelegate;
+@interface HDWelcomeView : UIView
+@property (nonatomic, weak) id <HDWelcomeViewDelegate> delegate;
+@end
 
+@protocol HDWelcomeViewDelegate <NSObject>
+@required
+- (void)welcomeView:(HDWelcomeView *)welcomeView dismissAnimated:(BOOL)animated;
+- (void)welcomeView:(HDWelcomeView *)welcomeView playSoundAtIndex:(NSUInteger)index;
+@end
+
+@interface HDWelcomeViewController : UIViewController
 @end

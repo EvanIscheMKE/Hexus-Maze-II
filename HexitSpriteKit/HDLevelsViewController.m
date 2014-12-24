@@ -22,13 +22,12 @@ static const CGFloat kTileHeightInsetMultiplier = .855f;
 @implementation HDLevelsContainerView
 @end
 
-
 @implementation HDLevelsView
+
 - (HDLevelsContainerView *)containerView
 {
     return self.subviews.firstObject;
 }
-
 
 - (void)performIntroAnimationWithCompletion:(dispatch_block_t)completion
 {
@@ -53,12 +52,10 @@ static const CGFloat kTileHeightInsetMultiplier = .855f;
 
 - (void)performOutroAnimationWithCompletion:(dispatch_block_t)completion
 {
-    const NSTimeInterval kIncreaseInterval = .03f;
-
-    NSTimeInterval delay = 0.0f;
-    
     [CATransaction begin];
     [CATransaction setCompletionBlock:completion];
+    const NSTimeInterval kIncreaseInterval = .03f;
+    NSTimeInterval delay = 0.0f;
     for (HDHexagonView *hexa in [[self.containerView.subviews mutableCopy] shuffle]) {
         
         CAKeyframeAnimation *scale = [CAKeyframeAnimation animationWithKeyPath:@"transform.scale"];
