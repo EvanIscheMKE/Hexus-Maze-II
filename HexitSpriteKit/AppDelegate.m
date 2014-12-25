@@ -22,7 +22,6 @@ NSString * const iOS8AppStoreURLFormat = @"itms-apps://itunes.apple.com/app/id%d
 
 @interface AppDelegate ()<HDContainerViewControllerDelegate, GKGameCenterControllerDelegate>
 @property (nonatomic, strong) HDContainerViewController *containerController;
-@property (nonatomic, strong) AVAudioPlayer *loop;
 @end
 
 @implementation AppDelegate
@@ -30,30 +29,26 @@ NSString * const iOS8AppStoreURLFormat = @"itms-apps://itunes.apple.com/app/id%d
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
     [application setStatusBarHidden:YES];
+    [self _setup];
     
      self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
     [self.window setRootViewController:[HDWelcomeViewController new]];
     [self.window makeKeyAndVisible];
-    
-    [self _setup];
     
     return YES;
 }
 
 - (void)_setup
 {
-    NSError *sessionError = nil;
-    [[AVAudioSession sharedInstance] setCategory:AVAudioSessionCategoryAmbient error:&sessionError];
-    [[AVAudioSession sharedInstance] setActive:YES error:&sessionError];
-    
-    [[HDSoundManager sharedManager] preloadSounds:SOUNDS_TO_PRELOAD];
-    [[HDGameCenterManager sharedManager] authenticateGameCenter];
-    [self _prepareSoundLoop];
-    [self setPlayLoop:YES];
-    
     if (![[NSUserDefaults standardUserDefaults] boolForKey:HDFirstRunKey]) {
         [[HDSettingsManager sharedManager] configureSettingsForFirstRun];
+        [[NSUserDefaults standardUserDefaults] setBool:YES forKey:HDFirstRunKey];
     }
+    
+    [[HDSoundManager sharedManager] setPlayLoop:YES];
+    [[HDSoundManager sharedManager] startAudio];
+    [[HDSoundManager sharedManager] preloadSounds:SOUNDS_TO_PRELOAD];
+    [[HDGameCenterManager sharedManager] authenticateGameCenter];
 }
 
 - (void)presentContainerViewController
@@ -97,36 +92,6 @@ NSString * const iOS8AppStoreURLFormat = @"itms-apps://itunes.apple.com/app/id%d
 {
     HDGameViewController *controller = [[HDGameViewController alloc] initWithLevel:level];
     [self.containerController setFrontViewController:controller animated:NO];
-}
-
-//- (void)navigateToRandomlyGeneratedLevel
-//{
-//    HDGameViewController *controller = [[HDGameViewController alloc] initWithRandomlyGeneratedLevel];
-//    [self.containerController setFrontViewController:controller animated:YES];
-//}
-
-#pragma mark -
-#pragma mark - < SOUND LOOP >
-
-- (void)_prepareSoundLoop
-{
-    NSError *error = nil;
-    NSString *path = [[NSBundle mainBundle] pathForResource:@"Mellowtron" ofType:@"mp3"];
-    self.loop = [[AVAudioPlayer alloc] initWithContentsOfURL:[NSURL URLWithString:path] error:&error];
-    [self.loop setNumberOfLoops:-1];
-    [self.loop setVolume:.3f];
-    [self.loop prepareToPlay];
-}
-
-- (void)setPlayLoop:(BOOL)playLoop
-{
-    _playLoop = playLoop;
-    
-    if (playLoop) {
-        [self.loop play];
-    } else {
-        [self.loop stop];
-    }
 }
 
 #pragma mark -
@@ -194,6 +159,21 @@ transitionedFromController:(UIViewController *)fromController
         [(HDRearViewController *)self.containerController.rearViewController setGameInterfaceHidden:YES];
     }
 }
+
+#pragma mark - <UIApplicationDelegate>
+
+- (void)applicationDidEnterBackground:(UIApplication *)application {
+    [[HDSoundManager sharedManager] stopAudio];
+}
+
+- (void)applicationWillEnterForeground:(UIApplication *)application {
+    [[HDSoundManager sharedManager] startAudio];
+}
+
+- (void)applicationWillTerminate:(UIApplication *)application {
+    [[HDSoundManager sharedManager] stopAudio];
+}
+
 
 
 @end

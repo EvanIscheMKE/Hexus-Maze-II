@@ -24,9 +24,9 @@
 - (instancetype)initWithFrame:(CGRect)frame
 {
     if (self = [super initWithFrame:frame]) {
-        [self setShowsHorizontalScrollIndicator:NO];
-        [self setPagingEnabled:YES];
-        [self setManager:[HDMapManager sharedManager]];
+        self.showsHorizontalScrollIndicator = NO;
+        self.pagingEnabled = YES;
+        self.manager = [HDMapManager sharedManager];
     }
     return self;
 }

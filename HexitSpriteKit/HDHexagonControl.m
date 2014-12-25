@@ -19,9 +19,9 @@ static const CGFloat kPageSpacing        = 34.0f;
 {
     CGRect bounds = CGRectMake(0.0f, 0.0f, CGRectGetWidth(frame), CGRectGetHeight(frame));
     if (self = [super initWithFrame:bounds]) {
-        [self setBackgroundColor:[UIColor flatMidnightBlueColor]];
-        [self setCurrentPageTintColor:[UIColor whiteColor]];
-        [self setTintColor:[UIColor whiteColor]];
+        self.backgroundColor = [UIColor flatMidnightBlueColor];
+        self.currentPageTintColor = [UIColor whiteColor];
+        self.tintColor = [UIColor whiteColor];
     }
     return self;
 }

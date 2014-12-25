@@ -160,6 +160,12 @@
 
 + (void)entranceAnimationWithTiles:(NSArray *)tiles completion:(dispatch_block_t)completion
 {
+    if (tiles.count == 0) {
+        if (completion) {
+            completion();
+        }
+    }
+    
     NSUInteger count = tiles.count;
     
     NSTimeInterval _delay = 0;
@@ -215,6 +221,12 @@
 
 + (void)completionAnimationWithTiles:(NSArray *)tiles completion:(dispatch_block_t)completion
 {
+    if (tiles.count == 0) {
+        if (completion) {
+            completion();
+        }
+    }
+    
     // Array count --;
     NSUInteger countTo = tiles.count -1;
     

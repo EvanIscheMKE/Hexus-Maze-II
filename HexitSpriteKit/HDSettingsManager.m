@@ -18,7 +18,10 @@
     [[NSUserDefaults standardUserDefaults] setBool:YES forKey:HDVibrationKey];
     [[NSUserDefaults standardUserDefaults] setBool:YES forKey:HDEffectsKey];
     [[NSUserDefaults standardUserDefaults] setBool:YES forKey:HDSoundkey];
-    [[NSUserDefaults standardUserDefaults] setBool:YES forKey:HDFirstRunKey];
+    
+    self.vibe  =  [[NSUserDefaults standardUserDefaults] boolForKey:HDVibrationKey];
+    self.fx    =  [[NSUserDefaults standardUserDefaults] boolForKey:HDEffectsKey];
+    self.sound =  [[NSUserDefaults standardUserDefaults] boolForKey:HDSoundkey];
 }
 
 #pragma mark -
@@ -27,10 +30,10 @@
 - (instancetype)init
 {
     if (self = [super init]) {
-        [self setVibe: [[NSUserDefaults standardUserDefaults] boolForKey:HDVibrationKey]];
-        [self setFx:   [[NSUserDefaults standardUserDefaults] boolForKey:HDEffectsKey]];
-        [self setSound:[[NSUserDefaults standardUserDefaults] boolForKey:HDSoundkey]];
-        [self setMusic:YES];
+        self.vibe  =  [[NSUserDefaults standardUserDefaults] boolForKey:HDVibrationKey];
+        self.fx    =  [[NSUserDefaults standardUserDefaults] boolForKey:HDEffectsKey];
+        self.sound =  [[NSUserDefaults standardUserDefaults] boolForKey:HDSoundkey];
+        self.music = YES;
     }
     return self;
 }

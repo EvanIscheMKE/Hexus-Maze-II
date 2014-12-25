@@ -70,6 +70,7 @@ static const CGFloat kPadding = 4.0f;
     
     UIImageView *pictureFrame = [[UIImageView alloc] initWithImage:[self _levelsComingSoonSign]];
     [pictureFrame setCenter:CGPointMake(CGRectGetMidX(self.bounds), CGRectGetHeight(self.bounds)/3)];
+    pictureFrame.layer.allowsEdgeAntialiasing = YES;
     pictureFrame.layer.borderWidth = 10.0f;
     pictureFrame.layer.borderColor = [[UIColor clearColor] CGColor];
     [self addSubview:pictureFrame];
@@ -129,6 +130,9 @@ static const CGFloat kPadding = 4.0f;
         
         CGSize imageSize = CGSizeMake(CGRectGetWidth(self.bounds)/1.35f, CGRectGetHeight(self.bounds)/1.8f);
         UIGraphicsBeginImageContextWithOptions(imageSize, NO, [[UIScreen mainScreen] scale]);
+        
+        CGContextSetShouldAntialias(UIGraphicsGetCurrentContext(), YES);
+        CGContextSetAllowsAntialiasing(UIGraphicsGetCurrentContext(), YES);
         
         [[UIColor whiteColor] setFill];
         [[UIColor flatPeterRiverColor] setStroke];

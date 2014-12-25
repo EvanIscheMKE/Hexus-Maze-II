@@ -138,18 +138,18 @@ static const CGFloat kTileHeightInsetMultiplier = .855f;
             [tap setNumberOfTapsRequired:1];
             [hexagon addGestureRecognizer:tap];
             
-            if (level.completed)
-            {
+//            if (level.completed)
+//            {
                 [hexagon setState:HDHexagonStateCompleted index:tagIndex];
-            }
-            else if (!level.completed && level.isUnlocked)
-            {
-                [hexagon setState:HDHexagonStateUnlocked index:tagIndex];
-            }
-            else
-            {
-                [hexagon setState:HDHexagonStateLocked index:tagIndex];
-            }
+//            }
+//            else if (!level.completed && level.isUnlocked)
+//            {
+//                [hexagon setState:HDHexagonStateUnlocked index:tagIndex];
+//            }
+//            else
+//            {
+//                [hexagon setState:HDHexagonStateLocked index:tagIndex];
+//            }
             tagIndex++;
         }
     }
