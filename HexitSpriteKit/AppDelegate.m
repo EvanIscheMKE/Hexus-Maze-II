@@ -45,6 +45,7 @@ NSString * const iOS8AppStoreURLFormat = @"itms-apps://itunes.apple.com/app/id%d
         [[NSUserDefaults standardUserDefaults] setBool:YES forKey:HDFirstRunKey];
     }
     
+    [[HDSoundManager sharedManager] ]
     [[HDSoundManager sharedManager] setPlayLoop:YES];
     [[HDSoundManager sharedManager] startAudio];
     [[HDSoundManager sharedManager] preloadSounds:SOUNDS_TO_PRELOAD];
@@ -161,6 +162,10 @@ transitionedFromController:(UIViewController *)fromController
 }
 
 #pragma mark - <UIApplicationDelegate>
+
+- (void)applicationWillResignActive:(UIApplication *)application {
+    [[NSUserDefaults standardUserDefaults] synchronize];
+}
 
 - (void)applicationDidEnterBackground:(UIApplication *)application {
     [[HDSoundManager sharedManager] stopAudio];

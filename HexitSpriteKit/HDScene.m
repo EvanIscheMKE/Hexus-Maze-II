@@ -15,6 +15,7 @@
 #import "SKColor+HDColor.h"
 #import "HDSpriteNode.h"
 #import "HDSettingsManager.h"
+#import "HDSoundManager.h"
 #import "SKEmitterNode+EmitterAdditions.h"
 #import "NSMutableArray+UniqueAdditions.h"
 #import "HDMapManager.h"
@@ -529,9 +530,11 @@ static const CGFloat kTileHeightInsetMultiplier = .845f;
 
 - (void)runAction:(SKAction *)action withKey:(NSString *)key
 {
-    // if key is a sounds key, check to make sure sounds are on before playing
-    if ([key isEqualToString:HDSoundActionKey] && ![[HDSettingsManager sharedManager] sound]) {
-        return;
+    // if key is equal to "HDSoundActionKey", check to make sure the sounds on and there's no background music playing
+    if ([key isEqualToString:HDSoundActionKey]) {
+        if (![[HDSettingsManager sharedManager] sound] || [HDSoundManager isOtherAudioPlaying]) {
+            return;
+        }
     }
     [super runAction:action withKey:key];
 }

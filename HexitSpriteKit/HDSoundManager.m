@@ -13,9 +13,12 @@
 
 @interface HDSoundManager ()
 @property (nonatomic, getter=isSoundSessionActive, assign) BOOL soundSessionActive;
+@property (nonatomic, strong) AVAudioPlayer *loopPlayer;
 @end
 
-@implementation HDSoundManager
+@implementation HDSoundManager {
+    BOOL _loopsValid;
+}
 
 - (instancetype)init
 {
@@ -35,9 +38,32 @@
     return _soundController;
 }
 
-+ (BOOL)isOtherAudioPlaying {
-    AVAudioSession *audioSession = [AVAudioSession sharedInstance];
-    return audioSession.otherAudioPlaying;
+#pragma mark - Sounds Manager For UIKit
+
+- (void)setPlayLoop:(BOOL)playLoop
+{
+    if (!_loopsValid) {
+        return;
+    }
+    
+    if (playLoop) {
+        [self.loopPlayer play];
+    } else {
+        [self.loopPlayer stop];
+    }
+}
+
+- (void)preloadLoopWithName:(NSString *)filename;
+{
+    NSError *error = nil;
+    NSString *soundPath = [[[NSBundle mainBundle] resourcePath] stringByAppendingPathComponent:filename];
+    self.loopPlayer = [[AVAudioPlayer alloc] initWithContentsOfURL:[NSURL fileURLWithPath:soundPath] error:&error];
+    self.loopPlayer.numberOfLoops = -1; /* Will continue to play until we tell it to stop. */
+    [self.loopPlayer prepareToPlay];
+    
+    if (!error) {
+        _loopsValid = YES;
+    }
 }
 
 - (void)preloadSounds:(NSArray *)soundNames
@@ -65,6 +91,14 @@
 }
 
 #pragma mark - Audio Session 
+
+ /* AVAudioSession cannot be active while the application is in the background, so we have to stop it when going in to background, and reactivate it when entering foreground. */
+
++ (BOOL)isOtherAudioPlaying
+{
+    AVAudioSession *audioSession = [AVAudioSession sharedInstance];
+    return audioSession.otherAudioPlaying;
+}
 
 - (void)startAudio
 {

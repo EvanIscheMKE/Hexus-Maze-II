@@ -16,8 +16,9 @@
 
 - (void)playSound:(NSString *)soundName;
 - (void)preloadSounds:(NSArray *)preloadedSounds;
+- (void)preloadLoopWithName:(NSString *)filename;
 
- /* AVAudioSession cannot be active while the application is in the background, so we have to stop it when going in to background, and reactivate it when entering foreground. */
++ (BOOL)isOtherAudioPlaying;
 - (void)startAudio;
 - (void)stopAudio;
 
