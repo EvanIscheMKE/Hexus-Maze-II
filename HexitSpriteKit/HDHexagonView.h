@@ -22,9 +22,10 @@ typedef NS_ENUM(NSUInteger, HDHexagonState) {
 @interface HDHexagonView : UIView
 @property (nonatomic, getter=isEnabled, assign) BOOL enabled;
 
-@property (nonatomic, strong) UIView *container;
-@property (nonatomic, strong) UILabel *indexLabel;
-@property (nonatomic, strong) UIImageView *imageView;
+@property (nonatomic, strong)  UIView *container;
+@property (nonatomic, strong)  UILabel *indexLabel;
+@property (nonatomic, strong)  UIImageView *imageView;
+@property (nonatomic, readonly) HDHexagonState state;
 - (void)setState:(HDHexagonState)state index:(NSInteger)index;
 - (instancetype)initWithFrame:(CGRect)frame type:(HDHexagonType)type strokeColor:(UIColor *)strokeColor;
 @end

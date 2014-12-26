@@ -102,10 +102,6 @@ NSString * const TRIPLE_KEY = @"triple";
         return YES;
     };
     
-    [self.node runAction:[SKAction scaleTo:.9f duration:.15f] completion:^{
-        [self.node runAction:[SKAction scaleTo:1.0f duration:.15f]];
-    }];
-    
     _recievedTouchesCount++;
     
     switch (self.type) {
@@ -118,7 +114,6 @@ NSString * const TRIPLE_KEY = @"triple";
         case HDHexagonTypeDouble:
             switch (_recievedTouchesCount) {
                 case 1:{
-                    [[NSNotificationCenter defaultCenter] postNotificationName:HDAnimateLabelNotification object:nil];
                     SKShapeNode *shapeNode = (SKShapeNode *)[self.node childNodeWithName:DOUBLE_KEY];
                     [shapeNode removeFromParent];
                 } break;
@@ -129,11 +124,9 @@ NSString * const TRIPLE_KEY = @"triple";
         case HDHexagonTypeTriple:
             switch (_recievedTouchesCount) {
                 case 1:
-                    [[NSNotificationCenter defaultCenter] postNotificationName:HDAnimateLabelNotification object:nil];
                     [[[(SKShapeNode *)[[self.node children] lastObject] children] firstObject] removeFromParent];
                     break;
                 case 2:
-                    [[NSNotificationCenter defaultCenter] postNotificationName:HDAnimateLabelNotification object:nil];
                     [self.node removeAllChildren];
                     break;
                 case 3:

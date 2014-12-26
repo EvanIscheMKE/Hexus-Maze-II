@@ -33,17 +33,18 @@ static const CGFloat kTileHeightInsetMultiplier = .855f;
 {
     [CATransaction begin];
     [CATransaction setCompletionBlock:completion];
-    const NSTimeInterval kIncreaseInterval = .03f;
+    
     NSTimeInterval delay = 0;
+    const NSTimeInterval kIncreaseInterval = .03f;
     for (HDHexagonView *hexa in [[self.containerView.subviews mutableCopy] shuffle]) {
         
         [hexa performSelector:@selector(setHidden:) withObject:0 afterDelay:delay];
         
         CAKeyframeAnimation *scale = [CAKeyframeAnimation animationWithKeyPath:@"transform.scale"];
-        [scale setValues:@[@0.0f,@1.1f,@1.0f]];
-        [scale setDuration:.3f];
-        [scale setBeginTime:CACurrentMediaTime() + delay];
-        [hexa.layer addAnimation:scale forKey:@"ScaleIn"];
+        scale.values = @[@0.0f,@1.1f,@1.0f];
+        scale.duration = .3f;
+        scale.beginTime = CACurrentMediaTime() + delay;
+        [hexa.layer addAnimation:scale forKey:scale.keyPath];
         
         delay += kIncreaseInterval;
     }
@@ -54,8 +55,9 @@ static const CGFloat kTileHeightInsetMultiplier = .855f;
 {
     [CATransaction begin];
     [CATransaction setCompletionBlock:completion];
-    const NSTimeInterval kIncreaseInterval = .03f;
+    
     NSTimeInterval delay = 0.0f;
+    const NSTimeInterval kIncreaseInterval = .03f;
     for (HDHexagonView *hexa in [[self.containerView.subviews mutableCopy] shuffle]) {
         
         CAKeyframeAnimation *scale = [CAKeyframeAnimation animationWithKeyPath:@"transform.scale"];
@@ -64,7 +66,7 @@ static const CGFloat kTileHeightInsetMultiplier = .855f;
         scale.removedOnCompletion = NO;
         scale.fillMode = kCAFillModeForwards;
         scale.beginTime = CACurrentMediaTime() + delay;
-        [hexa.layer addAnimation:scale forKey:@"ScaleOut"];
+        [hexa.layer addAnimation:scale forKey:scale.keyPath];
         
         delay += kIncreaseInterval;
     }
@@ -164,7 +166,7 @@ static const CGFloat kTileHeightInsetMultiplier = .855f;
 
 - (void)_beginGame:(UITapGestureRecognizer *)sender
 {
-    self.view.userInteractionEnabled = NO;
+    self.view.userInteractionEnabled = ([(HDHexagonView *)sender.view state] == HDHexagonStateLocked) ? YES : NO;
     [self.delegate levelsViewController:self didSelectLevel:[sender.view tag]];
 }
 

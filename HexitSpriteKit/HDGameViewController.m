@@ -29,7 +29,10 @@ static const CGFloat kPadding    = 5.0f;
 @property (nonatomic, assign) NSUInteger completedTileCount;
 
 @property (nonatomic, assign) BOOL pauseGame;
+@property (nonatomic, assign) BOOL restartButtonHidden;
 @property (nonatomic, assign) BOOL navigationBarHidden;
+
+@property (nonatomic, strong) UIButton *restart;
 
 @property (nonatomic, strong) HDGridManager *gridManager;
 @property (nonatomic, strong) HDScene *scene;
@@ -49,10 +52,6 @@ static const CGFloat kPadding    = 5.0f;
 {
     [[NSNotificationCenter defaultCenter] removeObserver:self name:UIApplicationWillResignActiveNotification object:nil];
     [[NSNotificationCenter defaultCenter] removeObserver:self name:UIApplicationDidBecomeActiveNotification  object:nil];
-    [[NSNotificationCenter defaultCenter] removeObserver:self name:HDCompletedTileCountNotification  object:nil];
-    [[NSNotificationCenter defaultCenter] removeObserver:self name:HDAnimateLabelNotification        object:nil];
-    [[NSNotificationCenter defaultCenter] removeObserver:self name:HDClearTileCountNotification      object:nil];
-    [[NSNotificationCenter defaultCenter] removeObserver:self name:HDNextLevelNotification           object:nil];
 }
 
 - (id)initWithLevel:(NSInteger)level
@@ -90,11 +89,6 @@ static const CGFloat kPadding    = 5.0f;
     self.view.backgroundColor = [UIColor flatMidnightBlueColor];
     
     [[NSNotificationCenter defaultCenter] addObserver:self
-                                             selector:@selector(_performHeightAnimationOnCountLabel)
-                                                 name:HDAnimateLabelNotification
-                                               object:nil];
-    
-    [[NSNotificationCenter defaultCenter] addObserver:self
                                              selector:@selector(_applicationWillResignActive)
                                                  name:UIApplicationWillResignActiveNotification
                                                object:nil];
@@ -122,6 +116,17 @@ static const CGFloat kPadding    = 5.0f;
 
 #pragma mark - Public
 
+- (void)setRestartButtonHidden:(BOOL)restartButtonHidden
+{
+    _restartButtonHidden = restartButtonHidden;
+    
+    if (_restartButtonHidden) {
+        [self _hideRestartAnimated:YES];
+    } else {
+        [self _showRestartAnimated:YES];
+    }
+}
+
 - (void)setNavigationBarHidden:(BOOL)navigationBarHidden
 {
     _navigationBarHidden = navigationBarHidden;
@@ -135,6 +140,9 @@ static const CGFloat kPadding    = 5.0f;
 
 - (void)restartGame
 {
+    if (!self.restartButtonHidden) {
+        self.restartButtonHidden = YES;
+    }
     [self.scene restart];
 }
 
@@ -176,7 +184,7 @@ static const CGFloat kPadding    = 5.0f;
     [self.view addGestureRecognizer:rightEdgeGesture];
     
     CGRect navBarFrame = CGRectMake(0.0f, -kDefaultContainerHeight, CGRectGetWidth(self.view.bounds), kDefaultContainerHeight);
-    self.navigationBar = [HDNavigationBar viewWithToggleImage:[UIImage imageNamed:@"Grid"] activityImage:[UIImage imageNamed:@"Reset"]];
+    self.navigationBar = [HDNavigationBar viewWithToggleImage:[UIImage imageNamed:@"Grid"] activityImage:[UIImage new]];
     self.navigationBar.frame = navBarFrame;
     [[self.navigationBar.subviews firstObject] addTarget:container
                                                   action:@selector(toggleMenuViewController)
@@ -185,6 +193,9 @@ static const CGFloat kPadding    = 5.0f;
                                                  action:@selector(restartGame)
                                        forControlEvents:UIControlEventTouchUpInside];
     [self.view addSubview:self.navigationBar];
+    
+    self.restart = [self _restartButton];
+    [self.view addSubview:self.restart];
     
     self.completedLabel = [self _completionLabel];
     [self.navigationBar addSubview:self.completedLabel];
@@ -211,7 +222,7 @@ static const CGFloat kPadding    = 5.0f;
     NSArray *hexagons = [self.gridManager hexagons];
     
     self.completedTileCount = 0;
-    [self setTotalTileCount:hexagons.count];
+    self.totalTileCount = hexagons.count;
     [self.scene layoutNodesWithGrid:hexagons];
 }
 
@@ -236,6 +247,36 @@ static const CGFloat kPadding    = 5.0f;
         CGRect rect = self.navigationBar.frame;
         rect.origin.y = 0.0f;
         self.navigationBar.frame = rect;
+    };
+    
+    if (!animated) {
+        animate();
+    } else {
+        [UIView animateWithDuration:.3f animations:animate];
+    }
+}
+
+- (void)_hideRestartAnimated:(BOOL)animated
+{
+    dispatch_block_t animate = ^{
+        CGPoint position = self.restart.center;
+        position.y = CGRectGetHeight(self.view.bounds) + CGRectGetMidX(self.restart.bounds);
+        self.restart.center = position;
+    };
+    
+    if (!animated) {
+        animate();
+    } else {
+        [UIView animateWithDuration:.3f animations:animate];
+    }
+}
+
+- (void)_showRestartAnimated:(BOOL)animated
+{
+    dispatch_block_t animate = ^{
+        CGPoint position = self.restart.center;
+        position.y = CGRectGetHeight(self.view.bounds) - (CGRectGetMidY(self.restart.bounds) + 20.0f);
+        self.restart.center = position;
     };
     
     if (!animated) {
@@ -320,9 +361,23 @@ static const CGFloat kPadding    = 5.0f;
     self.completedTileCount = count;
 }
 
+- (void)scene:(HDScene *)scene gameEndedWithCompletion:(BOOL)completion
+{
+    if (completion) {
+        self.navigationBarHidden = YES;
+    } else {
+        self.restartButtonHidden = NO;
+    }
+}
+
 - (void)multipleTouchTileWasTouchedInScene:(HDScene *)scene
 {
     [self _scaleAnimationOnKeyPath:@"transform.scale.y"];
+}
+
+- (void)gameWillResetInScene:(HDScene *)scene
+{
+    self.navigationBarHidden = NO;
 }
 
 #pragma mark - <UIScreenEdgeGestureRecognizer>
@@ -336,7 +391,30 @@ static const CGFloat kPadding    = 5.0f;
     }
 }
 
-#pragma mark -
+#pragma mark - Button
+
+- (UIButton *)_restartButton
+{
+    CGRect restartBounds = CGRectMake(0.0f, 0.0f, CGRectGetWidth(CGRectInset(self.view.bounds, 20.0f, 0.0f)), 44.0f);
+    UIButton *restartButton = [UIButton buttonWithType:UIButtonTypeCustom];
+    restartButton.frame = restartBounds;
+    [restartButton addTarget:self action:@selector(restartGame) forControlEvents:UIControlEventTouchUpInside];
+    [restartButton setTitle:@"Try Again" forState:UIControlStateNormal];
+    [restartButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
+    [restartButton.titleLabel setTextAlignment:NSTextAlignmentCenter];
+    [restartButton.titleLabel setFont:GILLSANS_LIGHT(22.0f)];
+    restartButton.layer.borderColor  = [[UIColor whiteColor] CGColor];
+    restartButton.layer.borderWidth  = 5.0f;
+    restartButton.layer.cornerRadius = 5.0f;
+    restartButton.center = CGPointMake(
+                                       CGRectGetMidX(self.view.bounds),
+                                       CGRectGetHeight(self.view.bounds) + CGRectGetMidX(restartBounds)
+                                       );
+    
+    return restartButton;
+}
+
+#pragma mark - Labels
 
 - (UILabel *)_completedCountLabel
 {

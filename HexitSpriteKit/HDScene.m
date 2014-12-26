@@ -209,22 +209,23 @@ static const CGFloat kTileHeightInsetMultiplier = .845f;
         [_selectedHexagons addObject:hexagon];
         
         if ([hexagon selectedAfterRecievingTouches]){
-            if (self.delegate && [self.delegate respondsToSelector:@selector(scene:updateSelectedTileCount:)]){
-                [self.delegate scene:self updateSelectedTileCount:_hexagons.count - [self _inPlayTileCount]];
+            [hexagon.node runAction:[SKAction scaleTo:.9f duration:.15f] completion:^{
+                [hexagon.node runAction:[SKAction scaleTo:1.0f duration:.15f]];
+            }];
+            if (self.delegate && [self.delegate respondsToSelector:@selector(scene:updatedSelectedTileCount:)]){
+                [self.delegate scene:self updatedSelectedTileCount:_hexagons.count - [self _inPlayTileCount]];
             }
         } else {
-            if (self.delegate && [self.delegate respondsToSelector:@selector(scene:updateSelectedTileCount:)]){
-                [self.delegate scene:self updateSelectedTileCount:_hexagons.count - [self _inPlayTileCount]];
+            if (self.delegate && [self.delegate respondsToSelector:@selector(multipleTouchTileWasTouchedInScene:)]){
+                [self.delegate multipleTouchTileWasTouchedInScene:self];
             }
         }
-        
-        HDSpriteNode *sprite = [self indicatorTileUnderHexagon:hexagon];
         
         // Check if FX are on before adding emitter effects
         if ([[HDSettingsManager sharedManager] fx]) {
+            HDSpriteNode *sprite = [self indicatorTileUnderHexagon:hexagon];
             [sprite addChild:[SKEmitterNode hexaEmitterWithColor:hexagon.node.strokeColor scale:hexagon.selected ? .9f : .5f]];
         }
-        
         [self _checkGameStateForTile:hexagon];
         [self _playSoundForHexagon:hexagon withVibration:YES];
     }
@@ -299,21 +300,8 @@ static const CGFloat kTileHeightInsetMultiplier = .845f;
 
 - (void)_checkGameStateForTile:(HDHexagon *)tile
 {
-    if ([self isGameOverAfterPlacingTile:tile]) {
-        // Lost Game
-        
-        CGRect shapeRect = CGRectMake(0.0f, 0.0f, CGRectGetWidth(self.frame) - 40.0f, 50.0f);
-        UIBezierPath *shape = [UIBezierPath bezierPathWithRoundedRect:shapeRect cornerRadius:8.0f];
-        HDRestartNode *node = [HDRestartNode shapeNodeWithPath:[shape CGPath] centered:YES];
-        node.position = CGPointMake(
-                                    CGRectGetWidth(self.frame) / 2,
-                                    -CGRectGetHeight(node.frame) / 2
-                                    );
-        [self addChild:node];
-        
-        [node runAction:[SKAction moveToY:CGRectGetHeight(node.frame) / 2 + 20.0f duration:.3f]];
-   
-    } else if ([self _inPlayTileCount] == 0) {
+
+    if ([self _inPlayTileCount] == 0) {
         // Won Game
         
         self.animating = YES;
@@ -330,7 +318,10 @@ static const CGFloat kTileHeightInsetMultiplier = .845f;
             [self addChild:alertNode];
         }];
         
-       [[self.view.subviews firstObject] setUserInteractionEnabled:NO];
+        if (self.delegate && [self.delegate respondsToSelector:@selector(scene:gameEndedWithCompletion:)]) {
+            [self.delegate scene:self gameEndedWithCompletion:YES];
+        }
+        
        [[HDMapManager sharedManager] completedLevelAtIndex:self.levelIndex-1];
         
     } else if ([self _inPlayTileCount] == 1 && self.includeEndTile) {
@@ -340,6 +331,12 @@ static const CGFloat kTileHeightInsetMultiplier = .845f;
                 hexagon.state = HDHexagonStateEnabled;
                 break;
             }
+        }
+        
+    } else if ([self isGameOverAfterPlacingTile:tile]) {
+        // Lost Game
+        if (self.delegate && [self.delegate respondsToSelector:@selector(scene:gameEndedWithCompletion:)]) {
+            [self.delegate scene:self gameEndedWithCompletion:NO];
         }
     }
 }
@@ -442,8 +439,8 @@ static const CGFloat kTileHeightInsetMultiplier = .845f;
     self.levelIndex += 1;
     
     // Call parent to refill model with next level's data, then call us back
-    if (self.delegate && [self.delegate respondsToSelector:@selector(scene:proceedToLevel:)]) {
-        [self.delegate scene:self proceedToLevel:self.levelIndex];
+    if (self.delegate && [self.delegate respondsToSelector:@selector(scene:proceededToLevel:)]) {
+        [self.delegate scene:self proceededToLevel:self.levelIndex];
     }
 }
 
@@ -453,8 +450,8 @@ static const CGFloat kTileHeightInsetMultiplier = .845f;
 {
     self.countDownSoundIndex = NO;
     
-    if (self.delegate && [self.delegate respondsToSelector:@selector(scene:updateSelectedTileCount:)]) {
-        [self.delegate scene:self updateSelectedTileCount:0];
+    if (self.delegate && [self.delegate respondsToSelector:@selector(scene:updatedSelectedTileCount:)]) {
+        [self.delegate scene:self updatedSelectedTileCount:0];
     }
     
     // Return used starting tile count to ZERO
@@ -570,10 +567,14 @@ static const CGFloat kTileHeightInsetMultiplier = .845f;
     
     if ([title isEqualToString:RESTARTKEY]) {
         [self _restartFromClearedScreen];
-        [[self.view.subviews firstObject] setUserInteractionEnabled:YES];
+        if (self.delegate && [self.delegate respondsToSelector:@selector(gameWillResetInScene:)]) {
+            [self.delegate gameWillResetInScene:self];
+        }
     } else if ([title isEqualToString:NEXTLEVELKEY]) {
         [self _nextLevel];
-        [[self.view.subviews firstObject] setUserInteractionEnabled:YES];
+        if (self.delegate && [self.delegate respondsToSelector:@selector(gameWillResetInScene:)]) {
+            [self.delegate gameWillResetInScene:self];
+        }
     } else if ([title isEqualToString:SHAREKEY]) {
         [ADelegate presentShareViewController];
     } else if ([title isEqualToString:ACHIEVEMENTSKEY]) {
