@@ -14,6 +14,6 @@
 - (instancetype)initWithRandomlyGeneratedLevel;
 
 - (void)restartGame;
-
+- (void)performExitAnimationWithCompletion:(dispatch_block_t)completion;
 @end
 

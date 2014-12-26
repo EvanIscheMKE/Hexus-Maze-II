@@ -96,9 +96,11 @@ NSString * const TRIPLE_KEY = @"triple";
     }
 }
 
-- (void)recievedTouches
+- (BOOL)selectedAfterRecievingTouches
 {
-    if (self.isSelected) return;
+    if (self.isSelected) {
+        return YES;
+    };
     
     [self.node runAction:[SKAction scaleTo:.9f duration:.15f] completion:^{
         [self.node runAction:[SKAction scaleTo:1.0f duration:.15f]];
@@ -157,6 +159,7 @@ NSString * const TRIPLE_KEY = @"triple";
             [self setSelected:YES];
             break;
     }
+    return self.selected;
 }
 
 - (void)setSelected:(BOOL)selected
@@ -164,9 +167,6 @@ NSString * const TRIPLE_KEY = @"triple";
     _selected = selected;
     
     if (selected) {
-        
-        [[NSNotificationCenter defaultCenter] postNotificationName:HDCompletedTileCountNotification object:nil];
-        
         switch (self.type) {
             case HDHexagonTypeRegular:
                 [self.node setFillColor:self.node.strokeColor];

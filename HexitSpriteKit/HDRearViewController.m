@@ -36,8 +36,8 @@ static const CGFloat MINIMUM_MENU_OFFSET_X = 228.0f;
 
 - (void)viewDidLoad
 {
+    self.view.backgroundColor = [UIColor whiteColor];
     [super viewDidLoad];
-    [self.view setBackgroundColor:[UIColor flatCloudsColor]];
     [self _setup];
 }
 
@@ -52,39 +52,6 @@ static const CGFloat MINIMUM_MENU_OFFSET_X = 228.0f;
     }
 }
 
-#pragma mark -
-#pragma mark - Selectors
-
-- (IBAction)_openAcheivementsController:(id)sender
-{
-    HDContainerViewController *container = self.containerViewController;
-    if (container.isExpanded) {
-        [container toggleMenuViewControllerWithCompletion:^{
-             [ADelegate presentGameCenterControllerForState:GKGameCenterViewControllerStateAchievements];
-        }];
-    }
-}
-
-- (IBAction)_popToRootViewController:(id)sender
-{
-    HDContainerViewController *container = self.containerViewController;
-    if (container.isExpanded) {
-        [container toggleMenuViewControllerWithCompletion:^{
-            [[NSNotificationCenter defaultCenter] postNotificationName:@"gridPerformExitAnimations" object:nil];
-        }];
-    }
-}
-
-- (IBAction)_animateToLevelViewController:(id)sender
-{
-    HDContainerViewController *container = self.containerViewController;
-    if (container.isExpanded) {
-        [container toggleMenuViewControllerWithCompletion:^{
-            [[NSNotificationCenter defaultCenter] postNotificationName:@"performExitAnimations" object:nil];
-        }];
-    }
-}
-
 - (IBAction)updateToggleButtonAtTag:(id)sender
 {
     HDSwitch *toggle = (HDSwitch *)sender;
@@ -94,36 +61,42 @@ static const CGFloat MINIMUM_MENU_OFFSET_X = 228.0f;
     switch (toggle.tag) {
         case 0:
             [manager setSound:!manager.sound];
+            [[HDSoundManager sharedManager] playSound:HDButtonSound];
             break;
         case 1:
             [manager setMusic:!manager.music];
-            [ADelegate setPlayLoop:manager.music];
+            [[HDSoundManager sharedManager] setPlayLoop:manager.music];
+            [[HDSoundManager sharedManager] playSound:HDButtonSound];
             break;
         case 2:
             [manager setVibe:!manager.vibe];
+            [[HDSoundManager sharedManager] playSound:HDButtonSound];
+            if (manager.vibe) {
+                AudioServicesPlaySystemSound(kSystemSoundID_Vibrate);
+            }
             break;
         case 3:
             [manager setFx:!manager.fx];
+            [[HDSoundManager sharedManager] playSound:HDButtonSound];
             break;
         default:
-            NSAssert(NO, @"TagIndex is outside of 0-3 %@",NSStringFromSelector(_cmd));
+            NSAssert(NO, @"%@",NSStringFromSelector(_cmd));
             break;
     }
 }
 
-#pragma mark -
-#pragma mark - <Private>
+#pragma mark - Private
 
 - (void)_hideGameInterface
 {
     [self.retry setTitle:@"Achievements" forState:UIControlStateNormal];
     [self.map   setTitle:@"Main Menu"    forState:UIControlStateNormal];
     
-    [self.retry removeTarget:ADelegate action:@selector(restartCurrentLevel)       forControlEvents:UIControlEventTouchUpInside];
-    [self.map   removeTarget:self action:@selector(_animateToLevelViewController:) forControlEvents:UIControlEventTouchUpInside];
+    [self.retry removeTarget:ADelegate action:@selector(restartCurrentLevel:)           forControlEvents:UIControlEventTouchUpInside];
+    [self.map   removeTarget:ADelegate action:@selector(animateToLevelViewController:)  forControlEvents:UIControlEventTouchUpInside];
     
-    [self.retry addTarget:self action:@selector(_openAcheivementsController:) forControlEvents:UIControlEventTouchUpInside];
-    [self.map   addTarget:self action:@selector(_popToRootViewController:)    forControlEvents:UIControlEventTouchUpInside];
+    [self.retry addTarget:ADelegate action:@selector(openAcheivementsController:) forControlEvents:UIControlEventTouchUpInside];
+    [self.map   addTarget:ADelegate action:@selector(popToRootViewController:)    forControlEvents:UIControlEventTouchUpInside];
 }
 
 - (void)_showGameInterface
@@ -131,11 +104,11 @@ static const CGFloat MINIMUM_MENU_OFFSET_X = 228.0f;
     [self.retry setTitle:@"Restart"     forState:UIControlStateNormal];
     [self.map   setTitle:@"Back to Map" forState:UIControlStateNormal];
     
-    [self.retry removeTarget:self action:@selector(_openAcheivementsController:) forControlEvents:UIControlEventTouchUpInside];
-    [self.map   removeTarget:self action:@selector(_popToRootViewController:)    forControlEvents:UIControlEventTouchUpInside];
+    [self.retry removeTarget:ADelegate action:@selector(openAcheivementsController:) forControlEvents:UIControlEventTouchUpInside];
+    [self.map   removeTarget:ADelegate action:@selector(popToRootViewController:)    forControlEvents:UIControlEventTouchUpInside];
     
-    [self.retry addTarget:ADelegate action:@selector(restartCurrentLevel)       forControlEvents:UIControlEventTouchUpInside];
-    [self.map   addTarget:self action:@selector(_animateToLevelViewController:) forControlEvents:UIControlEventTouchUpInside];
+    [self.retry addTarget:ADelegate action:@selector(restartCurrentLevel:)           forControlEvents:UIControlEventTouchUpInside];
+    [self.map   addTarget:ADelegate action:@selector(animateToLevelViewController:)  forControlEvents:UIControlEventTouchUpInside];
 }
 
 - (UIView *)_setupSwitches
@@ -272,12 +245,12 @@ static const CGFloat MINIMUM_MENU_OFFSET_X = 228.0f;
     self.retry = [UIButton buttonWithType:UIButtonTypeCustom];
     [self.retry setTitle:@"Achievements" forState:UIControlStateNormal];
     [self.retry setBackgroundColor:[UIColor flatMidnightBlueColor]];
-    [self.retry addTarget:self action:@selector(_openAcheivementsController:) forControlEvents:UIControlEventTouchUpInside];
+    [self.retry addTarget:ADelegate action:@selector(openAcheivementsController:) forControlEvents:UIControlEventTouchUpInside];
     
     self.map = [UIButton buttonWithType:UIButtonTypeCustom];
     [self.map setBackgroundColor:[UIColor flatPeterRiverColor]];
     [self.map setTitle:@"Main Menu" forState:UIControlStateNormal];
-    [self.map addTarget:self action:@selector(_popToRootViewController:) forControlEvents:UIControlEventTouchUpInside];
+    [self.map addTarget:ADelegate action:@selector(popToRootViewController:) forControlEvents:UIControlEventTouchUpInside];
     
     UIButton *map   = self.map;
     UIButton *retry = self.retry;
@@ -297,8 +270,7 @@ static const CGFloat MINIMUM_MENU_OFFSET_X = 228.0f;
                   @"buttonHeight"     : @44.0f,
                   @"buttonWidth"      : @(ceilf(MAX(kAnimationOffsetX, MINIMUM_MENU_OFFSET_X) - (20.0f * 2))), // 20 pixel inset both sides
                   @"originYAxis"      : @(CGRectGetHeight(self.view.bounds)/5.15f),
-                  @"containerHeight"  : @280.0f,
-                  @"containerOriginX" : @50.0f };
+                  @"containerHeight"  : @280.0f };
     
     NSString *visualFormatString = @"V:|-originYAxis-[retry(buttonHeight)]-inset-[map(==retry)]-40-[container(containerHeight)]";
     NSArray *verticalConstraint = [NSLayoutConstraint constraintsWithVisualFormat:visualFormatString

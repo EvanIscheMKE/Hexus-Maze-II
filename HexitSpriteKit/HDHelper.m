@@ -263,7 +263,7 @@
 {
     NSMutableArray *hexagons = [NSMutableArray array];
     
-    // C-Shit, finding all possible tiles that are connected to 'hexagon'
+    // Find all possible tiles that are connected to 'hexagon', return any that are in play
     NSInteger hexagonRow[6];
     hexagonRow[0] = hexagon.row;
     hexagonRow[1] = hexagon.row;

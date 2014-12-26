@@ -47,13 +47,13 @@ static const CGFloat MINIMUM_MENU_OFFSET_X = 228.0f;
 }
 
 @synthesize isExpanded = _isExpanded;
-- (instancetype)initWithGameViewController:(UIViewController *)gameController rearViewController:(UIViewController *)rearController
+- (instancetype)initWithFrontViewController:(UIViewController *)frontController rearViewController:(UIViewController *)rearController
 {
-    NSParameterAssert(gameController);
+    NSParameterAssert(frontController);
     NSParameterAssert(rearController);
     if (self = [super init]) {
-        [self setFrontViewController:gameController];
-        [self setRearViewController:rearController];
+        self.frontViewController = frontController;
+        self.rearViewController  = rearController;
     }
     return self;
 }
@@ -70,14 +70,13 @@ static const CGFloat MINIMUM_MENU_OFFSET_X = 228.0f;
     
     [self.rearViewController didMoveToParentViewController:self];
     [self.frontViewController didMoveToParentViewController:self];
-    
 }
 
 - (void)setFrontViewController:(UIViewController *)controller animated:(BOOL)animated
 {
     UIViewController *oldController = self.frontViewController;
     
-    [self setFrontViewController:controller];
+    self.frontViewController = controller;
     [self addChildViewController:self.frontViewController];
     
     void (^completionBlock)(BOOL) = ^(BOOL finished){
@@ -103,7 +102,7 @@ static const CGFloat MINIMUM_MENU_OFFSET_X = 228.0f;
             
             CGRect rect = self.frontViewController.view.frame;
             rect.origin.x = 0;
-            [self.frontViewController.view setFrame:rect];
+            self.frontViewController.view.frame = rect;
         }
     };
     
@@ -127,6 +126,10 @@ static const CGFloat MINIMUM_MENU_OFFSET_X = 228.0f;
     }
     
     _isExpanded = isExpanded;
+    
+    if (self.delegate && [self.delegate respondsToSelector:@selector(container:willChangeExpandedState:)]) {
+        [self.delegate container:self willChangeExpandedState:isExpanded];
+    }
     
     if (_isExpanded) {
         [self _expandAnimated:YES];
@@ -156,14 +159,14 @@ static const CGFloat MINIMUM_MENU_OFFSET_X = 228.0f;
     dispatch_block_t closeAnimation = ^{
         CGRect rect = self.frontViewController.view.frame;
         rect.origin.x = 0;
-        [self.frontViewController.view setFrame:rect];
+        self.frontViewController.view.frame = rect;
     };
     
     if (!animated) {
         closeAnimation();
     } else {
         [UIView animateWithDuration:.3f
-                              delay:0.0f
+                              delay:.0f
              usingSpringWithDamping:.8f
               initialSpringVelocity:.05f
                             options:0
@@ -177,14 +180,14 @@ static const CGFloat MINIMUM_MENU_OFFSET_X = 228.0f;
     dispatch_block_t expandAnimation = ^{
         CGRect rect = self.frontViewController.view.frame;
         rect.origin.x = MAX(ceilf(kAnimationOffsetX), MINIMUM_MENU_OFFSET_X);
-        [self.frontViewController.view setFrame:rect];
+        self.frontViewController.view.frame = rect;
     };
     
     if (!animated) {
         expandAnimation();
     } else {
         [UIView animateWithDuration:.3f
-                              delay:0.0f
+                              delay:.0f
              usingSpringWithDamping:.8f
               initialSpringVelocity:.05f
                             options:0

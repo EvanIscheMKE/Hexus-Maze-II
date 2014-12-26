@@ -6,6 +6,8 @@
 //  Copyright (c) 2014 Evan William Ische. All rights reserved.
 //
 
+@import SpriteKit;
+
 #import "AppDelegate.h"
 #import "HDMapManager.h"
 #import "HDSoundManager.h"
@@ -19,6 +21,8 @@
 
 #define HEXUS_ID 898568105
 NSString * const iOS8AppStoreURLFormat = @"itms-apps://itunes.apple.com/app/id%d";
+
+NSString * const HDLeaderBoardIdentifierKey = @"LevelLeaderboard";
 
 @interface AppDelegate ()<HDContainerViewControllerDelegate, GKGameCenterControllerDelegate>
 @property (nonatomic, strong) HDContainerViewController *containerController;
@@ -45,10 +49,11 @@ NSString * const iOS8AppStoreURLFormat = @"itms-apps://itunes.apple.com/app/id%d
         [[NSUserDefaults standardUserDefaults] setBool:YES forKey:HDFirstRunKey];
     }
     
-    [[HDSoundManager sharedManager] ]
-    [[HDSoundManager sharedManager] setPlayLoop:YES];
     [[HDSoundManager sharedManager] startAudio];
+    [[HDSoundManager sharedManager] preloadLoopWithName:HDSoundLoopKey];
     [[HDSoundManager sharedManager] preloadSounds:SOUNDS_TO_PRELOAD];
+    [[HDSoundManager sharedManager] setPlayLoop:YES];
+    
     [[HDGameCenterManager sharedManager] authenticateGameCenter];
 }
 
@@ -56,10 +61,9 @@ NSString * const iOS8AppStoreURLFormat = @"itms-apps://itunes.apple.com/app/id%d
 {
     HDRearViewController *rearViewController  = [[HDRearViewController alloc] init];
     HDGridViewController *frontViewController = [[HDGridViewController alloc] init];
-    
-    self.containerController = [[HDContainerViewController alloc] initWithGameViewController:frontViewController
+    self.containerController = [[HDContainerViewController alloc] initWithFrontViewController:frontViewController
                                                                           rearViewController:rearViewController];
-    [self.containerController setDelegate:self];
+    self.containerController.delegate = self;
     
     [self.window.rootViewController presentViewController:self.containerController animated:NO completion:nil];
 }
@@ -67,21 +71,21 @@ NSString * const iOS8AppStoreURLFormat = @"itms-apps://itunes.apple.com/app/id%d
 - (void)presentGameCenterControllerForState:(GKGameCenterViewControllerState)state
 {
     GKGameCenterViewController *controller = [[GKGameCenterViewController alloc] init];
-    [controller setGameCenterDelegate:self];
-    [controller setLeaderboardIdentifier:@"LevelLeaderboard"];
-    [controller setViewState:state];
+    controller.gameCenterDelegate = self;
+    controller.leaderboardIdentifier = HDLeaderBoardIdentifierKey;
+    controller.viewState = state;
     [self.containerController presentViewController:controller animated:YES completion:nil];
 }
 
-- (void)navigateToLevelController
+- (void)beginGameWithLevel:(NSInteger)level
 {
-    [self.containerController setFrontViewController:[[HDGridViewController alloc] init] animated:NO];
+    HDGameViewController *controller = [[HDGameViewController alloc] initWithLevel:level];
+    [self.containerController setFrontViewController:controller animated:NO];
 }
 
-- (void)restartCurrentLevel
+- (IBAction)restartCurrentLevel:(id)sender
 {
     [[HDSoundManager sharedManager] playSound:HDButtonSound];
-    
     if (self.containerController.isExpanded) {
         [self.containerController toggleMenuViewControllerWithCompletion:^{
              [(HDGameViewController *)self.containerController.frontViewController restartGame];
@@ -89,23 +93,49 @@ NSString * const iOS8AppStoreURLFormat = @"itms-apps://itunes.apple.com/app/id%d
     }
 }
 
-- (void)navigateToNewLevel:(NSInteger)level
+- (IBAction)popToRootViewController:(id)sender
 {
-    HDGameViewController *controller = [[HDGameViewController alloc] initWithLevel:level];
-    [self.containerController setFrontViewController:controller animated:NO];
+    if (self.containerController.isExpanded) {
+        [self.containerController toggleMenuViewControllerWithCompletion:^{
+            if ([[self.containerController.childViewControllers lastObject] isKindOfClass:[HDGridViewController class]]) {
+                HDGridViewController *controller = (HDGridViewController *)[self.containerController.childViewControllers lastObject];
+                [controller performExitAnimationWithCompletion:^{
+                    [self.window.rootViewController dismissViewControllerAnimated:NO completion:nil];
+                }];
+            }
+        }];
+    }
 }
 
-#pragma mark -
-#pragma mark - < RATE >
+- (IBAction)animateToLevelViewController:(id)sender
+{
+    if (self.containerController.isExpanded) {
+        [self.containerController toggleMenuViewControllerWithCompletion:^{
+            if ([[self.containerController.childViewControllers lastObject] isKindOfClass:[HDGameViewController class]]) {
+                HDGameViewController *controller = (HDGameViewController *)[self.containerController.childViewControllers lastObject];
+                [controller performExitAnimationWithCompletion:^{
+                     [self.containerController setFrontViewController:[[HDGridViewController alloc] init] animated:NO];
+                }];
+            }
+        }];
+    }
+}
+
+- (IBAction)openAcheivementsController:(id)sender
+{
+    if (self.containerController.isExpanded) {
+        [self.containerController toggleMenuViewControllerWithCompletion:^{
+            [self presentGameCenterControllerForState:GKGameCenterViewControllerStateAchievements];
+        }];
+    }
+}
 
 - (void)rateHEXUS
 {
-    NSURL *url = [NSURL URLWithString:iOS8AppStoreURLFormat];
-    [[UIApplication sharedApplication] openURL:url];
+    if ([[UIApplication sharedApplication] canOpenURL:[NSURL URLWithString:iOS8AppStoreURLFormat]]) {
+      [[UIApplication sharedApplication] openURL:[NSURL URLWithString:iOS8AppStoreURLFormat]];
+    }
 }
-
-#pragma mark -
-#pragma mark - < SHARE >
 
 - (void)presentShareViewController
 {
@@ -114,14 +144,14 @@ NSString * const iOS8AppStoreURLFormat = @"itms-apps://itunes.apple.com/app/id%d
     NSArray *activityItems = @[@"HELLO", [self _screenshotOfFrontViewController]];
     UIActivityViewController *controller = [[UIActivityViewController alloc] initWithActivityItems:activityItems
                                                                              applicationActivities:nil];
-    [controller setExcludedActivityTypes: @[UIActivityTypePostToWeibo,
-                                            UIActivityTypePrint,
-                                            UIActivityTypeCopyToPasteboard,
-                                            UIActivityTypeAssignToContact,
-                                            UIActivityTypeAddToReadingList,
-                                            UIActivityTypePostToVimeo,
-                                            UIActivityTypePostToTencentWeibo,
-                                            UIActivityTypeAirDrop]];
+    controller.excludedActivityTypes = @[UIActivityTypePostToWeibo,
+                                         UIActivityTypePrint,
+                                         UIActivityTypeCopyToPasteboard,
+                                         UIActivityTypeAssignToContact,
+                                         UIActivityTypeAddToReadingList,
+                                         UIActivityTypePostToVimeo,
+                                         UIActivityTypePostToTencentWeibo,
+                                         UIActivityTypeAirDrop];
     
     [self.containerController presentViewController:controller animated:YES completion:nil];
 }
@@ -139,7 +169,6 @@ NSString * const iOS8AppStoreURLFormat = @"itms-apps://itunes.apple.com/app/id%d
     return screenShot;
 }
 
-#pragma mark -
 #pragma mark - <GKGameCenterControllerDelegate>
 
 - (void)gameCenterViewControllerDidFinish:(GKGameCenterViewController *)gameCenterViewController
@@ -147,8 +176,34 @@ NSString * const iOS8AppStoreURLFormat = @"itms-apps://itunes.apple.com/app/id%d
     [self.containerController dismissViewControllerAnimated:YES completion:nil];
 }
 
-#pragma mark -
 #pragma mark - <HDContainerViewControllerDelegate>
+
+- (void)container:(HDContainerViewController *)container willChangeExpandedState:(BOOL)expanded
+{
+    if (expanded) {
+        if ([container.frontViewController isKindOfClass:[HDGameViewController class]]) {
+            [[(SKView *)container.frontViewController.view scene] setPaused:YES];
+        } else {
+            for (id subView in container.frontViewController.view.subviews) {
+                if ([subView isKindOfClass:[UIScrollView class]]) {
+                    [subView setUserInteractionEnabled:NO];
+                    break;
+                }
+            }
+        }
+    } else {
+        if ([container.frontViewController isKindOfClass:[HDGameViewController class]]) {
+            [[(SKView *)container.frontViewController.view scene] setPaused:NO];
+        } else {
+            for (id subView in container.frontViewController.view.subviews) {
+                if ([subView isKindOfClass:[UIScrollView class]]) {
+                    [subView setUserInteractionEnabled:YES];
+                    break;
+                }
+            }
+        }
+    }
+}
 
 - (void)container:(HDContainerViewController *)container
 transitionedFromController:(UIViewController *)fromController
@@ -178,7 +233,5 @@ transitionedFromController:(UIViewController *)fromController
 - (void)applicationWillTerminate:(UIApplication *)application {
     [[HDSoundManager sharedManager] stopAudio];
 }
-
-
 
 @end

@@ -37,6 +37,7 @@ extern NSString * const HDBackgroundDate;
 extern NSString * const HDBubbleSoundKey;
 extern NSString * const HDHexGridKey;
 
+extern NSString * const HDSoundLoopKey;
 extern NSString * const HDButtonSound;
 extern NSString * const HDSwipeSound;
 extern NSString * const HDC3;

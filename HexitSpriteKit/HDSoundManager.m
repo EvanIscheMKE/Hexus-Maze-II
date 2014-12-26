@@ -6,7 +6,8 @@
 //  Copyright (c) 2014 Evan William Ische. All rights reserved.
 //
 
-@import SpriteKit;
+@import AVFoundation;
+@import AudioToolbox;
 
 #import "HDSettingsManager.h"
 #import "HDSoundManager.h"
@@ -16,9 +17,7 @@
 @property (nonatomic, strong) AVAudioPlayer *loopPlayer;
 @end
 
-@implementation HDSoundManager {
-    BOOL _loopsValid;
-}
+@implementation HDSoundManager
 
 - (instancetype)init
 {
@@ -42,11 +41,11 @@
 
 - (void)setPlayLoop:(BOOL)playLoop
 {
-    if (!_loopsValid) {
+    if (!self.loopPlayer) {
         return;
     }
-    
-    if (playLoop) {
+    _playLoop = playLoop;
+    if (_playLoop && ![[self class] isOtherAudioPlaying]) {
         [self.loopPlayer play];
     } else {
         [self.loopPlayer stop];
@@ -60,10 +59,6 @@
     self.loopPlayer = [[AVAudioPlayer alloc] initWithContentsOfURL:[NSURL fileURLWithPath:soundPath] error:&error];
     self.loopPlayer.numberOfLoops = -1; /* Will continue to play until we tell it to stop. */
     [self.loopPlayer prepareToPlay];
-    
-    if (!error) {
-        _loopsValid = YES;
-    }
 }
 
 - (void)preloadSounds:(NSArray *)soundNames

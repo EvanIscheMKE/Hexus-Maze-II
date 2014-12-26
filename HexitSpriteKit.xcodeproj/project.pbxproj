@@ -15,7 +15,6 @@
 		386CF62F1A3B6FA5006A8381 /* win.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 386CF62E1A3B6FA5006A8381 /* win.mp3 */; };
 		3874B9A61A20736000400CEB /* HDAlertNode.m in Sources */ = {isa = PBXBuildFile; fileRef = 3874B9A51A20736000400CEB /* HDAlertNode.m */; };
 		389E94F01A44A2F000F2DF05 /* HDGridScrollView.m in Sources */ = {isa = PBXBuildFile; fileRef = 389E94EF1A44A2F000F2DF05 /* HDGridScrollView.m */; };
-		389E94F41A45618B00F2DF05 /* Reset@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 389E94F31A45618B00F2DF05 /* Reset@2x.png */; };
 		389E94F61A47DE7F00F2DF05 /* CoreMotion.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 389E94F51A47DE7F00F2DF05 /* CoreMotion.framework */; };
 		389E94F81A488D5100F2DF05 /* Grid-76.json in Resources */ = {isa = PBXBuildFile; fileRef = 389E94F71A488D5100F2DF05 /* Grid-76.json */; };
 		389E94FA1A488D5A00F2DF05 /* Grid-77.json in Resources */ = {isa = PBXBuildFile; fileRef = 389E94F91A488D5A00F2DF05 /* Grid-77.json */; };
@@ -63,6 +62,8 @@
 		389E95D01A4AAFD800F2DF05 /* E3.m4a in Resources */ = {isa = PBXBuildFile; fileRef = 389E95AD1A4AAFD800F2DF05 /* E3.m4a */; };
 		389E95D11A4AAFD800F2DF05 /* D3.m4a in Resources */ = {isa = PBXBuildFile; fileRef = 389E95AE1A4AAFD800F2DF05 /* D3.m4a */; };
 		389E95D21A4AAFD800F2DF05 /* C3.m4a in Resources */ = {isa = PBXBuildFile; fileRef = 389E95AF1A4AAFD800F2DF05 /* C3.m4a */; };
+		389E95D71A4C1A7F00F2DF05 /* HDNavigationBar.m in Sources */ = {isa = PBXBuildFile; fileRef = 389E95D61A4C1A7F00F2DF05 /* HDNavigationBar.m */; };
+		389E95F11A4D2D1500F2DF05 /* HDRestartNode.m in Sources */ = {isa = PBXBuildFile; fileRef = 389E95F01A4D2D1500F2DF05 /* HDRestartNode.m */; };
 		38ABD5F21A4153A800C4321D /* HDHexagonView.m in Sources */ = {isa = PBXBuildFile; fileRef = 38ABD5F11A4153A800C4321D /* HDHexagonView.m */; };
 		38ABD5F71A420A3500C4321D /* HDHexagonControl.m in Sources */ = {isa = PBXBuildFile; fileRef = 38ABD5F61A420A3500C4321D /* HDHexagonControl.m */; };
 		38BAF5281A1FE10B004D5660 /* GameKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 38BAF5271A1FE10B004D5660 /* GameKit.framework */; };
@@ -197,7 +198,6 @@
 		3874B9A51A20736000400CEB /* HDAlertNode.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HDAlertNode.m; sourceTree = "<group>"; };
 		389E94EE1A44A2F000F2DF05 /* HDGridScrollView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HDGridScrollView.h; sourceTree = "<group>"; };
 		389E94EF1A44A2F000F2DF05 /* HDGridScrollView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HDGridScrollView.m; sourceTree = "<group>"; };
-		389E94F31A45618B00F2DF05 /* Reset@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "Reset@2x.png"; path = "HexitSpriteKit/Reset@2x.png"; sourceTree = "<group>"; };
 		389E94F51A47DE7F00F2DF05 /* CoreMotion.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreMotion.framework; path = System/Library/Frameworks/CoreMotion.framework; sourceTree = SDKROOT; };
 		389E94F71A488D5100F2DF05 /* Grid-76.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = "Grid-76.json"; sourceTree = "<group>"; };
 		389E94F91A488D5A00F2DF05 /* Grid-77.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = "Grid-77.json"; sourceTree = "<group>"; };
@@ -248,6 +248,10 @@
 		389E95AD1A4AAFD800F2DF05 /* E3.m4a */ = {isa = PBXFileReference; lastKnownFileType = file; name = E3.m4a; path = "../../../Desktop/HEXUS:SOUNDS/E3.m4a"; sourceTree = "<group>"; };
 		389E95AE1A4AAFD800F2DF05 /* D3.m4a */ = {isa = PBXFileReference; lastKnownFileType = file; name = D3.m4a; path = "../../../Desktop/HEXUS:SOUNDS/D3.m4a"; sourceTree = "<group>"; };
 		389E95AF1A4AAFD800F2DF05 /* C3.m4a */ = {isa = PBXFileReference; lastKnownFileType = file; name = C3.m4a; path = "../../../Desktop/HEXUS:SOUNDS/C3.m4a"; sourceTree = "<group>"; };
+		389E95D51A4C1A7F00F2DF05 /* HDNavigationBar.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HDNavigationBar.h; sourceTree = "<group>"; };
+		389E95D61A4C1A7F00F2DF05 /* HDNavigationBar.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HDNavigationBar.m; sourceTree = "<group>"; };
+		389E95EF1A4D2D1500F2DF05 /* HDRestartNode.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HDRestartNode.h; sourceTree = "<group>"; };
+		389E95F01A4D2D1500F2DF05 /* HDRestartNode.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HDRestartNode.m; sourceTree = "<group>"; };
 		38ABD5F01A4153A800C4321D /* HDHexagonView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HDHexagonView.h; sourceTree = "<group>"; };
 		38ABD5F11A4153A800C4321D /* HDHexagonView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HDHexagonView.m; sourceTree = "<group>"; };
 		38ABD5F51A420A3500C4321D /* HDHexagonControl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HDHexagonControl.h; sourceTree = "<group>"; };
@@ -570,7 +574,6 @@
 		38C0A8351A07251600C552F1 = {
 			isa = PBXGroup;
 			children = (
-				389E94F31A45618B00F2DF05 /* Reset@2x.png */,
 				38C0A8401A07251700C552F1 /* HexitSpriteKit */,
 				38C0A85A1A07251700C552F1 /* HexitSpriteKitTests */,
 				38C0A8671A07252E00C552F1 /* Frameworks */,
@@ -722,6 +725,8 @@
 				38521F3C1A19A20600484830 /* HDSpriteNode.m */,
 				3874B9A41A20736000400CEB /* HDAlertNode.h */,
 				3874B9A51A20736000400CEB /* HDAlertNode.m */,
+				389E95EF1A4D2D1500F2DF05 /* HDRestartNode.h */,
+				389E95F01A4D2D1500F2DF05 /* HDRestartNode.m */,
 				38C122191A2A2EF300224B33 /* HDSwitch.h */,
 				38C1221A1A2A2EF300224B33 /* HDSwitch.m */,
 				38ABD5F01A4153A800C4321D /* HDHexagonView.h */,
@@ -732,6 +737,8 @@
 				389E94EF1A44A2F000F2DF05 /* HDGridScrollView.m */,
 				389E953B1A496FF400F2DF05 /* HDLockedView.h */,
 				389E953C1A496FF400F2DF05 /* HDLockedView.m */,
+				389E95D51A4C1A7F00F2DF05 /* HDNavigationBar.h */,
+				389E95D61A4C1A7F00F2DF05 /* HDNavigationBar.m */,
 			);
 			name = Views;
 			sourceTree = "<group>";
@@ -912,7 +919,6 @@
 				38BDDCF61A20FBA2005035EE /* Grid-57.json in Resources */,
 				389E95C31A4AAFD800F2DF05 /* D5.m4a in Resources */,
 				389E95021A488D8300F2DF05 /* Grid-81.json in Resources */,
-				389E94F41A45618B00F2DF05 /* Reset@2x.png in Resources */,
 				38BDDCC51A20F965005035EE /* Grid-34.json in Resources */,
 				38BDDCF21A20FB80005035EE /* Grid-55.json in Resources */,
 				38BDDCBF1A20F93A005035EE /* Grid-31.json in Resources */,
@@ -1020,10 +1026,12 @@
 				38C67CD71A0AB8D80038526C /* HDWelcomeViewController.m in Sources */,
 				38C0A8471A07251700C552F1 /* AppDelegate.m in Sources */,
 				389E95441A4A128100F2DF05 /* HDLevelsViewController.m in Sources */,
+				389E95F11A4D2D1500F2DF05 /* HDRestartNode.m in Sources */,
 				38C0A8751A0758AC00C552F1 /* HDGridManager.m in Sources */,
 				38FDF9B51A1BEF1F005CCFE1 /* HDSettingsManager.m in Sources */,
 				38C67CDD1A0AB9350038526C /* UIColor+FlatColors.m in Sources */,
 				38ABD5F71A420A3500C4321D /* HDHexagonControl.m in Sources */,
+				389E95D71A4C1A7F00F2DF05 /* HDNavigationBar.m in Sources */,
 				3874B9A61A20736000400CEB /* HDAlertNode.m in Sources */,
 				38C67CE81A0ABF0E0038526C /* HDConstants.m in Sources */,
 				38C67D2F1A0AF3960038526C /* NSMutableArray+UniqueAdditions.m in Sources */,
@@ -1144,6 +1152,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				CODE_SIGN_IDENTITY = "iPhone Developer: Evan Ische (WTTNRX49WX)";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Evan Ische (WTTNRX49WX)";
 				GCC_PREFIX_HEADER = "HexitSpriteKit/Hexit-Prefix.pch";
@@ -1159,6 +1168,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				CODE_SIGN_IDENTITY = "iPhone Distribution: Evan Ische (4AUVF6937L)";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: Evan Ische (4AUVF6937L)";
 				GCC_PREFIX_HEADER = "HexitSpriteKit/Hexit-Prefix.pch";

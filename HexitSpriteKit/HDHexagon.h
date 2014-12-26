@@ -58,7 +58,7 @@ static const NSInteger NumberOfColumns = 9;
 
 - (instancetype)initWithRow:(NSInteger)row column:(NSInteger)column NS_DESIGNATED_INITIALIZER;
 
-- (void)recievedTouches;
+- (BOOL)selectedAfterRecievingTouches;
 - (void)restoreToInitialState;
 
 @end

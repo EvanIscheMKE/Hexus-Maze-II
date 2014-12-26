@@ -9,6 +9,7 @@
 @import AVFoundation;
 @import AudioToolbox;
 
+#import "HDRestartNode.h"
 #import "HDScene.h"
 #import "HDHelper.h"
 #import "HDHexagon.h"
@@ -39,8 +40,7 @@ static const CGFloat kTileHeightInsetMultiplier = .845f;
 
 @property (nonatomic, assign) BOOL animating;
 @property (nonatomic, assign) BOOL includeEndTile;
-@property (nonatomic, assign) BOOL countDownForSoundIndex;
-@property (nonatomic, assign) BOOL tilesAnimatedToCompleted;
+@property (nonatomic, assign) BOOL countDownSoundIndex;
 
 @property (nonatomic, strong) SKAction *loop;
 @property (nonatomic, strong) SKAction *completionZing;
@@ -51,10 +51,6 @@ static const CGFloat kTileHeightInsetMultiplier = .845f;
 @end
 
 @implementation HDScene {
-    NSUInteger _finishedTileCount;
-    NSUInteger _startingTileCount;
-    NSInteger  _startingTilesUsed;
-    
     CGFloat _minViewAreaOriginX;
     CGFloat _maxViewAreaOriginX;
     CGFloat _minViewAreaOriginY;
@@ -72,8 +68,8 @@ static const CGFloat kTileHeightInsetMultiplier = .845f;
 {
     if (self = [super initWithSize:size]) {
         
-        [self setCountDownForSoundIndex:NO];
-        [self setBackgroundColor:[SKColor flatMidnightBlueColor]];
+        self.countDownSoundIndex = NO;
+        self.backgroundColor = [SKColor flatMidnightBlueColor];
         
         _selectedHexagons = [NSMutableArray array];
         
@@ -93,26 +89,24 @@ static const CGFloat kTileHeightInsetMultiplier = .845f;
 {
     [self _setup];
     
-    _finishedTileCount = grid.count;
-    
     _hexagons = [NSArray arrayWithArray:grid];
-
+    
     CGPathRef pathRef = [HDHelper hexagonPathForBounds:CGRectMake(0.0f, 0.0f, kTileSize - kPadding, kTileSize - kPadding)];
     
     NSInteger index = 0;
     for (HDHexagon *hexagon in grid) {
-    
+        
         // For each each hexagon model, create a shapenode and assign it to the model
         CGPoint center = [self _pointForColumn:hexagon.column row:hexagon.row];
         HDHexagonNode *shapeNode = [HDHexagonNode shapeNodeWithPath:pathRef centered:YES];
-        [shapeNode setHidden:YES];
-        [shapeNode setPosition:center];
-        [shapeNode setName:HEXAGON_TITLE((long)index)];
+        shapeNode.hidden   = YES;
+        shapeNode.position = center;
+        shapeNode.name     = HEXAGON_TITLE((long)index);
         [self.gameLayer addChild:shapeNode];
         
-        [hexagon setDelegate:self];
-        [hexagon setNode:shapeNode];
-        [hexagon setType:(int)[self.gridManager hexagonTypeAtRow:hexagon.row column:hexagon.column]];
+        hexagon.node = shapeNode;
+        hexagon.type = (int)[self.gridManager hexagonTypeAtRow:hexagon.row column:hexagon.column];
+        hexagon.delegate = hexagon.isCountTile ? self : nil;
         
         // Find the largest and smallest possible center position for all tiles, will be used to center map
         if ((center.x) < _minCenterX) { _minCenterX = (center.x); }
@@ -120,22 +114,17 @@ static const CGFloat kTileHeightInsetMultiplier = .845f;
         if ((center.y) < _minCenterY) { _minCenterY = (center.y); }
         if ((center.y) > _maxCenterY) { _maxCenterY = (center.y); }
         
-        if (hexagon.type == HDHexagonTypeStarter) {
-            _startingTileCount++;
-        } else if (hexagon.type == HDHexagonTypeEnd) {
-            [self setIncludeEndTile:YES];
+        if (hexagon.type == HDHexagonTypeEnd) {
+            self.includeEndTile = YES;
         }
         index++;
     }
     
-    NSMutableArray *shuffledTiles = [_hexagons mutableCopy];
-    [shuffledTiles shuffle];
-    
     // Once all Tiles are layed out, center them
     [self _centerTilePositionWithCompletion:^{
-        [self setAnimating:YES];
-        [HDHelper entranceAnimationWithTiles:shuffledTiles completion:^{
-            [self setAnimating:NO];
+        self.animating = YES;
+        [HDHelper entranceAnimationWithTiles:[[_hexagons mutableCopy] shuffle] completion:^{
+            self.animating = NO;
         }];
     }];
 }
@@ -144,8 +133,6 @@ static const CGFloat kTileHeightInsetMultiplier = .845f;
 {
     // initalize varibles here instead of initWithSize, so when new levels laid out they're set to zero
     _soundIndex        = 0;
-    _startingTileCount = 0;
-    _startingTilesUsed = 0;
     _minCenterX        = MAXFLOAT;
     _maxCenterX        = 0.0f;
     _minCenterY        = MAXFLOAT;
@@ -155,14 +142,17 @@ static const CGFloat kTileHeightInsetMultiplier = .845f;
 - (void)layoutIndicatorTiles
 {
     // Loop through possible nodes, if a node exists create a layer underneath it to display indicator
-    for (NSInteger row = 0; row < NumberOfRows; row++) {
-        for (NSInteger column = 0; column < NumberOfColumns; column++) {
-            if ([self.gridManager hexagonTypeAtRow:row column:column]) {
+    for (NSInteger row = 0; row < NumberOfRows; row++)
+    {
+        for (NSInteger column = 0; column < NumberOfColumns; column++)
+        {
+            if ([self.gridManager hexagonTypeAtRow:row column:column])
+            {
                 CGSize tileSize = CGSizeMake(kTileSize, kTileSize);
                 HDSpriteNode *tileNode = [HDSpriteNode spriteNodeWithColor:[UIColor clearColor] size:tileSize];
-                [tileNode setRow:row];
-                [tileNode setColumn:column];
-                [tileNode setPosition:[self _pointForColumn:column row:row]];
+                tileNode.row = row;
+                tileNode.column = column;
+                tileNode.position = [self _pointForColumn:column row:row];
                 [self.tileLayer addChild:tileNode];
             }
         }
@@ -172,23 +162,26 @@ static const CGFloat kTileHeightInsetMultiplier = .845f;
 - (HDSpriteNode *)indicatorTileUnderHexagon:(HDHexagon *)hexagon
 {
     // find the tile on the tileLayer that has same position as selected hexagon
-    for (HDSpriteNode *indicator in self.tileLayer.children) {
-        if (indicator.row == hexagon.row && hexagon.column == indicator.column) {
+    for (HDSpriteNode *indicator in self.tileLayer.children)
+    {
+        if (indicator.row == hexagon.row && hexagon.column == indicator.column)
+        {
             return indicator;
         }
     }
     return nil;
 }
 
-#pragma mark -
-#pragma mark - UIResp0nder
+#pragma mark - UIResponder
 
 - (HDHexagon *)findHexagonFromPoint:(CGPoint)point
 {
     const CGFloat kHexagonInset = 2.0f;
     HDHexagon *selectedHexagon = nil;
-    for (HDHexagon *hex in _hexagons) {
-        if (CGRectContainsPoint(CGRectInset(hex.node.frame, kHexagonInset, kHexagonInset), point)) {
+    for (HDHexagon *hex in _hexagons)
+    {
+        if (CGRectContainsPoint(CGRectInset(hex.node.frame, kHexagonInset, kHexagonInset), point))
+        {
             selectedHexagon = hex;
         }
     }
@@ -214,42 +207,50 @@ static const CGFloat kTileHeightInsetMultiplier = .845f;
     if ([self _validateNextMoveToHexagon:hexagon fromHexagon:previousTile]) {
         
         [_selectedHexagons addObject:hexagon];
-        [hexagon recievedTouches];
+        
+        if ([hexagon selectedAfterRecievingTouches]){
+            if (self.delegate && [self.delegate respondsToSelector:@selector(scene:updateSelectedTileCount:)]){
+                [self.delegate scene:self updateSelectedTileCount:_hexagons.count - [self _inPlayTileCount]];
+            }
+        } else {
+            if (self.delegate && [self.delegate respondsToSelector:@selector(scene:updateSelectedTileCount:)]){
+                [self.delegate scene:self updateSelectedTileCount:_hexagons.count - [self _inPlayTileCount]];
+            }
+        }
         
         HDSpriteNode *sprite = [self indicatorTileUnderHexagon:hexagon];
         
         // Check if FX are on before adding emitter effects
         if ([[HDSettingsManager sharedManager] fx]) {
-             [sprite addChild:[SKEmitterNode hexaEmitterWithColor:hexagon.node.strokeColor scale:hexagon.selected ? .9f : .5f]];
+            [sprite addChild:[SKEmitterNode hexaEmitterWithColor:hexagon.node.strokeColor scale:hexagon.selected ? .9f : .5f]];
         }
         
-        [self _checkGameState:hexagon];
+        [self _checkGameStateForTile:hexagon];
         [self _playSoundForHexagon:hexagon withVibration:YES];
     }
 }
 
-#pragma mark -
-#pragma mark - <PRIVATE>
+#pragma mark - Private
 
 - (void)_playSoundForHexagon:(HDHexagon *)hexagon withVibration:(BOOL)vibration
 {
     [self runAction:[_sounds objectAtIndex:_soundIndex] withKey:HDSoundActionKey];
     
-    if ([self _checkIfAllHexagonsAreSelected] == 0) {
+    if ([self _inPlayTileCount] == 0) {
         [self runAction:self.completionZing withKey:HDSoundActionKey];
     }
     
-    if (self.countDownForSoundIndex) {
-        _soundIndex--;
+    if (self.countDownSoundIndex) {
         
+        _soundIndex--;
         if (_soundIndex == 0) {
-            [self setCountDownForSoundIndex:NO];
+            self.countDownSoundIndex = NO;
         }
     } else {
-        _soundIndex++;
         
+        _soundIndex++;
         if (_soundIndex == _sounds.count - 1) {
-            [self setCountDownForSoundIndex:YES];
+            self.countDownSoundIndex = YES;
         }
     }
     
@@ -296,72 +297,94 @@ static const CGFloat kTileHeightInsetMultiplier = .845f;
     }
 }
 
-- (void)_checkGameState:(HDHexagon *)hexagon
+- (void)_checkGameStateForTile:(HDHexagon *)tile
 {
-    // Won Game
-    if ([self _checkIfAllHexagonsAreSelected] == 0) {
+    if ([self isGameOverAfterPlacingTile:tile]) {
+        // Lost Game
         
-        [self setAnimating:YES];
+        CGRect shapeRect = CGRectMake(0.0f, 0.0f, CGRectGetWidth(self.frame) - 40.0f, 50.0f);
+        UIBezierPath *shape = [UIBezierPath bezierPathWithRoundedRect:shapeRect cornerRadius:8.0f];
+        HDRestartNode *node = [HDRestartNode shapeNodeWithPath:[shape CGPath] centered:YES];
+        node.position = CGPointMake(
+                                    CGRectGetWidth(self.frame) / 2,
+                                    -CGRectGetHeight(node.frame) / 2
+                                    );
+        [self addChild:node];
         
-        [[NSNotificationCenter defaultCenter] postNotificationName:HDToggleControlsNotification object:nil];
+        [node runAction:[SKAction moveToY:CGRectGetHeight(node.frame) / 2 + 20.0f duration:.3f]];
+   
+    } else if ([self _inPlayTileCount] == 0) {
+        // Won Game
+        
+        self.animating = YES;
         
         if ([[HDSettingsManager sharedManager] vibe]) {
-         AudioServicesPlaySystemSound(kSystemSoundID_Vibrate);
+            AudioServicesPlaySystemSound(kSystemSoundID_Vibrate);
         }
         
+        [self _gameCompletionAnimationWithCompletion:^{
+            HDAlertNode *alertNode = [HDAlertNode spriteNodeWithColor:[UIColor clearColor] size:self.frame.size];
+            alertNode.levelLabel.text = [NSString stringWithFormat:@"Level %ld", _levelIndex];
+            alertNode.delegate = self;
+            alertNode.position = CGPointMake(CGRectGetWidth(self.frame) / 2, CGRectGetHeight(self.frame) / 2);
+            [self addChild:alertNode];
+        }];
+        
+       [[self.view.subviews firstObject] setUserInteractionEnabled:NO];
        [[HDMapManager sharedManager] completedLevelAtIndex:self.levelIndex-1];
         
-        NSTimeInterval delay = 0;
+    } else if ([self _inPlayTileCount] == 1 && self.includeEndTile) {
         
-        NSMutableArray *shuffle = [_hexagons mutableCopy];
-        [shuffle shuffle];
-        
-        __block NSInteger count = 0;
-        for (HDHexagon *hexagon in shuffle) {
-            
-            // Setup Actions
-            SKAction *scaleUp  = [SKAction scaleTo:1.15f duration:.10f];
-            SKAction *scale    = [SKAction scaleTo:0.0f duration:0.10f];
-            SKAction *wait     = [SKAction waitForDuration:delay];
-            SKAction *sequence = [SKAction sequence:@[wait, scaleUp, scale]];
-            
-            [hexagon.node runAction:sequence completion:^{
-                [hexagon.node setHidden:YES];
-                [hexagon.node setScale:1.0f];
-             
-                if (_hexagons.count - 1 == count) {
-                    
-                    [self removeAllActions];
-                    
-                    HDAlertNode *alertNode = [HDAlertNode spriteNodeWithColor:[UIColor clearColor] size:self.frame.size];
-                    [alertNode.levelLabel setText:[NSString stringWithFormat:@"Level %ld", _levelIndex]];
-                    [alertNode setDelegate:self];
-                    [alertNode setPosition:CGPointMake(CGRectGetWidth(self.frame) / 2, CGRectGetHeight(self.frame) / 2)];
-                    [self addChild:alertNode];
-                    [alertNode show];
-                    
-                     // Wait For Alertnode to be halfway through animating before adding emittercell
-                    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(.5f * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-                        [self insertChild:[SKEmitterNode starEmitter] atIndex:0];
-                    });
-                    
-                }
-                count++;
-            }];
-            delay += .1f;
-        }
-        
-    } else if ([self _checkIfAllHexagonsAreSelected] == 1 && self.includeEndTile) {
         for (HDHexagon *hexagon in _hexagons) {
             if (hexagon.type == HDHexagonTypeEnd) {
-                [hexagon setState:HDHexagonStateEnabled];
+                hexagon.state = HDHexagonStateEnabled;
                 break;
             }
         }
     }
 }
 
-- (NSUInteger)_checkIfAllHexagonsAreSelected
+- (BOOL)isGameOverAfterPlacingTile:(HDHexagon *)hexagon
+{
+    NSUInteger startTileCount         = [self _startTileCount];
+    NSUInteger selectedStartTileCount = [self _selectedStartTileCount];
+    
+    if (startTileCount != selectedStartTileCount) {
+        return NO;
+    }
+    
+    NSArray *remainingMoves = [HDHelper possibleMovesForHexagon:hexagon inArray:_hexagons];
+    
+    if (remainingMoves.count == 0) {
+        return YES;
+    }
+    
+    return NO;
+}
+
+- (NSUInteger)_selectedStartTileCount
+{
+    NSUInteger count = 0;
+    for (HDHexagon *hexa in _hexagons) {
+        if (hexa.type == HDHexagonTypeStarter && hexa.selected) {
+            count++;
+        }
+    }
+    return count;
+}
+
+- (NSUInteger)_startTileCount
+{
+    NSUInteger count = 0;
+    for (HDHexagon *hexa in _hexagons) {
+        if (hexa.type == HDHexagonTypeStarter) {
+            count++;
+        }
+    }
+    return count;
+}
+
+- (NSUInteger)_inPlayTileCount
 {
     NSUInteger count = 0;
     for (HDHexagon *hexaon in _hexagons) {
@@ -406,33 +429,36 @@ static const CGFloat kTileHeightInsetMultiplier = .845f;
 
 - (void)_nextLevel
 {
-    
     // Clear out Arrays
     [_selectedHexagons removeAllObjects];
     
     // We want to start at 0 and count up when the new levels layed out
-    [self setCountDownForSoundIndex:NO];
+    self.countDownSoundIndex = NO;
     
     // Reduce retainCount
     [self.gameLayer removeAllChildren];
     [self.tileLayer removeAllChildren];
     
+    self.levelIndex += 1;
+    
     // Call parent to refill model with next level's data, then call us back
-    [[NSNotificationCenter defaultCenter] postNotificationName:HDNextLevelNotification object:nil];
+    if (self.delegate && [self.delegate respondsToSelector:@selector(scene:proceedToLevel:)]) {
+        [self.delegate scene:self proceedToLevel:self.levelIndex];
+    }
 }
 
-#pragma mark -
 #pragma mark - < RESTART >
 
 - (void)_resetVariablesForRestart
 {
-    self.countDownForSoundIndex = NO;
+    self.countDownSoundIndex = NO;
     
-    [[NSNotificationCenter defaultCenter] postNotificationName:HDClearTileCountNotification object:nil];
+    if (self.delegate && [self.delegate respondsToSelector:@selector(scene:updateSelectedTileCount:)]) {
+        [self.delegate scene:self updateSelectedTileCount:0];
+    }
     
     // Return used starting tile count to ZERO
     _soundIndex = 0;
-    _startingTilesUsed = 0;
     
     // Clear out Arrays
     [_selectedHexagons removeAllObjects];
@@ -454,16 +480,13 @@ static const CGFloat kTileHeightInsetMultiplier = .845f;
     [self _resetVariablesForRestart];
     
     // Shuffle a copy of tiles Array to prepare for animations
-    __block NSMutableArray *shuffledTiles = [_hexagons mutableCopy];
-    [shuffledTiles shuffle];
-    
-    for (HDHexagon *hexa in _hexagons) {
+    for (HDHexagon *hexa in [[_hexagons mutableCopy] shuffle]) {
         [hexa restoreToInitialState];
     }
     
     // Animate restart once restored
-    [HDHelper entranceAnimationWithTiles:shuffledTiles completion:^{
-        [self setAnimating:NO];
+    [HDHelper entranceAnimationWithTiles:[[_hexagons mutableCopy] shuffle] completion:^{
+        self.animating = NO;
     }];
 }
 
@@ -476,16 +499,12 @@ static const CGFloat kTileHeightInsetMultiplier = .845f;
     self.animating = YES;
     
     [self _resetVariablesForRestart];
-    
-    // Shuffle a copy of tiles Array to prepare for animations
-    __block NSMutableArray *shuffledTiles = [_hexagons mutableCopy];
-    [shuffledTiles shuffle];
-    
+
     // Animate out
-    [HDHelper completionAnimationWithTiles:shuffledTiles completion:^{
+    [HDHelper completionAnimationWithTiles:[[_hexagons mutableCopy] shuffle] completion:^{
         // Animate restart once restored
-        [HDHelper entranceAnimationWithTiles:shuffledTiles completion:^{
-            [self setAnimating:NO];
+        [HDHelper entranceAnimationWithTiles:[[_hexagons mutableCopy] shuffle] completion:^{
+            self.animating = NO;
         }];
     }];
 }
@@ -496,36 +515,74 @@ static const CGFloat kTileHeightInsetMultiplier = .845f;
     for (HDSpriteNode *hexagonSprite in self.tileLayer.children) {
         [hexagonSprite updateTextureFromHexagonType:HDHexagonTypeNone];
     }
-    
-    // Create a new array of shuffled _hexagons objects
-    __block NSMutableArray *shuffledTiles = [_hexagons mutableCopy];
-    [shuffledTiles shuffle];
-    
+
     // Animate out
-    [HDHelper completionAnimationWithTiles:shuffledTiles completion:completion];
+    [HDHelper completionAnimationWithTiles:[[_hexagons mutableCopy] shuffle] completion:completion];
 }
 
-#pragma mark -
+- (void)_gameCompletionAnimationWithCompletion:(dispatch_block_t)completion
+{
+    NSTimeInterval delay = 0;
+    
+    NSMutableArray *shuffle = [_hexagons mutableCopy];
+    [shuffle shuffle];
+    
+    __block NSInteger count = 0;
+    for (HDHexagon *hexagon in shuffle) {
+        
+        // Setup Actions
+        SKAction *scaleUp  = [SKAction scaleTo:1.15f duration:.10f];
+        SKAction *scale    = [SKAction scaleTo:0.0f duration:0.10f];
+        SKAction *wait     = [SKAction waitForDuration:delay];
+        SKAction *sequence = [SKAction sequence:@[wait, scaleUp, scale]];
+        
+        [hexagon.node runAction:sequence completion:^{
+            hexagon.node.hidden = YES;
+            hexagon.node.scale  = 1.0f;
+            
+            if (_hexagons.count - 1 == count) {
+                
+                [self removeAllActions];
+                
+                if (completion) {
+                    completion();
+                }
+            }
+            count++;
+        }];
+        delay += .1f;
+    }
+}
+
 #pragma mark - <HDAlertNodeDelegate>
 
 - (void)alertNodeWillDismiss:(HDAlertNode *)alertNode
 {
     SKEmitterNode *star = (SKEmitterNode *)[self childNodeWithName:@"STARKEY"];
-    [star setParticleBirthRate:0];
+    star.particleBirthRate = 0.0f;
     [star performSelector:@selector(removeFromParent) withObject:nil afterDelay:1.f];
     [self runAction:[SKAction playSoundFileNamed:HDButtonSound waitForCompletion:NO] withKey:HDSoundActionKey];
 }
 
-- (void)alertNode:(HDAlertNode *)alertNode clickedButtonAtIndex:(NSInteger)index
+- (void)alertNode:(HDAlertNode *)alertNode clickedButtonWithTitle:(NSString *)title
 {
-    [self setAnimating:NO];
-    [[NSNotificationCenter defaultCenter] postNotificationName:HDToggleControlsNotification object:nil];
+    self.animating = NO;
     
-    if (index == 0) {
+    if ([title isEqualToString:RESTARTKEY]) {
+        [self _restartFromClearedScreen];
+        [[self.view.subviews firstObject] setUserInteractionEnabled:YES];
+    } else if ([title isEqualToString:NEXTLEVELKEY]) {
         [self _nextLevel];
-        return;
+        [[self.view.subviews firstObject] setUserInteractionEnabled:YES];
+    } else if ([title isEqualToString:SHAREKEY]) {
+        [ADelegate presentShareViewController];
+    } else if ([title isEqualToString:ACHIEVEMENTSKEY]) {
+        [ADelegate presentGameCenterControllerForState:GKGameCenterViewControllerStateAchievements];
+    } else if ([title isEqualToString:LEADERBOARDKEY]) {
+        [ADelegate presentGameCenterControllerForState:GKGameCenterViewControllerStateLeaderboards];
+    } else if ([title isEqualToString:RATEKEY]) {
+        [ADelegate rateHEXUS];
     }
-    [self _restartFromClearedScreen];
 }
 
 - (void)runAction:(SKAction *)action withKey:(NSString *)key

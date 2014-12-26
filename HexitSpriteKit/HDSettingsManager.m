@@ -7,6 +7,7 @@
 //
 
 #import "HDSettingsManager.h"
+#import "HDSoundManager.h"
 
 @implementation HDSettingsManager
 
@@ -48,7 +49,6 @@
     return manager;
 }
 
-#pragma mark -
 #pragma mark - Override Setters
 
 - (void)setFx:(BOOL)fx

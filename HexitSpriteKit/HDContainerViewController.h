@@ -27,7 +27,7 @@
 
 @property (nonatomic, readonly) BOOL isExpanded;
 
-- (instancetype)initWithGameViewController:(UIViewController *)gameController
+- (instancetype)initWithFrontViewController:(UIViewController *)frontController
                         rearViewController:(UIViewController *)rearController NS_DESIGNATED_INITIALIZER;
 
 - (void)setFrontViewController:(UIViewController *)controller animated:(BOOL)animated;
@@ -38,10 +38,10 @@
 
 @protocol HDContainerViewControllerDelegate <NSObject>
 @required
-
 - (void)container:(HDContainerViewController *)container
  transitionedFromController:(UIViewController *)fromController
                toController:(UIViewController *)toController;
-
+- (void)container:(HDContainerViewController *)container
+ willChangeExpandedState:(BOOL)expanded;
 @end
 

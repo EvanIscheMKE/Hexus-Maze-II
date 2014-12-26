@@ -9,10 +9,12 @@
 @import SpriteKit;
 
 @class HDGridManager;
+@protocol HDSceneDelegate;
 @interface HDScene : SKScene
 
 @property (nonatomic, assign) NSInteger levelIndex;
 @property (nonatomic, strong) HDGridManager *gridManager;
+@property (nonatomic, weak) id <HDSceneDelegate> delegate;
 
 - (void)performExitAnimationsWithCompletion:(dispatch_block_t)completion;
 - (void)layoutNodesWithGrid:(NSArray *)grid;
@@ -21,3 +23,9 @@
 
 @end
 
+@protocol HDSceneDelegate <NSObject, SKSceneDelegate>
+@required
+- (void)scene:(HDScene *)scene proceededToLevel:(NSUInteger)level;
+- (void)scene:(HDScene *)scene updatedSelectedTileCount:(NSUInteger)count;
+- (void)multipleTouchTileWasTouchedInScene:(HDScene *)scene;
+@end

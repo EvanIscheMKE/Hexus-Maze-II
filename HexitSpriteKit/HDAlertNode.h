@@ -8,19 +8,23 @@
 
 #import <SpriteKit/SpriteKit.h>
 
+extern NSString * const NEXTLEVELKEY;
+extern NSString * const RESTARTKEY;
+extern NSString * const SHAREKEY;
+extern NSString * const LEADERBOARDKEY;
+extern NSString * const RATEKEY;
+extern NSString * const ACHIEVEMENTSKEY;
+
 @protocol HDAlertnodeDelegate;
 @interface HDAlertNode : SKSpriteNode
-@property (nonatomic, weak) id <HDAlertnodeDelegate> delegate;
+@property (nonatomic, weak) id<HDAlertnodeDelegate> delegate;
 @property (nonatomic, strong) SKLabelNode *levelLabel;
-
-- (void)show;
 
 @end
 
 @protocol HDAlertnodeDelegate <NSObject>
-@optional
-
-- (void)alertNode:(HDAlertNode *)alertNode clickedButtonAtIndex:(NSInteger)buttonIndex;
+@required
+- (void)alertNode:(HDAlertNode *)alertNode clickedButtonWithTitle:(NSString *)title;
 - (void)alertNodeWillDismiss:(HDAlertNode *)alertNode;
 
 @end

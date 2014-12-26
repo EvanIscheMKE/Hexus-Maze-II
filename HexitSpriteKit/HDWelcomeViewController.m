@@ -111,10 +111,10 @@ static const NSUInteger kHexaCount = 4;
 + (void)_performScaleOnView:(UIView *)view
 {
     CABasicAnimation *scale = [CABasicAnimation animationWithKeyPath:@"transform.scale"];
-    [scale setFromValue:@1.0f];
-    [scale setToValue:@.9f];
-    [scale setDuration:.15f];
-    [scale setAutoreverses:YES];
+    scale.fromValue = @1.0f;
+    scale.toValue   = @.9f;
+    scale.duration  = .15f;
+    scale.autoreverses = YES;
     [view.layer addAnimation:scale forKey:@"scale"];
 }
 
@@ -169,6 +169,10 @@ static const NSUInteger kHexaCount = 4;
 
 - (void)performExitAnimationsWithCompletion:(dispatch_block_t)completion
 {
+    
+    
+    
+    
     if (completion) {
         completion();
     }

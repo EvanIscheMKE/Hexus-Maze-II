@@ -14,30 +14,25 @@
 #import "HDHexagonControl.h"
 #import "HDSoundManager.h"
 #import "HDHexagonView.h"
+#import "HDNavigationBar.h"
 #import "HDGridScrollView.h"
 #import "UIColor+FlatColors.h"
 #import "HDGridViewController.h"
 #import "HDContainerViewController.h"
 #import "HDLevelsViewController.h"
 #import "HDLockedViewController.h"
+
 static const CGFloat kDefaultContainerHeight   = 70.0f;
 static const CGFloat kDefaultPageControlHeight = 50.0f;
-
-static const CGFloat kButtonSize = 42.0f;
-static const CGFloat kInset      = 20.0f;
 
 @interface HDGridViewController () <UIScrollViewDelegate ,HDGridScrollViewDelegate, HDLevelsViewControllerDelegate, HDGridScrollViewDatasource>
 
 @property (nonatomic, strong) HDGridScrollView *scrollView;
 @property (nonatomic, strong) HDHexagonControl *control;
 
-@property (nonatomic, assign) BOOL navigationBarHidden;
+@property (nonatomic, getter=isNavigationBarHidden, assign) BOOL navigationBarHidden;
 
-@property (nonatomic, strong) UIView *container;
-
-@property (nonatomic, strong) UIButton *toggleButton;
-@property (nonatomic, strong) UIButton *play;
-
+@property (nonatomic, strong) HDNavigationBar *container;
 @end
 
 @implementation HDGridViewController {
@@ -50,38 +45,30 @@ static const CGFloat kInset      = 20.0f;
 
 - (void)viewDidLoad
 {
+    self.view.backgroundColor = [UIColor flatMidnightBlueColor];
+    self.view.clipsToBounds = YES;
     [super viewDidLoad];
-    [self.view setBackgroundColor:[UIColor flatMidnightBlueColor]];
-    [self.view setClipsToBounds:YES];
     [self _setup];
-    
-    [[NSNotificationCenter defaultCenter] addObserver:self
-                                             selector:@selector(_performExitAnimation)
-                                                 name:@"gridPerformExitAnimations"
-                                               object:nil];
 }
 
-#pragma mark -
-#pragma mark - < PUBLIC >
+#pragma mark - Public
 
 - (void)levelsViewController:(HDLevelsViewController *)viewController didSelectLevel:(NSUInteger)level
 {
     [self beginLevel:level];
 }
 
-- (void)beginLevel:(NSInteger)level
+- (void)beginLevel:(NSUInteger)level
 {
     HDLevel *gamelevel = [[HDMapManager sharedManager] levelAtIndex:(NSInteger)level - 1];
     
-   // if (gamelevel.isUnlocked) {
-    [self setNavigationBarHidden:YES];
-    [[HDSoundManager sharedManager] playSound:HDButtonSound];
-    [self.scrollView performOutroAnimationWithCompletion:^{
-        [ADelegate navigateToNewLevel:(NSInteger)level];
-
-    }];
-        
-  //  }
+    if (gamelevel.isUnlocked) {
+        self.navigationBarHidden = YES;
+        [[HDSoundManager sharedManager] playSound:HDButtonSound];
+        [self.scrollView performOutroAnimationWithCompletion:^{
+            [ADelegate beginGameWithLevel:level];
+        }];
+    }
 }
 
 - (void)setNavigationBarHidden:(BOOL)navigationBarHidden
@@ -95,8 +82,7 @@ static const CGFloat kInset      = 20.0f;
     }
 }
 
-#pragma mark -
-#pragma mark - < PRIVATE >
+#pragma mark - Private
 
 - (HDContainerViewController *)containerController
 {
@@ -115,8 +101,8 @@ static const CGFloat kInset      = 20.0f;
     
     CGRect controlRect = CGRectMake(0.0f, 0.0f, CGRectGetWidth(self.view.bounds), kDefaultPageControlHeight);
     self.control = [[HDHexagonControl alloc] initWithFrame:controlRect];
-    [self.control setNumberOfPages:self.scrollView.numberOfPages];
-    [self.control setCurrentPage:0];
+    self.control.numberOfPages = self.scrollView.numberOfPages;
+    self.control.currentPage = 0;
     [self.control setCenter:CGPointMake(
                                         CGRectGetMidX(self.view.bounds),
                                         CGRectGetHeight(self.view.bounds) + CGRectGetMidY(self.control.bounds)
@@ -124,61 +110,22 @@ static const CGFloat kInset      = 20.0f;
     [self.view addSubview:self.control];
     
     CGRect containerFrame = CGRectMake(0.0f, -kDefaultContainerHeight, CGRectGetWidth(self.view.bounds), kDefaultContainerHeight);
-    self.container = [[UIView alloc] initWithFrame:containerFrame];
-    [self.container setBackgroundColor:[UIColor clearColor]];
+    self.container = [HDNavigationBar viewWithToggleImage:[UIImage imageNamed:@"Grid"] activityImage:[UIImage imageNamed:@"Play"]];
+    self.container.frame = containerFrame;
+    [[self.container.subviews firstObject] addTarget:[self containerController]
+                                              action:@selector(toggleMenuViewController)
+                                    forControlEvents:UIControlEventTouchUpInside];
+    [[self.container.subviews lastObject] addTarget:self
+                                              action:@selector(_beginLastUnlockedLevel)
+                                    forControlEvents:UIControlEventTouchUpInside];
+    self.container.backgroundColor = [UIColor clearColor];
     [self.view addSubview:self.container];
-    
-    self.toggleButton = [UIButton buttonWithType:UIButtonTypeCustom];
-    [self.toggleButton setImage:[UIImage imageNamed:@"Grid"] forState:UIControlStateNormal];
-    [self.toggleButton addTarget:[self containerController] action:@selector(toggleMenuViewController) forControlEvents:UIControlEventTouchUpInside];
-    
-    self.play = [UIButton buttonWithType:UIButtonTypeCustom];
-    [self.play setImage:[UIImage imageNamed:@"Play"] forState:UIControlStateNormal];
-    [self.play addTarget:self action:@selector(_beginLastUnlockedLevel) forControlEvents:UIControlEventTouchUpInside];
-    
-    for (UIButton *button in @[self.toggleButton, self.play]) {
-        [button setTranslatesAutoresizingMaskIntoConstraints:NO];
-        [self.container addSubview:button];
-    }
-    
-    UIButton *toggle = self.toggleButton;
-    UIButton *play   = self.play;
-    
-    _views = NSDictionaryOfVariableBindings(toggle, play);
-    
-    _metrics = @{ @"buttonHeight" : @(kButtonSize), @"inset" : @(kInset) };
-    
-    NSArray *toggleHorizontalConstraint = [NSLayoutConstraint constraintsWithVisualFormat:@"H:|-inset-[toggle(buttonHeight)]"
-                                                                                  options:0
-                                                                                  metrics:_metrics
-                                                                                    views:_views];
-    [self.view addConstraints:toggleHorizontalConstraint];
-    
-    NSArray *toggleVerticalConstraint   = [NSLayoutConstraint constraintsWithVisualFormat:@"V:|-inset-[toggle(buttonHeight)]"
-                                                                                  options:0
-                                                                                  metrics:_metrics
-                                                                                    views:_views];
-    [self.view addConstraints:toggleVerticalConstraint];
-    
-    NSArray *shareHorizontalConstraint = [NSLayoutConstraint constraintsWithVisualFormat:@"H:[play(buttonHeight)]-inset-|"
-                                                                                 options:0
-                                                                                 metrics:_metrics
-                                                                                   views:_views];
-    [self.view addConstraints:shareHorizontalConstraint];
-    
-    NSArray *shareVerticalConstraint   = [NSLayoutConstraint constraintsWithVisualFormat:@"V:|-inset-[play(buttonHeight)]"
-                                                                                 options:0
-                                                                                 metrics:_metrics
-                                                                                   views:_views];
-    [self.view addConstraints:shareVerticalConstraint];
 }
 
-- (void)_performExitAnimation
+- (void)performExitAnimationWithCompletion:(dispatch_block_t)completion
 {
-    [self setNavigationBarHidden:YES];
-    [self.scrollView performOutroAnimationWithCompletion:^{
-        [ADelegate.window.rootViewController dismissViewControllerAnimated:NO completion:nil];
-    }];
+    self.navigationBarHidden = YES;
+    [self.scrollView performOutroAnimationWithCompletion:completion];
 }
 
 - (void)_beginLastUnlockedLevel
@@ -189,7 +136,7 @@ static const CGFloat kInset      = 20.0f;
 - (void)viewDidAppear:(BOOL)animated
 {
     [super viewDidAppear:animated];
-    [self setNavigationBarHidden:NO];
+     self.navigationBarHidden = NO;
     [self.scrollView performIntroAnimationWithCompletion:nil];
 }
 
@@ -198,11 +145,11 @@ static const CGFloat kInset      = 20.0f;
     dispatch_block_t animate = ^{
         CGRect rect = self.container.frame;
         rect.origin.y = -kDefaultContainerHeight;
-        [self.container setFrame:rect];
+        self.container.frame = rect;
         
         CGPoint center = self.control.center;
         center.y =  CGRectGetHeight(self.view.bounds) + 25.0f;
-        [self.control setCenter:center];
+        self.control.center = center;
     };
     
     if (!animated) {
@@ -217,11 +164,11 @@ static const CGFloat kInset      = 20.0f;
     dispatch_block_t animate = ^{
         CGRect rect = self.container.frame;
         rect.origin.y = 0.0f;
-        [self.container setFrame:rect];
+        self.container.frame = rect;
         
         CGPoint center = self.control.center;
         center.y = CGRectGetHeight(self.view.bounds) - 45.0f;
-        [self.control setCenter:center];
+        self.control.center = center;
     };
     
     if (!animated) {
@@ -237,13 +184,7 @@ static const CGFloat kInset      = 20.0f;
     // Dispose of any resources that can be recreated.
 }
 
-#pragma mark -
 #pragma mark - <HDGridScrollViewDelegate>
-
-- (void)beginGameAtLevelIndex:(NSUInteger)levelIndex
-{
-    [self beginLevel:levelIndex];
-}
 
 - (NSArray *)pageViewsForGridScrollView:(HDGridScrollView *)gridScrollView
 {
@@ -288,26 +229,17 @@ static const CGFloat kInset      = 20.0f;
     return _pageViews;
 }
 
-#pragma mark -
 #pragma mark - <UIScrollViewDelegate>
 
 - (void)scrollViewDidScroll:(HDGridScrollView *)scrollView
 {
-    CGFloat percent = ((int)(scrollView.contentOffset.x) % (int)(scrollView.frame.size.width)) / scrollView.frame.size.width;
-    if (percent > 0.0 && percent < 1.0) {
-
-    }
-    
-    
     NSInteger page = 0;
     if (scrollView.isDragging || scrollView.isDecelerating){
         page = floor((self.scrollView.contentOffset.x - CGRectGetWidth(scrollView.bounds) / 2) / CGRectGetWidth(scrollView.bounds)) + 1;
     }
     
     if (page != _previousPage) {
-        
         [self.control setCurrentPage:MIN(page, scrollView.numberOfPages - 1)];
-        
         _previousPage = page;
     }
 }

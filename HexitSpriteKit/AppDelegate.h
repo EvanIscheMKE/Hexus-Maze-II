@@ -11,25 +11,17 @@
 @import GameKit;
 @import AVFoundation;
 @interface AppDelegate : UIResponder <UIApplicationDelegate>
-
 @property (nonatomic, strong) UIWindow *window;
-@property (nonatomic, getter=isPlayingLoop, assign) BOOL playLoop;
-
 - (void)presentGameCenterControllerForState:(GKGameCenterViewControllerState)state;
-
 - (void)presentShareViewController;
-
-//- (void)navigateToRandomlyGeneratedLevel;
-
-- (void)navigateToNewLevel:(NSInteger)level;
-
+- (void)beginGameWithLevel:(NSInteger)level;
 - (void)presentContainerViewController;
-
-- (void)navigateToLevelController;
-
-- (void)restartCurrentLevel;
-
 - (void)rateHEXUS;
+
+- (IBAction)restartCurrentLevel:(id)sender;
+- (IBAction)popToRootViewController:(id)sender;
+- (IBAction)animateToLevelViewController:(id)sender;
+- (IBAction)openAcheivementsController:(id)sender;
 
 @end
 

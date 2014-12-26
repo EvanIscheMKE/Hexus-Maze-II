@@ -59,11 +59,11 @@ static const CGFloat kTileHeightInsetMultiplier = .855f;
     for (HDHexagonView *hexa in [[self.containerView.subviews mutableCopy] shuffle]) {
         
         CAKeyframeAnimation *scale = [CAKeyframeAnimation animationWithKeyPath:@"transform.scale"];
-        [scale setValues:@[@1.0f,@1.1f,@0.0f]];
-        [scale setDuration:.3f];
-        [scale setRemovedOnCompletion:NO];
-        [scale setFillMode:kCAFillModeForwards];
-        [scale setBeginTime:CACurrentMediaTime() + delay];
+        scale.values = @[@1.0f,@1.1f,@0.0f];
+        scale.duration = .3f;
+        scale.removedOnCompletion = NO;
+        scale.fillMode = kCAFillModeForwards;
+        scale.beginTime = CACurrentMediaTime() + delay;
         [hexa.layer addAnimation:scale forKey:@"ScaleOut"];
         
         delay += kIncreaseInterval;
@@ -127,29 +127,29 @@ static const CGFloat kTileHeightInsetMultiplier = .855f;
             HDHexagonView *hexagon = [[HDHexagonView alloc] initWithFrame:bounds
                                                                      type:HDHexagonTypePoint
                                                               strokeColor:[UIColor flatPeterRiverColor]];
-            [hexagon setTag:tagIndex];
-            [hexagon setHidden:YES];
-            [hexagon setCenter:[HDLevelsViewController _pointForColumn:column row:row]];
+            hexagon.tag = tagIndex;
+            hexagon.hidden = YES;
+            hexagon.center = [HDLevelsViewController _pointForColumn:column row:row];
              
             [pageArray addObject:hexagon];
             [_containerView addSubview:hexagon];
             
             UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(_beginGame:)];
-            [tap setNumberOfTapsRequired:1];
+            tap.numberOfTapsRequired = 1;
             [hexagon addGestureRecognizer:tap];
             
-//            if (level.completed)
-//            {
+            if (level.completed)
+            {
                 [hexagon setState:HDHexagonStateCompleted index:tagIndex];
-//            }
-//            else if (!level.completed && level.isUnlocked)
-//            {
-//                [hexagon setState:HDHexagonStateUnlocked index:tagIndex];
-//            }
-//            else
-//            {
-//                [hexagon setState:HDHexagonStateLocked index:tagIndex];
-//            }
+            }
+            else if (!level.completed && level.isUnlocked)
+            {
+                [hexagon setState:HDHexagonStateUnlocked index:tagIndex];
+            }
+            else
+            {
+                [hexagon setState:HDHexagonStateLocked index:tagIndex];
+            }
             tagIndex++;
         }
     }
@@ -158,11 +158,13 @@ static const CGFloat kTileHeightInsetMultiplier = .855f;
 - (void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
+    self.view.userInteractionEnabled = YES;
     _containerView.center = CGPointMake(CGRectGetMidX(_levelsView.bounds), CGRectGetMidY(_levelsView.bounds));
 }
 
 - (void)_beginGame:(UITapGestureRecognizer *)sender
 {
+    self.view.userInteractionEnabled = NO;
     [self.delegate levelsViewController:self didSelectLevel:[sender.view tag]];
 }
 
