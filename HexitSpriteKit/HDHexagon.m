@@ -15,13 +15,12 @@ NSString * const DOUBLE_KEY = @"double";
 NSString * const TRIPLE_KEY = @"triple";
 
 @interface HDHexagon ()
+@property (nonatomic, assign) NSInteger touchesCount;
 @property (nonatomic, assign) NSInteger column;
 @property (nonatomic, assign) NSInteger row;
 @end
 
-@implementation HDHexagon{
-    NSInteger _recievedTouchesCount;
-}
+@implementation HDHexagon
 
 - (instancetype)init
 {
@@ -30,22 +29,14 @@ NSString * const TRIPLE_KEY = @"triple";
 
 - (instancetype)initWithRow:(NSInteger)row column:(NSInteger)column
 {
+    NSParameterAssert(row);
     if (self = [super init]) {
-        
-        NSParameterAssert(row);
-        
-        _recievedTouchesCount = 0;
-        
-        [self setRow:row];
-        [self setColumn:column];
-        [self setState:HDHexagonStateEnabled];
+        self.touchesCount = 0;
+        self.row    = row;
+        self.column = column;
+        self.state  = HDHexagonStateEnabled;
     }
     return self;
-}
-
-- (NSInteger)touchesCount
-{
-    return _recievedTouchesCount;
 }
 
 - (void)setType:(HDHexagonType)type
@@ -74,11 +65,11 @@ NSString * const TRIPLE_KEY = @"triple";
             break;
         case HDHexagonTypeEnd:
             [self.node endTile];
-            [self setState:HDHexagonStateDisabled];
+            self.state = HDHexagonStateDisabled;
             [self.node setStrokeColor:[SKColor whiteColor] fillColor:[SKColor clearColor]];
             break;
         case HDHexagonTypeOne:
-            [self setCountTile:YES];
+            self.countTile = YES;
             [self.node setStrokeColor:[SKColor flatEmeraldColor] fillColor:[SKColor clearColor]];
             break;
         case HDHexagonTypeTwo:
@@ -102,27 +93,27 @@ NSString * const TRIPLE_KEY = @"triple";
         return YES;
     };
     
-    _recievedTouchesCount++;
+    self.touchesCount++;
     
     switch (self.type) {
         case HDHexagonTypeRegular:
-            [self setSelected:YES];
+            self.selected = YES;
             break;
         case HDHexagonTypeStarter:
-            [self setSelected:YES];
+            self.selected = YES;
             break;
         case HDHexagonTypeDouble:
-            switch (_recievedTouchesCount) {
+            switch (self.touchesCount) {
                 case 1:{
                     SKShapeNode *shapeNode = (SKShapeNode *)[self.node childNodeWithName:DOUBLE_KEY];
                     [shapeNode removeFromParent];
                 } break;
                 case 2:
-                    [self setSelected:YES];
+                    self.selected = YES;
                     break;
             } break;
         case HDHexagonTypeTriple:
-            switch (_recievedTouchesCount) {
+            switch (self.touchesCount) {
                 case 1:
                     [[[(SKShapeNode *)[[self.node children] lastObject] children] firstObject] removeFromParent];
                     break;
@@ -130,26 +121,26 @@ NSString * const TRIPLE_KEY = @"triple";
                     [self.node removeAllChildren];
                     break;
                 case 3:
-                    [self setSelected:YES];
+                    self.selected = YES;
                     break;
             } break;
         case HDHexagonTypeEnd:
-            [self setSelected:YES];
+            self.selected = YES;
             break;
         case HDHexagonTypeOne:
-            [self setSelected:YES];
+            self.selected = YES;
             break;
         case HDHexagonTypeTwo:
-            [self setSelected:YES];
+            self.selected = YES;
             break;
         case HDHexagonTypeThree:
-            [self setSelected:YES];
+            self.selected = YES;
             break;
         case HDHexagonTypeFour:
-            [self setSelected:YES];
+            self.selected = YES;
             break;
         case HDHexagonTypeFive:
-            [self setSelected:YES];
+            self.selected = YES;
             break;
     }
     return self.selected;
@@ -200,41 +191,39 @@ NSString * const TRIPLE_KEY = @"triple";
     _locked = locked;
     
     if (!locked && self.state != HDHexagonStateEnabled) {
-        [self setState:HDHexagonStateEnabled];
-        [self.node setFillColor:[SKColor clearColor]];
+        self.state = HDHexagonStateEnabled;
+        self.node.fillColor = [SKColor clearColor];
         [self.node runAction:[SKAction rotateByAngle:-(M_PI * 2) duration:.2f]];
-        [self.node setLocked:NO];
+        self.node.locked = NO;
     }
 }
 
 - (void)restoreToInitialState
 {
-    _recievedTouchesCount = 0;
-    
-    [self setSelected:NO];
-    [self.node setLocked:NO];
     [self.node removeAllChildren];
-    
-    [self setState:HDHexagonStateEnabled];
-    [self setType:self.type];
+    self.touchesCount = 0;
+    self.selected    = NO;
+    self.node.locked = NO;
+    self.state = HDHexagonStateEnabled;
+    self.type  = self.type;
 }
 
 #pragma mark -
-#pragma mark - <PRIVATE>
+#pragma mark - Private
 
 - (void)_disabledTileWithCountIndex:(NSInteger)count
 {
-    [self setCountTile:YES];
-    [self setState:HDHexagonStateDisabled];
+    self.countTile   = YES;
+    self.node.locked = YES;
+    self.state = HDHexagonStateDisabled;
     [self.node setStrokeColor:[SKColor flatEmeraldColor] fillColor:[SKColor clearColor]];
-    [self.node setLocked:YES];
 }
 
 - (void)_countTileWasSelectedForType:(HDHexagonType)type
 {
     [self.node setFillColor:self.node.strokeColor];
-    if ([self.delegate respondsToSelector:@selector(unlockCountTileAfterHexagon:)] && type != HDHexagonTypeFive) {
-        [self.delegate unlockCountTileAfterHexagon:type];
+    if ([self.delegate respondsToSelector:@selector(hexagon:unlockedCountTile:)] && type != HDHexagonTypeFive) {
+        [self.delegate hexagon:self unlockedCountTile:type];
     }
 }
 

@@ -14,7 +14,7 @@
 
 @property (nonatomic, assign) NSInteger levelIndex;
 @property (nonatomic, strong) HDGridManager *gridManager;
-@property (nonatomic, weak) id <HDSceneDelegate> delegate;
+@property (nonatomic, weak) id<HDSceneDelegate> delegate;
 
 - (void)performExitAnimationsWithCompletion:(dispatch_block_t)completion;
 - (void)layoutNodesWithGrid:(NSArray *)grid;

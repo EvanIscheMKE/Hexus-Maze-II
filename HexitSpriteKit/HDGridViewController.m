@@ -43,6 +43,11 @@ static const CGFloat kDefaultPageControlHeight = 50.0f;
     NSInteger _previousPage;
 }
 
+- (void)dealloc
+{
+    NSLog(@"goodbye");
+}
+
 - (void)viewDidLoad
 {
     self.view.backgroundColor = [UIColor flatMidnightBlueColor];

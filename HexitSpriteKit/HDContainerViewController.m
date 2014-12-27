@@ -72,50 +72,22 @@ static const CGFloat MINIMUM_MENU_OFFSET_X = 228.0f;
     [self.frontViewController didMoveToParentViewController:self];
 }
 
-- (void)setFrontViewController:(UIViewController *)controller animated:(BOOL)animated
+- (void)setFrontMostViewController:(UIViewController *)controller
 {
     UIViewController *oldController = self.frontViewController;
     
     self.frontViewController = controller;
+    
+    [oldController willMoveToParentViewController:nil];
+    [oldController.view removeFromSuperview];
+    [oldController removeFromParentViewController];
+    
     [self addChildViewController:self.frontViewController];
+    [self.view addSubview:self.frontViewController.view];
+    [self.frontViewController didMoveToParentViewController:self];
     
-    void (^completionBlock)(BOOL) = ^(BOOL finished){
-        
-        [oldController willMoveToParentViewController:nil];
-        [oldController removeFromParentViewController];
-        [self.frontViewController didMoveToParentViewController:self];
-        
-        if (self.delegate && [self.delegate respondsToSelector:@selector(container:transitionedFromController:toController:)]) {
-            [self.delegate container:self transitionedFromController:oldController toController:self.frontViewController];
-        } 
-    };
-    
-    dispatch_block_t animation = ^{
-        
-        if (!animated) {
-            [oldController.view removeFromSuperview];
-            [self.view addSubview:self.frontViewController.view];
-        }
-        
-        if (self.isExpanded) {
-            self.isExpanded = NO;
-            
-            CGRect rect = self.frontViewController.view.frame;
-            rect.origin.x = 0;
-            self.frontViewController.view.frame = rect;
-        }
-    };
-    
-    if (animated) {
-        [self transitionFromViewController:oldController
-                          toViewController:self.frontViewController
-                                  duration:.5f
-                                   options:UIViewAnimationOptionTransitionFlipFromRight
-                                animations:animation
-                                completion:completionBlock];
-    } else {
-        animation();
-        completionBlock(YES);
+    if (self.delegate && [self.delegate respondsToSelector:@selector(container:transitionedFromController:toController:)]) {
+        [self.delegate container:self transitionedFromController:oldController toController:self.frontViewController];
     }
 }
 

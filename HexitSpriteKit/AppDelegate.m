@@ -59,10 +59,8 @@ NSString * const HDLeaderBoardIdentifierKey = @"LevelLeaderboard";
 
 - (void)presentContainerViewController
 {
-    HDRearViewController *rearViewController  = [[HDRearViewController alloc] init];
-    HDGridViewController *frontViewController = [[HDGridViewController alloc] init];
-    self.containerController = [[HDContainerViewController alloc] initWithFrontViewController:frontViewController
-                                                                          rearViewController:rearViewController];
+    self.containerController = [[HDContainerViewController alloc] initWithFrontViewController:[HDGridViewController new]
+                                                                           rearViewController:[HDRearViewController new]];
     self.containerController.delegate = self;
     
     [self.window.rootViewController presentViewController:self.containerController animated:NO completion:nil];
@@ -79,8 +77,7 @@ NSString * const HDLeaderBoardIdentifierKey = @"LevelLeaderboard";
 
 - (void)beginGameWithLevel:(NSInteger)level
 {
-    HDGameViewController *controller = [[HDGameViewController alloc] initWithLevel:level];
-    [self.containerController setFrontViewController:controller animated:NO];
+    [self.containerController setFrontMostViewController:[[HDGameViewController alloc] initWithLevel:level]];
 }
 
 - (IBAction)restartCurrentLevel:(id)sender
@@ -97,8 +94,8 @@ NSString * const HDLeaderBoardIdentifierKey = @"LevelLeaderboard";
 {
     if (self.containerController.isExpanded) {
         [self.containerController toggleMenuViewControllerWithCompletion:^{
-            if ([[self.containerController.childViewControllers lastObject] isKindOfClass:[HDGridViewController class]]) {
-                HDGridViewController *controller = (HDGridViewController *)[self.containerController.childViewControllers lastObject];
+            if ([self.containerController.frontViewController isKindOfClass:[HDGridViewController class]]) {
+                HDGridViewController *controller = (HDGridViewController *)self.containerController.frontViewController;
                 [controller performExitAnimationWithCompletion:^{
                     [self.window.rootViewController dismissViewControllerAnimated:NO completion:nil];
                 }];
@@ -111,10 +108,10 @@ NSString * const HDLeaderBoardIdentifierKey = @"LevelLeaderboard";
 {
     if (self.containerController.isExpanded) {
         [self.containerController toggleMenuViewControllerWithCompletion:^{
-            if ([[self.containerController.childViewControllers lastObject] isKindOfClass:[HDGameViewController class]]) {
-                HDGameViewController *controller = (HDGameViewController *)[self.containerController.childViewControllers lastObject];
+            if ([self.containerController.frontViewController isKindOfClass:[HDGameViewController class]]) {
+                HDGameViewController *controller = (HDGameViewController *)self.containerController.frontViewController;
                 [controller performExitAnimationWithCompletion:^{
-                     [self.containerController setFrontViewController:[[HDGridViewController alloc] init] animated:NO];
+                [self.containerController setFrontMostViewController:[HDGridViewController new]];
                 }];
             }
         }];

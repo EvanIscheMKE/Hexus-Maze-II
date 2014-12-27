@@ -42,7 +42,6 @@ static const CGFloat kTileHeightInsetMultiplier = .845f;
 @property (nonatomic, assign) BOOL includeEndTile;
 @property (nonatomic, assign) BOOL countDownSoundIndex;
 
-@property (nonatomic, strong) SKAction *loop;
 @property (nonatomic, strong) SKAction *completionZing;
 
 @property (nonatomic, strong) SKNode *gameLayer;
@@ -132,11 +131,11 @@ static const CGFloat kTileHeightInsetMultiplier = .845f;
 - (void)_setup
 {
     // initalize varibles here instead of initWithSize, so when new levels laid out they're set to zero
-    _soundIndex        = 0;
-    _minCenterX        = MAXFLOAT;
-    _maxCenterX        = 0.0f;
-    _minCenterY        = MAXFLOAT;
-    _maxCenterY        = 0.0f;
+    _soundIndex  = 0;
+    _minCenterX  = MAXFLOAT;
+    _maxCenterX  = 0.0f;
+    _minCenterY  = MAXFLOAT;
+    _maxCenterY  = 0.0f;
 }
 
 - (void)layoutIndicatorTiles
@@ -237,26 +236,14 @@ static const CGFloat kTileHeightInsetMultiplier = .845f;
 {
     [self runAction:[_sounds objectAtIndex:_soundIndex] withKey:HDSoundActionKey];
     
-    if ([self _inPlayTileCount] == 0) {
-        [self runAction:self.completionZing withKey:HDSoundActionKey];
+    if (_soundIndex == 0 || _soundIndex == _sounds.count - 1) {
+        self.countDownSoundIndex = !self.countDownSoundIndex;
     }
     
-    if (self.countDownSoundIndex) {
-        
-        _soundIndex--;
-        if (_soundIndex == 0) {
-            self.countDownSoundIndex = NO;
-        }
-    } else {
-        
-        _soundIndex++;
-        if (_soundIndex == _sounds.count - 1) {
-            self.countDownSoundIndex = YES;
-        }
-    }
+    _soundIndex = self.countDownSoundIndex ? _soundIndex - 1 : _soundIndex + 1;
     
     if (vibration && [[HDSettingsManager sharedManager] vibe]) {
-        if (hexagon.isCountTile || hexagon.type == HDHexagonTypeStarter) {
+        if (hexagon.isCountTile || hexagon.type == HDHexagonTypeStarter||[self _inPlayTileCount] == 0) {
             AudioServicesPlaySystemSound(kSystemSoundID_Vibrate);
         }
     }
@@ -586,6 +573,13 @@ static const CGFloat kTileHeightInsetMultiplier = .845f;
     }
 }
 
+- (void)alertNodeFinishedIntroAnimation:(HDAlertNode *)alertNode
+{
+    if (self.animating) {
+        [self insertChild:[SKEmitterNode starEmitter] atIndex:0];
+    }
+}
+
 - (void)runAction:(SKAction *)action withKey:(NSString *)key
 {
     // if key is equal to "HDSoundActionKey", check to make sure the sounds on and there's no background music playing
@@ -614,7 +608,6 @@ static const CGFloat kTileHeightInsetMultiplier = .845f;
 - (NSArray *)_preloadedGameSounds
 {
     //Preload any sounds that are going to be played throughout the game
-    self.loop = [SKAction playSoundFileNamed:@"C4.m4a" waitForCompletion:YES];
     self.completionZing = [SKAction playSoundFileNamed:@"win.mp3" waitForCompletion:YES];
     
     NSMutableArray *sounds = [NSMutableArray array];

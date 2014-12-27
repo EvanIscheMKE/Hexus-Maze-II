@@ -40,13 +40,11 @@ static const CGFloat kPadding = 4.0f;
     [self.motionManager startDeviceMotionUpdatesToQueue:[NSOperationQueue mainQueue]
                                             withHandler:
      ^(CMDeviceMotion *motion, NSError *error) {
-         dispatch_async(dispatch_get_main_queue(), ^{
              double angle = atan2(CGVectorMake(-motion.gravity.x, -motion.gravity.y).dy,
                                   CGVectorMake( motion.gravity.x,  motion.gravity.y).dx);
              [self.floatingAnchorBehavior setAnchorPoint:[self _pointFromAngle:angle
                                                                         center:self.attachmentBehavior.anchorPoint
                                                                         radius:CGRectGetMidY(self.bounds)]];
-         });
      }];
     _isStarted = YES;
 }
@@ -162,7 +160,12 @@ static const CGFloat kPadding = 4.0f;
         UIBezierPath *nail = [UIBezierPath bezierPathWithOvalInRect:nailFrame];
         [nail fill];
         
-        //  [@"Coming Soon"]
+        NSDictionary *attributes = @{
+                                    NSFontAttributeName:GILLSANS(40.0f),
+                                    NSForegroundColorAttributeName:[UIColor whiteColor]
+                                    };
+    //    [@"Coming Soon" drawInRect:CGRectMake(20.0f, imageSize.height *.66, imageSize.width, imageSize.height * .3) withAttributes:attributes];
+        [@"  New Levels\nComing Soon!" drawInRect:CGRectMake(25.0f, imageSize.height *.45f, imageSize.width, imageSize.height * .66) withAttributes:attributes];
         
         comingSoonSign = UIGraphicsGetImageFromCurrentImageContext();
         UIGraphicsEndImageContext();

@@ -30,7 +30,7 @@
 - (instancetype)initWithFrontViewController:(UIViewController *)frontController
                         rearViewController:(UIViewController *)rearController NS_DESIGNATED_INITIALIZER;
 
-- (void)setFrontViewController:(UIViewController *)controller animated:(BOOL)animated;
+- (void)setFrontMostViewController:(UIViewController *)controller;
 - (void)toggleMenuViewControllerWithCompletion:(dispatch_block_t)completion;
 - (void)toggleMenuViewController;
 

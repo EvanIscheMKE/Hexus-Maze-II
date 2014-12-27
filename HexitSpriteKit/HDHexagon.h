@@ -44,8 +44,8 @@ static const NSInteger NumberOfColumns = 9;
 @property (nonatomic, readonly) NSInteger touchesCount;
 
 @property (nonatomic, getter=isCountTile, assign) BOOL countTile;
-@property (nonatomic, getter=isSelected, assign) BOOL selected;
-@property (nonatomic, getter=isLocked,   assign) BOOL locked;
+@property (nonatomic, getter=isSelected, assign)  BOOL selected;
+@property (nonatomic, getter=isLocked,   assign)  BOOL locked;
 
 @property (nonatomic, weak) id<HDHexagonDelegate> delegate;
 @property (nonatomic, strong) HDHexagonNode *node;
@@ -65,5 +65,5 @@ static const NSInteger NumberOfColumns = 9;
 
 @protocol HDHexagonDelegate <NSObject>
 @optional
-- (void)unlockCountTileAfterHexagon:(HDHexagonType)type;
+- (void)hexagon:(HDHexagon *)hexagon unlockedCountTile:(HDHexagonType)type;
 @end

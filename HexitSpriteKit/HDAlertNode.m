@@ -91,7 +91,11 @@ NSString * const ACHIEVEMENTSKEY  = @"Achievements";
 - (void)_show
 {
     [self.container runAction:[SKAction moveToX:0.0f duration:.3f] completion:^{
-        [self.star runAction:[SKAction sequence:@[[SKAction scaleTo:1.2 duration:.4f],[SKAction scaleTo:1.0f duration:.2f]]]];
+        [self.star runAction:[SKAction sequence:@[[SKAction scaleTo:1.2 duration:.4f],[SKAction scaleTo:1.0f duration:.2f]]] completion:^{
+            if (self.delegate && [self.delegate respondsToSelector:@selector(alertNodeFinishedIntroAnimation:)]) {
+                [self.delegate alertNodeFinishedIntroAnimation:self];
+            }
+        }];
     }];
 }
 
@@ -165,13 +169,13 @@ NSString * const ACHIEVEMENTSKEY  = @"Achievements";
     [self.descriptionLabel setVerticalAlignmentMode:SKLabelVerticalAlignmentModeCenter];
     [self.descriptionLabel setFontColor:[SKColor flatMidnightBlueColor]];
     [self.descriptionLabel setFontName:@"GillSans"];
-    [self.descriptionLabel setFontSize:18.0f];
+    [self.descriptionLabel setFontSize:CGRectGetWidth(self.frame)/21];
     [self.descriptionLabel setPosition:descriptionCenter];
     [self.container addChild:self.descriptionLabel];
     
     self.levelLabel = [[SKLabelNode alloc] initWithFontNamed:@"GillSans-Light"];
     [self.levelLabel setPosition:CGPointMake(0.0f, CGRectGetHeight(self.container.frame) / 2.5f)];
-    [self.levelLabel setFontSize:28.0f];
+    [self.levelLabel setFontSize:CGRectGetWidth(self.frame)/14];
     [self.levelLabel setFontColor:[SKColor flatMidnightBlueColor]];
     [self.levelLabel setHorizontalAlignmentMode:SKLabelHorizontalAlignmentModeCenter];
     [self.levelLabel setVerticalAlignmentMode:SKLabelVerticalAlignmentModeBottom];

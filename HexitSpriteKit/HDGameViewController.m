@@ -25,6 +25,7 @@ static const CGFloat kPadding    = 5.0f;
 @property (nonatomic, strong) UILabel *completedLabel;
 @property (nonatomic, strong) UILabel *completedCountLabel;
 
+@property (nonatomic, assign) NSUInteger level;
 @property (nonatomic, assign) NSUInteger totalTileCount;
 @property (nonatomic, assign) NSUInteger completedTileCount;
 
@@ -44,8 +45,6 @@ static const CGFloat kPadding    = 5.0f;
     
     NSDictionary *_views;
     NSDictionary *_metrics;
-    
-    NSInteger _level;
 }
 
 - (void)dealloc
@@ -57,8 +56,7 @@ static const CGFloat kPadding    = 5.0f;
 - (id)initWithLevel:(NSInteger)level
 {
     if (self = [super init]) {
-    
-        _level = level;
+        self.level = level;
         _randomlyGeneratedLevel = NO;
         self.pauseGame = NO;
     }
@@ -68,10 +66,8 @@ static const CGFloat kPadding    = 5.0f;
 - (instancetype)initWithRandomlyGeneratedLevel
 {
     if (self = [super init]) {
-        
         _randomlyGeneratedLevel = YES;
         self.pauseGame = NO;
-        
     }
     return self;
 }
@@ -132,6 +128,9 @@ static const CGFloat kPadding    = 5.0f;
     _navigationBarHidden = navigationBarHidden;
     
     if (_navigationBarHidden) {
+        if (!self.restartButtonHidden) {
+            self.restartButtonHidden = YES;
+        }
         [self _hideAnimated:YES];
     } else {
         [self _showAnimated:YES];
@@ -158,7 +157,13 @@ static const CGFloat kPadding    = 5.0f;
     [self _updateCompletedLabel];
 }
 
-#pragma mark - Private
+- (void)performExitAnimationWithCompletion:(dispatch_block_t)completion
+{
+    self.navigationBarHidden = YES;
+    [self.scene performExitAnimationsWithCompletion:completion];
+}
+
+#pragma mark - Life cycle
 
 - (void)viewWillLayoutSubviews
 {
@@ -168,6 +173,21 @@ static const CGFloat kPadding    = 5.0f;
         [self _setupScene];
     }
 }
+
+- (void)didReceiveMemoryWarning
+{
+    [super didReceiveMemoryWarning];
+    // Dispose of any resources that can be recreated.
+}
+
+- (void)viewDidAppear:(BOOL)animated
+{
+    self.navigationBarHidden = NO;
+    [super viewDidAppear:animated];
+    [self _beginGame];
+}
+
+#pragma mark - Private
 
 - (void)_setup
 {
@@ -286,25 +306,6 @@ static const CGFloat kPadding    = 5.0f;
     }
 }
 
-- (void)didReceiveMemoryWarning
-{
-    [super didReceiveMemoryWarning];
-    // Dispose of any resources that can be recreated.
-}
-
-- (void)viewDidAppear:(BOOL)animated
-{
-    self.navigationBarHidden = NO;
-    [super viewDidAppear:animated];
-    [self _beginGame];
-}
-
-- (void)performExitAnimationWithCompletion:(dispatch_block_t)completion
-{
-    self.navigationBarHidden = YES;
-    [self.scene performExitAnimationsWithCompletion:completion];
-}
-
 - (void)_updateCompletedLabel
 {
     self.completedCountLabel.text = [NSString stringWithFormat:@"%lu/%lu",self.completedTileCount, self.totalTileCount];
@@ -347,10 +348,9 @@ static const CGFloat kPadding    = 5.0f;
 
 - (void)scene:(HDScene *)scene proceededToLevel:(NSUInteger)level
 {
-    _level = level;
+    self.level = level;
     
     self.gridManager = [[HDGridManager alloc] initWithLevelNumber:_level];
-    self.scene.delegate = self;
     self.scene.gridManager = self.gridManager;
     [self.scene layoutIndicatorTiles];
     [self _beginGame];
@@ -385,9 +385,7 @@ static const CGFloat kPadding    = 5.0f;
 - (void)handlePan:(UIPanGestureRecognizer *)gestureRecognizer
 {
     if (gestureRecognizer.state == UIGestureRecognizerStateEnded) {
-         HDContainerViewController *container = self.containerViewController;
-        [container toggleMenuViewController];
-        return;
+        [self.containerViewController toggleMenuViewController];
     }
 }
 
@@ -395,17 +393,21 @@ static const CGFloat kPadding    = 5.0f;
 
 - (UIButton *)_restartButton
 {
-    CGRect restartBounds = CGRectMake(0.0f, 0.0f, CGRectGetWidth(CGRectInset(self.view.bounds, 20.0f, 0.0f)), 44.0f);
+    CGRect restartBounds = CGRectMake(
+                                      0.0f,
+                                      0.0f,
+                                      CGRectGetWidth(CGRectInset(self.view.bounds, 25.0f, 0.0f)),
+                                      CGRectGetWidth(self.view.bounds) < 321.0f ? 34.0f : 44.0f);
     UIButton *restartButton = [UIButton buttonWithType:UIButtonTypeCustom];
     restartButton.frame = restartBounds;
     [restartButton addTarget:self action:@selector(restartGame) forControlEvents:UIControlEventTouchUpInside];
     [restartButton setTitle:@"Try Again" forState:UIControlStateNormal];
     [restartButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
     [restartButton.titleLabel setTextAlignment:NSTextAlignmentCenter];
-    [restartButton.titleLabel setFont:GILLSANS_LIGHT(22.0f)];
+    [restartButton.titleLabel setFont:GILLSANS(22.0f)];
     restartButton.layer.borderColor  = [[UIColor whiteColor] CGColor];
-    restartButton.layer.borderWidth  = 5.0f;
-    restartButton.layer.cornerRadius = 5.0f;
+    restartButton.layer.borderWidth  = 3.0f;
+    restartButton.layer.cornerRadius = 8.0f;
     restartButton.center = CGPointMake(
                                        CGRectGetMidX(self.view.bounds),
                                        CGRectGetHeight(self.view.bounds) + CGRectGetMidX(restartBounds)
@@ -422,7 +424,7 @@ static const CGFloat kPadding    = 5.0f;
     completedCountLabel.textColor = [UIColor whiteColor];
     completedCountLabel.numberOfLines = 1;
     completedCountLabel.textAlignment = NSTextAlignmentCenter;
-    completedCountLabel.font = GILLSANS(40.0f);
+    completedCountLabel.font = GILLSANS(CGRectGetWidth(self.view.bounds) / 10.0f);
     [completedCountLabel sizeToFit];
     completedCountLabel.center = CGPointMake(
                                             CGRectGetMidX(self.view.bounds),
@@ -440,7 +442,7 @@ static const CGFloat kPadding    = 5.0f;
     completedLabel.textColor = [UIColor whiteColor];
     completedLabel.numberOfLines = 1;
     completedLabel.textAlignment = NSTextAlignmentCenter;
-    completedLabel.font = GILLSANS_LIGHT(18.0f);
+    completedLabel.font = GILLSANS_LIGHT(CGRectGetWidth(self.view.bounds) / 20.0f);
     [completedLabel sizeToFit];
     completedLabel.center = CGPointMake(
                                         CGRectGetMidX(self.view.bounds),

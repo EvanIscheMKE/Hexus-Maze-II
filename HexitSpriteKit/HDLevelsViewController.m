@@ -117,6 +117,8 @@ static const CGFloat kTileHeightInsetMultiplier = .855f;
 
 - (void)viewDidLoad
 {
+    [super viewDidLoad];
+    
     NSMutableArray *pageArray = [NSMutableArray arrayWithCapacity:self.columns*self.rows];
     NSUInteger tagIndex = self.levelRange.location + 1;
     for (int row = 0; row < self.rows; row++)

@@ -9,16 +9,31 @@
 #import "HDHexagonControl.h"
 #import "UIColor+FlatColors.h"
 
-static const CGFloat kCurrentPageSize    = 25.0f;
-static const CGFloat kPageSize           = 16.0f;
-static const CGFloat kPageSpacing        = 34.0f;
+static const CGFloat kLargeCurrentPageSize = 25.0f;
+static const CGFloat kLargerPageSize       = 16.0f;
+static const CGFloat kLargePageSpacing     = 34.0f;
 
-@implementation HDHexagonControl
+static const CGFloat kSmallCurrentPageSize = 20.0f;
+static const CGFloat kSmallPageSize        = 12.0f;
+static const CGFloat kSmallPageSpacing     = 28.0f;
+
+@implementation HDHexagonControl{
+    CGFloat _kPageSpacing;
+    CGFloat _kCurrentPageSize;
+    CGFloat _kPageSize;
+}
 
 - (instancetype)initWithFrame:(CGRect)frame
 {
     CGRect bounds = CGRectMake(0.0f, 0.0f, CGRectGetWidth(frame), CGRectGetHeight(frame));
     if (self = [super initWithFrame:bounds]) {
+        
+        BOOL isWideScreen = (CGRectGetWidth([[UIScreen mainScreen] bounds]) > 321);
+        
+        _kPageSize  = isWideScreen ? kLargerPageSize : kSmallPageSize;
+        _kCurrentPageSize = isWideScreen ? kLargeCurrentPageSize : kSmallCurrentPageSize;
+        _kPageSpacing = isWideScreen ? kLargePageSpacing : kSmallPageSpacing;
+        
         self.backgroundColor = [UIColor flatMidnightBlueColor];
         self.currentPageTintColor = [UIColor whiteColor];
         self.tintColor = [UIColor whiteColor];
@@ -41,10 +56,10 @@ static const CGFloat kPageSpacing        = 34.0f;
 
 - (void)drawRect:(CGRect)rect
 {
-    const CGFloat kStartOriginX = ceilf(CGRectGetMidX(self.bounds) - (((CGFloat)self.numberOfPages - 1)/2) * kPageSpacing);
+    const CGFloat kStartOriginX = ceilf(CGRectGetMidX(self.bounds) - (((CGFloat)self.numberOfPages - 1)/2) * _kPageSpacing);
     for (NSInteger page = 0; page < self.numberOfPages; page++) {
         
-        CGPoint point = CGPointMake(kStartOriginX + (page * kPageSpacing), CGRectGetMidY(self.bounds));
+        CGPoint point = CGPointMake(kStartOriginX + (page * _kPageSpacing), CGRectGetMidY(self.bounds));
         
         UIBezierPath *hexagon;
         if (self.currentPage == page) {
@@ -52,10 +67,10 @@ static const CGFloat kPageSpacing        = 34.0f;
             [self.currentPageTintColor setStroke];
             
             CGRect rect = CGRectMake(
-                                     ceilf(point.x - kCurrentPageSize/2),
-                                     ceilf(point.y - kCurrentPageSize/2),
-                                     kCurrentPageSize,
-                                     kCurrentPageSize
+                                     ceilf(point.x - _kCurrentPageSize/2),
+                                     ceilf(point.y - _kCurrentPageSize/2),
+                                     _kCurrentPageSize,
+                                     _kCurrentPageSize
                                      );
             
             hexagon = [self _bezierHexagonInFrame:rect];
@@ -65,10 +80,10 @@ static const CGFloat kPageSpacing        = 34.0f;
             [self.tintColor setStroke];
             
             CGRect rect = CGRectMake(
-                                     ceilf(point.x - kPageSize/2),
-                                     ceilf(point.y - kPageSize/2),
-                                     kPageSize,
-                                     kPageSize
+                                     ceilf(point.x - _kPageSize/2),
+                                     ceilf(point.y - _kPageSize/2),
+                                     _kPageSize,
+                                     _kPageSize
                                      );
             
             hexagon = [self _bezierHexagonInFrame:rect];

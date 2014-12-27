@@ -14,10 +14,9 @@
 #import "HDHexagonView.h"
 #import "UIColor+FlatColors.h"
 
-static const CGFloat kPadding  = 4.0f;
-static const CGFloat kHexaSize = 100.0f;
-
 static const NSUInteger kHexaCount = 4;
+#define kPadding  [[UIScreen mainScreen] bounds].size.width <= 321.0f ? 2.0f : 4.0f
+#define kHexaSize [[UIScreen mainScreen] bounds].size.width / 3.75f
 
 @interface HDWelcomeView ()
 @property (nonatomic, strong) UIView *labelContainer;
@@ -39,17 +38,20 @@ static const NSUInteger kHexaCount = 4;
 
 - (void)_setup
 {
+    CGFloat size = kHexaSize;
+    CGFloat pad  = kPadding;
+    
     NSMutableArray *hexaArray = [NSMutableArray arrayWithCapacity:kHexaCount];
     
-    const CGFloat startingPositionY = CGRectGetMidY(self.bounds) - ((CGFloat)kHexaCount - 1) / 2 * kHexaSize;
+    const CGFloat startingPositionY = CGRectGetMidY(self.bounds) - (kHexaCount - 1) / 2.0f * kHexaSize;
     for (int i = 0; i < kHexaCount; i++) {
         
         CGPoint centerPoint = CGPointMake(
                                           CGRectGetMidX(self.bounds),
                                           startingPositionY + (i * kHexaSize)
                                           );
-        
-        CGRect hexaBounds = CGRectMake(0.0f, 0.0f, kHexaSize - kPadding, kHexaSize -kPadding);
+
+        CGRect hexaBounds = CGRectMake(0.0f, 0.0f, size - pad, size - pad);
         HDHexagonView *hexagon = [[HDHexagonView alloc] initWithFrame:hexaBounds
                                                                  type:HDHexagonTypeFlat /* Flat on top, instead of sitting up */
                                                           strokeColor:[UIColor whiteColor]];
@@ -62,7 +64,7 @@ static const NSUInteger kHexaCount = 4;
         [self addSubview:hexagon];
         
         CAShapeLayer *hexaLayer = (CAShapeLayer *)hexagon.layer;
-        hexaLayer.lineWidth = hexaLayer.lineWidth + kPadding;//Subtact above, then add here, increase line width without changing bound size
+        hexaLayer.lineWidth = hexaLayer.lineWidth + pad;//Subtact above, then add here, increase line width without changing bound size
     }
     
     _hexaArray = hexaArray;
@@ -85,7 +87,7 @@ static const NSUInteger kHexaCount = 4;
         tap.textAlignment = NSTextAlignmentCenter;
         tap.textColor = [UIColor whiteColor];
         tap.text = NSLocalizedString(@"TAP", nil);
-        tap.font = GILLSANS(26.0f);
+        tap.font = GILLSANS(CGRectGetWidth(self.labelContainer.bounds)/2/3);
         [tap sizeToFit];
         tap.center = tapLabelPosition;
         [self.labelContainer addSubview:tap];
@@ -141,6 +143,8 @@ static const NSUInteger kHexaCount = 4;
     NSUInteger index = 0;
     for (HDHexagonView *hexa in _hexaArray) {
         
+        [hexa.layer removeAllAnimations];
+        
         hexa.hidden = YES;
         hexa.enabled = (index == 0);
         hexa.userInteractionEnabled = YES;
@@ -167,15 +171,29 @@ static const NSUInteger kHexaCount = 4;
     }
 }
 
-- (void)performExitAnimationsWithCompletion:(dispatch_block_t)completion
+- (void)_performExitAnimationsWithCompletion:(dispatch_block_t)completion
 {
     
+    [CATransaction begin];
+    [CATransaction setCompletionBlock:completion];
     
-    
-    
-    if (completion) {
-        completion();
+    NSTimeInterval delay = 0;
+    for (HDHexagonView *hexa in _hexaArray) {
+        
+        [hexa.layer removeAllAnimations];
+        
+        CABasicAnimation *scale = [CABasicAnimation animationWithKeyPath:@"transform.scale"];
+        scale.toValue   = @0;
+        scale.beginTime = CACurrentMediaTime() + delay;
+        scale.duration  = .2f;
+        scale.removedOnCompletion = NO;
+        scale.fillMode  = kCAFillModeForwards;
+        [hexa.layer addAnimation:scale forKey:@"scale34"];
+        
+        delay += .05;
     }
+    
+    [CATransaction commit];
 }
 
 - (void)performIntroAnimationsWithCompletion:(dispatch_block_t)completion
@@ -192,10 +210,10 @@ static const NSUInteger kHexaCount = 4;
         
         for (UILabel *label in self.labelContainer.subviews) {
             CABasicAnimation *scale = [CABasicAnimation animationWithKeyPath:@"transform.scale.x"];
-            scale.byValue = @.3f;
-            scale.toValue = @1.3f;
+            scale.byValue  = @.3f;
+            scale.toValue  = @1.3f;
             scale.duration = .3f;
-            scale.repeatCount = MAXFLOAT;
+            scale.repeatCount  = MAXFLOAT;
             scale.autoreverses = YES;
             [label.layer addAnimation:scale forKey:@"scale"];
         }
@@ -325,12 +343,14 @@ static const NSUInteger kHexaCount = 4;
             }];
           } break;
         case 3:
-            [UIView animateWithDuration:.3f animations:^{
+            [UIView animateWithDuration:.2f animations:^{
                 self.labelContainer.alpha = 0.0f;
             } completion:^(BOOL finished) {
-                if (self.delegate && [self.delegate respondsToSelector:@selector(welcomeView:dismissAnimated:)]) {
-                    [self.delegate welcomeView:self dismissAnimated:YES];
-                }
+                [self _performExitAnimationsWithCompletion:^{
+                    if (self.delegate && [self.delegate respondsToSelector:@selector(welcomeView:dismissAnimated:)]) {
+                        [self.delegate welcomeView:self dismissAnimated:YES];
+                    }
+                }];
             }];
             break;
     }
@@ -381,13 +401,7 @@ static const NSUInteger kHexaCount = 4;
 
 - (void)welcomeView:(HDWelcomeView *)welcomeView dismissAnimated:(BOOL)animated
 {
-    if (animated) {
-        [self.welcomeView performExitAnimationsWithCompletion:^{
-            [ADelegate presentContainerViewController];
-        }];
-    } else {
-        [ADelegate presentContainerViewController];
-    }
+    [ADelegate presentContainerViewController];
 }
 
 - (void)welcomeView:(HDWelcomeView *)welcomeView playSoundAtIndex:(NSUInteger)index

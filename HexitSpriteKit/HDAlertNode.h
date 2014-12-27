@@ -26,5 +26,5 @@ extern NSString * const ACHIEVEMENTSKEY;
 @required
 - (void)alertNode:(HDAlertNode *)alertNode clickedButtonWithTitle:(NSString *)title;
 - (void)alertNodeWillDismiss:(HDAlertNode *)alertNode;
-
+- (void)alertNodeFinishedIntroAnimation:(HDAlertNode *)alertNode;
 @end

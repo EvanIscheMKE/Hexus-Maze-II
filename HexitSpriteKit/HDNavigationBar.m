@@ -8,7 +8,8 @@
 
 #import "HDNavigationBar.h"
 
-static const CGFloat kButtonSize = 42.0f;
+static const CGFloat kSmallButtonSize  = 34.0f;
+static const CGFloat kLargeButtonSize  = 42.0f;
 static const CGFloat kInset      = 20.0f;
 @interface HDNavigationBar ()
 @property (nonatomic, strong) UIButton *navigationButton;
@@ -40,10 +41,10 @@ static const CGFloat kInset      = 20.0f;
 - (void)_setup
 {
     self.navigationButton = [UIButton buttonWithType:UIButtonTypeCustom];
-    [self.navigationButton setImage:self.toggleImage forState:UIControlStateNormal];
+    [self.navigationButton setBackgroundImage:self.toggleImage forState:UIControlStateNormal];
 
      self.activityButton = [UIButton buttonWithType:UIButtonTypeCustom];
-    [self.activityButton setImage:self.activityImage forState:UIControlStateNormal];
+    [self.activityButton setBackgroundImage:self.activityImage forState:UIControlStateNormal];
     
     for (UIButton *subView in @[self.navigationButton, self.activityButton]) {
         subView.translatesAutoresizingMaskIntoConstraints = NO;
@@ -55,7 +56,8 @@ static const CGFloat kInset      = 20.0f;
     
     _views = NSDictionaryOfVariableBindings(toggle, share);
     
-    _metrics = @{ @"buttonHeight" : @(MAX(self.toggleImage.size.width, self.toggleImage.size.height)), @"inset" : @(kInset) };
+    _metrics = @{ @"buttonHeight" : @(CGRectGetWidth([[UIScreen mainScreen] bounds]) <= 321.0f ? kSmallButtonSize : kLargeButtonSize),
+                  @"inset"        : @(kInset) };
     
     NSArray *toggleHorizontalConstraint = [NSLayoutConstraint constraintsWithVisualFormat:@"H:|-inset-[toggle(buttonHeight)]"
                                                                                   options:0
