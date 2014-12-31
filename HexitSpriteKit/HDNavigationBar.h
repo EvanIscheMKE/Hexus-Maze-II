@@ -14,5 +14,5 @@
 @property (nonatomic, readonly) UIButton *navigationButton;
 @property (nonatomic, readonly) UIButton *activityButton;
 + (instancetype)viewWithToggleImage:(UIImage *)toggleImage activityImage:(UIImage *)activityImage;
-- (instancetype)initWithToggleImage:(UIImage *)toggleImage activityImage:(UIImage *)activityImage;
+- (instancetype)initWithToggleImage:(UIImage *)toggleImage activityImage:(UIImage *)activityImage NS_DESIGNATED_INITIALIZER;
 @end

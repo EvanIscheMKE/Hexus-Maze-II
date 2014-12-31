@@ -12,7 +12,7 @@
 #import "HDSettingsManager.h"
 #import "HDSoundManager.h"
 
-@interface HDSoundManager ()
+@interface HDSoundManager ()<AVAudioPlayerDelegate>
 @property (nonatomic, getter=isSoundSessionActive, assign) BOOL soundSessionActive;
 @property (nonatomic, strong) AVAudioPlayer *loopPlayer;
 @end
@@ -44,8 +44,9 @@
     if (!self.loopPlayer) {
         return;
     }
+    
     _playLoop = playLoop;
-    if (_playLoop && ![[self class] isOtherAudioPlaying]) {
+    if (playLoop && ![[self class] isOtherAudioPlaying]) {
         [self.loopPlayer play];
     } else {
         [self.loopPlayer stop];
@@ -57,6 +58,7 @@
     NSError *error = nil;
     NSString *soundPath = [[[NSBundle mainBundle] resourcePath] stringByAppendingPathComponent:filename];
     self.loopPlayer = [[AVAudioPlayer alloc] initWithContentsOfURL:[NSURL fileURLWithPath:soundPath] error:&error];
+    self.loopPlayer.delegate = self;
     self.loopPlayer.numberOfLoops = -1; /* Will continue to play until we tell it to stop. */
     [self.loopPlayer prepareToPlay];
 }
@@ -85,9 +87,9 @@
     }
 }
 
-#pragma mark - Audio Session 
+#pragma mark - Audio Session
 
- /* AVAudioSession cannot be active while the application is in the background, so we have to stop it when going in to background, and reactivate it when entering foreground. */
+/* AVAudioSession cannot be active while the application is in the background, so we have to stop it when going in to background, and reactivate it when entering foreground. */
 
 + (BOOL)isOtherAudioPlaying
 {
@@ -109,6 +111,7 @@
     if (!error) {
         [audioSession setActive:YES error:&error];
         self.soundSessionActive = YES;
+        self.playLoop = YES;
     }
 }
 
@@ -129,5 +132,12 @@
     }
 }
 
+#pragma mark - <AVAudioDelegate>
+
+-(void)audioPlayerDidFinishPlaying:(AVAudioPlayer *)player successfully:(BOOL)flag
+{
+    [self.loopPlayer stop];
+    [self.loopPlayer prepareToPlay];
+}
 
 @end

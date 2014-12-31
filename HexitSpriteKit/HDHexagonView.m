@@ -13,6 +13,9 @@
 #import "UIColor+FlatColors.h"
 
 @interface HDHexagonView ()
+@property (nonatomic, strong) UIView *container;
+@property (nonatomic, strong) UILabel *indexLabel;
+@property (nonatomic, strong) UIImageView *imageView;
 @property (nonatomic, assign) HDHexagonState state;
 @end
 
@@ -43,10 +46,10 @@
 
 - (void)_setup
 {
-    [[self hexaLayer] setFillColor:[[UIColor flatMidnightBlueColor] CGColor]];
-    [[self hexaLayer] setPath:[[HDHelper roundedPolygonPathWithRect:self.bounds lineWidth:0 sides:6 cornerRadius:2.0f] CGPath]];
-    [[self hexaLayer] setStrokeColor:[_hexaStroke CGColor]];
-    [[self hexaLayer] setLineWidth:8.0f];
+    [self.hexaLayer setFillColor:[[UIColor flatMidnightBlueColor] CGColor]];
+    [self.hexaLayer setPath:[[HDHelper roundedPolygonPathWithRect:self.bounds lineWidth:0 sides:6 cornerRadius:2.0f] CGPath]];
+    [self.hexaLayer setStrokeColor:[_hexaStroke CGColor]];
+    [self.hexaLayer setLineWidth:8.0f];
     
     self.container = [[UIView alloc] initWithFrame:self.bounds];
     self.container.userInteractionEnabled = NO;
@@ -96,6 +99,7 @@
             break;
         case HDHexagonStateCompleted:
             self.hexaLayer.fillColor  = [[UIColor flatPeterRiverColor] CGColor];
+            self.hexaLayer.strokeColor = self.hexaLayer.fillColor;
             self.indexLabel.textColor = [UIColor flatMidnightBlueColor];
             self.indexLabel.text      = [NSString stringWithFormat:@"%lu", index];
             

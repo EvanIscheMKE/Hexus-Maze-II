@@ -18,7 +18,6 @@
 
 - (void)performExitAnimationsWithCompletion:(dispatch_block_t)completion;
 - (void)layoutNodesWithGrid:(NSArray *)grid;
-- (void)layoutIndicatorTiles;
 - (void)restart;
 
 @end
@@ -29,5 +28,6 @@
 - (void)scene:(HDScene *)scene updatedSelectedTileCount:(NSUInteger)count;
 - (void)scene:(HDScene *)scene gameEndedWithCompletion:(BOOL)completion;
 - (void)multipleTouchTileWasTouchedInScene:(HDScene *)scene;
+@optional
 - (void)gameWillResetInScene:(HDScene *)scene;
 @end

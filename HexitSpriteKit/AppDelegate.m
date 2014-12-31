@@ -32,12 +32,13 @@ NSString * const HDLeaderBoardIdentifierKey = @"LevelLeaderboard";
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
-    [application setStatusBarHidden:YES];
-    [self _setup];
+    application.statusBarHidden = YES;
     
      self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
     [self.window setRootViewController:[HDWelcomeViewController new]];
     [self.window makeKeyAndVisible];
+    
+    [self _setup];
     
     return YES;
 }
@@ -69,9 +70,9 @@ NSString * const HDLeaderBoardIdentifierKey = @"LevelLeaderboard";
 - (void)presentGameCenterControllerForState:(GKGameCenterViewControllerState)state
 {
     GKGameCenterViewController *controller = [[GKGameCenterViewController alloc] init];
-    controller.gameCenterDelegate = self;
+    controller.gameCenterDelegate    = self;
     controller.leaderboardIdentifier = HDLeaderBoardIdentifierKey;
-    controller.viewState = state;
+    controller.viewState             = state;
     [self.containerController presentViewController:controller animated:YES completion:nil];
 }
 
@@ -111,7 +112,7 @@ NSString * const HDLeaderBoardIdentifierKey = @"LevelLeaderboard";
             if ([self.containerController.frontViewController isKindOfClass:[HDGameViewController class]]) {
                 HDGameViewController *controller = (HDGameViewController *)self.containerController.frontViewController;
                 [controller performExitAnimationWithCompletion:^{
-                [self.containerController setFrontMostViewController:[HDGridViewController new]];
+                    [self.containerController setFrontMostViewController:[HDGridViewController new]];
                 }];
             }
         }];
@@ -134,11 +135,13 @@ NSString * const HDLeaderBoardIdentifierKey = @"LevelLeaderboard";
     }
 }
 
-- (void)presentShareViewController
+- (void)presentShareViewControllerWithLevelIndex:(NSInteger)index
 {
     [[HDSoundManager sharedManager] playSound:HDButtonSound];
     
-    NSArray *activityItems = @[@"HELLO", [self _screenshotOfFrontViewController]];
+    NSString *shareText = [NSString stringWithFormat:@"I just completed level %lu on HEXUS",index];
+    
+    NSArray *activityItems = @[shareText, [self _screenshotOfFrontViewController]];
     UIActivityViewController *controller = [[UIActivityViewController alloc] initWithActivityItems:activityItems
                                                                              applicationActivities:nil];
     controller.excludedActivityTypes = @[UIActivityTypePostToWeibo,

@@ -11,8 +11,8 @@
 #import "SKColor+HDColor.h"
 #import "HDHexagonNode.h"
 
-NSString * const DOUBLE_KEY = @"double";
-NSString * const TRIPLE_KEY = @"triple";
+NSString * const HDDoubleKey = @"double";
+NSString * const HDTripleKey = @"triple";
 
 @interface HDHexagon ()
 @property (nonatomic, assign) NSInteger touchesCount;
@@ -49,28 +49,39 @@ NSString * const TRIPLE_KEY = @"triple";
     
     switch (type) {
         case HDHexagonTypeRegular:
-            [self.node setStrokeColor:[SKColor flatPeterRiverColor] fillColor:[SKColor clearColor]];
+            [self.node setStrokeColor:[SKColor flatPeterRiverColor]
+                            fillColor:[SKColor flatMidnightBlueColor]];
             break;
         case HDHexagonTypeStarter:
-            [self.node setStrokeColor:[SKColor whiteColor] fillColor:[SKColor clearColor]];
+            [self.node setStrokeColor:[SKColor whiteColor]
+                            fillColor:[SKColor flatMidnightBlueColor]];
             break;
         case HDHexagonTypeDouble:
-            [self.node setStrokeColor:[SKColor flatTurquoiseColor] fillColor:[SKColor clearColor]];
-            [self.node addDoubleNodeWithStroke:self.node.strokeColor fill:[SKColor clearColor]];
+            [self.node setStrokeColor:[SKColor flatTurquoiseColor]
+                            fillColor:[SKColor flatMidnightBlueColor]];
+            
+            [self.node addDoubleNodeWithStroke:self.node.strokeColor
+                                          fill:[SKColor flatMidnightBlueColor]];
             break;
         case HDHexagonTypeTriple:
-            [self.node setStrokeColor:[SKColor flatSilverColor] fillColor:[SKColor clearColor]];
-            [self.node addDoubleNodeWithStroke:self.node.strokeColor fill:[SKColor clearColor]];
-            [self.node addTripleNodeWithStroke:self.node.strokeColor fill:[SKColor clearColor]];
+            [self.node setStrokeColor:[SKColor flatSilverColor]
+                            fillColor:[SKColor flatMidnightBlueColor]];
+            
+            [self.node addDoubleNodeWithStroke:self.node.strokeColor
+                                          fill:[SKColor flatMidnightBlueColor]];
+            
+            [self.node addTripleNodeWithStroke:self.node.strokeColor
+                                          fill:[SKColor flatMidnightBlueColor]];
             break;
         case HDHexagonTypeEnd:
-            [self.node endTile];
             self.state = HDHexagonStateDisabled;
-            [self.node setStrokeColor:[SKColor whiteColor] fillColor:[SKColor clearColor]];
+            [self.node setStrokeColor:[SKColor flatAlizarinColor]
+                            fillColor:[SKColor flatMidnightBlueColor]];
             break;
         case HDHexagonTypeOne:
             self.countTile = YES;
-            [self.node setStrokeColor:[SKColor flatEmeraldColor] fillColor:[SKColor clearColor]];
+            [self.node setStrokeColor:[SKColor flatEmeraldColor]
+                            fillColor:[SKColor flatMidnightBlueColor]];
             break;
         case HDHexagonTypeTwo:
             [self _disabledTileWithCountIndex:2];
@@ -105,7 +116,7 @@ NSString * const TRIPLE_KEY = @"triple";
         case HDHexagonTypeDouble:
             switch (self.touchesCount) {
                 case 1:{
-                    SKShapeNode *shapeNode = (SKShapeNode *)[self.node childNodeWithName:DOUBLE_KEY];
+                    SKShapeNode *shapeNode = (SKShapeNode *)[self.node childNodeWithName:HDDoubleKey];
                     [shapeNode removeFromParent];
                 } break;
                 case 2:
@@ -202,10 +213,10 @@ NSString * const TRIPLE_KEY = @"triple";
 {
     [self.node removeAllChildren];
     self.touchesCount = 0;
-    self.selected    = NO;
-    self.node.locked = NO;
-    self.state = HDHexagonStateEnabled;
-    self.type  = self.type;
+    self.selected     = NO;
+    self.node.locked  = NO;
+    self.state        = HDHexagonStateEnabled;
+    self.type         = self.type;
 }
 
 #pragma mark -

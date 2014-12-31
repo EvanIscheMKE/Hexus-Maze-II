@@ -8,13 +8,6 @@
 
 
 // Notification Keys
-NSString * const HDIntroAnimationNotification     = @"performIntroAnimations";
-NSString * const HDAnimateLabelNotification       = @"animateCompletedCountLabelY";
-NSString * const HDCompletedTileCountNotification = @"UpdateCompletedTileCountNotification";
-NSString * const HDClearTileCountNotification     = @"clearCompletedTileCountNotification";
-
-NSString * const HDNextLevelNotification      = @"NextLevelNotification";
-NSString * const HDToggleControlsNotification = @"ToggleControlsNotification";
 NSString * const HDSoundNotification          = @"TileWasSoundNotification";
 NSString * const HDVibrationNotification      = @"TileWasVibrationNotification";
 NSString * const HDRestartNotificaiton        = @"restartNotification";

@@ -9,11 +9,10 @@
 #import <UIKit/UIKit.h>
 
 @import GameKit;
-@import AVFoundation;
 @interface AppDelegate : UIResponder <UIApplicationDelegate>
 @property (nonatomic, strong) UIWindow *window;
 - (void)presentGameCenterControllerForState:(GKGameCenterViewControllerState)state;
-- (void)presentShareViewController;
+- (void)presentShareViewControllerWithLevelIndex:(NSInteger)index;
 - (void)beginGameWithLevel:(NSInteger)level;
 - (void)presentContainerViewController;
 - (void)rateHEXUS;

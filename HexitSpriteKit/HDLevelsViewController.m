@@ -34,20 +34,21 @@ static const CGFloat kTileHeightInsetMultiplier = .855f;
     [CATransaction begin];
     [CATransaction setCompletionBlock:completion];
     
-    NSTimeInterval delay = 0;
-    const NSTimeInterval kIncreaseInterval = .03f;
-    for (HDHexagonView *hexa in [[self.containerView.subviews mutableCopy] shuffle]) {
-        
-        [hexa performSelector:@selector(setHidden:) withObject:0 afterDelay:delay];
-        
-        CAKeyframeAnimation *scale = [CAKeyframeAnimation animationWithKeyPath:@"transform.scale"];
-        scale.values = @[@0.0f,@1.1f,@1.0f];
-        scale.duration = .3f;
-        scale.beginTime = CACurrentMediaTime() + delay;
-        [hexa.layer addAnimation:scale forKey:scale.keyPath];
-        
-        delay += kIncreaseInterval;
+    for (int row = 0; row < 7; row++) {
+        for (HDHexagonView *hexagon in self.containerView.subviews) {
+            if (row == hexagon.row) {
+                
+                [hexagon performSelector:@selector(setHidden:) withObject:0 afterDelay:row * .1f];
+                
+                CAKeyframeAnimation *scale = [CAKeyframeAnimation animationWithKeyPath:@"transform.scale"];
+                scale.values    = @[@0.0f, @1.1f, @1.0f];
+                scale.duration  = .3f;
+                scale.beginTime = CACurrentMediaTime() + row * .1f;
+                [hexagon.layer addAnimation:scale forKey:scale.keyPath];
+            }
+        }
     }
+    
     [CATransaction commit];
 }
 
@@ -56,19 +57,18 @@ static const CGFloat kTileHeightInsetMultiplier = .855f;
     [CATransaction begin];
     [CATransaction setCompletionBlock:completion];
     
-    NSTimeInterval delay = 0.0f;
-    const NSTimeInterval kIncreaseInterval = .03f;
-    for (HDHexagonView *hexa in [[self.containerView.subviews mutableCopy] shuffle]) {
+    for (HDHexagonView *hexa in self.containerView.subviews) {
         
-        CAKeyframeAnimation *scale = [CAKeyframeAnimation animationWithKeyPath:@"transform.scale"];
-        scale.values = @[@1.0f,@1.1f,@0.0f];
-        scale.duration = .3f;
+        [[hexa subviews] makeObjectsPerformSelector:@selector(removeFromSuperview)];
+        
+        CABasicAnimation *scale = [CABasicAnimation animationWithKeyPath:@"transform.scale"];
+        scale.fromValue = @1;
+        scale.toValue   = @0;
+        scale.duration  = .3f;
         scale.removedOnCompletion = NO;
         scale.fillMode = kCAFillModeForwards;
-        scale.beginTime = CACurrentMediaTime() + delay;
         [hexa.layer addAnimation:scale forKey:scale.keyPath];
-        
-        delay += kIncreaseInterval;
+    
     }
     [CATransaction commit];
 }
@@ -110,7 +110,13 @@ static const CGFloat kTileHeightInsetMultiplier = .855f;
     self.view = [HDLevelsView new];
     _levelsView = (HDLevelsView *)self.view;
     
-    CGRect containerFrame =  CGRectMake(0.0f, 0.0f, kHexaSize * self.columns, kHexaSize * kTileHeightInsetMultiplier * (self.rows - 1));
+    CGRect containerFrame =  CGRectMake(
+                                        0.0f,
+                                        0.0f,
+                                        kHexaSize * self.columns,
+                                        kHexaSize * kTileHeightInsetMultiplier * (self.rows - 1)
+                                        );
+    
     _containerView = [[HDLevelsContainerView alloc] initWithFrame:containerFrame];
     [_levelsView addSubview:_containerView];
 }
@@ -121,17 +127,18 @@ static const CGFloat kTileHeightInsetMultiplier = .855f;
     
     NSMutableArray *pageArray = [NSMutableArray arrayWithCapacity:self.columns*self.rows];
     NSUInteger tagIndex = self.levelRange.location + 1;
-    for (int row = 0; row < self.rows; row++)
-    {
-        for (int column = 0; column < self.columns; column++)
-        {
+    for (int row = 0; row < self.rows; row++) {
+        for (int column = 0; column < self.columns; column++) {
+            
             HDLevel *level = [[HDMapManager sharedManager] levelAtIndex:tagIndex - 1];
             
             CGRect bounds = CGRectMake(0.0f, 0.0f, kHexaSize - kPadding, kHexaSize - kPadding);
             HDHexagonView *hexagon = [[HDHexagonView alloc] initWithFrame:bounds
                                                                      type:HDHexagonTypePoint
                                                               strokeColor:[UIColor flatPeterRiverColor]];
-            hexagon.tag = tagIndex;
+            hexagon.row    = row;
+            hexagon.column = column;
+            hexagon.tag    = tagIndex;
             hexagon.hidden = YES;
             hexagon.center = [HDLevelsViewController _pointForColumn:column row:row];
              
@@ -142,16 +149,11 @@ static const CGFloat kTileHeightInsetMultiplier = .855f;
             tap.numberOfTapsRequired = 1;
             [hexagon addGestureRecognizer:tap];
             
-            if (level.completed)
-            {
+            if (level.completed) {
                 [hexagon setState:HDHexagonStateCompleted index:tagIndex];
-            }
-            else if (!level.completed && level.isUnlocked)
-            {
+            } else if (!level.completed && level.isUnlocked) {
                 [hexagon setState:HDHexagonStateUnlocked index:tagIndex];
-            }
-            else
-            {
+            } else {
                 [hexagon setState:HDHexagonStateLocked index:tagIndex];
             }
             tagIndex++;
@@ -168,7 +170,7 @@ static const CGFloat kTileHeightInsetMultiplier = .855f;
 
 - (void)_beginGame:(UITapGestureRecognizer *)sender
 {
-    self.view.userInteractionEnabled = ([(HDHexagonView *)sender.view state] == HDHexagonStateLocked) ? YES : NO;
+    self.view.userInteractionEnabled = ([(HDHexagonView *)sender.view state] == HDHexagonStateLocked);
     [self.delegate levelsViewController:self didSelectLevel:[sender.view tag]];
 }
 

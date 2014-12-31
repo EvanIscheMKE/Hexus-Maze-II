@@ -21,6 +21,7 @@ static const CGFloat kSmallPageSpacing     = 28.0f;
     CGFloat _kPageSpacing;
     CGFloat _kCurrentPageSize;
     CGFloat _kPageSize;
+    BOOL _isWideScreen;
 }
 
 - (instancetype)initWithFrame:(CGRect)frame
@@ -28,11 +29,11 @@ static const CGFloat kSmallPageSpacing     = 28.0f;
     CGRect bounds = CGRectMake(0.0f, 0.0f, CGRectGetWidth(frame), CGRectGetHeight(frame));
     if (self = [super initWithFrame:bounds]) {
         
-        BOOL isWideScreen = (CGRectGetWidth([[UIScreen mainScreen] bounds]) > 321);
+        _isWideScreen = (CGRectGetWidth([[UIScreen mainScreen] bounds]) > 321);
         
-        _kPageSize  = isWideScreen ? kLargerPageSize : kSmallPageSize;
-        _kCurrentPageSize = isWideScreen ? kLargeCurrentPageSize : kSmallCurrentPageSize;
-        _kPageSpacing = isWideScreen ? kLargePageSpacing : kSmallPageSpacing;
+        _kPageSize  = _isWideScreen ? kLargerPageSize : kSmallPageSize;
+        _kCurrentPageSize = _isWideScreen ? kLargeCurrentPageSize : kSmallCurrentPageSize;
+        _kPageSpacing = _isWideScreen ? kLargePageSpacing : kSmallPageSpacing;
         
         self.backgroundColor = [UIColor flatMidnightBlueColor];
         self.currentPageTintColor = [UIColor whiteColor];
@@ -89,7 +90,7 @@ static const CGFloat kSmallPageSpacing     = 28.0f;
             hexagon = [self _bezierHexagonInFrame:rect];
             
         }
-        [hexagon setLineWidth:6];
+        [hexagon setLineWidth:_isWideScreen ? 6.0f : 4.0f];
         [hexagon stroke];
     }
 }

@@ -10,6 +10,7 @@
 
 @interface HDHexagonNode : SKShapeNode
 
+@property (nonatomic, assign) CGPoint defaultPosition;
 @property (nonatomic, getter=isLocked, assign) BOOL locked;
 
 - (void)setStrokeColor:(UIColor *)strokeColor fillColor:(UIColor *)fillColor;
@@ -17,7 +18,8 @@
 - (void)addTripleNodeWithStroke:(UIColor *)stroke fill:(UIColor *)fill;
 - (void)addDoubleNodeWithStroke:(UIColor *)stroke fill:(UIColor *)fill;
 
-- (void)endTile;
+- (void)indicatorPositionFromHexagonType:(HDHexagonType)type;
+- (void)indicatorPositionFromHexagonType:(HDHexagonType)type withTouchesCount:(NSInteger)count;
 
 @end
 

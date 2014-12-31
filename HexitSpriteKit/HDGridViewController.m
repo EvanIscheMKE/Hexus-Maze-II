@@ -22,6 +22,7 @@
 #import "HDLevelsViewController.h"
 #import "HDLockedViewController.h"
 
+static const NSUInteger kNumberOfLevelsPerPage = 28;
 static const CGFloat kDefaultContainerHeight   = 70.0f;
 static const CGFloat kDefaultPageControlHeight = 50.0f;
 
@@ -67,13 +68,13 @@ static const CGFloat kDefaultPageControlHeight = 50.0f;
 {
     HDLevel *gamelevel = [[HDMapManager sharedManager] levelAtIndex:(NSInteger)level - 1];
     
-    if (gamelevel.isUnlocked) {
+    //if (gamelevel.isUnlocked) {
         self.navigationBarHidden = YES;
         [[HDSoundManager sharedManager] playSound:HDButtonSound];
         [self.scrollView performOutroAnimationWithCompletion:^{
             [ADelegate beginGameWithLevel:level];
         }];
-    }
+   // }
 }
 
 - (void)setNavigationBarHidden:(BOOL)navigationBarHidden
@@ -201,7 +202,7 @@ static const CGFloat kDefaultPageControlHeight = 50.0f;
     
     HDMapManager *mapManager = [HDMapManager sharedManager];
     const NSUInteger numberOfLevels = mapManager.numberOfLevels;
-    const NSUInteger numberOfLevelsPerPage = 28;
+    const NSUInteger numberOfLevelsPerPage = kNumberOfLevelsPerPage;
     const NSUInteger numberOfPages = ceilf((float)numberOfLevels / (float)numberOfLevelsPerPage) + 1 /* 1 for the "locked" screen*/;
     
     NSUInteger displayedLevels = 0;

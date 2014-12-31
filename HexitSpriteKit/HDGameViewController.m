@@ -8,17 +8,23 @@
 
 @import SpriteKit;
 
+#import "HDAlertView.h"
+#import "HDInfoView.h"
+#import "HDTVManager.h"
+#import "HDTVHexagonItem.h"
 #import "HDLevelGenerator.h"
 #import "HDNavigationBar.h"
 #import "UIColor+FlatColors.h"
 #import "HDContainerViewController.h"
 #import "HDGameViewController.h"
+#import "HDTableViewCell.h"
 #import "HDGridManager.h"
 #import "HDScene.h"
 
 static const CGFloat kDefaultContainerHeight = 70.0f;
-static const CGFloat kPadding    = 5.0f;
-@interface HDGameViewController () <HDSceneDelegate>
+static const CGFloat kPadding                = 5.0f;
+
+@interface HDGameViewController () <UITableViewDataSource, UITableViewDelegate, UIGestureRecognizerDelegate, HDSceneDelegate>
 
 @property (nonatomic, strong) HDNavigationBar *navigationBar;
 
@@ -35,6 +41,9 @@ static const CGFloat kPadding    = 5.0f;
 
 @property (nonatomic, strong) UIButton *restart;
 
+@property (nonatomic, strong) UIScreenEdgePanGestureRecognizer *leftEdgeGesture;
+@property (nonatomic, strong) UIScreenEdgePanGestureRecognizer *rightEdgeGesture;
+
 @property (nonatomic, strong) HDGridManager *gridManager;
 @property (nonatomic, strong) HDScene *scene;
 
@@ -42,15 +51,12 @@ static const CGFloat kPadding    = 5.0f;
 
 @implementation HDGameViewController {
     BOOL _randomlyGeneratedLevel;
-    
-    NSDictionary *_views;
-    NSDictionary *_metrics;
 }
 
 - (void)dealloc
 {
-    [[NSNotificationCenter defaultCenter] removeObserver:self name:UIApplicationWillResignActiveNotification object:nil];
-    [[NSNotificationCenter defaultCenter] removeObserver:self name:UIApplicationDidBecomeActiveNotification  object:nil];
+   // [[NSNotificationCenter defaultCenter] removeObserver:self name:UIApplicationWillResignActiveNotification object:nil];
+   // [[NSNotificationCenter defaultCenter] removeObserver:self name:UIApplicationDidBecomeActiveNotification  object:nil];
 }
 
 - (id)initWithLevel:(NSInteger)level
@@ -165,6 +171,8 @@ static const CGFloat kPadding    = 5.0f;
 
 #pragma mark - Life cycle
 
+
+
 - (void)viewWillLayoutSubviews
 {
     [super viewWillLayoutSubviews];
@@ -182,7 +190,6 @@ static const CGFloat kPadding    = 5.0f;
 
 - (void)viewDidAppear:(BOOL)animated
 {
-    self.navigationBarHidden = NO;
     [super viewDidAppear:animated];
     [self _beginGame];
 }
@@ -193,24 +200,24 @@ static const CGFloat kPadding    = 5.0f;
 {
     HDContainerViewController *container = self.containerViewController;
     
-    UIScreenEdgePanGestureRecognizer *leftEdgeGesture;
-    leftEdgeGesture = [[UIScreenEdgePanGestureRecognizer alloc] initWithTarget:self action:@selector(handlePan:)];
-    leftEdgeGesture.edges = UIRectEdgeLeft;
-    [self.view addGestureRecognizer:leftEdgeGesture];
+    self.leftEdgeGesture = [[UIScreenEdgePanGestureRecognizer alloc] initWithTarget:self action:@selector(handlePan:)];
+    self.leftEdgeGesture.edges = UIRectEdgeLeft;
+    self.leftEdgeGesture.delegate = self;
+    [self.view addGestureRecognizer:self.leftEdgeGesture];
     
-    UIScreenEdgePanGestureRecognizer *rightEdgeGesture;
-    rightEdgeGesture = [[UIScreenEdgePanGestureRecognizer alloc] initWithTarget:self action:@selector(handlePan:)];
-    rightEdgeGesture.edges = UIRectEdgeRight;
-    [self.view addGestureRecognizer:rightEdgeGesture];
+    self.rightEdgeGesture = [[UIScreenEdgePanGestureRecognizer alloc] initWithTarget:self action:@selector(handlePan:)];
+    self.rightEdgeGesture.edges = UIRectEdgeRight;
+    self.rightEdgeGesture.delegate = self;
+    [self.view addGestureRecognizer:self.rightEdgeGesture];
     
     CGRect navBarFrame = CGRectMake(0.0f, -kDefaultContainerHeight, CGRectGetWidth(self.view.bounds), kDefaultContainerHeight);
-    self.navigationBar = [HDNavigationBar viewWithToggleImage:[UIImage imageNamed:@"Grid"] activityImage:[UIImage new]];
+    self.navigationBar = [HDNavigationBar viewWithToggleImage:[UIImage imageNamed:@"Grid"] activityImage:[UIImage imageNamed:@"TileToggle-"]];
     self.navigationBar.frame = navBarFrame;
     [[self.navigationBar.subviews firstObject] addTarget:container
                                                   action:@selector(toggleMenuViewController)
                                         forControlEvents:UIControlEventTouchUpInside];
     [[self.navigationBar.subviews lastObject] addTarget:self
-                                                 action:@selector(restartGame)
+                                                 action:@selector(_presentInfoView)
                                        forControlEvents:UIControlEventTouchUpInside];
     [self.view addSubview:self.navigationBar];
     
@@ -224,16 +231,23 @@ static const CGFloat kPadding    = 5.0f;
     [self.navigationBar addSubview:self.completedCountLabel];
 }
 
+- (void)_presentInfoView
+{
+    HDAlertView *alertView = [[HDAlertView alloc] init];
+    [alertView.infoView setDelegate:self dataSource:self];
+    [alertView show];
+}
+
 - (void)_setupScene
 {
     SKView * skView = (SKView *)self.view;
     
     self.scene = [HDScene sceneWithSize:self.view.bounds.size];
+    skView.showsFPS = YES;
+    skView.showsNodeCount = YES;
     self.scene.delegate = self;
     self.scene.levelIndex = _level;
     self.scene.gridManager = self.gridManager;
-    [self.scene layoutIndicatorTiles];
-    
     [skView presentScene:self.scene];
 }
 
@@ -317,7 +331,7 @@ static const CGFloat kPadding    = 5.0f;
                                    );
     
     [self _scaleAnimationOnKeyPath:@"transform.scale.x"];
-    [self.completedCountLabel setCenter:position];
+    self.completedCountLabel.center = position;
 }
 
 - (void)_scaleAnimationOnKeyPath:(NSString *)keyPath
@@ -348,11 +362,9 @@ static const CGFloat kPadding    = 5.0f;
 
 - (void)scene:(HDScene *)scene proceededToLevel:(NSUInteger)level
 {
+    self.gridManager = [[HDGridManager alloc] initWithLevelNumber:level];
     self.level = level;
-    
-    self.gridManager = [[HDGridManager alloc] initWithLevelNumber:_level];
     self.scene.gridManager = self.gridManager;
-    [self.scene layoutIndicatorTiles];
     [self _beginGame];
 }
 
@@ -380,6 +392,42 @@ static const CGFloat kPadding    = 5.0f;
     self.navigationBarHidden = NO;
 }
 
+#pragma mark - <UIGestureRecognizerDelegate>
+
+-(BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldReceiveTouch:(UITouch *)touch
+{    
+    HDContainerViewController *container = self.containerViewController;
+    
+    if (gestureRecognizer == self.leftEdgeGesture && !container.isExpanded) {
+        return YES;
+    } else if (gestureRecognizer == self.rightEdgeGesture && container.isExpanded) {
+        return YES;
+    }
+    return NO;
+}
+
+#pragma mark - <UITableViewDatasource>
+
+- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
+{
+    return [[HDTVManager sharedManager] count];
+}
+
+- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    HDTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:tableViewIdentifier forIndexPath:indexPath];
+    
+    HDTVHexagonItem *item = [[HDTVManager sharedManager] itemAtIndex:indexPath.row];
+    
+    cell.imageView.image      = item.image;
+    cell.detailTextLabel.text = item.hexDescription;
+    cell.textLabel.text       = item.title;
+    
+    return cell;
+}
+
+#pragma mark - <UITableViewDelegat>
+
 #pragma mark - <UIScreenEdgeGestureRecognizer>
 
 - (void)handlePan:(UIPanGestureRecognizer *)gestureRecognizer
@@ -397,7 +445,8 @@ static const CGFloat kPadding    = 5.0f;
                                       0.0f,
                                       0.0f,
                                       CGRectGetWidth(CGRectInset(self.view.bounds, 25.0f, 0.0f)),
-                                      CGRectGetWidth(self.view.bounds) < 321.0f ? 34.0f : 44.0f);
+                                      CGRectGetWidth(self.view.bounds) < 321.0f ? 34.0f : 44.0f
+                                      );
     UIButton *restartButton = [UIButton buttonWithType:UIButtonTypeCustom];
     restartButton.frame = restartBounds;
     [restartButton addTarget:self action:@selector(restartGame) forControlEvents:UIControlEventTouchUpInside];
@@ -421,10 +470,10 @@ static const CGFloat kPadding    = 5.0f;
 - (UILabel *)_completedCountLabel
 {
     UILabel *completedCountLabel = [[UILabel alloc] init];
-    completedCountLabel.textColor = [UIColor whiteColor];
+    completedCountLabel.textColor     = [UIColor whiteColor];
     completedCountLabel.numberOfLines = 1;
     completedCountLabel.textAlignment = NSTextAlignmentCenter;
-    completedCountLabel.font = GILLSANS(CGRectGetWidth(self.view.bounds) / 10.0f);
+    completedCountLabel.font          = GILLSANS(CGRectGetWidth(self.view.bounds) / 10.0f);
     [completedCountLabel sizeToFit];
     completedCountLabel.center = CGPointMake(
                                             CGRectGetMidX(self.view.bounds),
@@ -438,11 +487,11 @@ static const CGFloat kPadding    = 5.0f;
 - (UILabel *)_completionLabel
 {
     UILabel *completedLabel = [[UILabel alloc] init];
-    completedLabel.text = @"Completed";
-    completedLabel.textColor = [UIColor whiteColor];
+    completedLabel.text          = @"Completed";
+    completedLabel.textColor     = [UIColor whiteColor];
     completedLabel.numberOfLines = 1;
     completedLabel.textAlignment = NSTextAlignmentCenter;
-    completedLabel.font = GILLSANS_LIGHT(CGRectGetWidth(self.view.bounds) / 20.0f);
+    completedLabel.font          = GILLSANS_LIGHT(CGRectGetWidth(self.view.bounds) / 20.0f);
     [completedLabel sizeToFit];
     completedLabel.center = CGPointMake(
                                         CGRectGetMidX(self.view.bounds),

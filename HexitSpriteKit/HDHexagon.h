@@ -31,8 +31,8 @@ typedef enum {
     HDHexagonStateNone     = 0
 } HDHexagonState;
 
-extern NSString * const DOUBLE_KEY;
-extern NSString * const TRIPLE_KEY;
+extern NSString * const HDDoubleKey;
+extern NSString * const HDTripleKey;
 
 static const NSInteger NumberOfRows    = 18;
 static const NSInteger NumberOfColumns = 9;

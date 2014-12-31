@@ -15,7 +15,7 @@
 #import "UIColor+FlatColors.h"
 
 static const NSUInteger kHexaCount = 4;
-#define kPadding  [[UIScreen mainScreen] bounds].size.width <= 321.0f ? 2.0f : 4.0f
+#define kPadding  [[UIScreen mainScreen] bounds].size.width < 321.0f ? 2.0f : 4.0f
 #define kHexaSize [[UIScreen mainScreen] bounds].size.width / 3.75f
 
 @interface HDWelcomeView ()
@@ -86,10 +86,10 @@ static const NSUInteger kHexaCount = 4;
         UILabel *tap = [[UILabel alloc] init];
         tap.textAlignment = NSTextAlignmentCenter;
         tap.textColor = [UIColor whiteColor];
-        tap.text = NSLocalizedString(@"TAP", nil);
-        tap.font = GILLSANS(CGRectGetWidth(self.labelContainer.bounds)/2/3);
+        tap.text      = NSLocalizedString(@"TAP", nil);
+        tap.font      = GILLSANS(CGRectGetWidth(self.labelContainer.bounds)/2/3);
         [tap sizeToFit];
-        tap.center = tapLabelPosition;
+        tap.center    = tapLabelPosition;
         [self.labelContainer addSubview:tap];
     }
 }
@@ -102,9 +102,9 @@ static const NSUInteger kHexaCount = 4;
     [CATransaction setCompletionBlock:completion];
     
     CABasicAnimation *rotate = [CABasicAnimation animationWithKeyPath:@"transform.rotation.z"];
-    rotate.duration = .3f;
+    rotate.duration  = .3f;
     rotate.fromValue = @0;
-    rotate.toValue = @(M_PI * 4);
+    rotate.toValue   = @(M_PI * 4);
     [view.layer addAnimation:rotate forKey:@"rotate"];
     
     [CATransaction commit];
@@ -177,20 +177,19 @@ static const NSUInteger kHexaCount = 4;
     [CATransaction begin];
     [CATransaction setCompletionBlock:completion];
     
-    NSTimeInterval delay = 0;
     for (HDHexagonView *hexa in _hexaArray) {
         
-        [hexa.layer removeAllAnimations];
+        if ([hexa.layer animationKeys].count) {
+            [hexa.layer removeAllAnimations];
+        }
         
         CABasicAnimation *scale = [CABasicAnimation animationWithKeyPath:@"transform.scale"];
         scale.toValue   = @0;
-        scale.beginTime = CACurrentMediaTime() + delay;
-        scale.duration  = .2f;
+        scale.duration  = .3f;
         scale.removedOnCompletion = NO;
         scale.fillMode  = kCAFillModeForwards;
         [hexa.layer addAnimation:scale forKey:@"scale34"];
-        
-        delay += .05;
+
     }
     
     [CATransaction commit];
@@ -204,7 +203,7 @@ static const NSUInteger kHexaCount = 4;
             self.labelContainer.alpha = 1.0f;
         } completion:^(BOOL finished) {
             if (completion) {
-                 completion();
+                completion();
             }
         }];
         
@@ -219,77 +218,50 @@ static const NSUInteger kHexaCount = 4;
         }
     };
     
-    dispatch_block_t fourthAnimation = ^{
-        
-        [CATransaction begin];
-        [CATransaction setCompletionBlock:finalAnimation];
-        
-        HDHexagonView *fourth = [_hexaArray objectAtIndex:1];
-        fourth.hidden = NO;
-        
-        CABasicAnimation *fourthAnimation = [CABasicAnimation animationWithKeyPath:@"position.x"];
-        fourthAnimation.toValue   = @(fourth.center.x);
-        fourthAnimation.fromValue = @(-kHexaSize/2);
-        fourthAnimation.duration  = .15f;
-        [fourth.layer addAnimation:fourthAnimation forKey:@"SecondTileAnimationKey"];
-        
-        [CATransaction commit];
-        
-    };
+    HDHexagonView *first  = [_hexaArray objectAtIndex:2];
+    HDHexagonView *second = [_hexaArray firstObject];
+    HDHexagonView *third  = [_hexaArray lastObject];
+    HDHexagonView *fourth = [_hexaArray objectAtIndex:1];
     
-    dispatch_block_t thirdAnimation = ^{
-        
-        [CATransaction begin];
-        [CATransaction setCompletionBlock:fourthAnimation];
-        
-        HDHexagonView *third = [_hexaArray lastObject];
-        third.hidden = NO;
-        
-        CABasicAnimation *thirdAnimation = [CABasicAnimation animationWithKeyPath:@"position.y"];
-        thirdAnimation.toValue   = @(third.center.y);
-        thirdAnimation.fromValue = @(CGRectGetHeight(self.bounds)+kHexaSize/2);
-        thirdAnimation.duration  = .15f;
-        [third.layer addAnimation:thirdAnimation forKey:@"FourthTileAnimationKey"];
-        
-        [CATransaction commit];
-        
-    };
+    NSString *keyPath[4];
+    keyPath[0] = @"position.x";
+    keyPath[1] = @"position.y";
+    keyPath[2] = @"position.y";
+    keyPath[3] = @"position.x";
     
-    dispatch_block_t secondAnimation = ^{
-        
-        [CATransaction begin];
-        [CATransaction setCompletionBlock:thirdAnimation];
-        
-        HDHexagonView *second = [_hexaArray firstObject];
-        second.hidden = NO;
-        
-        CABasicAnimation *secondAnimation = [CABasicAnimation animationWithKeyPath:@"position.y"];
-        secondAnimation.toValue = @(second.center.y);
-        secondAnimation.fromValue = @(-kHexaSize/2);
-        secondAnimation.duration = .15f;
-        [second.layer addAnimation:secondAnimation forKey:@"FirstTileAnimationKey"];
-        
-        [CATransaction commit];
-    };
+    CGFloat toValue[4];
+    toValue[0] = first.center.x;
+    toValue[1] = second.center.y;
+    toValue[2] = third.center.y;
+    toValue[3] = fourth.center.x;
     
-    dispatch_block_t firstAnimation = ^{
+    CGFloat fromValue[4];
+    fromValue[0] = CGRectGetWidth(self.bounds) + kHexaSize / 2;
+    fromValue[1] = -kHexaSize / 2;
+    fromValue[2] = CGRectGetHeight(self.bounds) + kHexaSize / 2;
+    fromValue[3] = -kHexaSize / 2;
+    
+    [CATransaction begin];
+    [CATransaction setCompletionBlock:finalAnimation];
+    
+    NSInteger index = 0;
+    NSTimeInterval delay = 0;
+    for (HDHexagonView *view in @[first, second, third, fourth]) {
         
-        [CATransaction begin];
-        [CATransaction setCompletionBlock:secondAnimation];
+        [view performSelector:@selector(setHidden:) withObject:0 afterDelay:delay];
         
-        HDHexagonView *first = [_hexaArray objectAtIndex:2];
-        first.hidden = NO;
+        CABasicAnimation *animation = [CABasicAnimation animationWithKeyPath:keyPath[index]];
+        animation.toValue   = @(toValue[index]);
+        animation.fromValue = @(fromValue[index]);
+        animation.duration  = .15f;
+        animation.beginTime = CACurrentMediaTime() + delay;
+        [view.layer addAnimation:animation forKey:[NSString stringWithFormat:@"%@%f",keyPath[index],delay]];
         
-        CABasicAnimation *firstAnimation = [CABasicAnimation animationWithKeyPath:@"position.x"];
-        firstAnimation.toValue   = @(first.center.x);
-        firstAnimation.fromValue = @(CGRectGetWidth(self.bounds) + kHexaSize/2);
-        firstAnimation.duration  = .15f;
-        [first.layer addAnimation:firstAnimation forKey:@"ThirdTileAnimationKey"];
-        
-        [CATransaction commit];
-        
-    };
-    firstAnimation();
+        index++;
+        delay += animation.duration;
+    }
+    
+    [CATransaction commit];
 }
 
 #pragma mark - UIResponder

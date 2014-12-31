@@ -12,6 +12,7 @@
 #import "HDHexagon.h"
 #import "HDHexagonNode.h"
 #import "UIColor+FlatColors.h"
+#import "SKTTimingFunctions.h"
 
 @implementation HDHelper
 
@@ -160,62 +161,82 @@
 
 + (void)entranceAnimationWithTiles:(NSArray *)tiles completion:(dispatch_block_t)completion
 {
+    // If the arrays empty return, dont need to do animations on nada
     if (tiles.count == 0) {
         if (completion) {
             completion();
         }
     }
     
-    NSUInteger count = tiles.count;
+    // Array count --;
+    NSUInteger countTo = tiles.count -1;
     
-    NSTimeInterval _delay = 0;
+    // Find minimum and maximum row
+    NSUInteger maxRow = 0;
+    NSUInteger minRow = NSIntegerMax;
+    for (HDHexagon *hexagon in tiles) {
+        if (hexagon.row > maxRow) {
+            maxRow = hexagon.row;
+        }
+        if (hexagon.row < minRow) {
+            minRow = MAX(hexagon.row, 0);
+        }
+    }
     
-    // Setup actions for base tiles
-    SKAction *show  = [SKAction unhide];
-    SKAction *scale = [SKAction scaleTo:0.0f  duration:0.0f];
-    SKAction *pop   = [SKAction scaleTo:1.15f duration:.2f];
-    SKAction *size  = [SKAction scaleTo:1.0f  duration:.2f];
-    
-    // setup actions for children nodes
-    SKAction *doubleTouch = [SKAction moveTo:CGPointMake(1.0f, 1.0f) duration:.3f];
-    SKAction *tripleTouch = [SKAction sequence: @[[SKAction waitForDuration:.4f], doubleTouch]];
-    
-    // Animate regular, start, and base tiles onto node with pop effect
+    //
+    SKAction *waitAction   = [SKAction waitForDuration:.4f];
+    SKAction *doubleAction = [SKAction moveTo:CGPointMake(1.0f, 1.0f) duration:.3f];
+    SKAction *tripleAction = [SKAction sequence: @[waitAction, doubleAction]];
+
+    // Loop through tiles and scale to zilch
     __block NSInteger index = 0;
-    for (HDHexagon *hex in tiles) {
-        
-        NSArray *sequence =  @[[SKAction waitForDuration:_delay], scale, show, pop, size];
-        
-        [(SKShapeNode *)hex.node runAction:[SKAction sequence:sequence]
-                 completion:^{
-                     if (index == count - 1) {
-                         
-                         // Once base animation is complete, check for children and animate them in
-                         NSTimeInterval completionTime = 0.0f;
-                         for (HDHexagon *hexa in tiles) {
-                             
-                         NSTimeInterval current = completionTime;
-                         if ([(SKShapeNode *)hexa.node childNodeWithName:DOUBLE_KEY]) {
-                              completionTime = (.3f > completionTime) ? .3f : current;
-                              [[hexa.node childNodeWithName:DOUBLE_KEY] runAction:doubleTouch];
-                                 
-                              if ([[[(SKShapeNode *)hexa.node children] lastObject] childNodeWithName:TRIPLE_KEY]) {
-                                     completionTime = (.7f > completionTime) ? .7f : current;
-                                     [[[[hexa.node children] lastObject] childNodeWithName:TRIPLE_KEY] runAction:tripleTouch];
-                              }
+    for (NSInteger row = minRow; row < maxRow + 1; row++) {
+        for (HDHexagon *hexagon in tiles) {
+            if (hexagon.row == row) {
+                
+                SKAction *wait          = [SKAction waitForDuration:row * .1f];
+                SKAction *dropPositionY = [SKAction moveTo:hexagon.node.defaultPosition duration:.3f];
+                SKAction *sequence      = [SKAction sequence:@[wait, dropPositionY]];
+                
+                dropPositionY.timingMode = SKActionTimingEaseOut;
+                
+                CGPoint position = CGPointMake(
+                                              hexagon.node.position.x,
+                                              CGRectGetHeight([[UIScreen mainScreen] bounds]) + CGRectGetHeight(hexagon.node.frame)/2 + 5.0f
+                                              );
+                
+                hexagon.node.hidden = NO;
+                hexagon.node.position = position;
+                [hexagon.node runAction:sequence completion:^{
+                    
+                    if (index == countTo) {
+                        NSTimeInterval completionTime = 0.0f;
+                        for (HDHexagon *hexagon in tiles) {
+                            [hexagon.node removeAllActions];
+                            
+                            NSTimeInterval current = completionTime;
+                            if ([hexagon.node childNodeWithName:HDDoubleKey]) {
+                                completionTime = (doubleAction.duration > completionTime) ? doubleAction.duration : current;
+                                [hexagon.node runAction:[SKAction runAction:doubleAction onChildWithName:HDDoubleKey]];
                             }
-                         }
-                         
-                         // after animations complete, call completion block
-                         dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(completionTime * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-                             if (completion) {
-                                 completion();
-                             }
-                         });
-                     }
-                     index++;
-                 }];
-        _delay += .025f;
+                            if ([[[hexagon.node children] lastObject] childNodeWithName:HDTripleKey]) {
+                                completionTime = (tripleAction.duration > completionTime) ? tripleAction.duration : current;
+                                [[[hexagon.node children] lastObject] runAction:[SKAction runAction:tripleAction onChildWithName:HDTripleKey]];
+                            }
+                            
+                            // SLOPPY need something like CATransaction, because this shit sucks
+                            dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(completionTime * NSEC_PER_SEC)),
+                                           dispatch_get_main_queue(), ^{
+                                               if (completion) {
+                                                   completion();
+                                               }
+                                           });
+                        }
+                    }
+                    index++;
+                }];
+            }
+        }
     }
 }
 
@@ -231,22 +252,22 @@
     NSUInteger countTo = tiles.count -1;
     
     // Scale to zero
-    SKAction *scaleUp   = [SKAction scaleTo:1.15f duration:.2f];
-    SKAction *scaleDown = [SKAction scaleTo:0.0f duration:.2f];
+    SKAction *scaleDown = [SKAction scaleTo:0.0f duration:.35f];
     
     // Loop through tiles and scale to zilch
     __block NSInteger index = 0;
-    NSTimeInterval delay = 0.0f;
     for (HDHexagon *tile in tiles) {
         
+        tile.node.fillColor = tile.node.strokeColor;
+        [[tile.node children] makeObjectsPerformSelector:@selector(removeFromParent)];
+        
         // Setup actions
-        SKAction *wait     = [SKAction waitForDuration:delay];
         SKAction *hide     = [SKAction hide];
-        SKAction *sequence = [SKAction sequence:@[wait, scaleUp, scaleDown, hide]];
+        SKAction *sequence = [SKAction sequence:@[ scaleDown, hide]];
         
         [(SKShapeNode *)tile.node runAction:sequence
                   completion:^{
-                      [tile.node setScale:1.0f];
+                      tile.node.scale = 1.0f;
                       [tile restoreToInitialState];
                       if (index == countTo) {
                           if (completion) {
@@ -255,7 +276,6 @@
                       }
                       index++;
                   }];
-        delay += .025f;
     }
 }
 

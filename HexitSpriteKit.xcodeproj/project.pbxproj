@@ -7,7 +7,10 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		38521F3D1A19A20600484830 /* HDSpriteNode.m in Sources */ = {isa = PBXBuildFile; fileRef = 38521F3C1A19A20600484830 /* HDSpriteNode.m */; };
+		3824A5DD1A538C3D00788E0E /* Grid-84.json in Resources */ = {isa = PBXBuildFile; fileRef = 3824A5DC1A538C3D00788E0E /* Grid-84.json */; };
+		38658BE41A4F953300BE789E /* HDTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 38658BE31A4F953300BE789E /* HDTableViewCell.m */; };
+		38658C131A4FCF0F00BE789E /* HDAlertView.m in Sources */ = {isa = PBXBuildFile; fileRef = 38658C121A4FCF0F00BE789E /* HDAlertView.m */; };
+		38658C161A513A5400BE789E /* SKTTimingFunctions.m in Sources */ = {isa = PBXBuildFile; fileRef = 38658C151A513A5400BE789E /* SKTTimingFunctions.m */; };
 		386CF5D91A383A98006A8381 /* AudioToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 386CF5D81A383A98006A8381 /* AudioToolbox.framework */; };
 		386CF5DB1A383AFC006A8381 /* HDScene.m in Sources */ = {isa = PBXBuildFile; fileRef = 386CF5DA1A383AFC006A8381 /* HDScene.m */; };
 		386CF6291A3982BA006A8381 /* SKEmitterNode+EmitterAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 386CF6281A3982BA006A8381 /* SKEmitterNode+EmitterAdditions.m */; };
@@ -28,7 +31,6 @@
 		389E95401A4A106200F2DF05 /* HDLockedViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 389E953F1A4A106200F2DF05 /* HDLockedViewController.m */; };
 		389E95441A4A128100F2DF05 /* HDLevelsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 389E95431A4A128100F2DF05 /* HDLevelsViewController.m */; };
 		389E95D71A4C1A7F00F2DF05 /* HDNavigationBar.m in Sources */ = {isa = PBXBuildFile; fileRef = 389E95D61A4C1A7F00F2DF05 /* HDNavigationBar.m */; };
-		389E95F11A4D2D1500F2DF05 /* HDRestartNode.m in Sources */ = {isa = PBXBuildFile; fileRef = 389E95F01A4D2D1500F2DF05 /* HDRestartNode.m */; };
 		38ABD5F21A4153A800C4321D /* HDHexagonView.m in Sources */ = {isa = PBXBuildFile; fileRef = 38ABD5F11A4153A800C4321D /* HDHexagonView.m */; };
 		38ABD5F71A420A3500C4321D /* HDHexagonControl.m in Sources */ = {isa = PBXBuildFile; fileRef = 38ABD5F61A420A3500C4321D /* HDHexagonControl.m */; };
 		38BAF5281A1FE10B004D5660 /* GameKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 38BAF5271A1FE10B004D5660 /* GameKit.framework */; };
@@ -168,6 +170,9 @@
 		38D4249A1A4F6C1A00FD21A2 /* E3.m4a in Resources */ = {isa = PBXBuildFile; fileRef = 38D424771A4F6C1A00FD21A2 /* E3.m4a */; };
 		38D4249B1A4F6C1A00FD21A2 /* D3.m4a in Resources */ = {isa = PBXBuildFile; fileRef = 38D424781A4F6C1A00FD21A2 /* D3.m4a */; };
 		38D4249C1A4F6C1A00FD21A2 /* C3.m4a in Resources */ = {isa = PBXBuildFile; fileRef = 38D424791A4F6C1A00FD21A2 /* C3.m4a */; };
+		38D4249F1A4F733A00FD21A2 /* HDTVHexagonItem.m in Sources */ = {isa = PBXBuildFile; fileRef = 38D4249E1A4F733A00FD21A2 /* HDTVHexagonItem.m */; };
+		38D424A21A4F759800FD21A2 /* HDTVManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 38D424A11A4F759800FD21A2 /* HDTVManager.m */; };
+		38D424A61A4F7BAF00FD21A2 /* HDInfoView.m in Sources */ = {isa = PBXBuildFile; fileRef = 38D424A51A4F7BAF00FD21A2 /* HDInfoView.m */; };
 		38F5A6B61A076B960036750A /* HDLevel.m in Sources */ = {isa = PBXBuildFile; fileRef = 38F5A6B51A076B960036750A /* HDLevel.m */; };
 		38F5A6B91A07F2FA0036750A /* Grid-1.json in Resources */ = {isa = PBXBuildFile; fileRef = 38F5A6B71A07F2FA0036750A /* Grid-1.json */; };
 		38F5A6BD1A08014F0036750A /* HDHexagon.m in Sources */ = {isa = PBXBuildFile; fileRef = 38F5A6BC1A08014F0036750A /* HDHexagon.m */; };
@@ -186,8 +191,13 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
-		38521F3B1A19A20600484830 /* HDSpriteNode.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HDSpriteNode.h; sourceTree = "<group>"; };
-		38521F3C1A19A20600484830 /* HDSpriteNode.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HDSpriteNode.m; sourceTree = "<group>"; };
+		3824A5DC1A538C3D00788E0E /* Grid-84.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = "Grid-84.json"; sourceTree = "<group>"; };
+		38658BE21A4F953300BE789E /* HDTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HDTableViewCell.h; sourceTree = "<group>"; };
+		38658BE31A4F953300BE789E /* HDTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HDTableViewCell.m; sourceTree = "<group>"; };
+		38658C111A4FCF0F00BE789E /* HDAlertView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HDAlertView.h; sourceTree = "<group>"; };
+		38658C121A4FCF0F00BE789E /* HDAlertView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HDAlertView.m; sourceTree = "<group>"; };
+		38658C141A513A5400BE789E /* SKTTimingFunctions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SKTTimingFunctions.h; sourceTree = "<group>"; };
+		38658C151A513A5400BE789E /* SKTTimingFunctions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SKTTimingFunctions.m; sourceTree = "<group>"; };
 		386CF5D81A383A98006A8381 /* AudioToolbox.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AudioToolbox.framework; path = System/Library/Frameworks/AudioToolbox.framework; sourceTree = SDKROOT; };
 		386CF5DA1A383AFC006A8381 /* HDScene.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HDScene.m; sourceTree = "<group>"; };
 		386CF6271A3982BA006A8381 /* SKEmitterNode+EmitterAdditions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "SKEmitterNode+EmitterAdditions.h"; sourceTree = "<group>"; };
@@ -215,8 +225,6 @@
 		389E95431A4A128100F2DF05 /* HDLevelsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HDLevelsViewController.m; sourceTree = "<group>"; };
 		389E95D51A4C1A7F00F2DF05 /* HDNavigationBar.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HDNavigationBar.h; sourceTree = "<group>"; };
 		389E95D61A4C1A7F00F2DF05 /* HDNavigationBar.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HDNavigationBar.m; sourceTree = "<group>"; };
-		389E95EF1A4D2D1500F2DF05 /* HDRestartNode.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HDRestartNode.h; sourceTree = "<group>"; };
-		389E95F01A4D2D1500F2DF05 /* HDRestartNode.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HDRestartNode.m; sourceTree = "<group>"; };
 		38ABD5F01A4153A800C4321D /* HDHexagonView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HDHexagonView.h; sourceTree = "<group>"; };
 		38ABD5F11A4153A800C4321D /* HDHexagonView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HDHexagonView.m; sourceTree = "<group>"; };
 		38ABD5F51A420A3500C4321D /* HDHexagonControl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HDHexagonControl.h; sourceTree = "<group>"; };
@@ -382,6 +390,12 @@
 		38D424771A4F6C1A00FD21A2 /* E3.m4a */ = {isa = PBXFileReference; lastKnownFileType = file; path = E3.m4a; sourceTree = "<group>"; };
 		38D424781A4F6C1A00FD21A2 /* D3.m4a */ = {isa = PBXFileReference; lastKnownFileType = file; path = D3.m4a; sourceTree = "<group>"; };
 		38D424791A4F6C1A00FD21A2 /* C3.m4a */ = {isa = PBXFileReference; lastKnownFileType = file; path = C3.m4a; sourceTree = "<group>"; };
+		38D4249D1A4F733A00FD21A2 /* HDTVHexagonItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HDTVHexagonItem.h; sourceTree = "<group>"; };
+		38D4249E1A4F733A00FD21A2 /* HDTVHexagonItem.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HDTVHexagonItem.m; sourceTree = "<group>"; };
+		38D424A01A4F759800FD21A2 /* HDTVManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HDTVManager.h; sourceTree = "<group>"; };
+		38D424A11A4F759800FD21A2 /* HDTVManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HDTVManager.m; sourceTree = "<group>"; };
+		38D424A41A4F7BAF00FD21A2 /* HDInfoView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HDInfoView.h; sourceTree = "<group>"; };
+		38D424A51A4F7BAF00FD21A2 /* HDInfoView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HDInfoView.m; sourceTree = "<group>"; };
 		38F5A6B41A076B960036750A /* HDLevel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HDLevel.h; sourceTree = "<group>"; };
 		38F5A6B51A076B960036750A /* HDLevel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HDLevel.m; sourceTree = "<group>"; };
 		38F5A6B71A07F2FA0036750A /* Grid-1.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = "Grid-1.json"; sourceTree = "<group>"; };
@@ -662,6 +676,8 @@
 				38C0A8711A07348400C552F1 /* SKColor+HDColor.m */,
 				386CF6271A3982BA006A8381 /* SKEmitterNode+EmitterAdditions.h */,
 				386CF6281A3982BA006A8381 /* SKEmitterNode+EmitterAdditions.m */,
+				38658C141A513A5400BE789E /* SKTTimingFunctions.h */,
+				38658C151A513A5400BE789E /* SKTTimingFunctions.m */,
 			);
 			name = Categories;
 			sourceTree = "<group>";
@@ -692,6 +708,7 @@
 				389E95011A488D8300F2DF05 /* Grid-81.json */,
 				389E95031A488D8B00F2DF05 /* Grid-82.json */,
 				389E95051A488D9800F2DF05 /* Grid-83.json */,
+				3824A5DC1A538C3D00788E0E /* Grid-84.json */,
 			);
 			name = "EXTENDED TRIPLE";
 			sourceTree = "<group>";
@@ -721,12 +738,8 @@
 				386CF5DA1A383AFC006A8381 /* HDScene.m */,
 				38C0A8761A075FBA00C552F1 /* HDHexagonNode.h */,
 				38C0A8771A075FBA00C552F1 /* HDHexagonNode.m */,
-				38521F3B1A19A20600484830 /* HDSpriteNode.h */,
-				38521F3C1A19A20600484830 /* HDSpriteNode.m */,
 				3874B9A41A20736000400CEB /* HDAlertNode.h */,
 				3874B9A51A20736000400CEB /* HDAlertNode.m */,
-				389E95EF1A4D2D1500F2DF05 /* HDRestartNode.h */,
-				389E95F01A4D2D1500F2DF05 /* HDRestartNode.m */,
 				38C122191A2A2EF300224B33 /* HDSwitch.h */,
 				38C1221A1A2A2EF300224B33 /* HDSwitch.m */,
 				38ABD5F01A4153A800C4321D /* HDHexagonView.h */,
@@ -739,6 +752,12 @@
 				389E953C1A496FF400F2DF05 /* HDLockedView.m */,
 				389E95D51A4C1A7F00F2DF05 /* HDNavigationBar.h */,
 				389E95D61A4C1A7F00F2DF05 /* HDNavigationBar.m */,
+				38658C111A4FCF0F00BE789E /* HDAlertView.h */,
+				38658C121A4FCF0F00BE789E /* HDAlertView.m */,
+				38D424A41A4F7BAF00FD21A2 /* HDInfoView.h */,
+				38D424A51A4F7BAF00FD21A2 /* HDInfoView.m */,
+				38658BE21A4F953300BE789E /* HDTableViewCell.h */,
+				38658BE31A4F953300BE789E /* HDTableViewCell.m */,
 			);
 			name = Views;
 			sourceTree = "<group>";
@@ -746,6 +765,7 @@
 		38C67CD31A0A2A060038526C /* Model */ = {
 			isa = PBXGroup;
 			children = (
+				38D424A31A4F782600FD21A2 /* Table */,
 				38C67D291A0AEA550038526C /* Map */,
 				38C1223B1A2C29DC00224B33 /* HDSoundManager.h */,
 				38C1223C1A2C29DC00224B33 /* HDSoundManager.m */,
@@ -786,6 +806,17 @@
 				38F5A6B51A076B960036750A /* HDLevel.m */,
 			);
 			name = Map;
+			sourceTree = "<group>";
+		};
+		38D424A31A4F782600FD21A2 /* Table */ = {
+			isa = PBXGroup;
+			children = (
+				38D424A01A4F759800FD21A2 /* HDTVManager.h */,
+				38D424A11A4F759800FD21A2 /* HDTVManager.m */,
+				38D4249D1A4F733A00FD21A2 /* HDTVHexagonItem.h */,
+				38D4249E1A4F733A00FD21A2 /* HDTVHexagonItem.m */,
+			);
+			name = Table;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -954,6 +985,7 @@
 				38BDDCC31A20F94D005035EE /* Grid-33.json in Resources */,
 				38C67CF51A0ACE230038526C /* Grid-6.json in Resources */,
 				38BDDCC11A20F943005035EE /* Grid-32.json in Resources */,
+				3824A5DD1A538C3D00788E0E /* Grid-84.json in Resources */,
 				389E95041A488D8B00F2DF05 /* Grid-82.json in Resources */,
 				38C1222E1A2C1C9400224B33 /* Grid-69.json in Resources */,
 				38C122281A2C1C6000224B33 /* Grid-66.json in Resources */,
@@ -1025,11 +1057,12 @@
 				38C0A8781A075FBA00C552F1 /* HDHexagonNode.m in Sources */,
 				38C67CD71A0AB8D80038526C /* HDWelcomeViewController.m in Sources */,
 				38C0A8471A07251700C552F1 /* AppDelegate.m in Sources */,
+				38D424A21A4F759800FD21A2 /* HDTVManager.m in Sources */,
 				389E95441A4A128100F2DF05 /* HDLevelsViewController.m in Sources */,
-				389E95F11A4D2D1500F2DF05 /* HDRestartNode.m in Sources */,
 				38C0A8751A0758AC00C552F1 /* HDGridManager.m in Sources */,
 				38FDF9B51A1BEF1F005CCFE1 /* HDSettingsManager.m in Sources */,
 				38C67CDD1A0AB9350038526C /* UIColor+FlatColors.m in Sources */,
+				38D424A61A4F7BAF00FD21A2 /* HDInfoView.m in Sources */,
 				38ABD5F71A420A3500C4321D /* HDHexagonControl.m in Sources */,
 				389E95D71A4C1A7F00F2DF05 /* HDNavigationBar.m in Sources */,
 				3874B9A61A20736000400CEB /* HDAlertNode.m in Sources */,
@@ -1039,14 +1072,17 @@
 				38C0A8721A07348400C552F1 /* SKColor+HDColor.m in Sources */,
 				38F5A6BD1A08014F0036750A /* HDHexagon.m in Sources */,
 				389E94F01A44A2F000F2DF05 /* HDGridScrollView.m in Sources */,
+				38658BE41A4F953300BE789E /* HDTableViewCell.m in Sources */,
+				38658C161A513A5400BE789E /* SKTTimingFunctions.m in Sources */,
 				38C67CE31A0ABD050038526C /* HDHelper.m in Sources */,
+				38658C131A4FCF0F00BE789E /* HDAlertView.m in Sources */,
 				38C67D281A0AEA490038526C /* HDMapManager.m in Sources */,
-				38521F3D1A19A20600484830 /* HDSpriteNode.m in Sources */,
 				38CA40241A1485380024D6BF /* HDRearViewController.m in Sources */,
 				386CF6291A3982BA006A8381 /* SKEmitterNode+EmitterAdditions.m in Sources */,
 				38C2E13B1A2671F3008D5F33 /* HDLevelGenerator.m in Sources */,
 				38C1221B1A2A2EF300224B33 /* HDSwitch.m in Sources */,
 				389E953D1A496FF400F2DF05 /* HDLockedView.m in Sources */,
+				38D4249F1A4F733A00FD21A2 /* HDTVHexagonItem.m in Sources */,
 				38C67D2C1A0AEBD50038526C /* HDGameCenterManager.m in Sources */,
 				38C1223D1A2C29DC00224B33 /* HDSoundManager.m in Sources */,
 				38ABD5F21A4153A800C4321D /* HDHexagonView.m in Sources */,

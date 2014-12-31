@@ -14,11 +14,6 @@
 
 + (SKEmitterNode *)starEmitter
 {
-    CGPoint particlePosition = CGPointMake(
-                                           CGRectGetWidth([[UIScreen mainScreen] bounds]) / 2,
-                                           CGRectGetHeight([[UIScreen mainScreen] bounds]) / 2
-                                           );
-    
     SKEmitterNode *emitter = [SKEmitterNode node];
     [emitter setParticleBirthRate:50];
     [emitter setParticleTexture:[SKTexture textureWithImage:[[self class] starImage]]];
@@ -27,7 +22,7 @@
     [emitter setAlpha:.5];
     [emitter setName:@"STARKEY"];
     [emitter setParticleAlphaRange:.5f];
-    [emitter setParticlePosition:particlePosition];
+    [emitter setParticlePosition:CGPointZero];
     [emitter setParticleSpeed:300.0f];
     [emitter setEmissionAngle:89.0f];
     [emitter setParticleScale:1.0f];

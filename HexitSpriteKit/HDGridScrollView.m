@@ -31,7 +31,7 @@
     return self;
 }
 
-#pragma mark - <PUBLIC>
+#pragma mark - Public
 
 - (void)performIntroAnimationWithCompletion:(dispatch_block_t)completion
 {
@@ -67,7 +67,7 @@
     [CATransaction commit];
 }
 
-#pragma mark - < PRIVATE >
+#pragma mark - Private
 
 - (void)willMoveToSuperview:(UIView *)newSuperview
 {

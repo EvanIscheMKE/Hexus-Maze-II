@@ -19,12 +19,12 @@ extern NSString * const ACHIEVEMENTSKEY;
 @interface HDAlertNode : SKSpriteNode
 @property (nonatomic, weak) id<HDAlertnodeDelegate> delegate;
 @property (nonatomic, strong) SKLabelNode *levelLabel;
-
+- (instancetype)initWithColor:(UIColor *)color size:(CGSize)size lastLevel:(BOOL)lastLevel;
+- (void)show;
 @end
 
 @protocol HDAlertnodeDelegate <NSObject>
-@required
+@optional
 - (void)alertNode:(HDAlertNode *)alertNode clickedButtonWithTitle:(NSString *)title;
-- (void)alertNodeWillDismiss:(HDAlertNode *)alertNode;
 - (void)alertNodeFinishedIntroAnimation:(HDAlertNode *)alertNode;
 @end
