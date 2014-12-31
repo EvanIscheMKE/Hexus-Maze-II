@@ -55,8 +55,8 @@ static const CGFloat kPadding                = 5.0f;
 
 - (void)dealloc
 {
-   // [[NSNotificationCenter defaultCenter] removeObserver:self name:UIApplicationWillResignActiveNotification object:nil];
-   // [[NSNotificationCenter defaultCenter] removeObserver:self name:UIApplicationDidBecomeActiveNotification  object:nil];
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:UIApplicationWillResignActiveNotification object:nil];
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:UIApplicationDidBecomeActiveNotification  object:nil];
 }
 
 - (id)initWithLevel:(NSInteger)level
@@ -170,8 +170,6 @@ static const CGFloat kPadding                = 5.0f;
 }
 
 #pragma mark - Life cycle
-
-
 
 - (void)viewWillLayoutSubviews
 {
@@ -394,7 +392,7 @@ static const CGFloat kPadding                = 5.0f;
 
 #pragma mark - <UIGestureRecognizerDelegate>
 
--(BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldReceiveTouch:(UITouch *)touch
+- (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldReceiveTouch:(UITouch *)touch
 {    
     HDContainerViewController *container = self.containerViewController;
     
@@ -437,7 +435,7 @@ static const CGFloat kPadding                = 5.0f;
     }
 }
 
-#pragma mark - Button
+#pragma mark - Buttons
 
 - (UIButton *)_restartButton
 {
@@ -447,15 +445,15 @@ static const CGFloat kPadding                = 5.0f;
                                       CGRectGetWidth(CGRectInset(self.view.bounds, 25.0f, 0.0f)),
                                       CGRectGetWidth(self.view.bounds) < 321.0f ? 34.0f : 44.0f
                                       );
+    
     UIButton *restartButton = [UIButton buttonWithType:UIButtonTypeCustom];
     restartButton.frame = restartBounds;
     [restartButton addTarget:self action:@selector(restartGame) forControlEvents:UIControlEventTouchUpInside];
     [restartButton setTitle:@"Try Again" forState:UIControlStateNormal];
     [restartButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
     [restartButton.titleLabel setTextAlignment:NSTextAlignmentCenter];
-    [restartButton.titleLabel setFont:GILLSANS(22.0f)];
-    restartButton.layer.borderColor  = [[UIColor whiteColor] CGColor];
-    restartButton.layer.borderWidth  = 3.0f;
+    [restartButton.titleLabel setFont:GILLSANS_LIGHT(22.0f)];
+    restartButton.backgroundColor = [UIColor flatPeterRiverColor];
     restartButton.layer.cornerRadius = 8.0f;
     restartButton.center = CGPointMake(
                                        CGRectGetMidX(self.view.bounds),

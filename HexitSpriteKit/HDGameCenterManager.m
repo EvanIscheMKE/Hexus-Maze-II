@@ -43,12 +43,12 @@ NSString * const LEADERBOARDID_KEY = @"LevelLeaderboard";
 - (void)reportLevelCompletion:(int64_t)level
 {
     if (level % 15 == 0) {
-        [self submitAchievementWithIdentifier:[NSString stringWithFormat:@"LevelSet%lld",level/15]];
+        [self submitAchievementWithIdentifier:[NSString stringWithFormat:@"LevelSet%lld",level/10]];
     }
     
     if ([GKLocalPlayer localPlayer].isAuthenticated) {
         GKScore *completedLevel = [[GKScore alloc] initWithLeaderboardIdentifier:LEADERBOARDID_KEY];
-        [completedLevel setValue:level];
+        completedLevel.value = level;
         [GKScore reportScores:@[completedLevel] withCompletionHandler:^(NSError *error) {
             if (error) {
                 
@@ -60,8 +60,8 @@ NSString * const LEADERBOARDID_KEY = @"LevelLeaderboard";
 - (void)submitAchievementWithIdentifier:(NSString *)identifier
 {
     GKAchievement *scoreAchievement = [[GKAchievement alloc] initWithIdentifier:identifier];
-    [scoreAchievement setShowsCompletionBanner:YES];
-    [scoreAchievement setPercentComplete:100];
+    scoreAchievement.showsCompletionBanner = YES;
+    scoreAchievement.percentComplete = 100;
     
     [GKAchievement reportAchievements:@[scoreAchievement] withCompletionHandler:^(NSError *error) {
         if (error != nil) {

@@ -8,12 +8,12 @@
 
 #import <SpriteKit/SpriteKit.h>
 
-extern NSString * const NEXTLEVELKEY;
-extern NSString * const RESTARTKEY;
-extern NSString * const SHAREKEY;
-extern NSString * const LEADERBOARDKEY;
-extern NSString * const RATEKEY;
-extern NSString * const ACHIEVEMENTSKEY;
+extern NSString * const HDNextLevelKey;
+extern NSString * const HDRestartLevelKey;
+extern NSString * const HDShareKey;
+extern NSString * const HDGCLeaderboardKey;
+extern NSString * const HDRateKey;
+extern NSString * const HDGCAchievementsKey;
 
 @protocol HDAlertnodeDelegate;
 @interface HDAlertNode : SKSpriteNode

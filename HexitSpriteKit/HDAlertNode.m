@@ -11,21 +11,24 @@
 #import "SKEmitterNode+EmitterAdditions.h"
 #import "SKColor+HDColor.h"
 
-NSString * const NEXTLEVELKEY     = @"nextLevelKey";
-NSString * const RESTARTKEY       = @"restartKeY";
-NSString * const SHAREKEY         = @"Share";
-NSString * const LEADERBOARDKEY   = @"leaderboard";
-NSString * const RATEKEY          = @"heart";
-NSString * const ACHIEVEMENTSKEY  = @"Achievements";
+NSString * const HDNextLevelKey       = @"nextLevelKey";
+NSString * const HDRestartLevelKey    = @"restartKeY";
+NSString * const HDShareKey           = @"Share";
+NSString * const HDGCLeaderboardKey   = @"leaderboard";
+NSString * const HDRateKey            = @"heart";
+NSString * const HDGCAchievementsKey  = @"Achievements";
+
+static const CGFloat cornerRadius = 15.0f;
 
 @interface HDAlertNode ()
 
 @property (nonatomic, strong) SKShapeNode *star;
 @property (nonatomic, strong) SKShapeNode *menuView;
 
-@property (nonatomic, strong) SKSpriteNode *rightButton;
-@property (nonatomic, strong) SKSpriteNode *leftButton;
+@property (nonatomic, strong) SKSpriteNode *nextButton;
+@property (nonatomic, strong) SKSpriteNode *restartButton;
 @property (nonatomic, strong) SKSpriteNode *stripe;
+@property (nonatomic, strong) SKSpriteNode *container;
 
 @property (nonatomic, strong) SKLabelNode *descriptionLabel;
 
@@ -42,8 +45,6 @@ NSString * const ACHIEVEMENTSKEY  = @"Achievements";
         
         self.userInteractionEnabled = YES;
         self.anchorPoint = CGPointMake(.5f, .5f);
-        
-        NSLog(lastLevel ? @"YES" : @"NO");
         
         _isLastLevel = lastLevel;
         _descriptionArray = @[@"Now you have it!",
@@ -67,8 +68,12 @@ NSString * const ACHIEVEMENTSKEY  = @"Achievements";
 
 - (void)_setup
 {
+    self.container = [[SKSpriteNode alloc] initWithColor:[UIColor colorWithWhite:0.0f alpha:.4f] size:self.frame.size];
+    self.container.alpha = 0.0f;
+    [self addChild:self.container];
+    
     CGRect containerFrame = CGRectInset(self.frame, CGRectGetWidth(self.frame)/15, CGRectGetHeight(self.frame)/6);
-    UIBezierPath *path = [UIBezierPath bezierPathWithRoundedRect:containerFrame cornerRadius:15.0f];
+    UIBezierPath *path = [UIBezierPath bezierPathWithRoundedRect:containerFrame cornerRadius:cornerRadius];
     self.menuView = [SKShapeNode shapeNodeWithPath:[path CGPath] centered:YES];
     self.menuView.position    = CGPointMake(0.0f, CGRectGetHeight(self.frame));
     self.menuView.antialiased = YES;
@@ -87,11 +92,11 @@ NSString * const ACHIEVEMENTSKEY  = @"Achievements";
                                );
         
         UIImage *nextLevelImage = [self _nextLevelImageTexture];
-        self.rightButton = [SKSpriteNode spriteNodeWithTexture:[SKTexture textureWithImage:nextLevelImage]];
-        self.rightButton.name        = NEXTLEVELKEY;
-        self.rightButton.anchorPoint = CGPointMake(.0f, .5f);
-        self.rightButton.position    = position;
-        [self.menuView addChild:self.rightButton];
+        self.nextButton = [SKSpriteNode spriteNodeWithTexture:[SKTexture textureWithImage:nextLevelImage]];
+        self.nextButton.name        = HDNextLevelKey;
+        self.nextButton.anchorPoint = CGPointMake(.0f, .5f);
+        self.nextButton.position    = position;
+        [self.menuView addChild:self.nextButton];
         
         position = CGPointMake(
                                -(CGRectGetWidth(self.menuView.frame)/2),
@@ -99,35 +104,35 @@ NSString * const ACHIEVEMENTSKEY  = @"Achievements";
                                );
         
         UIImage *menuButtonImage = [self _restartButtonTexture];
-        self.leftButton = [SKSpriteNode spriteNodeWithTexture:[SKTexture textureWithImage:menuButtonImage]];
-        self.leftButton.name        = RESTARTKEY;
-        self.leftButton.anchorPoint = CGPointMake(.0f, .5f);
-        self.leftButton.position    = position;
-        [self.menuView addChild:self.leftButton];
+        self.restartButton = [SKSpriteNode spriteNodeWithTexture:[SKTexture textureWithImage:menuButtonImage]];
+        self.restartButton.name        = HDRestartLevelKey;
+        self.restartButton.anchorPoint = CGPointMake(.0f, .5f);
+        self.restartButton.position    = position;
+        [self.menuView addChild:self.restartButton];
         
     } else {
         
         UIImage *restartImage = [self _fullWidthRestartTexture];
         
         position = CGPointMake(0.0f, -(CGRectGetHeight(self.menuView.frame)/2 - buttonHeight));
-        self.leftButton = [SKSpriteNode spriteNodeWithTexture:[SKTexture textureWithImage:restartImage]];
-        self.leftButton.name        = RESTARTKEY;
-        self.leftButton.position    = position;
-        [self.menuView addChild:self.leftButton];
+        self.restartButton = [SKSpriteNode spriteNodeWithTexture:[SKTexture textureWithImage:restartImage]];
+        self.restartButton.name        = HDRestartLevelKey;
+        self.restartButton.position    = position;
+        [self.menuView addChild:self.restartButton];
         
     }
     
     const CGFloat kStripeHeight = CGRectGetHeight(self.menuView.frame) / 6.5f;
     
-    position = CGPointMake(0.0f, CGRectGetMaxY(self.leftButton.frame) + kStripeHeight / 2 );
+    position = CGPointMake(0.0f, CGRectGetMaxY(self.restartButton.frame) + kStripeHeight / 2 );
     CGSize stripeSize = CGSizeMake(CGRectGetWidth(self.menuView.frame), kStripeHeight);
     self.stripe = [SKSpriteNode spriteNodeWithColor:[SKColor flatAsbestosColor] size:stripeSize];
-    self.stripe.name     = RESTARTKEY;
+    self.stripe.name     = HDRestartLevelKey;
     self.stripe.position = position;
     [self.menuView addChild:self.stripe];
     
     const CGFloat kMargin   = (CGRectGetWidth(self.stripe.frame) / 5.0);
-    NSArray *imagePaths = @[SHAREKEY, LEADERBOARDKEY, ACHIEVEMENTSKEY, RATEKEY];
+    NSArray *imagePaths = @[HDShareKey, HDGCLeaderboardKey, HDGCAchievementsKey, HDRateKey];
     for (int column = 0; column < 4; column++) {
         
         CGPoint nodePosition = CGPointMake( (-kMargin * 1.5f) + (column * kMargin), 0.0f);
@@ -139,24 +144,6 @@ NSString * const ACHIEVEMENTSKEY  = @"Achievements";
         [self.stripe addChild:node];
     }
     
-    CGPoint descriptionCenter = CGPointMake(0.0f, CGRectGetMaxY(self.stripe.frame) + 12.0f);
-    self.descriptionLabel = [SKLabelNode labelNodeWithText:[_descriptionArray objectAtIndex:arc4random() % _descriptionArray.count]];
-    self.descriptionLabel.horizontalAlignmentMode = SKLabelHorizontalAlignmentModeCenter;
-    self.descriptionLabel.verticalAlignmentMode   = SKLabelVerticalAlignmentModeCenter;
-    self.descriptionLabel.fontColor = [SKColor flatMidnightBlueColor];
-    self.descriptionLabel.fontName  = @"GillSans";
-    self.descriptionLabel.fontSize  = CGRectGetWidth(self.frame) / 21;
-    self.descriptionLabel.position  = descriptionCenter;
-    [self.menuView addChild:self.descriptionLabel];
-    
-    self.levelLabel = [[SKLabelNode alloc] initWithFontNamed:@"GillSans-Light"];
-    self.levelLabel.position = CGPointMake(0.0f, CGRectGetHeight(self.menuView.frame) / 2.4f);
-    self.levelLabel.fontSize = CGRectGetWidth(self.frame)/14;
-    self.levelLabel.fontColor = [SKColor flatMidnightBlueColor];
-    self.levelLabel.horizontalAlignmentMode = SKLabelHorizontalAlignmentModeCenter;
-    self.levelLabel.verticalAlignmentMode = SKLabelVerticalAlignmentModeBottom;
-    [self.menuView addChild:self.levelLabel];
-    
     const CGFloat kStarSize = CGRectGetHeight(self.frame)/4.5f;
     CGPathRef middleStarPath = [HDHelper starPathForBounds:CGRectMake(0.0f, 0.0, kStarSize, kStarSize)];
     self.star = [SKShapeNode shapeNodeWithPath:middleStarPath centered:YES];
@@ -164,6 +151,24 @@ NSString * const ACHIEVEMENTSKEY  = @"Achievements";
     self.star.scale = 0.0f;
     self.star.fillColor = [SKColor flatEmeraldColor];
     [self.menuView addChild:self.star];
+    
+    CGPoint descriptionCenter = CGPointMake(0.0f, CGRectGetMaxY(self.stripe.frame) + CGRectGetWidth(self.frame) / 21 / 2);
+    self.descriptionLabel = [SKLabelNode labelNodeWithText:[_descriptionArray objectAtIndex:arc4random() % _descriptionArray.count]];
+    self.descriptionLabel.fontName  = @"GillSans";
+    self.descriptionLabel.fontSize  = CGRectGetWidth(self.frame) / 21;
+    self.descriptionLabel.position  = descriptionCenter;
+    
+    self.levelLabel = [[SKLabelNode alloc] initWithFontNamed:@"GillSans-Light"];
+    self.levelLabel.position = CGPointMake(0.0f, CGRectGetHeight(self.menuView.frame) / 2.2f);
+    self.levelLabel.fontSize = CGRectGetWidth(self.frame)/14;
+    
+    for (SKLabelNode *label in @[self.descriptionLabel, self.levelLabel]) {
+        label.fontColor = [SKColor flatMidnightBlueColor];
+        label.horizontalAlignmentMode = SKLabelHorizontalAlignmentModeCenter;
+        label.verticalAlignmentMode = SKLabelVerticalAlignmentModeCenter;
+        [self.menuView addChild:label];
+    }
+    
 }
 
 #pragma mark - Public
@@ -171,12 +176,15 @@ NSString * const ACHIEVEMENTSKEY  = @"Achievements";
 - (void)dismissWithCompletion:(dispatch_block_t)completion
 {
     SKAction *upAction      = [SKAction moveToY:15.0f duration:.3f];
-    SKAction *downAction    = [SKAction moveToY:-CGRectGetHeight(self.frame) duration:.3f];
-    SKAction *sequeneAction = [SKAction sequence:@[upAction, downAction]];
+    SKAction *downAction    = [SKAction moveToY:-CGRectGetHeight(self.frame) duration:upAction.duration];
+    SKAction *sequeneAction = [SKAction sequence:@[upAction, downAction,]];
+    
+    SKAction *fadeOutAction = [SKAction fadeOutWithDuration:.5f];
     
     upAction.timingMode   = SKActionTimingEaseIn;
     downAction.timingMode = upAction.timingMode;
     
+    [self.container runAction:fadeOutAction];
     [self.menuView runAction:sequeneAction completion:^{
         [self removeFromParent];
         if (completion) {
@@ -187,8 +195,16 @@ NSString * const ACHIEVEMENTSKEY  = @"Achievements";
 
 - (void)show
 {
-    [self.menuView runAction:[SKAction moveToY:0.0f duration:.5f] completion:^{
-        [self.star runAction:[SKAction sequence:@[[SKAction scaleTo:1.2 duration:.4f],[SKAction scaleTo:1.0f duration:.2f]]] completion:^{
+    SKAction *scaleUpAction   = [SKAction scaleTo:1.2 duration:.4f];
+    SKAction *scaleDownAction = [SKAction scaleTo:1.0f duration:.2f];
+    SKAction *sequenceAction  = [SKAction sequence:@[scaleUpAction, scaleDownAction]];
+    
+    SKAction *positionAction  = [SKAction moveToY:0.0f duration:.5f];
+    SKAction *fadeInAction    = [SKAction fadeInWithDuration:positionAction.duration];
+    
+    [self.container runAction:fadeInAction];
+    [self.menuView runAction:positionAction completion:^{
+        [self.star runAction:sequenceAction completion:^{
             if (self.delegate && [self.delegate respondsToSelector:@selector(alertNodeFinishedIntroAnimation:)]) {
                 [self.delegate alertNodeFinishedIntroAnimation:self];
             }
@@ -215,7 +231,7 @@ NSString * const ACHIEVEMENTSKEY  = @"Achievements";
         
         UIBezierPath *button = [UIBezierPath bezierPathWithRoundedRect:imageFrame
                                                      byRoundingCorners:UIRectCornerBottomLeft|UIRectCornerBottomRight
-                                                           cornerRadii:CGSizeMake(15.0f, 15.0f)];
+                                                           cornerRadii:CGSizeMake(cornerRadius, cornerRadius)];
         [button addClip];
         
         [[UIColor flatEmeraldColor] setStroke];
@@ -248,7 +264,7 @@ NSString * const ACHIEVEMENTSKEY  = @"Achievements";
         
         UIBezierPath *button = [UIBezierPath bezierPathWithRoundedRect:imageFrame
                                                      byRoundingCorners:UIRectCornerBottomLeft
-                                                           cornerRadii:CGSizeMake(15.0f, 15.0f)];
+                                                           cornerRadii:CGSizeMake(cornerRadius, cornerRadius)];
         [button addClip];
         
         [[UIColor flatEmeraldColor] setStroke];
@@ -272,7 +288,7 @@ NSString * const ACHIEVEMENTSKEY  = @"Achievements";
         CGRect imageFrame = CGRectMake(
                                        0.0f,
                                        0.0f,
-                                       CGRectGetWidth(self.menuView.frame) / 1.5,
+                                       CGRectGetWidth(self.menuView.frame) / 1.5f,
                                        CGRectGetHeight(self.menuView.frame) / 4.25f
                                        );
         
@@ -281,7 +297,7 @@ NSString * const ACHIEVEMENTSKEY  = @"Achievements";
         [[UIColor flatEmeraldColor] setFill];
         UIBezierPath *button = [UIBezierPath bezierPathWithRoundedRect:imageFrame
                                                      byRoundingCorners:UIRectCornerBottomRight
-                                                           cornerRadii:CGSizeMake(15.0f, 15.0f)];
+                                                           cornerRadii:CGSizeMake(cornerRadius, cornerRadius)];
         [button fill];
         [button addClip];
         
@@ -302,7 +318,6 @@ NSString * const ACHIEVEMENTSKEY  = @"Achievements";
         [rightArrow moveToPoint:   CGPointMake(endPoint - offset, offset)];
         [rightArrow addLineToPoint:CGPointMake(endPoint, CGRectGetHeight(imageFrame)/2)];
         [rightArrow addLineToPoint:CGPointMake(endPoint - offset, CGRectGetHeight(imageFrame) - offset)];
-        
         [rightArrow stroke];
         
         nextLevel = UIGraphicsGetImageFromCurrentImageContext();
@@ -322,11 +337,12 @@ NSString * const ACHIEVEMENTSKEY  = @"Achievements";
                                                       startAngle:DEGREES_RADIANS(330.0f)
                                                         endAngle:DEGREES_RADIANS(290.0f)
                                                        clockwise:YES];
+    CGPoint endPoint = circle.currentPoint;
+    
     circle.lineCapStyle  = kCGLineCapRound;
     circle.lineJoinStyle = kCGLineJoinRound;
     circle.lineWidth     = 8.0f;
     
-    CGPoint endPoint = circle.currentPoint;
     [circle addLineToPoint:CGPointMake(endPoint.x - offset/2, endPoint.y + offset/2.0f)];
     [circle moveToPoint:endPoint];
     [circle addLineToPoint:CGPointMake(endPoint.x - offset/2, endPoint.y - offset/1.85f)];
@@ -343,7 +359,7 @@ NSString * const ACHIEVEMENTSKEY  = @"Achievements";
     
     SKNode *node = [self nodeAtPoint:location];
     if (self.delegate && [self.delegate respondsToSelector:@selector(alertNode:clickedButtonWithTitle:)]) {
-        if ([node.name isEqualToString:NEXTLEVELKEY]||[node.name isEqualToString:RESTARTKEY]) {
+        if ([node.name isEqualToString:HDNextLevelKey]||[node.name isEqualToString:HDRestartLevelKey]) {
             [self dismissWithCompletion:^{
                 [self.delegate alertNode:self clickedButtonWithTitle:node.name];
             }];

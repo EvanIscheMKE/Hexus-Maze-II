@@ -446,19 +446,19 @@ static const CGFloat kTileHeightInsetMultiplier = .845f;
 {
     self.animating = NO;
     
-    if ([title isEqualToString:RESTARTKEY]) {
+    if ([title isEqualToString:HDRestartLevelKey]) {
         [self restart];
         if (self.delegate && [self.delegate respondsToSelector:@selector(gameWillResetInScene:)]) {
             [self.delegate gameWillResetInScene:self]; }
-    } else if ([title isEqualToString:NEXTLEVELKEY]) {
+    } else if ([title isEqualToString:HDNextLevelKey]) {
         [self _nextLevel];
-    } else if ([title isEqualToString:SHAREKEY]) {
+    } else if ([title isEqualToString:HDShareKey]) {
         [ADelegate presentShareViewControllerWithLevelIndex:self.levelIndex];
-    } else if ([title isEqualToString:ACHIEVEMENTSKEY]) {
+    } else if ([title isEqualToString:HDGCAchievementsKey]) {
         [ADelegate presentGameCenterControllerForState:GKGameCenterViewControllerStateAchievements];
-    } else if ([title isEqualToString:LEADERBOARDKEY]) {
+    } else if ([title isEqualToString:HDGCLeaderboardKey]) {
         [ADelegate presentGameCenterControllerForState:GKGameCenterViewControllerStateLeaderboards];
-    } else if ([title isEqualToString:RATEKEY]) {
+    } else if ([title isEqualToString:HDRateKey]) {
         [ADelegate rateHEXUS];
     }
 }
