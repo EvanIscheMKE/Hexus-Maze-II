@@ -25,16 +25,6 @@ static const NSUInteger kHexaCount = 4;
 
 #pragma mark - Animations
 
-- (UIView *)_labelContainer
-{
-    for (UIView *label in self.subviews) {
-        if ([label isKindOfClass:[UIView class]]) {
-            return label;
-        }
-    }
-    return nil;
-}
-
 + (void)performRotationOnView:(UIView *)view completion:(dispatch_block_t)completion
 {
     [CATransaction begin];
@@ -79,6 +69,10 @@ static const NSUInteger kHexaCount = 4;
     self._labelContainer.center = tapCenter;
     self._labelContainer.alpha  = 0.0f;
     
+    CGRect bannerFrame = self._bannerView.frame;
+    bannerFrame.origin.y = CGRectGetHeight(self.bounds);
+    [self._bannerView setFrame:bannerFrame];
+    
     NSUInteger index = 0;
     for (id hexagon in self.subviews) {
         
@@ -118,6 +112,11 @@ static const NSUInteger kHexaCount = 4;
 
 - (void)performExitAnimationsWithCompletion:(dispatch_block_t)completion
 {
+    [UIView animateWithDuration:.3f animations:^{
+        CGRect bannerFrame = self._bannerView.frame;
+        bannerFrame.origin.y = CGRectGetHeight(self.bounds);
+        self._bannerView.frame = bannerFrame;
+    }];
     
     [CATransaction begin];
     [CATransaction setCompletionBlock:completion];
@@ -136,7 +135,7 @@ static const NSUInteger kHexaCount = 4;
         
         CABasicAnimation *scale = [CABasicAnimation animationWithKeyPath:@"transform.scale"];
         scale.toValue   = @0;
-        scale.duration  = .3f;
+        scale.duration  = .2f;
         scale.removedOnCompletion = NO;
         scale.fillMode  = kCAFillModeForwards;
         [hexa.layer addAnimation:scale forKey:@"scale34"];
@@ -146,28 +145,16 @@ static const NSUInteger kHexaCount = 4;
     [CATransaction commit];
 }
 
-- (dispatch_block_t)_continuousAnimationsBlock
-{
-    dispatch_block_t continuousAnimations = ^{
-        
-        for (UILabel *label in self._labelContainer.subviews) {
-            CABasicAnimation *scale = [CABasicAnimation animationWithKeyPath:@"transform.scale.x"];
-            scale.byValue      = @.3f;
-            scale.toValue      = @1.3f;
-            scale.duration     = .3f;
-            scale.repeatCount  = MAXFLOAT;
-            scale.autoreverses = YES;
-            [label.layer addAnimation:scale forKey:@"scale"];
-        }
-        [UIView animateWithDuration:.3f animations:^{
-            self._labelContainer.alpha = 1.0f;
-        } completion:nil];
-    };
-    return continuousAnimations;
-}
-
 - (void)performIntroAnimationsWithCompletion:(dispatch_block_t)completion
 {
+    if ([self _bannerView].isBannerLoaded) {
+        [UIView animateWithDuration:.3f animations:^{
+            CGRect bannerFrame = self._bannerView.frame;
+            bannerFrame.origin.y = CGRectGetHeight(self.bounds) - CGRectGetHeight([[self _bannerView] frame]);
+            self._bannerView.frame = bannerFrame;
+        }];
+    }
+    
     dispatch_block_t finalAnimation = [self _continuousAnimationsBlock];
         
     HDHexagonView *first  = [self.subviews objectAtIndex:2];
@@ -216,16 +203,70 @@ static const NSUInteger kHexaCount = 4;
     [CATransaction commit];
 }
 
+#pragma mark - Private
+
+- (dispatch_block_t)_continuousAnimationsBlock
+{
+    dispatch_block_t continuousAnimations = ^{
+        
+        for (UILabel *label in self._labelContainer.subviews) {
+            CABasicAnimation *scale = [CABasicAnimation animationWithKeyPath:@"transform.scale.x"];
+            scale.byValue      = @.3f;
+            scale.toValue      = @1.3f;
+            scale.duration     = .3f;
+            scale.repeatCount  = MAXFLOAT;
+            scale.autoreverses = YES;
+            [label.layer addAnimation:scale forKey:@"scale"];
+        }
+        [UIView animateWithDuration:.3f animations:^{
+            self._labelContainer.alpha = 1.0f;
+        } completion:nil];
+    };
+    return continuousAnimations;
+}
+
+- (ADBannerView *)_bannerView
+{
+    for (id bannerView in self.subviews) {
+        if ([bannerView isKindOfClass:[ADBannerView class]]) {
+            return bannerView;
+        }
+    }
+    return nil;
+}
+
+- (UIView *)_labelContainer
+{
+    for (id container in self.subviews) {
+        if (![container isKindOfClass:[HDHexagonView class]] &&
+            ![container isKindOfClass:[ADBannerView class]]) {
+            return container;
+        }
+    }
+    return nil;
+}
+
 @end
 
 @interface HDWelcomeViewController ()<ADBannerViewDelegate>
+@property (nonatomic, strong) ADBannerView *bannerView;
 @property (nonatomic, strong) UIView *labelContainer;
 @property (nonatomic, weak) HDWelcomeView *welcomeView;
 @end
 
 @implementation HDWelcomeViewController {
+    BOOL _bannerIsVisible;
+    
     NSArray *_soundsArray;
     NSArray *_hexaArray;
+}
+
+- (instancetype)init
+{
+    if (self = [super init]) {
+        _soundsArray = @[HDC3, HDD3, HDE3, HDF3];
+    }
+    return self;
 }
 
 - (void)loadView
@@ -233,18 +274,12 @@ static const NSUInteger kHexaCount = 4;
     CGRect welcomeViewFrame = [[UIScreen mainScreen] bounds];
     self.view = [[HDWelcomeView alloc] initWithFrame:welcomeViewFrame];
     self.welcomeView = (HDWelcomeView *)self.view;
-    
-    _soundsArray = @[HDC3, HDD3, HDE3, HDF3];
 }
 
 - (void)viewDidLoad
 {
     [super viewDidLoad];
     self.view.backgroundColor = [UIColor flatMidnightBlueColor];
-    
-    ADBannerView *bannerView = [[ADBannerView alloc] init];
-    bannerView.delegate = self;
-    [self.view addSubview:bannerView];
     
     CGFloat size = kHexaSize;
     CGFloat pad  = kPadding;
@@ -275,6 +310,8 @@ static const NSUInteger kHexaCount = 4;
         hexaLayer.lineWidth = hexaLayer.lineWidth + pad;//Subtact above, then add here, increase line width without changing bound size
     }
     
+    _hexaArray = hexaArray;
+    
     // Create a container view to contain the 'tap' labels, animate this down screen instead of multiple labels
     CGRect  containerFrame  = CGRectMake(0.0f, 0.0f, CGRectGetMidX(self.view.bounds), 2.0f);
     self.labelContainer = [[UIView alloc] initWithFrame:containerFrame];
@@ -299,12 +336,14 @@ static const NSUInteger kHexaCount = 4;
         [self.labelContainer addSubview:tap];
     }
     
-    _hexaArray = hexaArray;
+    self.bannerView = [[ADBannerView alloc] init];
+    self.bannerView.delegate = self;
+    [self.view addSubview:self.bannerView];
 }
-
 
 - (void)viewWillAppear:(BOOL)animated
 {
+     _bannerIsVisible = NO;
     [super viewWillAppear:animated];
     [self.welcomeView prepareForIntroAnimations];
 }
@@ -330,6 +369,7 @@ static const NSUInteger kHexaCount = 4;
 
 - (void)touchesMoved:(NSSet *)touches withEvent:(UIEvent *)event
 {
+    // Touches
     UITouch *touch   = [[touches allObjects] lastObject];
     CGPoint location = [touch locationInView:self.view];
     
@@ -362,7 +402,7 @@ static const NSUInteger kHexaCount = 4;
     [HDWelcomeView performScaleOnView:hexaView];
     [[_hexaArray objectAtIndex:MIN(index + 1, 3)] setEnabled:YES];
     
-    [[HDSoundManager sharedManager] playSound:_soundsArray[index]];
+    [[HDSoundManager sharedManager] playSound:_soundsArray[MIN(index, 3)]];
     
     switch (index) {
         case 1:{
@@ -372,8 +412,7 @@ static const NSUInteger kHexaCount = 4;
             }];
         } break;
         case 3:
-
-            [UIView animateWithDuration:.2f animations:^{
+            [UIView animateWithDuration:.3f animations:^{
                 self.labelContainer.alpha = 0.0f;
             } completion:^(BOOL finished) {
                 [self.welcomeView performExitAnimationsWithCompletion:^{
@@ -381,6 +420,32 @@ static const NSUInteger kHexaCount = 4;
                 }];
             }];
             break;
+    }
+}
+
+#pragma mark - <ADBannerViewDelegate>
+
+- (void)bannerView:(ADBannerView *)banner didFailToReceiveAdWithError:(NSError *)error
+{
+    if (_bannerIsVisible) {
+        _bannerIsVisible = NO;
+        [UIView animateWithDuration:.3f animations:^{
+            CGRect bannerFrame = self.bannerView.frame;
+            bannerFrame.origin.y = CGRectGetHeight(self.view.bounds);
+            self.bannerView.frame = bannerFrame;
+        }];
+    }
+}
+
+- (void)bannerViewDidLoadAd:(ADBannerView *)banner
+{
+    if (!_bannerIsVisible) {
+        _bannerIsVisible = YES;
+        [UIView animateWithDuration:.3f animations:^{
+            CGRect bannerFrame = self.bannerView.frame;
+            bannerFrame.origin.y = CGRectGetHeight(self.view.bounds) - CGRectGetHeight(self.bannerView.bounds);
+            self.bannerView.frame = bannerFrame;
+        }];
     }
 }
 

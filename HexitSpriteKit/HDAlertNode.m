@@ -152,7 +152,7 @@ static const CGFloat cornerRadius = 15.0f;
     self.star.fillColor = [SKColor flatEmeraldColor];
     [self.menuView addChild:self.star];
     
-    CGPoint descriptionCenter = CGPointMake(0.0f, CGRectGetMaxY(self.stripe.frame) + CGRectGetWidth(self.frame) / 21 / 2);
+    CGPoint descriptionCenter = CGPointMake(0.0f, CGRectGetMaxY(self.stripe.frame) + (CGRectGetWidth(self.frame) / 21 / 2) + 5.0f);
     self.descriptionLabel = [SKLabelNode labelNodeWithText:[_descriptionArray objectAtIndex:arc4random() % _descriptionArray.count]];
     self.descriptionLabel.fontName  = @"GillSans";
     self.descriptionLabel.fontSize  = CGRectGetWidth(self.frame) / 21;

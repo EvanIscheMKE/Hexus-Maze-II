@@ -12,9 +12,19 @@
 #import "HDHexagon.h"
 #import "HDHexagonNode.h"
 #import "UIColor+FlatColors.h"
-#import "SKTTimingFunctions.h"
 
 @implementation HDHelper
+
++ (CGFloat)sideMenuOffsetX
+{
+    CGFloat buttonSize = [[self class] isWideScreen] ? kLargeButtonSize : kSmallButtonSize;
+    return  CGRectGetWidth([[UIScreen mainScreen] bounds]) - (buttonSize + (kButtonInset * 2));
+}
+
++ (BOOL)isWideScreen
+{
+    return (CGRectGetWidth([[UIScreen mainScreen] bounds]) > 320.0f);
+}
 
 + (CGPathRef)hexagonPathForBounds:(CGRect)bounds
 {

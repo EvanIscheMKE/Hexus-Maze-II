@@ -14,8 +14,6 @@
 #import "HDHelper.h"
 #import "HDConstants.h"
 
-static const CGFloat MINIMUM_MENU_OFFSET_X = 228.0f;
-
 @implementation UIViewController (HDMenuViewController)
 
 - (HDContainerViewController *)containerViewController
@@ -30,19 +28,17 @@ static const CGFloat MINIMUM_MENU_OFFSET_X = 228.0f;
 @end
 
 @interface HDContainerViewController ()
-
-@property (nonatomic, copy) dispatch_block_t layoutMenuToggle;
-
 @property (nonatomic, strong) UIViewController *frontViewController;
 @property (nonatomic, strong) UIViewController *rearViewController;
-
 @property (nonatomic, setter=setExpanded:, assign) BOOL isExpanded;
-
 @end
 
 @implementation HDContainerViewController {
     NSDictionary *_metrics;
     NSDictionary *_views;
+    
+    CGFloat _menuOffsetX;
+    
     BOOL _isExpanded;
 }
 
@@ -58,6 +54,8 @@ static const CGFloat MINIMUM_MENU_OFFSET_X = 228.0f;
     return self;
 }
 
+#pragma mark - Life cycle
+
 - (void)viewDidLoad
 {
     [super viewDidLoad];
@@ -68,9 +66,16 @@ static const CGFloat MINIMUM_MENU_OFFSET_X = 228.0f;
     [self.view addSubview:self.rearViewController.view];
     [self.view addSubview:self.frontViewController.view];
     
-    [self.rearViewController didMoveToParentViewController:self];
+    [self.rearViewController  didMoveToParentViewController:self];
     [self.frontViewController didMoveToParentViewController:self];
 }
+
+- (void)didReceiveMemoryWarning
+{
+    [super didReceiveMemoryWarning];
+}
+
+#pragma mark - Public
 
 - (void)setFrontMostViewController:(UIViewController *)controller
 {
@@ -126,6 +131,8 @@ static const CGFloat MINIMUM_MENU_OFFSET_X = 228.0f;
     [self setExpanded:!self.isExpanded];
 }
 
+#pragma mark - Private
+
 - (void)_closeAnimated:(BOOL)animated
 {
     dispatch_block_t closeAnimation = ^{
@@ -151,7 +158,7 @@ static const CGFloat MINIMUM_MENU_OFFSET_X = 228.0f;
 {
     dispatch_block_t expandAnimation = ^{
         CGRect rect = self.frontViewController.view.frame;
-        rect.origin.x = MAX(ceilf(kAnimationOffsetX), MINIMUM_MENU_OFFSET_X);
+        rect.origin.x = [HDHelper sideMenuOffsetX];
         self.frontViewController.view.frame = rect;
     };
     
@@ -166,11 +173,6 @@ static const CGFloat MINIMUM_MENU_OFFSET_X = 228.0f;
                          animations:expandAnimation
                          completion:nil];
     }
-}
-
-- (void)didReceiveMemoryWarning
-{
-    [super didReceiveMemoryWarning];
 }
 
 @end

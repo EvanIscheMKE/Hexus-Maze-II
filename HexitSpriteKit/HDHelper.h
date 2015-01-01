@@ -20,7 +20,8 @@
                                        sides:(NSInteger)sides
                                 cornerRadius:(CGFloat)cornerRadius;
 
-
++ (BOOL)isWideScreen;
++ (CGFloat)sideMenuOffsetX;
 + (void)entranceAnimationWithTiles:(NSArray *)tiles completion:(dispatch_block_t)completion;
 + (void)completionAnimationWithTiles:(NSArray *)tiles completion:(dispatch_block_t)completion;
 

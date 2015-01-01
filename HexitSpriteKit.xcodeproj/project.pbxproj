@@ -10,13 +10,13 @@
 		3824A5DD1A538C3D00788E0E /* Grid-84.json in Resources */ = {isa = PBXBuildFile; fileRef = 3824A5DC1A538C3D00788E0E /* Grid-84.json */; };
 		38658BE41A4F953300BE789E /* HDTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 38658BE31A4F953300BE789E /* HDTableViewCell.m */; };
 		38658C131A4FCF0F00BE789E /* HDAlertView.m in Sources */ = {isa = PBXBuildFile; fileRef = 38658C121A4FCF0F00BE789E /* HDAlertView.m */; };
-		38658C161A513A5400BE789E /* SKTTimingFunctions.m in Sources */ = {isa = PBXBuildFile; fileRef = 38658C151A513A5400BE789E /* SKTTimingFunctions.m */; };
 		386CF5D91A383A98006A8381 /* AudioToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 386CF5D81A383A98006A8381 /* AudioToolbox.framework */; };
 		386CF5DB1A383AFC006A8381 /* HDScene.m in Sources */ = {isa = PBXBuildFile; fileRef = 386CF5DA1A383AFC006A8381 /* HDScene.m */; };
 		386CF6291A3982BA006A8381 /* SKEmitterNode+EmitterAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 386CF6281A3982BA006A8381 /* SKEmitterNode+EmitterAdditions.m */; };
 		386CF62D1A3A250D006A8381 /* Mellowtron.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 386CF62C1A3A250D006A8381 /* Mellowtron.mp3 */; };
 		386CF62F1A3B6FA5006A8381 /* win.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 386CF62E1A3B6FA5006A8381 /* win.mp3 */; };
 		3874B9A61A20736000400CEB /* HDAlertNode.m in Sources */ = {isa = PBXBuildFile; fileRef = 3874B9A51A20736000400CEB /* HDAlertNode.m */; };
+		3877252A1A55025B00B06179 /* WhiteStar-@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 387725291A55025B00B06179 /* WhiteStar-@2x.png */; };
 		389E94F01A44A2F000F2DF05 /* HDGridScrollView.m in Sources */ = {isa = PBXBuildFile; fileRef = 389E94EF1A44A2F000F2DF05 /* HDGridScrollView.m */; };
 		389E94F61A47DE7F00F2DF05 /* CoreMotion.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 389E94F51A47DE7F00F2DF05 /* CoreMotion.framework */; };
 		389E94F81A488D5100F2DF05 /* Grid-76.json in Resources */ = {isa = PBXBuildFile; fileRef = 389E94F71A488D5100F2DF05 /* Grid-76.json */; };
@@ -196,8 +196,6 @@
 		38658BE31A4F953300BE789E /* HDTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HDTableViewCell.m; sourceTree = "<group>"; };
 		38658C111A4FCF0F00BE789E /* HDAlertView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HDAlertView.h; sourceTree = "<group>"; };
 		38658C121A4FCF0F00BE789E /* HDAlertView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HDAlertView.m; sourceTree = "<group>"; };
-		38658C141A513A5400BE789E /* SKTTimingFunctions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SKTTimingFunctions.h; sourceTree = "<group>"; };
-		38658C151A513A5400BE789E /* SKTTimingFunctions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SKTTimingFunctions.m; sourceTree = "<group>"; };
 		386CF5D81A383A98006A8381 /* AudioToolbox.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AudioToolbox.framework; path = System/Library/Frameworks/AudioToolbox.framework; sourceTree = SDKROOT; };
 		386CF5DA1A383AFC006A8381 /* HDScene.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HDScene.m; sourceTree = "<group>"; };
 		386CF6271A3982BA006A8381 /* SKEmitterNode+EmitterAdditions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "SKEmitterNode+EmitterAdditions.h"; sourceTree = "<group>"; };
@@ -206,6 +204,7 @@
 		386CF62E1A3B6FA5006A8381 /* win.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = win.mp3; sourceTree = "<group>"; };
 		3874B9A41A20736000400CEB /* HDAlertNode.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HDAlertNode.h; sourceTree = "<group>"; };
 		3874B9A51A20736000400CEB /* HDAlertNode.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HDAlertNode.m; sourceTree = "<group>"; };
+		387725291A55025B00B06179 /* WhiteStar-@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "WhiteStar-@2x.png"; sourceTree = "<group>"; };
 		389E94EE1A44A2F000F2DF05 /* HDGridScrollView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HDGridScrollView.h; sourceTree = "<group>"; };
 		389E94EF1A44A2F000F2DF05 /* HDGridScrollView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HDGridScrollView.m; sourceTree = "<group>"; };
 		389E94F51A47DE7F00F2DF05 /* CoreMotion.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreMotion.framework; path = System/Library/Frameworks/CoreMotion.framework; sourceTree = SDKROOT; };
@@ -588,6 +587,7 @@
 		38C0A8351A07251600C552F1 = {
 			isa = PBXGroup;
 			children = (
+				387725291A55025B00B06179 /* WhiteStar-@2x.png */,
 				38C0A8401A07251700C552F1 /* HexitSpriteKit */,
 				38C0A85A1A07251700C552F1 /* HexitSpriteKitTests */,
 				38C0A8671A07252E00C552F1 /* Frameworks */,
@@ -676,8 +676,6 @@
 				38C0A8711A07348400C552F1 /* SKColor+HDColor.m */,
 				386CF6271A3982BA006A8381 /* SKEmitterNode+EmitterAdditions.h */,
 				386CF6281A3982BA006A8381 /* SKEmitterNode+EmitterAdditions.m */,
-				38658C141A513A5400BE789E /* SKTTimingFunctions.h */,
-				38658C151A513A5400BE789E /* SKTTimingFunctions.m */,
 			);
 			name = Categories;
 			sourceTree = "<group>";
@@ -1000,6 +998,7 @@
 				38BDDCE31A20FA3A005035EE /* Grid-49.json in Resources */,
 				38C67D011A0ACE530038526C /* Grid-12.json in Resources */,
 				38C67D071A0ACE690038526C /* Grid-15.json in Resources */,
+				3877252A1A55025B00B06179 /* WhiteStar-@2x.png in Resources */,
 				38D4249B1A4F6C1A00FD21A2 /* D3.m4a in Resources */,
 				38BDDCF81A20FBAA005035EE /* Grid-58.json in Resources */,
 				38C67D171A0AE3C10038526C /* Grid-23.json in Resources */,
@@ -1073,7 +1072,6 @@
 				38F5A6BD1A08014F0036750A /* HDHexagon.m in Sources */,
 				389E94F01A44A2F000F2DF05 /* HDGridScrollView.m in Sources */,
 				38658BE41A4F953300BE789E /* HDTableViewCell.m in Sources */,
-				38658C161A513A5400BE789E /* SKTTimingFunctions.m in Sources */,
 				38C67CE31A0ABD050038526C /* HDHelper.m in Sources */,
 				38658C131A4FCF0F00BE789E /* HDAlertView.m in Sources */,
 				38C67D281A0AEA490038526C /* HDMapManager.m in Sources */,

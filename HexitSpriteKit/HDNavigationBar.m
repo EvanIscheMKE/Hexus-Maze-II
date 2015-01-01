@@ -8,10 +8,8 @@
 
 #import "HDNavigationBar.h"
 #import "UIColor+FlatColors.h"
+#import "HDHelper.h"
 
-static const CGFloat kSmallButtonSize  = 34.0f;
-static const CGFloat kLargeButtonSize  = 42.0f;
-static const CGFloat kInset            = 20.0f;
 @interface HDNavigationBar ()
 @property (nonatomic, strong) UIButton *navigationButton;
 @property (nonatomic, strong) UIButton *activityButton;
@@ -57,8 +55,8 @@ static const CGFloat kInset            = 20.0f;
     
     _views = NSDictionaryOfVariableBindings(toggle, share);
     
-    _metrics = @{ @"buttonHeight" : @(CGRectGetWidth([[UIScreen mainScreen] bounds]) < 321.0f ? kSmallButtonSize : kLargeButtonSize),
-                  @"inset"        : @(kInset) };
+    _metrics = @{ @"buttonHeight" : @(![HDHelper isWideScreen] ? kSmallButtonSize : kLargeButtonSize),
+                  @"inset"        : @(kButtonInset) };
     
     NSArray *toggleHorizontalConstraint = [NSLayoutConstraint constraintsWithVisualFormat:@"H:|-inset-[toggle(buttonHeight)]"
                                                                                   options:0

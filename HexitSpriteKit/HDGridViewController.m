@@ -40,13 +40,9 @@ static const CGFloat kDefaultPageControlHeight = 50.0f;
     NSDictionary *_metrics;
     NSDictionary *_views;
     NSMutableArray *_pageViews;
+    NSMutableArray *_imageViews;
     
     NSInteger _previousPage;
-}
-
-- (void)dealloc
-{
-    NSLog(@"goodbye");
 }
 
 - (void)viewDidLoad
@@ -235,10 +231,48 @@ static const CGFloat kDefaultPageControlHeight = 50.0f;
     return _pageViews;
 }
 
+- (NSArray *)_imageViewsFromScrollView:(UIScrollView *)scrollView
+{
+    if (_imageViews) {
+        return  _imageViews;
+    }
+    
+    _imageViews = [NSMutableArray array];
+    
+    NSMutableArray *hexagons   = [NSMutableArray array];
+    NSArray *viewsCorrespondingToProtocol = [[scrollView subviews] filteredArrayUsingPredicate:[NSPredicate predicateWithBlock:^BOOL(id evaluatedObject, NSDictionary *bindings) {
+        return [evaluatedObject conformsToProtocol:@protocol(HDGridScrollViewChild)];
+    }]];
+    
+    for (UIView *view in viewsCorrespondingToProtocol) {
+        NSArray *firstSubviews = view.subviews;
+        [hexagons addObjectsFromArray:[[firstSubviews firstObject] subviews]];
+    }
+
+    for (HDHexagonView *hexa in hexagons) {
+        if (hexa.imageView) {
+            [_imageViews addObject:hexa.imageView];
+        }
+    }
+    
+    return _imageViews;
+}
+
 #pragma mark - <UIScrollViewDelegate>
 
 - (void)scrollViewDidScroll:(HDGridScrollView *)scrollView
 {
+    CGFloat offset = fmod(ABS(scrollView.contentOffset.x), CGRectGetWidth(scrollView.bounds)) / CGRectGetWidth(scrollView.bounds);
+    if (offset > .5f) {
+        offset = 1 - offset;
+    }
+    
+    dispatch_async(dispatch_get_main_queue(), ^{
+        for (UIImageView *imageView in [self _imageViewsFromScrollView:scrollView]) {
+            imageView.transform = CGAffineTransformMakeScale(1.0f - offset, 1.0f - offset);
+        }
+    });
+    
     NSInteger page = 0;
     if (scrollView.isDragging || scrollView.isDecelerating){
         page = floor((self.scrollView.contentOffset.x - CGRectGetWidth(scrollView.bounds) / 2) / CGRectGetWidth(scrollView.bounds)) + 1;
@@ -252,7 +286,11 @@ static const CGFloat kDefaultPageControlHeight = 50.0f;
 
 - (void)scrollViewWillBeginDragging:(UIScrollView *)scrollView
 {
-    [[HDSoundManager sharedManager] playSound:HDSwipeSound];
+    dispatch_async(dispatch_get_main_queue(), ^{
+        if (scrollView.contentOffset.x >= 0) {
+            [[HDSoundManager sharedManager] playSound:HDSwipeSound];
+        }
+    });
 }
 
 @end

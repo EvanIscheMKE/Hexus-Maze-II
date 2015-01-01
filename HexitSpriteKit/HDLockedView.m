@@ -135,7 +135,7 @@ static const CGFloat kPadding = 4.0f;
         [[UIColor whiteColor] setFill];
         [[UIColor flatPeterRiverColor] setStroke];
         
-        CGRect nailFrame = CGRectMake(imageSize.width/2 - kPadding*5/2, imageSize.height/20, kPadding*5, kPadding*5);
+        CGRect nailFrame = CGRectMake(imageSize.width/2 - kPadding*8/2, imageSize.height/20, kPadding*8, kPadding*8);
         CGRect signFrame = CGRectMake(3.0f, imageSize.height/3.25, imageSize.width - 6.0f, imageSize.height/1.5f);
         
         UIBezierPath *leftString  = [UIBezierPath bezierPath];

@@ -12,8 +12,7 @@
 #import "HDSoundManager.h"
 #import "HDSettingsManager.h"
 #import "HDSwitch.h"
-
-static const CGFloat MINIMUM_MENU_OFFSET_X = 228.0f;
+#import "HDHelper.h"
 
 @interface HDRearViewController ()
 @property (nonatomic, strong) NSMutableArray *arrayOfButtons;
@@ -21,7 +20,7 @@ static const CGFloat MINIMUM_MENU_OFFSET_X = 228.0f;
 @property (nonatomic, strong) UIButton *map;
 @end
 
-@implementation HDRearViewController{
+@implementation HDRearViewController {
     NSDictionary *_views;
     NSDictionary *_metrics;
 }
@@ -71,16 +70,11 @@ static const CGFloat MINIMUM_MENU_OFFSET_X = 228.0f;
         case 2:
             [manager setVibe:!manager.vibe];
             [[HDSoundManager sharedManager] playSound:HDButtonSound];
-            if (manager.vibe) {
-                AudioServicesPlaySystemSound(kSystemSoundID_Vibrate);
-            }
+            if (manager.vibe) { AudioServicesPlaySystemSound(kSystemSoundID_Vibrate); }
             break;
         case 3:
             [manager setFx:!manager.fx];
             [[HDSoundManager sharedManager] playSound:HDButtonSound];
-            break;
-        default:
-            NSAssert(NO, @"%@",NSStringFromSelector(_cmd));
             break;
     }
 }
@@ -113,7 +107,7 @@ static const CGFloat MINIMUM_MENU_OFFSET_X = 228.0f;
 
 - (UIView *)_setupSwitches
 {
-    CGRect containerBounds = CGRectMake(0.0f, 0.0f, MAX(kAnimationOffsetX,MINIMUM_MENU_OFFSET_X) - (2 * 20.0f), 200.0f);
+    CGRect containerBounds = CGRectMake(0.0f, 0.0f, [HDHelper sideMenuOffsetX], 200.0f);
     UIView *container = [[UIView alloc] initWithFrame:containerBounds];
     [container setTranslatesAutoresizingMaskIntoConstraints:NO];
     
@@ -166,8 +160,8 @@ static const CGFloat MINIMUM_MENU_OFFSET_X = 228.0f;
                                @"buttonHeight": @(35.0f),
                                @"labelHeight" : @(16.0f),
                                @"margin"      : @(20.0f),
-                               @"inset"       : @(10.0f),
-                               @"buttonWidth" : @(75.0f) };
+                               @"inset"       : @(20.0f),
+                               @"buttonWidth" : @(80.0f) };
     
     
     NSString *constraintVerticalLeft = @"V:|[sound(buttonHeight)][labelOne(labelHeight)]-inset-[vibe(buttonHeight)][labelThree(labelHeight)]";
@@ -266,9 +260,9 @@ static const CGFloat MINIMUM_MENU_OFFSET_X = 228.0f;
     
     _views = NSDictionaryOfVariableBindings(retry, map, container);
     
-    _metrics = @{ @"inset"            : @20.0f,
-                  @"buttonHeight"     : @44.0f,
-                  @"buttonWidth"      : @(ceilf(MAX(kAnimationOffsetX, MINIMUM_MENU_OFFSET_X) - (20.0f * 2))), // 20 pixel inset both sides
+    _metrics = @{ @"inset"            : @40.0f,
+                  @"buttonHeight"     : @48.0f,
+                  @"buttonWidth"      : @(ceilf([HDHelper sideMenuOffsetX] - (40.0f * 2))),
                   @"originYAxis"      : @(CGRectGetHeight(self.view.bounds)/5.15f),
                   @"containerHeight"  : @280.0f };
     

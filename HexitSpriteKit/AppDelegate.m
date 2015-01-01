@@ -19,7 +19,7 @@
 #import "HDRearViewController.h"
 #import "HDContainerViewController.h"
 
-#define HEXUS_ID 898568105
+#define HEXUS_ID 945933714
 NSString * const iOS8AppStoreURLFormat = @"itms-apps://itunes.apple.com/app/id%d";
 
 NSString * const HDLeaderBoardIdentifierKey = @"LevelLeaderboard";

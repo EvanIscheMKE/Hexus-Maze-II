@@ -81,7 +81,7 @@
 
 - (void)setBackgroundColor:(UIColor *)backgroundColor
 {
-    NSAssert(NO, @"Use setFill and setStroke %@",NSStringFromSelector(_cmd));
+    NSAssert(NO, @"Use setFill: or setStroke: %@",NSStringFromSelector(_cmd));
 }
 
 - (void)setState:(HDHexagonState)state index:(NSInteger)index
@@ -93,6 +93,8 @@
             self.imageView.image = [UIImage imageNamed:@"Locked"];
             break;
         case HDHexagonStateUnlocked:
+            self.imageView = nil;
+            [self.imageView removeFromSuperview];
             self.hexaLayer.strokeColor = [[UIColor whiteColor] CGColor];
             self.indexLabel.textColor  = [UIColor whiteColor];
             self.indexLabel.text       = [NSString stringWithFormat:@"%lu", index];
@@ -112,9 +114,8 @@
             CGPoint imagePosition = self.imageView.center;
             imagePosition.y = CGRectGetHeight(self.bounds) * .25f;
             
-            self.imageView.center    = imagePosition;
-            self.imageView.image     = [self _star];
-            self.imageView.transform = CGAffineTransformMakeRotation(M_PI);
+            self.imageView.center = imagePosition;
+            self.imageView.image  = [UIImage imageNamed:@"WhiteStar-"];
             
             break;
         default:
@@ -126,19 +127,26 @@
 - (UIImage *)_star
 {
     // Create the star little less that half the size of bounds
-    CGSize _startSize = CGSizeMake(CGRectGetHeight(self.bounds)/2.25f, CGRectGetHeight(self.bounds)/2.25f);
-    UIGraphicsBeginImageContextWithOptions(_startSize, NO, [[UIScreen mainScreen] scale]);
-    
-    [[UIColor whiteColor] setFill];
-    
-    CGPathRef starRef = [HDHelper starPathForBounds:CGRectMake(0.0f, 0.0f, _startSize.width, _startSize.height)];
-    UIBezierPath *starPath = [UIBezierPath bezierPathWithCGPath:starRef];
+    static UIImage *star = nil;
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        
+        NSLog(@"%f",CGRectGetHeight(self.bounds)/2.25f);
+        
+        CGSize _startSize = CGSizeMake(CGRectGetHeight(self.bounds)/2.25f, CGRectGetHeight(self.bounds)/2.25f);
+        UIGraphicsBeginImageContextWithOptions(_startSize, NO, [[UIScreen mainScreen] scale]);
+        
+        [[UIColor whiteColor] setFill];
+        
+        CGPathRef starRef = [HDHelper starPathForBounds:CGRectMake(0.0f, 0.0f, _startSize.width, _startSize.height)];
+        UIBezierPath *starPath = [UIBezierPath bezierPathWithCGPath:starRef];
+        
+        [starPath fill];
+        
+        star = UIGraphicsGetImageFromCurrentImageContext();
+        UIGraphicsEndImageContext();
 
-    [starPath fill];
-    
-    UIImage *star = UIGraphicsGetImageFromCurrentImageContext();
-    UIGraphicsEndImageContext();
-    
+    });
     return star;
 }
 

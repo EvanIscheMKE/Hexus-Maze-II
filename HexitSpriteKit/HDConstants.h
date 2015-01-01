@@ -45,6 +45,11 @@ extern NSString * const HDD3;
 extern NSString * const HDE3;
 extern NSString * const HDF3;
 
+static const CGFloat kSmallButtonSize  = 34.0f;
+static const CGFloat kLargeButtonSize  = 42.0f;
+static const CGFloat kButtonInset      = 20.0f;
+
+
 #define GILLSANS(x)       [UIFont fontWithName:@"GillSans" size:x]
 #define GILLSANS_LIGHT(x) [UIFont fontWithName:@"GillSans-Light" size:x]
 

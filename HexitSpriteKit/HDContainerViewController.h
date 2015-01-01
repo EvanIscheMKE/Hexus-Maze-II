@@ -8,9 +8,8 @@
 
 #import <UIKit/UIKit.h>
 
-#define kAnimationOffsetX [[UIScreen mainScreen] bounds].size.width / 2 + 40.0f // UGGLYY
-
 @class HDContainerViewController;
+
 
 @interface UIViewController (HDMenuViewController)
 - (HDContainerViewController *)containerViewController;

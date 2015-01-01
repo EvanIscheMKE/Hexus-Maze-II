@@ -253,7 +253,7 @@ static const CGFloat kTileHeightInsetMultiplier = .845f;
         
         self.animating = YES;
         
-        [self runAction:self.completionZing withKey:HDSoundkey];
+        [self runAction:self.completionZing withKey:HDSoundActionKey];
         [tile.node runAction:[SKAction scaleTo:.9f duration:.1f] completion:^{
             [tile.node runAction:[SKAction scaleTo:1.0f duration:.1f] completion:^{
                 
