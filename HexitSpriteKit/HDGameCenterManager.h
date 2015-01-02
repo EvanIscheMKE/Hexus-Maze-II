@@ -13,7 +13,6 @@
 + (HDGameCenterManager *)sharedManager;
 - (void)authenticateGameCenter;
 - (void)reportLevelCompletion:(int64_t)level;
-- (void)submitAchievementWithIdentifier:(NSString *)identifier;
 
 @end
 

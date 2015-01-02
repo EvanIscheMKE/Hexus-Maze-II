@@ -89,7 +89,7 @@ static const NSUInteger kHexaCount = 4;
         hexa.userInteractionEnabled = YES;
         
         CAShapeLayer *hexaLayer = (CAShapeLayer *)hexa.layer;
-        hexaLayer.fillColor = [[UIColor flatMidnightBlueColor] CGColor];
+        hexaLayer.fillColor = [[UIColor flatWetAsphaltColor] CGColor];
         
         switch (index) {
             case 0:
@@ -279,7 +279,7 @@ static const NSUInteger kHexaCount = 4;
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    self.view.backgroundColor = [UIColor flatMidnightBlueColor];
+    self.view.backgroundColor = [UIColor flatWetAsphaltColor];
     
     CGFloat size = kHexaSize;
     CGFloat pad  = kPadding;
@@ -301,7 +301,7 @@ static const NSUInteger kHexaCount = 4;
         hexagon.tag     = i;
         hexagon.enabled = (i == 0);
         hexagon.center  = centerPoint;
-        hexagon.indexLabel.textColor = [UIColor flatMidnightBlueColor];
+        hexagon.indexLabel.textColor = [UIColor flatWetAsphaltColor];
         hexagon.indexLabel.font      = GILLSANS(CGRectGetMidX(hexagon.bounds));
         [hexaArray addObject:hexagon];
         [self.view addSubview:hexagon];
@@ -343,9 +343,9 @@ static const NSUInteger kHexaCount = 4;
 
 - (void)viewWillAppear:(BOOL)animated
 {
-     _bannerIsVisible = NO;
     [super viewWillAppear:animated];
     [self.welcomeView prepareForIntroAnimations];
+     _bannerIsVisible = self.bannerView.isBannerLoaded;
 }
 
 - (void)viewDidAppear:(BOOL)animated

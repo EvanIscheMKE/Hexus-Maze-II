@@ -46,7 +46,7 @@
 
 - (void)_setup
 {
-    [self.hexaLayer setFillColor:[[UIColor flatMidnightBlueColor] CGColor]];
+    [self.hexaLayer setFillColor:[[UIColor flatWetAsphaltColor] CGColor]];
     [self.hexaLayer setPath:[[HDHelper roundedPolygonPathWithRect:self.bounds lineWidth:0 sides:6 cornerRadius:2.0f] CGPath]];
     [self.hexaLayer setStrokeColor:[_hexaStroke CGColor]];
     [self.hexaLayer setLineWidth:8.0f];
@@ -87,67 +87,31 @@
 - (void)setState:(HDHexagonState)state index:(NSInteger)index
 {
     [self setState:state];
-    switch (state) {
-        case HDHexagonStateLocked:
-            self.hexaLayer.strokeColor = [[UIColor flatEmeraldColor] CGColor];
-            self.imageView.image = [UIImage imageNamed:@"Locked"];
-            break;
-        case HDHexagonStateUnlocked:
-            self.imageView = nil;
-            [self.imageView removeFromSuperview];
-            self.hexaLayer.strokeColor = [[UIColor whiteColor] CGColor];
-            self.indexLabel.textColor  = [UIColor whiteColor];
-            self.indexLabel.text       = [NSString stringWithFormat:@"%lu", index];
-            break;
-        case HDHexagonStateCompleted:
-            self.hexaLayer.fillColor  = [[UIColor flatPeterRiverColor] CGColor];
-            self.hexaLayer.strokeColor = self.hexaLayer.fillColor;
-            self.indexLabel.textColor = [UIColor flatMidnightBlueColor];
-            self.indexLabel.text      = [NSString stringWithFormat:@"%lu", index];
-            
-            // Move text down to make room for completion start
-            CGPoint labelPosition = self.indexLabel.center;
-            labelPosition.y = CGRectGetHeight(self.bounds) * .7f;
-            self.indexLabel.center = labelPosition;
-            
-            // Move imageviews center point up to make room for image
-            CGPoint imagePosition = self.imageView.center;
-            imagePosition.y = CGRectGetHeight(self.bounds) * .25f;
-            
-            self.imageView.center = imagePosition;
-            self.imageView.image  = [UIImage imageNamed:@"WhiteStar-"];
-            
-            break;
-        default:
-            NSAssert(NO, @"%@",NSStringFromSelector(_cmd));
-            break;
+    
+    if (state != HDHexagonStateLocked) {
+        self.hexaLayer.fillColor  = [[UIColor flatPeterRiverColor] CGColor];
+        self.hexaLayer.strokeColor = self.hexaLayer.fillColor;
+        self.indexLabel.textColor = [UIColor flatWetAsphaltColor];
+        self.indexLabel.text      = [NSString stringWithFormat:@"%lu", index];
+        
+        // Move text down to make room for completion start
+        CGPoint labelPosition = self.indexLabel.center;
+        labelPosition.y = CGRectGetHeight(self.bounds) * .7f;
+        self.indexLabel.center = labelPosition;
+        
+        // Move imageviews center point up to make room for image
+        CGPoint imagePosition = self.imageView.center;
+        imagePosition.y = CGRectGetHeight(self.bounds) * .25f;
+        
+        self.imageView.center = imagePosition;
+        self.imageView.image  = [UIImage imageNamed:(state == HDHexagonStateCompleted) ? @"WhiteStar-" : @"BlueStar-"];
+        
+        return;
     }
-}
+    
+    self.hexaLayer.strokeColor = [[UIColor flatEmeraldColor] CGColor];
+    self.imageView.image = [UIImage imageNamed:@"Locked"];
 
-- (UIImage *)_star
-{
-    // Create the star little less that half the size of bounds
-    static UIImage *star = nil;
-    static dispatch_once_t onceToken;
-    dispatch_once(&onceToken, ^{
-        
-        NSLog(@"%f",CGRectGetHeight(self.bounds)/2.25f);
-        
-        CGSize _startSize = CGSizeMake(CGRectGetHeight(self.bounds)/2.25f, CGRectGetHeight(self.bounds)/2.25f);
-        UIGraphicsBeginImageContextWithOptions(_startSize, NO, [[UIScreen mainScreen] scale]);
-        
-        [[UIColor whiteColor] setFill];
-        
-        CGPathRef starRef = [HDHelper starPathForBounds:CGRectMake(0.0f, 0.0f, _startSize.width, _startSize.height)];
-        UIBezierPath *starPath = [UIBezierPath bezierPathWithCGPath:starRef];
-        
-        [starPath fill];
-        
-        star = UIGraphicsGetImageFromCurrentImageContext();
-        UIGraphicsEndImageContext();
-
-    });
-    return star;
 }
 
 @end

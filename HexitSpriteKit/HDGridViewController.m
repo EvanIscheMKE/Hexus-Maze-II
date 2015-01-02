@@ -18,7 +18,6 @@
 #import "HDGridScrollView.h"
 #import "UIColor+FlatColors.h"
 #import "HDGridViewController.h"
-#import "HDContainerViewController.h"
 #import "HDLevelsViewController.h"
 #import "HDLockedViewController.h"
 
@@ -47,7 +46,7 @@ static const CGFloat kDefaultPageControlHeight = 50.0f;
 
 - (void)viewDidLoad
 {
-    self.view.backgroundColor = [UIColor flatMidnightBlueColor];
+    self.view.backgroundColor = [UIColor flatWetAsphaltColor];
     self.view.clipsToBounds = YES;
     [super viewDidLoad];
     [self _setup];
@@ -86,11 +85,6 @@ static const CGFloat kDefaultPageControlHeight = 50.0f;
 
 #pragma mark - Private
 
-- (HDContainerViewController *)containerController
-{
-    return self.containerViewController;
-}
-
 - (void)_setup
 {
     NSUInteger numberOfPages = [self pageViewsForGridScrollView:self.scrollView].count;
@@ -114,8 +108,8 @@ static const CGFloat kDefaultPageControlHeight = 50.0f;
     CGRect containerFrame = CGRectMake(0.0f, -kDefaultContainerHeight, CGRectGetWidth(self.view.bounds), kDefaultContainerHeight);
     self.container = [HDNavigationBar viewWithToggleImage:[UIImage imageNamed:@"Grid"] activityImage:[UIImage imageNamed:@"Play"]];
     self.container.frame = containerFrame;
-    [[self.container.subviews firstObject] addTarget:[self containerController]
-                                              action:@selector(toggleMenuViewController)
+    [[self.container.subviews firstObject] addTarget:self.navigationController
+                                              action:@selector(popViewControllerAnimated:)
                                     forControlEvents:UIControlEventTouchUpInside];
     [[self.container.subviews lastObject] addTarget:self
                                               action:@selector(_beginLastUnlockedLevel)

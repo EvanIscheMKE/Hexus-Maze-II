@@ -17,10 +17,5 @@
 - (void)presentContainerViewController;
 - (void)rateHEXUS;
 
-- (IBAction)restartCurrentLevel:(id)sender;
-- (IBAction)popToRootViewController:(id)sender;
-- (IBAction)animateToLevelViewController:(id)sender;
-- (IBAction)openAcheivementsController:(id)sender;
-
 @end
 

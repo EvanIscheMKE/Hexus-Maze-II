@@ -163,7 +163,7 @@ static const CGFloat cornerRadius = 15.0f;
     self.levelLabel.fontSize = CGRectGetWidth(self.frame)/14;
     
     for (SKLabelNode *label in @[self.descriptionLabel, self.levelLabel]) {
-        label.fontColor = [SKColor flatMidnightBlueColor];
+        label.fontColor = [SKColor flatWetAsphaltColor];
         label.horizontalAlignmentMode = SKLabelHorizontalAlignmentModeCenter;
         label.verticalAlignmentMode = SKLabelVerticalAlignmentModeCenter;
         [self.menuView addChild:label];

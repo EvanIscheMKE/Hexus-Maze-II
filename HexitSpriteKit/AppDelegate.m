@@ -16,16 +16,14 @@
 #import "HDGameViewController.h"
 #import "HDGridViewController.h"
 #import "HDWelcomeViewController.h"
-#import "HDRearViewController.h"
-#import "HDContainerViewController.h"
 
 #define HEXUS_ID 945933714
 NSString * const iOS8AppStoreURLFormat = @"itms-apps://itunes.apple.com/app/id%d";
 
 NSString * const HDLeaderBoardIdentifierKey = @"LevelLeaderboard";
 
-@interface AppDelegate ()<HDContainerViewControllerDelegate, GKGameCenterControllerDelegate>
-@property (nonatomic, strong) HDContainerViewController *containerController;
+@interface AppDelegate ()<GKGameCenterControllerDelegate>
+@property (nonatomic, strong) UINavigationController *controller;
 @end
 
 @implementation AppDelegate
@@ -34,8 +32,11 @@ NSString * const HDLeaderBoardIdentifierKey = @"LevelLeaderboard";
 {
     application.statusBarHidden = YES;
     
+    self.controller = [[UINavigationController alloc] initWithRootViewController:[HDWelcomeViewController new]];
+    self.controller.navigationBarHidden = YES;
+    
      self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
-    [self.window setRootViewController:[HDWelcomeViewController new]];
+    [self.window setRootViewController:self.controller];
     [self.window makeKeyAndVisible];
     
     [self _setup];
@@ -60,11 +61,7 @@ NSString * const HDLeaderBoardIdentifierKey = @"LevelLeaderboard";
 
 - (void)presentContainerViewController
 {
-    self.containerController = [[HDContainerViewController alloc] initWithFrontViewController:[HDGridViewController new]
-                                                                           rearViewController:[HDRearViewController new]];
-    self.containerController.delegate = self;
-    
-    [self.window.rootViewController presentViewController:self.containerController animated:NO completion:nil];
+    [self.controller pushViewController:[HDGridViewController new] animated:NO];
 }
 
 - (void)presentGameCenterControllerForState:(GKGameCenterViewControllerState)state
@@ -73,59 +70,17 @@ NSString * const HDLeaderBoardIdentifierKey = @"LevelLeaderboard";
     controller.gameCenterDelegate    = self;
     controller.leaderboardIdentifier = HDLeaderBoardIdentifierKey;
     controller.viewState             = state;
-    [self.containerController presentViewController:controller animated:YES completion:nil];
+    [self.controller presentViewController:controller animated:YES completion:nil];
 }
 
 - (void)beginGameWithLevel:(NSInteger)level
 {
-    [self.containerController setFrontMostViewController:[[HDGameViewController alloc] initWithLevel:level]];
-}
-
-- (IBAction)restartCurrentLevel:(id)sender
-{
-    [[HDSoundManager sharedManager] playSound:HDButtonSound];
-    if (self.containerController.isExpanded) {
-        [self.containerController toggleMenuViewControllerWithCompletion:^{
-             [(HDGameViewController *)self.containerController.frontViewController restartGame];
-        }];
-    }
-}
-
-- (IBAction)popToRootViewController:(id)sender
-{
-    if (self.containerController.isExpanded) {
-        [self.containerController toggleMenuViewControllerWithCompletion:^{
-            if ([self.containerController.frontViewController isKindOfClass:[HDGridViewController class]]) {
-                HDGridViewController *controller = (HDGridViewController *)self.containerController.frontViewController;
-                [controller performExitAnimationWithCompletion:^{
-                    [self.window.rootViewController dismissViewControllerAnimated:NO completion:nil];
-                }];
-            }
-        }];
-    }
-}
-
-- (IBAction)animateToLevelViewController:(id)sender
-{
-    if (self.containerController.isExpanded) {
-        [self.containerController toggleMenuViewControllerWithCompletion:^{
-            if ([self.containerController.frontViewController isKindOfClass:[HDGameViewController class]]) {
-                HDGameViewController *controller = (HDGameViewController *)self.containerController.frontViewController;
-                [controller performExitAnimationWithCompletion:^{
-                    [self.containerController setFrontMostViewController:[HDGridViewController new]];
-                }];
-            }
-        }];
-    }
+    [self.controller pushViewController:[[HDGameViewController alloc] initWithLevel:level] animated:YES];
 }
 
 - (IBAction)openAcheivementsController:(id)sender
 {
-    if (self.containerController.isExpanded) {
-        [self.containerController toggleMenuViewControllerWithCompletion:^{
-            [self presentGameCenterControllerForState:GKGameCenterViewControllerStateAchievements];
-        }];
-    }
+    [self presentGameCenterControllerForState:GKGameCenterViewControllerStateAchievements];
 }
 
 - (void)rateHEXUS
@@ -139,7 +94,7 @@ NSString * const HDLeaderBoardIdentifierKey = @"LevelLeaderboard";
 {
     [[HDSoundManager sharedManager] playSound:HDButtonSound];
     
-    NSString *shareText = [NSString stringWithFormat:@"I just completed level %lu on HEXUS",index];
+    NSString *shareText = [NSString stringWithFormat:@"I just completed level %lu on Hexus",index];
     
     NSArray *activityItems = @[shareText, [self _screenshotOfFrontViewController]];
     UIActivityViewController *controller = [[UIActivityViewController alloc] initWithActivityItems:activityItems
@@ -153,7 +108,7 @@ NSString * const HDLeaderBoardIdentifierKey = @"LevelLeaderboard";
                                          UIActivityTypePostToTencentWeibo,
                                          UIActivityTypeAirDrop];
     
-    [self.containerController presentViewController:controller animated:YES completion:nil];
+    [self.controller presentViewController:controller animated:YES completion:nil];
 }
 
 - (UIImage *)_screenshotOfFrontViewController
@@ -161,7 +116,7 @@ NSString * const HDLeaderBoardIdentifierKey = @"LevelLeaderboard";
     CGRect bounds = [[UIScreen mainScreen] bounds];
     UIGraphicsBeginImageContextWithOptions(bounds.size, YES, [[UIScreen mainScreen] scale]);
     
-    [self.containerController.frontViewController.view drawViewHierarchyInRect:bounds afterScreenUpdates:YES];
+    [self.controller.view drawViewHierarchyInRect:bounds afterScreenUpdates:YES];
     
     UIImage *screenShot = UIGraphicsGetImageFromCurrentImageContext();
     UIGraphicsEndImageContext();
@@ -173,47 +128,7 @@ NSString * const HDLeaderBoardIdentifierKey = @"LevelLeaderboard";
 
 - (void)gameCenterViewControllerDidFinish:(GKGameCenterViewController *)gameCenterViewController
 {
-    [self.containerController dismissViewControllerAnimated:YES completion:nil];
-}
-
-#pragma mark - <HDContainerViewControllerDelegate>
-
-- (void)container:(HDContainerViewController *)container willChangeExpandedState:(BOOL)expanded
-{
-    if (expanded) {
-        if ([container.frontViewController isKindOfClass:[HDGameViewController class]]) {
-            [[(SKView *)container.frontViewController.view scene] setPaused:YES];
-        } else {
-            for (id subView in container.frontViewController.view.subviews) {
-                if ([subView isKindOfClass:[UIScrollView class]]) {
-                    [subView setUserInteractionEnabled:NO];
-                    break;
-                }
-            }
-        }
-    } else {
-        if ([container.frontViewController isKindOfClass:[HDGameViewController class]]) {
-            [[(SKView *)container.frontViewController.view scene] setPaused:NO];
-        } else {
-            for (id subView in container.frontViewController.view.subviews) {
-                if ([subView isKindOfClass:[UIScrollView class]]) {
-                    [subView setUserInteractionEnabled:YES];
-                    break;
-                }
-            }
-        }
-    }
-}
-
-- (void)container:(HDContainerViewController *)container
-transitionedFromController:(UIViewController *)fromController
-     toController:(UIViewController *)toController
-{
-    if ([fromController isKindOfClass:[HDGridViewController class]] && [toController isKindOfClass:[HDGameViewController class]]) {
-        [(HDRearViewController *)self.containerController.rearViewController setGameInterfaceHidden:NO];
-    } else if ([toController isKindOfClass:[HDGridViewController class]] && [fromController isKindOfClass:[HDGameViewController class]]) {
-        [(HDRearViewController *)self.containerController.rearViewController setGameInterfaceHidden:YES];
-    }
+    [self.controller dismissViewControllerAnimated:YES completion:nil];
 }
 
 #pragma mark - <UIApplicationDelegate>

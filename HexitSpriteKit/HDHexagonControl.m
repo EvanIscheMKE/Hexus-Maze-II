@@ -35,7 +35,7 @@ static const CGFloat kSmallPageSpacing     = 28.0f;
         _kCurrentPageSize = _isWideScreen ? kLargeCurrentPageSize : kSmallCurrentPageSize;
         _kPageSpacing = _isWideScreen ? kLargePageSpacing : kSmallPageSpacing;
         
-        self.backgroundColor = [UIColor flatMidnightBlueColor];
+        self.backgroundColor = [UIColor flatWetAsphaltColor];
         self.currentPageTintColor = [UIColor whiteColor];
         self.tintColor = [UIColor whiteColor];
     }

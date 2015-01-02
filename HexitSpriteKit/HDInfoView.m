@@ -59,7 +59,7 @@ NSString * const tableViewIdentifier = @"identifer";
     
     CGRect tableViewFrame = CGRectInset(self.bounds, 2.0f, 50.0f);
      self.tableView = [[UITableView alloc] initWithFrame:tableViewFrame];
-     self.tableView.backgroundColor = [UIColor flatMidnightBlueColor];
+     self.tableView.backgroundColor = [UIColor flatWetAsphaltColor];
      self.tableView.showsVerticalScrollIndicator = NO;
      self.tableView.rowHeight = CGRectGetHeight(CGRectInset(self.bounds, 0.0f, 50.0f))/4;
     [self.tableView registerClass:[HDTableViewCell class] forCellReuseIdentifier:tableViewIdentifier];

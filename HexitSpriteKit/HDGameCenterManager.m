@@ -10,7 +10,7 @@
 
 #import "HDGameCenterManager.h"
 
-NSString * const LEADERBOARDID_KEY = @"LevelLeaderboard";
+NSString * const HDLeaderBoardKey = @"LevelLeaderboard";
 
 @implementation HDGameCenterManager
 
@@ -42,12 +42,10 @@ NSString * const LEADERBOARDID_KEY = @"LevelLeaderboard";
 
 - (void)reportLevelCompletion:(int64_t)level
 {
-    if (level % 15 == 0) {
-        [self submitAchievementWithIdentifier:[NSString stringWithFormat:@"LevelSet%lld",level/10]];
-    }
+    [self submitAchievementForLevel:level];
     
     if ([GKLocalPlayer localPlayer].isAuthenticated) {
-        GKScore *completedLevel = [[GKScore alloc] initWithLeaderboardIdentifier:LEADERBOARDID_KEY];
+        GKScore *completedLevel = [[GKScore alloc] initWithLeaderboardIdentifier:HDLeaderBoardKey];
         completedLevel.value = level;
         [GKScore reportScores:@[completedLevel] withCompletionHandler:^(NSError *error) {
             if (error) {
@@ -57,12 +55,21 @@ NSString * const LEADERBOARDID_KEY = @"LevelLeaderboard";
     }
 }
 
-- (void)submitAchievementWithIdentifier:(NSString *)identifier
+- (void)submitAchievementForLevel:(int64_t)level
 {
-    GKAchievement *scoreAchievement = [[GKAchievement alloc] initWithIdentifier:identifier];
-    scoreAchievement.showsCompletionBanner = YES;
-    scoreAchievement.percentComplete = 100;
+    NSInteger identifierIndex  = ceilf(level / 14.0f);
+    NSInteger percentCompleted = ceilf((level % 14) / 14.0f * 100);
     
+    if (percentCompleted == 0) {
+        percentCompleted += 100;
+    }
+    
+    NSLog(@"Level:%lld//Index:%zd//Complete:%zd",level, identifierIndex, percentCompleted);
+    
+    NSString *identifier = [NSString stringWithFormat:@"Achievement%zd",identifierIndex];
+    GKAchievement *scoreAchievement = [[GKAchievement alloc] initWithIdentifier:identifier];
+    scoreAchievement.showsCompletionBanner = (percentCompleted == 100);
+    scoreAchievement.percentComplete = percentCompleted;
     [GKAchievement reportAchievements:@[scoreAchievement] withCompletionHandler:^(NSError *error) {
         if (error != nil) {
             NSLog(@"%@",[error localizedDescription]);

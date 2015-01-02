@@ -17,6 +17,7 @@
 		386CF62F1A3B6FA5006A8381 /* win.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 386CF62E1A3B6FA5006A8381 /* win.mp3 */; };
 		3874B9A61A20736000400CEB /* HDAlertNode.m in Sources */ = {isa = PBXBuildFile; fileRef = 3874B9A51A20736000400CEB /* HDAlertNode.m */; };
 		3877252A1A55025B00B06179 /* WhiteStar-@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 387725291A55025B00B06179 /* WhiteStar-@2x.png */; };
+		3877252C1A55562E00B06179 /* BlueStar-@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 3877252B1A55562E00B06179 /* BlueStar-@2x.png */; };
 		389E94F01A44A2F000F2DF05 /* HDGridScrollView.m in Sources */ = {isa = PBXBuildFile; fileRef = 389E94EF1A44A2F000F2DF05 /* HDGridScrollView.m */; };
 		389E94F61A47DE7F00F2DF05 /* CoreMotion.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 389E94F51A47DE7F00F2DF05 /* CoreMotion.framework */; };
 		389E94F81A488D5100F2DF05 /* Grid-76.json in Resources */ = {isa = PBXBuildFile; fileRef = 389E94F71A488D5100F2DF05 /* Grid-76.json */; };
@@ -97,7 +98,6 @@
 		38C122481A2C519D00224B33 /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 38C122471A2C519D00224B33 /* QuartzCore.framework */; };
 		38C2E13B1A2671F3008D5F33 /* HDLevelGenerator.m in Sources */ = {isa = PBXBuildFile; fileRef = 38C2E13A1A2671F3008D5F33 /* HDLevelGenerator.m */; };
 		38C67CD71A0AB8D80038526C /* HDWelcomeViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 38C67CD61A0AB8D80038526C /* HDWelcomeViewController.m */; };
-		38C67CDA1A0AB8FF0038526C /* HDContainerViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 38C67CD91A0AB8FF0038526C /* HDContainerViewController.m */; };
 		38C67CDD1A0AB9350038526C /* UIColor+FlatColors.m in Sources */ = {isa = PBXBuildFile; fileRef = 38C67CDC1A0AB9350038526C /* UIColor+FlatColors.m */; };
 		38C67CE31A0ABD050038526C /* HDHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = 38C67CE21A0ABD050038526C /* HDHelper.m */; };
 		38C67CE81A0ABF0E0038526C /* HDConstants.m in Sources */ = {isa = PBXBuildFile; fileRef = 38C67CE71A0ABF0E0038526C /* HDConstants.m */; };
@@ -134,7 +134,6 @@
 		38C67D2C1A0AEBD50038526C /* HDGameCenterManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 38C67D2B1A0AEBD50038526C /* HDGameCenterManager.m */; };
 		38C67D2F1A0AF3960038526C /* NSMutableArray+UniqueAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 38C67D2E1A0AF3960038526C /* NSMutableArray+UniqueAdditions.m */; };
 		38C67D311A0B149F0038526C /* 104947__glaneur-de-sons__bubble-8.wav in Resources */ = {isa = PBXBuildFile; fileRef = 38C67D301A0B149F0038526C /* 104947__glaneur-de-sons__bubble-8.wav */; };
-		38CA40241A1485380024D6BF /* HDRearViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 38CA40231A1485380024D6BF /* HDRearViewController.m */; };
 		38D4247A1A4F6C1A00FD21A2 /* B2.m4a in Resources */ = {isa = PBXBuildFile; fileRef = 38D424571A4F6C1A00FD21A2 /* B2.m4a */; };
 		38D4247B1A4F6C1A00FD21A2 /* A2.m4a in Resources */ = {isa = PBXBuildFile; fileRef = 38D424581A4F6C1A00FD21A2 /* A2.m4a */; };
 		38D4247C1A4F6C1A00FD21A2 /* G2.m4a in Resources */ = {isa = PBXBuildFile; fileRef = 38D424591A4F6C1A00FD21A2 /* G2.m4a */; };
@@ -205,6 +204,7 @@
 		3874B9A41A20736000400CEB /* HDAlertNode.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HDAlertNode.h; sourceTree = "<group>"; };
 		3874B9A51A20736000400CEB /* HDAlertNode.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HDAlertNode.m; sourceTree = "<group>"; };
 		387725291A55025B00B06179 /* WhiteStar-@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "WhiteStar-@2x.png"; sourceTree = "<group>"; };
+		3877252B1A55562E00B06179 /* BlueStar-@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "BlueStar-@2x.png"; sourceTree = "<group>"; };
 		389E94EE1A44A2F000F2DF05 /* HDGridScrollView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HDGridScrollView.h; sourceTree = "<group>"; };
 		389E94EF1A44A2F000F2DF05 /* HDGridScrollView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HDGridScrollView.m; sourceTree = "<group>"; };
 		389E94F51A47DE7F00F2DF05 /* CoreMotion.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreMotion.framework; path = System/Library/Frameworks/CoreMotion.framework; sourceTree = SDKROOT; };
@@ -307,8 +307,6 @@
 		38C2E13A1A2671F3008D5F33 /* HDLevelGenerator.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HDLevelGenerator.m; sourceTree = "<group>"; };
 		38C67CD51A0AB8D80038526C /* HDWelcomeViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HDWelcomeViewController.h; sourceTree = "<group>"; };
 		38C67CD61A0AB8D80038526C /* HDWelcomeViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HDWelcomeViewController.m; sourceTree = "<group>"; };
-		38C67CD81A0AB8FF0038526C /* HDContainerViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HDContainerViewController.h; sourceTree = "<group>"; };
-		38C67CD91A0AB8FF0038526C /* HDContainerViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HDContainerViewController.m; sourceTree = "<group>"; };
 		38C67CDB1A0AB9350038526C /* UIColor+FlatColors.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIColor+FlatColors.h"; sourceTree = "<group>"; };
 		38C67CDC1A0AB9350038526C /* UIColor+FlatColors.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIColor+FlatColors.m"; sourceTree = "<group>"; };
 		38C67CE11A0ABD050038526C /* HDHelper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HDHelper.h; sourceTree = "<group>"; };
@@ -352,8 +350,6 @@
 		38C67D2D1A0AF3960038526C /* NSMutableArray+UniqueAdditions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSMutableArray+UniqueAdditions.h"; sourceTree = "<group>"; };
 		38C67D2E1A0AF3960038526C /* NSMutableArray+UniqueAdditions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSMutableArray+UniqueAdditions.m"; sourceTree = "<group>"; };
 		38C67D301A0B149F0038526C /* 104947__glaneur-de-sons__bubble-8.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = "104947__glaneur-de-sons__bubble-8.wav"; sourceTree = "<group>"; };
-		38CA40221A1485380024D6BF /* HDRearViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HDRearViewController.h; sourceTree = "<group>"; };
-		38CA40231A1485380024D6BF /* HDRearViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HDRearViewController.m; sourceTree = "<group>"; };
 		38D424571A4F6C1A00FD21A2 /* B2.m4a */ = {isa = PBXFileReference; lastKnownFileType = file; path = B2.m4a; sourceTree = "<group>"; };
 		38D424581A4F6C1A00FD21A2 /* A2.m4a */ = {isa = PBXFileReference; lastKnownFileType = file; path = A2.m4a; sourceTree = "<group>"; };
 		38D424591A4F6C1A00FD21A2 /* G2.m4a */ = {isa = PBXFileReference; lastKnownFileType = file; path = G2.m4a; sourceTree = "<group>"; };
@@ -588,6 +584,7 @@
 			isa = PBXGroup;
 			children = (
 				387725291A55025B00B06179 /* WhiteStar-@2x.png */,
+				3877252B1A55562E00B06179 /* BlueStar-@2x.png */,
 				38C0A8401A07251700C552F1 /* HexitSpriteKit */,
 				38C0A85A1A07251700C552F1 /* HexitSpriteKitTests */,
 				38C0A8671A07252E00C552F1 /* Frameworks */,
@@ -718,10 +715,6 @@
 				38C67CD61A0AB8D80038526C /* HDWelcomeViewController.m */,
 				38BAF53F1A1FFC64004D5660 /* HDGridViewController.h */,
 				38BAF5401A1FFC64004D5660 /* HDGridViewController.m */,
-				38C67CD81A0AB8FF0038526C /* HDContainerViewController.h */,
-				38C67CD91A0AB8FF0038526C /* HDContainerViewController.m */,
-				38CA40221A1485380024D6BF /* HDRearViewController.h */,
-				38CA40231A1485380024D6BF /* HDRearViewController.m */,
 				38C0A8481A07251700C552F1 /* HDGameViewController.h */,
 				38C0A8491A07251700C552F1 /* HDGameViewController.m */,
 				389E95411A4A126100F2DF05 /* Grid View Controllers */,
@@ -1025,6 +1018,7 @@
 				38C122411A2C2EDE00224B33 /* Swooshed.mp3 in Resources */,
 				38C122381A2C1CC300224B33 /* Grid-74.json in Resources */,
 				38D424931A4F6C1A00FD21A2 /* E4.m4a in Resources */,
+				3877252C1A55562E00B06179 /* BlueStar-@2x.png in Resources */,
 				38D424991A4F6C1A00FD21A2 /* F3.m4a in Resources */,
 				38C122241A2C1C4F00224B33 /* Grid-64.json in Resources */,
 				38D424871A4F6C1A00FD21A2 /* C6.m4a in Resources */,
@@ -1049,7 +1043,6 @@
 			files = (
 				389E95401A4A106200F2DF05 /* HDLockedViewController.m in Sources */,
 				38F5A6B61A076B960036750A /* HDLevel.m in Sources */,
-				38C67CDA1A0AB8FF0038526C /* HDContainerViewController.m in Sources */,
 				38BAF5411A1FFC64004D5660 /* HDGridViewController.m in Sources */,
 				38C0A84A1A07251700C552F1 /* HDGameViewController.m in Sources */,
 				386CF5DB1A383AFC006A8381 /* HDScene.m in Sources */,
@@ -1075,7 +1068,6 @@
 				38C67CE31A0ABD050038526C /* HDHelper.m in Sources */,
 				38658C131A4FCF0F00BE789E /* HDAlertView.m in Sources */,
 				38C67D281A0AEA490038526C /* HDMapManager.m in Sources */,
-				38CA40241A1485380024D6BF /* HDRearViewController.m in Sources */,
 				386CF6291A3982BA006A8381 /* SKEmitterNode+EmitterAdditions.m in Sources */,
 				38C2E13B1A2671F3008D5F33 /* HDLevelGenerator.m in Sources */,
 				38C1221B1A2A2EF300224B33 /* HDSwitch.m in Sources */,

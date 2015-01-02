@@ -65,7 +65,7 @@ static const CGFloat kTileHeightInsetMultiplier = .845f;
     if (self = [super initWithSize:size]) {
         
         self.countDownSoundIndex = NO;
-        self.backgroundColor = [SKColor flatMidnightBlueColor];
+        self.backgroundColor = [SKColor flatWetAsphaltColor];
         
         _selectedHexagons = [NSMutableArray array];
         
@@ -140,7 +140,7 @@ static const CGFloat kTileHeightInsetMultiplier = .845f;
 
 #pragma mark - UIResponder
 
-- (HDHexagon *)findHexagonFromPoint:(CGPoint)point
+- (HDHexagon *)findHexagonContainingPoint:(CGPoint)point
 {
     const CGFloat kHexagonInset = 2.0f;
     HDHexagon *selectedHexagon = nil;
@@ -165,7 +165,7 @@ static const CGFloat kTileHeightInsetMultiplier = .845f;
     CGPoint location = [touch locationInNode:self];
     
     // Find the node located under the touch
-    HDHexagon *hexagon = [self findHexagonFromPoint:location];
+    HDHexagon *hexagon = [self findHexagonContainingPoint:location];
     
     HDHexagon *previousTile = [_selectedHexagons lastObject];
     
@@ -188,6 +188,7 @@ static const CGFloat kTileHeightInsetMultiplier = .845f;
         if ([[HDSettingsManager sharedManager] fx]) {
             [hexagon.node addChild:[SKEmitterNode hexaEmitterWithColor:hexagon.node.strokeColor scale:hexagon.selected ? .9f : .5f]];
         }
+        
         [self _checkGameStateForTile:hexagon];
         [self _playSoundForHexagon:hexagon withVibration:YES];
     }

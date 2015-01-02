@@ -46,18 +46,18 @@ static const CGFloat kPadding = 5.0f;
         _onColor  = onColor;
         _offColor = offColor;
         
-        [self setBackgroundColor:_onColor];
-        [self setupSubviews];
-        [self setOn:YES];
+        self.on = YES;
+        self.backgroundColor = _onColor;
         
         CALayer *layer = [self layer];
-        [layer setCornerRadius:5.0f];
+        layer.cornerRadius = 5.0f;
         
+        [self _setup];
     }
     return self;
 }
 
-- (void)setupSubviews;
+- (void)_setup;
 {
     CGRect slidingViewFrame = CGRectMake(
                                          CGRectGetWidth(self.bounds) - (CGRectGetWidth(self.slidingView.bounds) + kPadding),
@@ -67,24 +67,24 @@ static const CGFloat kPadding = 5.0f;
                                          );
     
     self.slidingView = [[UIView alloc] initWithFrame:slidingViewFrame];
-    [self.slidingView.layer setCornerRadius:3.0f];
-    [self.slidingView setUserInteractionEnabled:NO];
-    [self.slidingView setBackgroundColor:[UIColor whiteColor]];
+    self.slidingView.layer.cornerRadius = 3.0f;
+    self.slidingView.userInteractionEnabled = NO;
+    self.slidingView.backgroundColor = [UIColor whiteColor];
     [self addSubview:self.slidingView];
     
     CGRect onLabelFrame = CGRectMake(0.0f, 0.0f, CGRectGetWidth(self.bounds)/1.5f - kPadding, CGRectGetHeight(self.bounds));
      self.onLabel = [[UILabel alloc] initWithFrame:onLabelFrame];
-    [self.onLabel setText:NSLocalizedString(@"ON", nil)];
-    [self.onLabel setAlpha:1.0f];
+    self.onLabel.text  = NSLocalizedString(@"ON", nil);
+    self.onLabel.alpha = 1.0f;
     
     CGRect offLabelFrame = CGRectMake(CGRectGetWidth(self.bounds)/3.0f + kPadding, 0.0f, CGRectGetWidth(self.bounds)/1.5f - kPadding, CGRectGetHeight(self.bounds));
      self.offLabel = [[UILabel alloc] initWithFrame:offLabelFrame];
-    [self.offLabel setText:NSLocalizedString(@"OFF", nil)];
-    [self.offLabel setAlpha:0.0f];
+    self.offLabel.text = NSLocalizedString(@"OFF", nil);
+    self.offLabel.alpha = 0.0f;
     
     for (UILabel *label in @[self.onLabel, self.offLabel]) {
-        [label setTextAlignment:NSTextAlignmentCenter];
-        [label setTextColor:[UIColor whiteColor]];
+        label.textAlignment = NSTextAlignmentCenter;
+        label.textColor = [UIColor whiteColor];
         [self addSubview:label];
     }
 }
@@ -95,14 +95,14 @@ static const CGFloat kPadding = 5.0f;
     
     if (!_animating) {
     
-        [self.offLabel setFrame:CGRectMake(
-                                           CGRectGetWidth(self.bounds)/3,
-                                           0.0f,
-                                           CGRectGetWidth(self.bounds)/1.5f,
-                                           CGRectGetHeight(self.bounds)
-                                           )];
+        self.offLabel.frame = CGRectMake(
+                                        CGRectGetWidth(self.bounds)/3,
+                                        0.0f,
+                                        CGRectGetWidth(self.bounds)/1.5f,
+                                        CGRectGetHeight(self.bounds)
+                                        );
         
-        [self.onLabel setFrame:CGRectMake(0.0f, 0.0f, CGRectGetWidth(self.bounds)/1.5f, CGRectGetHeight(self.bounds))];
+        self.onLabel.frame = CGRectMake(0.0f, 0.0f, CGRectGetWidth(self.bounds)/1.5f, CGRectGetHeight(self.bounds));
         
         if (self.isON) {
             CGRect slidingViewFrame = CGRectMake(
@@ -111,13 +111,14 @@ static const CGFloat kPadding = 5.0f;
                                                  CGRectGetWidth(self.bounds)/3,
                                                  CGRectGetHeight(self.bounds)-(kPadding*2)
                                                  );
-            [self.slidingView setFrame:slidingViewFrame];
+            
+            self.slidingView.frame = slidingViewFrame;
         } else {
-           [self.slidingView setFrame:CGRectMake(kPadding, kPadding, CGRectGetWidth(self.bounds)/3, CGRectGetHeight(self.bounds)-(kPadding*2))];
+            self.slidingView.frame = CGRectMake(kPadding, kPadding, CGRectGetWidth(self.bounds)/3, CGRectGetHeight(self.bounds)-(kPadding*2));
         }
         
         for (UILabel *label in @[self.onLabel, self.offLabel]) {
-            [label setFont:GILLSANS_LIGHT(CGRectGetHeight(self.bounds) * .5f)];
+            label.font = GILLSANS_LIGHT(CGRectGetHeight(self.bounds) * .5f);
         }
     }
 }
@@ -165,10 +166,10 @@ static const CGFloat kPadding = 5.0f;
     dispatch_block_t animationBlock = ^{
         const CGFloat kOriginX = CGRectGetWidth(self.bounds) - (CGRectGetWidth(self.slidingView.bounds) + kPadding);
         CGRect slidingViewFrame = CGRectMake(kOriginX, kPadding, CGRectGetWidth(self.bounds)/3, CGRectGetHeight(self.bounds) - (kPadding*2));
-        [self.slidingView setFrame:slidingViewFrame];
-        [self setBackgroundColor:_onColor];
-        [self.onLabel  setAlpha:1.0f];
-        [self.offLabel setAlpha:0.0f];
+        self.slidingView.frame = slidingViewFrame;
+        self.backgroundColor   = _onColor;
+        self.onLabel.alpha     = 1.0f;
+        self.offLabel.alpha    = 0.0f;
     };
     
     if (!animated) {
@@ -185,10 +186,10 @@ static const CGFloat kPadding = 5.0f;
 {
     dispatch_block_t animationBlock = ^{
         CGRect slidingViewFrame = CGRectMake(kPadding, kPadding, CGRectGetWidth(self.bounds)/3, CGRectGetHeight(self.bounds) - (kPadding*2));
-        [self.slidingView setFrame:slidingViewFrame];
-        [self setBackgroundColor:_offColor];
-        [self.onLabel setAlpha:0.0f];
-        [self.offLabel setAlpha:1.0f];
+        self.slidingView.frame = slidingViewFrame;
+        self.backgroundColor   = _offColor;
+        self.onLabel.alpha     = 0.0f;
+        self.offLabel.alpha    = 1.0f;
     };
     
     if (!animated) {
