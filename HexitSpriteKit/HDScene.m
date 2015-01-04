@@ -501,7 +501,10 @@ static const CGFloat kTileHeightInsetMultiplier = .845f;
     for (int i = 3; i < 7; i++) {
         for (NSString *note in notes) {
             NSString *filePath = [NSString stringWithFormat:@"%@%d.m4a",note,i];
-            [sounds addObject:[SKAction playSoundFileNamed:filePath waitForCompletion:YES]];
+            SKAction *sound = [SKAction playSoundFileNamed:filePath waitForCompletion:YES];
+            if (sound) {
+                [sounds addObject:sound];
+            }
         }
     }
     return sounds;

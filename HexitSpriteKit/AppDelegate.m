@@ -15,6 +15,7 @@
 #import "HDGameCenterManager.h"
 #import "HDGameViewController.h"
 #import "HDGridViewController.h"
+#import "HDSettingsViewController.h"
 #import "HDWelcomeViewController.h"
 
 #define HEXUS_ID 945933714
@@ -48,7 +49,6 @@ NSString * const HDLeaderBoardIdentifierKey = @"LevelLeaderboard";
 {
     if (![[NSUserDefaults standardUserDefaults] boolForKey:HDFirstRunKey]) {
         [[HDSettingsManager sharedManager] configureSettingsForFirstRun];
-        [[NSUserDefaults standardUserDefaults] setBool:YES forKey:HDFirstRunKey];
     }
     
     [[HDSoundManager sharedManager] startAudio];
@@ -59,7 +59,12 @@ NSString * const HDLeaderBoardIdentifierKey = @"LevelLeaderboard";
     [[HDGameCenterManager sharedManager] authenticateGameCenter];
 }
 
-- (void)presentContainerViewController
+- (void)presentSettingsViewController
+{
+    [self.window.rootViewController presentViewController:[HDSettingsViewController new] animated:NO completion:nil];
+}
+
+- (void)presentLevelViewController
 {
     [self.controller pushViewController:[HDGridViewController new] animated:NO];
 }
@@ -73,14 +78,11 @@ NSString * const HDLeaderBoardIdentifierKey = @"LevelLeaderboard";
     [self.controller presentViewController:controller animated:YES completion:nil];
 }
 
-- (void)beginGameWithLevel:(NSInteger)level
+- (void)presentGameControllerToPlayLevel:(NSInteger)level
 {
-    [self.controller pushViewController:[[HDGameViewController alloc] initWithLevel:level] animated:YES];
-}
-
-- (IBAction)openAcheivementsController:(id)sender
-{
-    [self presentGameCenterControllerForState:GKGameCenterViewControllerStateAchievements];
+    HDGameViewController *controller = [[HDGameViewController alloc] initWithLevel:level];
+    [self.controller pushViewController:controller animated:NO];
+    
 }
 
 - (void)rateHEXUS

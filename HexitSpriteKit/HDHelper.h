@@ -14,6 +14,7 @@
 
 + (CGPathRef)hexagonPathForBounds:(CGRect)bounds;
 + (CGPathRef)starPathForBounds:(CGRect)bounds;
++ (UIBezierPath *)restartArrowAroundPoint:(CGPoint)center;
 + (UIBezierPath *)hexagonPathWithRect:(CGRect)square cornerRadius:(CGFloat)cornerRadius;
 + (UIBezierPath *)roundedPolygonPathWithRect:(CGRect)square
                                    lineWidth:(CGFloat)lineWidth

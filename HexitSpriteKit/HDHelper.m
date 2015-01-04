@@ -130,6 +130,27 @@
     return path;
 }
 
++ (UIBezierPath *)restartArrowAroundPoint:(CGPoint)center
+{
+    const CGFloat offset = center.y * 2 / 5 /* Multiply the the center.y by 2 to get the height of container*/;
+    UIBezierPath *circle = [UIBezierPath bezierPathWithArcCenter:center
+                                                          radius:offset
+                                                      startAngle:DEGREES_RADIANS(330.0f)
+                                                        endAngle:DEGREES_RADIANS(290.0f)
+                                                       clockwise:YES];
+    CGPoint endPoint = circle.currentPoint;
+    
+    circle.lineCapStyle  = kCGLineCapRound;
+    circle.lineJoinStyle = kCGLineJoinRound;
+    circle.lineWidth     = 8.0f;
+    
+    [circle addLineToPoint:CGPointMake(endPoint.x - offset/2, endPoint.y + offset/2.0f)];
+    [circle moveToPoint:endPoint];
+    [circle addLineToPoint:CGPointMake(endPoint.x - offset/2, endPoint.y - offset/1.85f)];
+    
+    return circle;
+}
+
 + (CGPathRef)starPathForBounds:(CGRect)bounds
 {
     UIBezierPath *starPath = [UIBezierPath bezierPath];
@@ -208,7 +229,7 @@
                 SKAction *dropPositionY = [SKAction moveTo:hexagon.node.defaultPosition duration:.3f];
                 SKAction *sequence      = [SKAction sequence:@[wait, dropPositionY]];
                 
-                dropPositionY.timingMode = SKActionTimingEaseOut;
+                dropPositionY.timingMode = SKActionTimingEaseInEaseOut;
                 
                 CGPoint position = CGPointMake(
                                               hexagon.node.position.x,

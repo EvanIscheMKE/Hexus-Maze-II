@@ -28,7 +28,6 @@ static const CGFloat cornerRadius = 15.0f;
 @property (nonatomic, strong) SKSpriteNode *nextButton;
 @property (nonatomic, strong) SKSpriteNode *restartButton;
 @property (nonatomic, strong) SKSpriteNode *stripe;
-@property (nonatomic, strong) SKSpriteNode *container;
 
 @property (nonatomic, strong) SKLabelNode *descriptionLabel;
 
@@ -68,10 +67,6 @@ static const CGFloat cornerRadius = 15.0f;
 
 - (void)_setup
 {
-    self.container = [[SKSpriteNode alloc] initWithColor:[UIColor colorWithWhite:0.0f alpha:.4f] size:self.frame.size];
-    self.container.alpha = 0.0f;
-    [self addChild:self.container];
-    
     CGRect containerFrame = CGRectInset(self.frame, CGRectGetWidth(self.frame)/15, CGRectGetHeight(self.frame)/6);
     UIBezierPath *path = [UIBezierPath bezierPathWithRoundedRect:containerFrame cornerRadius:cornerRadius];
     self.menuView = [SKShapeNode shapeNodeWithPath:[path CGPath] centered:YES];
@@ -114,7 +109,7 @@ static const CGFloat cornerRadius = 15.0f;
         
         UIImage *restartImage = [self _fullWidthRestartTexture];
         
-        position = CGPointMake(0.0f, -(CGRectGetHeight(self.menuView.frame)/2 - buttonHeight));
+        position = CGPointMake(0.0f, -(CGRectGetHeight(self.menuView.frame)/2 - buttonHeight/2));
         self.restartButton = [SKSpriteNode spriteNodeWithTexture:[SKTexture textureWithImage:restartImage]];
         self.restartButton.name        = HDRestartLevelKey;
         self.restartButton.position    = position;
@@ -127,7 +122,7 @@ static const CGFloat cornerRadius = 15.0f;
     position = CGPointMake(0.0f, CGRectGetMaxY(self.restartButton.frame) + kStripeHeight / 2 );
     CGSize stripeSize = CGSizeMake(CGRectGetWidth(self.menuView.frame), kStripeHeight);
     self.stripe = [SKSpriteNode spriteNodeWithColor:[SKColor flatAsbestosColor] size:stripeSize];
-    self.stripe.name     = HDRestartLevelKey;
+    //self.stripe.name     = HDRestartLevelKey;
     self.stripe.position = position;
     [self.menuView addChild:self.stripe];
     
@@ -179,12 +174,9 @@ static const CGFloat cornerRadius = 15.0f;
     SKAction *downAction    = [SKAction moveToY:-CGRectGetHeight(self.frame) duration:upAction.duration];
     SKAction *sequeneAction = [SKAction sequence:@[upAction, downAction,]];
     
-    SKAction *fadeOutAction = [SKAction fadeOutWithDuration:.5f];
-    
     upAction.timingMode   = SKActionTimingEaseIn;
     downAction.timingMode = upAction.timingMode;
     
-    [self.container runAction:fadeOutAction];
     [self.menuView runAction:sequeneAction completion:^{
         [self removeFromParent];
         if (completion) {
@@ -200,9 +192,7 @@ static const CGFloat cornerRadius = 15.0f;
     SKAction *sequenceAction  = [SKAction sequence:@[scaleUpAction, scaleDownAction]];
     
     SKAction *positionAction  = [SKAction moveToY:0.0f duration:.5f];
-    SKAction *fadeInAction    = [SKAction fadeInWithDuration:positionAction.duration];
-    
-    [self.container runAction:fadeInAction];
+
     [self.menuView runAction:positionAction completion:^{
         [self.star runAction:sequenceAction completion:^{
             if (self.delegate && [self.delegate respondsToSelector:@selector(alertNodeFinishedIntroAnimation:)]) {
@@ -237,7 +227,7 @@ static const CGFloat cornerRadius = 15.0f;
         [[UIColor flatEmeraldColor] setStroke];
         
         CGPoint center = CGPointMake(CGRectGetWidth(imageFrame)/2, CGRectGetHeight(imageFrame)/2);
-        UIBezierPath *circle = [self _restartArrowArounndPoint:center];
+        UIBezierPath *circle = [HDHelper restartArrowAroundPoint:center];
         [circle stroke];
         
         restartButton = UIGraphicsGetImageFromCurrentImageContext();
@@ -270,7 +260,7 @@ static const CGFloat cornerRadius = 15.0f;
         [[UIColor flatEmeraldColor] setStroke];
         
         CGPoint center = CGPointMake(CGRectGetWidth(imageFrame)/2, CGRectGetHeight(imageFrame)/2);
-        UIBezierPath *circle = [self _restartArrowArounndPoint:center];
+        UIBezierPath *circle = [HDHelper restartArrowAroundPoint:center];
         [circle stroke];
         
         menuButton = UIGraphicsGetImageFromCurrentImageContext();
@@ -301,9 +291,9 @@ static const CGFloat cornerRadius = 15.0f;
         [button fill];
         [button addClip];
         
-        const CGFloat startPoint = CGRectGetWidth(imageFrame)/2 - CGRectGetWidth(imageFrame)/6;
-        const CGFloat endPoint   = CGRectGetWidth(imageFrame)/2 + CGRectGetWidth(imageFrame)/6;
-        const CGFloat offset     = CGRectGetHeight(imageFrame)/4;
+        const CGFloat startPoint = CGRectGetWidth(imageFrame)/2 - CGRectGetWidth(imageFrame)/7;
+        const CGFloat endPoint   = CGRectGetWidth(imageFrame)/2 + CGRectGetWidth(imageFrame)/7;
+        const CGFloat offset     = CGRectGetHeight(imageFrame)/5;
         
         [[UIColor whiteColor] setStroke];
         
@@ -315,9 +305,9 @@ static const CGFloat cornerRadius = 15.0f;
         [rightArrow moveToPoint:CGPointMake(startPoint,  CGRectGetHeight(imageFrame)/2)];
         [rightArrow addLineToPoint:CGPointMake(endPoint, CGRectGetHeight(imageFrame)/2)];
         
-        [rightArrow moveToPoint:   CGPointMake(endPoint - offset, offset)];
+        [rightArrow moveToPoint:   CGPointMake(endPoint - offset, CGRectGetHeight(imageFrame)/3)];
         [rightArrow addLineToPoint:CGPointMake(endPoint, CGRectGetHeight(imageFrame)/2)];
-        [rightArrow addLineToPoint:CGPointMake(endPoint - offset, CGRectGetHeight(imageFrame) - offset)];
+        [rightArrow addLineToPoint:CGPointMake(endPoint - offset, CGRectGetHeight(imageFrame) - CGRectGetHeight(imageFrame)/3)];
         [rightArrow stroke];
         
         nextLevel = UIGraphicsGetImageFromCurrentImageContext();
@@ -325,29 +315,6 @@ static const CGFloat cornerRadius = 15.0f;
     });
     
     return nextLevel;
-}
-
-#pragma mark - UIBezierPath
-
-- (UIBezierPath *)_restartArrowArounndPoint:(CGPoint)center
-{
-    const CGFloat offset = center.y * 2 / 4 /* Multiply the the center.y by 2 to get the height of container*/;
-    UIBezierPath *circle = [UIBezierPath bezierPathWithArcCenter:center
-                                                          radius:offset
-                                                      startAngle:DEGREES_RADIANS(330.0f)
-                                                        endAngle:DEGREES_RADIANS(290.0f)
-                                                       clockwise:YES];
-    CGPoint endPoint = circle.currentPoint;
-    
-    circle.lineCapStyle  = kCGLineCapRound;
-    circle.lineJoinStyle = kCGLineJoinRound;
-    circle.lineWidth     = 8.0f;
-    
-    [circle addLineToPoint:CGPointMake(endPoint.x - offset/2, endPoint.y + offset/2.0f)];
-    [circle moveToPoint:endPoint];
-    [circle addLineToPoint:CGPointMake(endPoint.x - offset/2, endPoint.y - offset/1.85f)];
-    
-    return circle;
 }
 
 #pragma mark - UIResponder

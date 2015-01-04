@@ -9,5 +9,4 @@
 #import <UIKit/UIKit.h>
 
 @interface HDGridViewController : UIViewController
-- (void)performExitAnimationWithCompletion:(dispatch_block_t)completion;
 @end

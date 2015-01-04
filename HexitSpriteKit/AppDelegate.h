@@ -13,8 +13,9 @@
 @property (nonatomic, strong) UIWindow *window;
 - (void)presentGameCenterControllerForState:(GKGameCenterViewControllerState)state;
 - (void)presentShareViewControllerWithLevelIndex:(NSInteger)index;
-- (void)beginGameWithLevel:(NSInteger)level;
-- (void)presentContainerViewController;
+- (void)presentGameControllerToPlayLevel:(NSInteger)level;
+- (void)presentSettingsViewController;
+- (void)presentLevelViewController;
 - (void)rateHEXUS;
 
 @end

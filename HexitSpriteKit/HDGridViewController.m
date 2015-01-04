@@ -22,8 +22,8 @@
 #import "HDLockedViewController.h"
 
 static const NSUInteger kNumberOfLevelsPerPage = 28;
-static const CGFloat kDefaultContainerHeight   = 70.0f;
-static const CGFloat kDefaultPageControlHeight = 50.0f;
+static const CGFloat defaultContainerHeight   = 70.0f;
+static const CGFloat defaultPageControlHeight = 50.0f;
 
 @interface HDGridViewController () <UIScrollViewDelegate ,HDGridScrollViewDelegate, HDLevelsViewControllerDelegate, HDGridScrollViewDatasource>
 
@@ -67,7 +67,7 @@ static const CGFloat kDefaultPageControlHeight = 50.0f;
         self.navigationBarHidden = YES;
         [[HDSoundManager sharedManager] playSound:HDButtonSound];
         [self.scrollView performOutroAnimationWithCompletion:^{
-            [ADelegate beginGameWithLevel:level];
+            [ADelegate presentGameControllerToPlayLevel:level];
         }];
    // }
 }
@@ -95,7 +95,7 @@ static const CGFloat kDefaultPageControlHeight = 50.0f;
     self.scrollView.datasource = self;
     [self.view addSubview:self.scrollView];
     
-    CGRect controlRect = CGRectMake(0.0f, 0.0f, CGRectGetWidth(self.view.bounds), kDefaultPageControlHeight);
+    CGRect controlRect = CGRectMake(0.0f, 0.0f, CGRectGetWidth(self.view.bounds), defaultPageControlHeight);
     self.control = [[HDHexagonControl alloc] initWithFrame:controlRect];
     self.control.numberOfPages = self.scrollView.numberOfPages;
     self.control.currentPage = 0;
@@ -105,11 +105,11 @@ static const CGFloat kDefaultPageControlHeight = 50.0f;
                                         )];
     [self.view addSubview:self.control];
     
-    CGRect containerFrame = CGRectMake(0.0f, -kDefaultContainerHeight, CGRectGetWidth(self.view.bounds), kDefaultContainerHeight);
+    CGRect containerFrame = CGRectMake(0.0f, -defaultContainerHeight, CGRectGetWidth(self.view.bounds), defaultContainerHeight);
     self.container = [HDNavigationBar viewWithToggleImage:[UIImage imageNamed:@"Grid"] activityImage:[UIImage imageNamed:@"Play"]];
     self.container.frame = containerFrame;
-    [[self.container.subviews firstObject] addTarget:self.navigationController
-                                              action:@selector(popViewControllerAnimated:)
+    [[self.container.subviews firstObject] addTarget:self
+                                              action:@selector(performExitAnimation)
                                     forControlEvents:UIControlEventTouchUpInside];
     [[self.container.subviews lastObject] addTarget:self
                                               action:@selector(_beginLastUnlockedLevel)
@@ -118,10 +118,12 @@ static const CGFloat kDefaultPageControlHeight = 50.0f;
     [self.view addSubview:self.container];
 }
 
-- (void)performExitAnimationWithCompletion:(dispatch_block_t)completion
+- (void)performExitAnimation
 {
     self.navigationBarHidden = YES;
-    [self.scrollView performOutroAnimationWithCompletion:completion];
+    [self.scrollView performOutroAnimationWithCompletion:^{
+        [self.navigationController popViewControllerAnimated:NO];
+    }];
 }
 
 - (void)_beginLastUnlockedLevel
@@ -140,7 +142,7 @@ static const CGFloat kDefaultPageControlHeight = 50.0f;
 {
     dispatch_block_t animate = ^{
         CGRect rect = self.container.frame;
-        rect.origin.y = -kDefaultContainerHeight;
+        rect.origin.y = -defaultContainerHeight;
         self.container.frame = rect;
         
         CGPoint center = self.control.center;

@@ -11,6 +11,7 @@
 
 #import "HDSoundManager.h"
 #import "HDWelcomeViewController.h"
+#import "HDTutorialParentViewController.h"
 #import "HDHexagonView.h"
 #import "UIColor+FlatColors.h"
 
@@ -25,20 +26,6 @@ static const NSUInteger kHexaCount = 4;
 
 #pragma mark - Animations
 
-+ (void)performRotationOnView:(UIView *)view completion:(dispatch_block_t)completion
-{
-    [CATransaction begin];
-    [CATransaction setCompletionBlock:completion];
-    
-    CABasicAnimation *rotate = [CABasicAnimation animationWithKeyPath:@"transform.rotation.z"];
-    rotate.duration  = .15f;
-    rotate.fromValue = @0;
-    rotate.toValue   = @(M_PI*2);
-    [view.layer addAnimation:rotate forKey:@"rotate"];
-    
-    [CATransaction commit];
-}
-
 + (void)performScaleOnView:(UIView *)view
 {
     CABasicAnimation *scale = [CABasicAnimation animationWithKeyPath:@"transform.scale"];
@@ -49,75 +36,8 @@ static const NSUInteger kHexaCount = 4;
     [view.layer addAnimation:scale forKey:@"scale"];
 }
 
-- (void)animateTapLabelPosition
-{
-    [UIView animateWithDuration:.3f
-                     animations:^{
-                         CGRect tapRect = self._labelContainer.frame;
-                         tapRect.origin.y += kHexaSize;
-                         self._labelContainer.frame = tapRect;
-                     }];
-}
-
-- (void)prepareForIntroAnimations
-{
-    CGPoint tapCenter = CGPointMake(
-                                    CGRectGetMidX(self.bounds),
-                                    CGRectGetMidY(self.bounds) - ((CGFloat)kHexaCount - 1) / 2 * kHexaSize
-                                    );
-    
-    self._labelContainer.center = tapCenter;
-    self._labelContainer.alpha  = 0.0f;
-    
-    CGRect bannerFrame = self._bannerView.frame;
-    bannerFrame.origin.y = CGRectGetHeight(self.bounds);
-    [self._bannerView setFrame:bannerFrame];
-    
-    NSUInteger index = 0;
-    for (id hexagon in self.subviews) {
-        
-        if (![hexagon isKindOfClass:[HDHexagonView class]]) {
-            continue;
-        }
-        
-        HDHexagonView *hexa = (HDHexagonView *)hexagon;
-        
-        [hexa.layer removeAllAnimations];
-        
-        hexa.hidden = YES;
-        hexa.enabled = (index == 0);
-        hexa.userInteractionEnabled = YES;
-        
-        CAShapeLayer *hexaLayer = (CAShapeLayer *)hexa.layer;
-        hexaLayer.fillColor = [[UIColor flatWetAsphaltColor] CGColor];
-        
-        switch (index) {
-            case 0:
-                hexaLayer.strokeColor = [[UIColor whiteColor] CGColor];
-                break;
-            case 1:
-                hexaLayer.strokeColor = [[UIColor flatEmeraldColor] CGColor];
-                break;
-            case 2:
-                hexaLayer.strokeColor = [[UIColor flatPeterRiverColor] CGColor];
-                break;
-            case 3:
-                hexaLayer.strokeColor = [[UIColor flatEmeraldColor] CGColor];
-                hexa.imageView.image  = [UIImage imageNamed:@"Lock45"];
-                break;
-        }
-        index++;
-    }
-}
-
 - (void)performExitAnimationsWithCompletion:(dispatch_block_t)completion
 {
-    [UIView animateWithDuration:.3f animations:^{
-        CGRect bannerFrame = self._bannerView.frame;
-        bannerFrame.origin.y = CGRectGetHeight(self.bounds);
-        self._bannerView.frame = bannerFrame;
-    }];
-    
     [CATransaction begin];
     [CATransaction setCompletionBlock:completion];
     
@@ -147,16 +67,7 @@ static const NSUInteger kHexaCount = 4;
 
 - (void)performIntroAnimationsWithCompletion:(dispatch_block_t)completion
 {
-    if ([self _bannerView].isBannerLoaded) {
-        [UIView animateWithDuration:.3f animations:^{
-            CGRect bannerFrame = self._bannerView.frame;
-            bannerFrame.origin.y = CGRectGetHeight(self.bounds) - CGRectGetHeight([[self _bannerView] frame]);
-            self._bannerView.frame = bannerFrame;
-        }];
-    }
     
-    dispatch_block_t finalAnimation = [self _continuousAnimationsBlock];
-        
     HDHexagonView *first  = [self.subviews objectAtIndex:2];
     HDHexagonView *second = [self.subviews firstObject];
     HDHexagonView *third  = [self.subviews objectAtIndex:3];
@@ -181,7 +92,7 @@ static const NSUInteger kHexaCount = 4;
     fromValue[3] = -kHexaSize / 2;
     
     [CATransaction begin];
-    [CATransaction setCompletionBlock:finalAnimation];
+    [CATransaction setCompletionBlock:completion];
     
     NSInteger index = 0;
     NSTimeInterval delay = 0;
@@ -203,60 +114,13 @@ static const NSUInteger kHexaCount = 4;
     [CATransaction commit];
 }
 
-#pragma mark - Private
-
-- (dispatch_block_t)_continuousAnimationsBlock
-{
-    dispatch_block_t continuousAnimations = ^{
-        
-        for (UILabel *label in self._labelContainer.subviews) {
-            CABasicAnimation *scale = [CABasicAnimation animationWithKeyPath:@"transform.scale.x"];
-            scale.byValue      = @.3f;
-            scale.toValue      = @1.3f;
-            scale.duration     = .3f;
-            scale.repeatCount  = MAXFLOAT;
-            scale.autoreverses = YES;
-            [label.layer addAnimation:scale forKey:@"scale"];
-        }
-        [UIView animateWithDuration:.3f animations:^{
-            self._labelContainer.alpha = 1.0f;
-        } completion:nil];
-    };
-    return continuousAnimations;
-}
-
-- (ADBannerView *)_bannerView
-{
-    for (id bannerView in self.subviews) {
-        if ([bannerView isKindOfClass:[ADBannerView class]]) {
-            return bannerView;
-        }
-    }
-    return nil;
-}
-
-- (UIView *)_labelContainer
-{
-    for (id container in self.subviews) {
-        if (![container isKindOfClass:[HDHexagonView class]] &&
-            ![container isKindOfClass:[ADBannerView class]]) {
-            return container;
-        }
-    }
-    return nil;
-}
-
 @end
 
-@interface HDWelcomeViewController ()<ADBannerViewDelegate>
-@property (nonatomic, strong) ADBannerView *bannerView;
-@property (nonatomic, strong) UIView *labelContainer;
+@interface HDWelcomeViewController ()
 @property (nonatomic, weak) HDWelcomeView *welcomeView;
 @end
 
 @implementation HDWelcomeViewController {
-    BOOL _bannerIsVisible;
-    
     NSArray *_soundsArray;
     NSArray *_hexaArray;
 }
@@ -268,6 +132,8 @@ static const NSUInteger kHexaCount = 4;
     }
     return self;
 }
+
+#pragma mark - View Cycle
 
 - (void)loadView
 {
@@ -311,47 +177,36 @@ static const NSUInteger kHexaCount = 4;
     }
     
     _hexaArray = hexaArray;
-    
-    // Create a container view to contain the 'tap' labels, animate this down screen instead of multiple labels
-    CGRect  containerFrame  = CGRectMake(0.0f, 0.0f, CGRectGetMidX(self.view.bounds), 2.0f);
-    self.labelContainer = [[UIView alloc] initWithFrame:containerFrame];
-    self.labelContainer.backgroundColor = [UIColor clearColor];
-    [self.view addSubview:self.labelContainer];
-    
-    //Create two labels, one positioned on each side of the hexagon that needs to be 'tappped'
-    for (int i = 0; i < 2; i++) {
-        
-        CGPoint tapLabelPosition = CGPointMake(
-                                               (i == 0) ? 0.0f : CGRectGetWidth(self.labelContainer.bounds),
-                                               CGRectGetMidY(self.labelContainer.bounds)
-                                               );
-        
-        UILabel *tap = [[UILabel alloc] init];
-        tap.textAlignment = NSTextAlignmentCenter;
-        tap.textColor = [UIColor whiteColor];
-        tap.text      = NSLocalizedString(@"TAP", nil);
-        tap.font      = GILLSANS(CGRectGetWidth(self.labelContainer.bounds)/2/3);
-        [tap sizeToFit];
-        tap.center    = tapLabelPosition;
-        [self.labelContainer addSubview:tap];
-    }
-    
-    self.bannerView = [[ADBannerView alloc] init];
-    self.bannerView.delegate = self;
-    [self.view addSubview:self.bannerView];
+
+    CGRect settingsBounds = CGRectMake(0.0f, 0.0f, 40.0f, 40.0f);
+    UIButton *settings = [UIButton buttonWithType:UIButtonTypeCustom];
+    settings.frame = settingsBounds;
+    [settings setBackgroundImage:[UIImage imageNamed:@"SettingsIcon-"] forState:UIControlStateNormal];
+    settings.backgroundColor = [UIColor flatWetAsphaltColor];
+    settings.center = CGPointMake(CGRectGetMidX(self.view.bounds),
+                                  CGRectGetHeight(self.view.bounds) - CGRectGetMidY(settings.bounds) - 5.0f);// Add 5px for spacing
+    settings.frame  = CGRectIntegral(settings.frame);
+    [self.view addSubview:settings];
 }
 
 - (void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
-    [self.welcomeView prepareForIntroAnimations];
-     _bannerIsVisible = self.bannerView.isBannerLoaded;
+    [self _prepareForIntroAnimations];
 }
 
 - (void)viewDidAppear:(BOOL)animated
 {
     [super viewDidAppear:animated];
     [self.welcomeView performIntroAnimationsWithCompletion:nil];
+    
+    if (![[NSUserDefaults standardUserDefaults] boolForKey:HDFirstRunKey]) {
+        
+        HDTutorialParentViewController *controller = [[HDTutorialParentViewController alloc] init];
+        [self.navigationController presentViewController:controller animated:NO completion:nil];
+    
+        [[NSUserDefaults standardUserDefaults] setBool:YES forKey:HDFirstRunKey];
+    }
 }
 
 - (void)didReceiveMemoryWarning
@@ -398,54 +253,53 @@ static const NSUInteger kHexaCount = 4;
     hexaView.userInteractionEnabled = NO;
     hexaLayer.fillColor = hexaLayer.strokeColor;
     
-    [self.welcomeView animateTapLabelPosition];
     [HDWelcomeView performScaleOnView:hexaView];
     [[_hexaArray objectAtIndex:MIN(index + 1, 3)] setEnabled:YES];
     
     [[HDSoundManager sharedManager] playSound:_soundsArray[MIN(index, 3)]];
     
-    switch (index) {
-        case 1:{
-            [HDWelcomeView performRotationOnView:(HDHexagonView *)[_hexaArray lastObject] completion:^{
-                [[(HDHexagonView *)[_hexaArray lastObject] layer] removeAllAnimations];
-                [(HDHexagonView *)[_hexaArray lastObject] imageView].image = nil;
-            }];
-        } break;
-        case 3:
-            [UIView animateWithDuration:.3f animations:^{
-                self.labelContainer.alpha = 0.0f;
-            } completion:^(BOOL finished) {
-                [self.welcomeView performExitAnimationsWithCompletion:^{
-                    [ADelegate presentContainerViewController];
-                }];
-            }];
-            break;
-    }
-}
-
-#pragma mark - <ADBannerViewDelegate>
-
-- (void)bannerView:(ADBannerView *)banner didFailToReceiveAdWithError:(NSError *)error
-{
-    if (_bannerIsVisible) {
-        _bannerIsVisible = NO;
-        [UIView animateWithDuration:.3f animations:^{
-            CGRect bannerFrame = self.bannerView.frame;
-            bannerFrame.origin.y = CGRectGetHeight(self.view.bounds);
-            self.bannerView.frame = bannerFrame;
+    if (index == 3) {
+        [self.welcomeView performExitAnimationsWithCompletion:^{
+            [ADelegate presentLevelViewController];
         }];
     }
 }
 
-- (void)bannerViewDidLoadAd:(ADBannerView *)banner
+- (void)_prepareForIntroAnimations
 {
-    if (!_bannerIsVisible) {
-        _bannerIsVisible = YES;
-        [UIView animateWithDuration:.3f animations:^{
-            CGRect bannerFrame = self.bannerView.frame;
-            bannerFrame.origin.y = CGRectGetHeight(self.view.bounds) - CGRectGetHeight(self.bannerView.bounds);
-            self.bannerView.frame = bannerFrame;
-        }];
+    NSUInteger index = 0;
+    for (id hexagon in _hexaArray) {
+        
+        if (![hexagon isKindOfClass:[HDHexagonView class]]) {
+            continue;
+        }
+        
+        HDHexagonView *hexa     = (HDHexagonView *)hexagon;
+        CAShapeLayer *hexaLayer = (CAShapeLayer *)hexa.layer;
+        
+        [hexa.layer removeAllAnimations];
+        
+        hexa.hidden = YES;
+        hexa.enabled = (index == 0);
+        hexa.userInteractionEnabled = YES;
+        
+        hexaLayer.fillColor = [[UIColor flatWetAsphaltColor] CGColor];
+        
+        switch (index) {
+            case 0:
+                hexaLayer.strokeColor = [[UIColor whiteColor] CGColor];
+                break;
+            case 1:
+                hexaLayer.strokeColor = [[UIColor flatPeterRiverColor] CGColor];
+                break;
+            case 2:
+                hexaLayer.strokeColor = [[UIColor flatPeterRiverColor] CGColor];
+                break;
+            case 3:
+                hexaLayer.strokeColor = [[UIColor flatEmeraldColor] CGColor];
+                break;
+        }
+        index++;
     }
 }
 

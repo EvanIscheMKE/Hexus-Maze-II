@@ -59,7 +59,9 @@ static const CGFloat kTileHeightInsetMultiplier = .855f;
     
     for (HDHexagonView *hexa in self.containerView.subviews) {
         
-        [[hexa subviews] makeObjectsPerformSelector:@selector(removeFromSuperview)];
+        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(.3 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+            hexa.hidden = YES;
+        });
         
         CABasicAnimation *scale = [CABasicAnimation animationWithKeyPath:@"transform.scale"];
         scale.fromValue = @1;

@@ -18,11 +18,9 @@ static const CGFloat kPadding = 4.0f;
 @property (nonatomic, strong) UIAttachmentBehavior *attachmentBehavior;
 @property (nonatomic, strong) UIAttachmentBehavior *floatingAnchorBehavior;
 @property (nonatomic, strong) UICollisionBehavior *collisionBehavior;
-@property (nonatomic, strong) UIGravityBehavior *gravityBehavior;
 @end
 
-@implementation HDLockedView
-{
+@implementation HDLockedView {
     BOOL _isStarted;
 }
 
@@ -45,6 +43,7 @@ static const CGFloat kPadding = 4.0f;
              [self.floatingAnchorBehavior setAnchorPoint:[self _pointFromAngle:angle
                                                                         center:self.attachmentBehavior.anchorPoint
                                                                         radius:CGRectGetMidY(self.bounds)]];
+         
      }];
     _isStarted = YES;
 }
@@ -60,11 +59,10 @@ static const CGFloat kPadding = 4.0f;
 }
 
 #pragma mark -
-#pragma mark - <PRIVATE>
+#pragma mark - Private
 
 - (void)_setup
 {
-    self.animator = [[UIDynamicAnimator alloc] initWithReferenceView:self];
     
     UIImageView *pictureFrame = [[UIImageView alloc] initWithImage:[self _levelsComingSoonSign]];
     [pictureFrame setCenter:CGPointMake(CGRectGetMidX(self.bounds), CGRectGetHeight(self.bounds)/3)];
@@ -73,7 +71,29 @@ static const CGFloat kPadding = 4.0f;
     pictureFrame.layer.borderColor = [[UIColor clearColor] CGColor];
     [self addSubview:pictureFrame];
     
-    self.gravityBehavior = [[UIGravityBehavior alloc] initWithItems:@[pictureFrame]];
+    CGRect signFrame = CGRectMake(
+                                  5.0f,
+                                  CGRectGetHeight(pictureFrame.bounds)/3.25f,
+                                  CGRectGetWidth(CGRectInset(pictureFrame.bounds, 5.0f, 0.0f)),
+                                  CGRectGetHeight(pictureFrame.bounds)/1.5f
+                                  );
+    UILabel *pictureFramesMessage = [[UILabel alloc] initWithFrame:signFrame];
+    pictureFramesMessage.text = NSLocalizedString(@"New Levels \n Coming Soon..", nil);
+    pictureFramesMessage.numberOfLines = 0;
+    pictureFramesMessage.textColor     = [UIColor whiteColor];
+    pictureFramesMessage.font          = [UIFont fontWithName:@"MarkerFelt-Thin" size:CGRectGetWidth(self.bounds)/9];
+    pictureFramesMessage.textAlignment = NSTextAlignmentCenter;
+    [pictureFrame addSubview:pictureFramesMessage];
+    
+    CALayer *nailLayer = [CALayer layer];
+    nailLayer.backgroundColor = [UIColor whiteColor].CGColor;
+    nailLayer.bounds = CGRectMake(0.0f, 0.0f, 32.0f, 32.0f);
+    nailLayer.cornerRadius = CGRectGetMidX(nailLayer.bounds);
+    nailLayer.masksToBounds = YES;
+    nailLayer.position = CGPointMake(CGRectGetMidX(self.bounds), CGRectGetHeight(self.bounds)/5);
+    [self.layer addSublayer:nailLayer];
+    
+    self.animator = [[UIDynamicAnimator alloc] initWithReferenceView:self];
     
     self.collisionBehavior = [[UICollisionBehavior alloc] initWithItems:@[pictureFrame]];
     self.collisionBehavior.translatesReferenceBoundsIntoBoundary = YES;
@@ -85,9 +105,9 @@ static const CGFloat kPadding = 4.0f;
                                                                                      CGRectGetMidX(self.bounds),
                                                                                      CGRectGetHeight(self.bounds)/5
                                                                                      )];
-    self.attachmentBehavior.damping   = 0;
-    self.attachmentBehavior.length    = 0;
-    self.attachmentBehavior.frequency = 0;
+    self.attachmentBehavior.damping   = 0.0f;
+    self.attachmentBehavior.length    = 0.0f;
+    self.attachmentBehavior.frequency = 0.0f;
     [self.animator addBehavior:self.attachmentBehavior];
     
     self.floatingAnchorBehavior = [[UIAttachmentBehavior alloc] initWithItem:pictureFrame
@@ -96,13 +116,10 @@ static const CGFloat kPadding = 4.0f;
                                                                                          CGRectGetWidth(self.bounds),
                                                                                          CGRectGetHeight(self.bounds)
                                                                                          )];
-    self.floatingAnchorBehavior.damping   = .2f;
-    self.floatingAnchorBehavior.length    = 0;
-    self.floatingAnchorBehavior.frequency = 1;
+    self.floatingAnchorBehavior.damping   = 0.2f;
+    self.floatingAnchorBehavior.length    = 0.0f;
+    self.floatingAnchorBehavior.frequency = 1.0f;
     [self.animator addBehavior:self.floatingAnchorBehavior];
-
-//    UIDynamicItemBehavior *itemBehavior = [[UIDynamicItemBehavior alloc] initWithItems:@[pictureFrame]];
-//    [itemBehavior setElasticity:.25f];
     
     self.motionManager = [[CMMotionManager alloc] init];
     [self.motionManager setDeviceMotionUpdateInterval:1/60.0f];
@@ -111,7 +128,6 @@ static const CGFloat kPadding = 4.0f;
 - (void)_teardown
 {
     [self.animator removeAllBehaviors];
-    self.gravityBehavior = nil;
     self.attachmentBehavior = nil;
     self.floatingAnchorBehavior = nil;
     self.motionManager = nil;
@@ -157,25 +173,15 @@ static const CGFloat kPadding = 4.0f;
         signPath.lineWidth = 8.0f;
         [signPath stroke];
         
-        UIBezierPath *nail = [UIBezierPath bezierPathWithOvalInRect:nailFrame];
-        [nail fill];
-        
-        NSDictionary *attributes = @{
-                                    NSFontAttributeName:GILLSANS(40.0f),
-                                    NSForegroundColorAttributeName:[UIColor whiteColor]
-                                    };
-    //    [@"Coming Soon" drawInRect:CGRectMake(20.0f, imageSize.height *.66, imageSize.width, imageSize.height * .3) withAttributes:attributes];
-        [@"  New Levels\nComing Soon!" drawInRect:CGRectMake(25.0f, imageSize.height *.45f, imageSize.width, imageSize.height * .66) withAttributes:attributes];
-        
         comingSoonSign = UIGraphicsGetImageFromCurrentImageContext();
         UIGraphicsEndImageContext();
     });
     return comingSoonSign;
 }
 
-- (CGPoint)_pointFromAngle:(double)rAngle center:(CGPoint)centerPoint radius:(double)radius
+- (CGPoint)_pointFromAngle:(double)angleInRadians center:(CGPoint)centerPoint radius:(double)radius
 {
-    return CGPointMake(radius * cos(rAngle) + centerPoint.x, radius * sin(rAngle) + centerPoint.y);
+    return CGPointMake(radius * cos(angleInRadians) + centerPoint.x, radius * sin(angleInRadians) + centerPoint.y);
 }
 
 @end

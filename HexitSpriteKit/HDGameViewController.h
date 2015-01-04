@@ -9,11 +9,6 @@
 #import <UIKit/UIKit.h>
 
 @interface HDGameViewController : UIViewController
-
 - (instancetype)initWithLevel:(NSInteger)level;
-- (instancetype)initWithRandomlyGeneratedLevel;
-
-- (void)restartGame;
-- (void)performExitAnimationWithCompletion:(dispatch_block_t)completion;
 @end
 

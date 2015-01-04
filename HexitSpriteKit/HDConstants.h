@@ -34,7 +34,6 @@ extern NSString * const HDRemainingTime;
 extern NSString * const HDBackgroundDate;
 
 //
-extern NSString * const HDBubbleSoundKey;
 extern NSString * const HDHexGridKey;
 
 extern NSString * const HDSoundLoopKey;
@@ -49,7 +48,7 @@ static const CGFloat kSmallButtonSize  = 34.0f;
 static const CGFloat kLargeButtonSize  = 42.0f;
 static const CGFloat kButtonInset      = 20.0f;
 
-
+//MarkerFelt-Thin
 #define GILLSANS(x)       [UIFont fontWithName:@"GillSans" size:x]
 #define GILLSANS_LIGHT(x) [UIFont fontWithName:@"GillSans-Light" size:x]
 
