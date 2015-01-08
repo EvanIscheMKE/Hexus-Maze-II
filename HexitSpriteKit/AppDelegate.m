@@ -37,7 +37,7 @@ NSString * const HDLeaderBoardIdentifierKey = @"LevelLeaderboard";
     self.controller.navigationBarHidden = YES;
     
      self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
-    [self.window setRootViewController:self.controller];
+    self.window.rootViewController = self.controller;
     [self.window makeKeyAndVisible];
     
     [self _setup];

@@ -61,7 +61,6 @@ static const NSUInteger kHexaCount = 4;
         [hexa.layer addAnimation:scale forKey:@"scale34"];
 
     }
-    
     [CATransaction commit];
 }
 
@@ -118,6 +117,7 @@ static const NSUInteger kHexaCount = 4;
 
 @interface HDWelcomeViewController ()
 @property (nonatomic, weak) HDWelcomeView *welcomeView;
+@property (nonatomic, strong) UIButton *settings;
 @end
 
 @implementation HDWelcomeViewController {
@@ -162,7 +162,6 @@ static const NSUInteger kHexaCount = 4;
         
         CGRect hexaBounds = CGRectMake(0.0f, 0.0f, size - pad, size - pad);
         HDHexagonView *hexagon = [[HDHexagonView alloc] initWithFrame:hexaBounds
-                                                                 type:HDHexagonTypeFlat /* Flat on top, instead of sitting up */
                                                           strokeColor:[UIColor whiteColor]];
         hexagon.tag     = i;
         hexagon.enabled = (i == 0);
@@ -178,15 +177,16 @@ static const NSUInteger kHexaCount = 4;
     
     _hexaArray = hexaArray;
 
-    CGRect settingsBounds = CGRectMake(0.0f, 0.0f, 40.0f, 40.0f);
-    UIButton *settings = [UIButton buttonWithType:UIButtonTypeCustom];
-    settings.frame = settingsBounds;
-    [settings setBackgroundImage:[UIImage imageNamed:@"SettingsIcon-"] forState:UIControlStateNormal];
-    settings.backgroundColor = [UIColor flatWetAsphaltColor];
-    settings.center = CGPointMake(CGRectGetMidX(self.view.bounds),
-                                  CGRectGetHeight(self.view.bounds) - CGRectGetMidY(settings.bounds) - 5.0f);// Add 5px for spacing
-    settings.frame  = CGRectIntegral(settings.frame);
-    [self.view addSubview:settings];
+    CGRect settingsBounds = CGRectMake(0.0f, 0.0f, 30.0f, 30.0f);
+    self.settings = [UIButton buttonWithType:UIButtonTypeCustom];
+    self.settings.frame = settingsBounds;
+    [self.settings addTarget:ADelegate action:@selector(presentSettingsViewController) forControlEvents:UIControlEventTouchUpInside];
+    [self.settings setBackgroundImage:[UIImage imageNamed:@"SettingsIcon-"] forState:UIControlStateNormal];
+    self.settings.backgroundColor = [UIColor flatWetAsphaltColor];
+    self.settings.center = CGPointMake(CGRectGetMidX(self.view.bounds),
+                                  CGRectGetHeight(self.view.bounds) + CGRectGetMidY(self.settings.bounds));
+    self.settings.frame  = CGRectIntegral(self.settings.frame);
+    [self.view addSubview:self.settings];
 }
 
 - (void)viewWillAppear:(BOOL)animated
@@ -198,21 +198,15 @@ static const NSUInteger kHexaCount = 4;
 - (void)viewDidAppear:(BOOL)animated
 {
     [super viewDidAppear:animated];
-    [self.welcomeView performIntroAnimationsWithCompletion:nil];
+    [self.welcomeView performIntroAnimationsWithCompletion:^{
+        [self _showActivityAnimated:YES];
+    }];
     
-    if (![[NSUserDefaults standardUserDefaults] boolForKey:HDFirstRunKey]) {
-        
-        HDTutorialParentViewController *controller = [[HDTutorialParentViewController alloc] init];
-        [self.navigationController presentViewController:controller animated:NO completion:nil];
-    
-        [[NSUserDefaults standardUserDefaults] setBool:YES forKey:HDFirstRunKey];
-    }
-}
-
-- (void)didReceiveMemoryWarning
-{
-    [super didReceiveMemoryWarning];
-    // Dispose of any resources that can be recreated.
+////    if (![[NSUserDefaults standardUserDefaults] boolForKey:HDFirstRunKey]) {
+//        HDTutorialParentViewController *controller = [[HDTutorialParentViewController alloc] init];
+//        [self.navigationController presentViewController:controller animated:NO completion:nil];
+//        [[NSUserDefaults standardUserDefaults] setBool:YES forKey:HDFirstRunKey];
+////    }
 }
 
 #pragma mark - UIResponder
@@ -245,6 +239,43 @@ static const NSUInteger kHexaCount = 4;
 
 #pragma mark - Private
 
+- (void)_hideActivityAnimated:(BOOL)animated
+{
+    dispatch_block_t animation = ^{
+        self.settings.center = CGPointMake(CGRectGetMidX(self.view.bounds),
+                                           CGRectGetHeight(self.view.bounds) + CGRectGetMidY(self.settings.bounds));
+    };
+    
+    if (animation) {
+        [UIView animateWithDuration:.3f animations:animation];
+    } else {
+        animation();
+    }
+}
+
+- (void)_showActivityAnimated:(BOOL)animated
+{
+    dispatch_block_t animation = ^{
+        
+        self.settings.center = CGPointMake(CGRectGetMidX(self.view.bounds),
+                                           CGRectGetHeight(self.view.bounds) - CGRectGetMidY(self.settings.bounds) - 15.0f);
+    };
+    
+    if (animated) {
+        [UIView animateWithDuration:.3f animations:animation];
+    } else {
+        animation();
+    }
+}
+
+- (void)_presentSettingsViewController
+{
+    [self _hideActivityAnimated:YES];
+    [self.welcomeView performExitAnimationsWithCompletion:^{
+        [ADelegate presentSettingsViewController];
+    }];
+}
+
 - (void)_updateStateForTile:(HDHexagonView *)hexaView atIndex:(NSUInteger)index
 {
     CAShapeLayer *hexaLayer = (CAShapeLayer *)hexaView.layer;
@@ -259,7 +290,9 @@ static const NSUInteger kHexaCount = 4;
     [[HDSoundManager sharedManager] playSound:_soundsArray[MIN(index, 3)]];
     
     if (index == 3) {
+        [self _hideActivityAnimated:YES];
         [self.welcomeView performExitAnimationsWithCompletion:^{
+            
             [ADelegate presentLevelViewController];
         }];
     }
@@ -267,6 +300,8 @@ static const NSUInteger kHexaCount = 4;
 
 - (void)_prepareForIntroAnimations
 {
+    [self _hideActivityAnimated:NO];
+    
     NSUInteger index = 0;
     for (id hexagon in _hexaArray) {
         

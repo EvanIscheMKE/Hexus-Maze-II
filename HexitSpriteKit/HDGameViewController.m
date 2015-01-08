@@ -158,6 +158,8 @@ static const CGFloat defaultContainerHeight = 70.0f;
 - (void)_setupScene
 {
     SKView * skView = (SKView *)self.view;
+    skView.showsFPS = YES;
+    skView.showsNodeCount = YES;
     
     self.scene = [HDScene sceneWithSize:self.view.bounds.size];
     self.scene.delegate = self;

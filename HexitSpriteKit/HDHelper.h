@@ -13,6 +13,8 @@
 @interface HDHelper : NSObject
 
 + (CGPathRef)hexagonPathForBounds:(CGRect)bounds;
++ (UIBezierPath *)bezierHexagonInFrame:(CGRect)frame;
+
 + (CGPathRef)starPathForBounds:(CGRect)bounds;
 + (UIBezierPath *)restartArrowAroundPoint:(CGPoint)center;
 + (UIBezierPath *)hexagonPathWithRect:(CGRect)square cornerRadius:(CGFloat)cornerRadius;
@@ -27,7 +29,5 @@
 + (void)completionAnimationWithTiles:(NSArray *)tiles completion:(dispatch_block_t)completion;
 
 + (NSArray *)possibleMovesForHexagon:(HDHexagon *)hexagon inArray:(NSArray *)array;
-
-+ (CGPoint)pointForColumn:(NSInteger)column row:(NSInteger)row numberOfColumns:(NSUInteger)numberOfColumns numberOfRows:(NSUInteger)numberOfRows;
 
 @end

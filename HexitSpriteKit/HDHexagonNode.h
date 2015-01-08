@@ -8,16 +8,21 @@
 
 @import SpriteKit;
 
-@interface HDHexagonNode : SKShapeNode
+@interface HDHexagonNode : SKSpriteNode
+
+@property (nonatomic, strong) UIColor *fillColor;
+@property (nonatomic, strong) UIColor *strokeColor;
+
+@property (nonatomic, assign) CGPathRef pathRef;
+@property (nonatomic, assign) CGFloat lineWidth;
 
 @property (nonatomic, assign) CGPoint defaultPosition;
 @property (nonatomic, getter=isLocked, assign) BOOL locked;
 
++ (instancetype)shapeNodeWithPath:(CGPathRef)pathRef;
+
+- (void)addHexaLayer;
 - (void)setStrokeColor:(UIColor *)strokeColor fillColor:(UIColor *)fillColor;
-
-- (void)addTripleNodeWithStroke:(UIColor *)stroke fill:(UIColor *)fill;
-- (void)addDoubleNodeWithStroke:(UIColor *)stroke fill:(UIColor *)fill;
-
 - (void)indicatorPositionFromHexagonType:(HDHexagonType)type;
 - (void)indicatorPositionFromHexagonType:(HDHexagonType)type withTouchesCount:(NSInteger)count;
 

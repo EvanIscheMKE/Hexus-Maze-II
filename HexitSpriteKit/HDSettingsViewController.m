@@ -10,6 +10,42 @@
 #import "UIColor+FlatColors.h"
 #import "HDSettingsViewController.h"
 
+static const CGFloat defaultCellHeight = 70.0;
+
+@interface HDSettingsControlsView ()
+
+@end
+
+@implementation HDSettingsControlsView
+
+- (instancetype)initWithFrame:(CGRect)frame
+{
+    if (self = [super initWithFrame:frame]) {
+        self.backgroundColor = [UIColor flatWetAsphaltColor];
+        [self _setup];
+    }
+    return self;
+}
+
+- (void)_setup
+{
+    CGRect hexaFrame = CGRectMake(0.0f, 0.0f, CGRectGetHeight(self.bounds), CGRectGetHeight(self.bounds));
+    self.hexaToggle = [[HDHexagonView alloc] initWithFrame:hexaFrame
+                                               strokeColor:[UIColor whiteColor]];
+    [self addSubview:self.hexaToggle];
+    
+    CGRect descriptionFrame = CGRectMake(0.0f, 0.0f, CGRectGetWidth(self.bounds) - CGRectGetHeight(self.bounds), CGRectGetHeight(self.bounds));
+    self.descriptionLabel = [[UILabel alloc] initWithFrame:descriptionFrame];
+    self.descriptionLabel.font = GILLSANS_LIGHT(CGRectGetHeight(self.bounds)/2.5f);
+    self.descriptionLabel.textAlignment = NSTextAlignmentLeft;
+    self.descriptionLabel.center = CGPointMake(CGRectGetWidth(self.bounds)/1.5f + 5.0f, CGRectGetMidY(self.descriptionLabel.bounds));
+    self.descriptionLabel.textColor = [UIColor whiteColor];
+    self.descriptionLabel.text = @"Vibration";
+    [self addSubview:self.descriptionLabel];
+}
+
+@end
+
 @interface HDSettingsViewController ()
 
 @end
@@ -28,14 +64,19 @@
 {
     [super viewDidLoad];
     self.view.backgroundColor = [UIColor flatWetAsphaltColor];
-
-    // Do any additional setup after loading the view.
+    [self _setup];
 }
 
-- (void)didReceiveMemoryWarning
+#pragma mark - Private
+
+- (void)_setup
 {
-    [super didReceiveMemoryWarning];
-    // Dispose of any resources that can be recreated.
+    
+    for (int i = 0; i < 4; i++) {
+        CGRect controlFrame = CGRectMake(50.0f, 50.0f, CGRectGetWidth(self.view.bounds) - 100.0f, defaultCellHeight);
+        HDSettingsControlsView *control = [[HDSettingsControlsView alloc] initWithFrame:controlFrame];
+        [self.view addSubview:control];
+    }
 }
 
 @end

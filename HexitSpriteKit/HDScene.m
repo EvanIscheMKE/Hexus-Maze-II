@@ -28,7 +28,7 @@
 
 NSString * const HDSoundActionKey = @"SOUND_KEY";
 
-static const CGFloat kPadding = 2.0f;
+static const CGFloat kPadding = 3.5f;
 static const CGFloat kTileHeightInsetMultiplier = .845f;
 @interface HDScene ()<HDHexagonDelegate, HDAlertnodeDelegate>
 
@@ -47,6 +47,8 @@ static const CGFloat kTileHeightInsetMultiplier = .845f;
 @end
 
 @implementation HDScene {
+    NSMutableArray *_pool;
+    
     CGFloat _minViewAreaOriginX;
     CGFloat _maxViewAreaOriginX;
     CGFloat _minViewAreaOriginY;
@@ -64,12 +66,13 @@ static const CGFloat kTileHeightInsetMultiplier = .845f;
 {
     if (self = [super initWithSize:size]) {
         
+        _pool = [NSMutableArray array];
+        
         self.countDownSoundIndex = NO;
         self.backgroundColor = [SKColor flatWetAsphaltColor];
         
-        _selectedHexagons = [NSMutableArray array];
-        
-        _sounds = [self _preloadedGameSounds];
+        self.selectedHexagons = [NSMutableArray array];
+        self.sounds = [self _preloadedGameSounds];
         
         self.gameLayer = [SKNode node];
         [self addChild:self.gameLayer];
@@ -84,24 +87,32 @@ static const CGFloat kTileHeightInsetMultiplier = .845f;
     
     self.userInteractionEnabled = NO;
     
-    _hexagons = [NSArray arrayWithArray:grid];
+    if (self.hexagons) {
+        for (HDHexagon *hexagon in self.hexagons) {
+            if (hexagon.node) {
+                [[hexagon.node children] makeObjectsPerformSelector:@selector(removeFromParent)];
+                [_pool addObject:hexagon.node];
+            }
+        }
+    }
     
-    CGPathRef pathRef = [HDHelper hexagonPathForBounds:CGRectMake(0.0f, 0.0f, kTileSize - kPadding, kTileSize - kPadding)];
+    self.hexagons = [NSArray arrayWithArray:grid];
     
     NSInteger index = 0;
     for (HDHexagon *hexagon in grid) {
         
         // For each each hexagon model, create a shapenode and assign it to the model
         CGPoint center = [self _pointForColumn:hexagon.column row:hexagon.row];
-        HDHexagonNode *shapeNode = [HDHexagonNode shapeNodeWithPath:pathRef centered:YES];
+        HDHexagonNode *shapeNode = [self _getHexaNode];
         shapeNode.hidden   = YES;
         shapeNode.position = center;
         shapeNode.name     = HEXAGON_TITLE((long)index);
-        [self.gameLayer addChild:shapeNode];
         
         hexagon.node = shapeNode;
         hexagon.type = (int)[self.gridManager hexagonTypeAtRow:hexagon.row column:hexagon.column];
         hexagon.delegate = hexagon.isCountTile ? self : nil;
+        
+        [self.gameLayer addChild:shapeNode];
         
         // Find the largest and smallest possible center position for all tiles, will be used to center map
         if ((center.x) < _minCenterX) { _minCenterX = (center.x); }
@@ -138,16 +149,30 @@ static const CGFloat kTileHeightInsetMultiplier = .845f;
     _maxCenterY  = 0.0f;
 }
 
+- (HDHexagonNode *)_getHexaNode
+{
+    if (_pool.count > 0) {
+        HDHexagonNode *hexa = [_pool firstObject];
+        [_pool removeObject:hexa];
+        return hexa;
+    }
+    
+    // if there is no nodes left in the pool, create a new one to return
+    CGPathRef pathRef = [[HDHelper bezierHexagonInFrame:CGRectMake(kPadding, kPadding, ceilf(kTileSize-kPadding), ceilf(kTileSize-kPadding))] CGPath];
+    HDHexagonNode *hexa = [HDHexagonNode shapeNodeWithPath:pathRef];
+    hexa.size = CGSizeMake(ceilf(kTileSize + kPadding), ceilf(kTileSize + kPadding));
+    
+    return hexa;
+}
+
 #pragma mark - UIResponder
 
 - (HDHexagon *)findHexagonContainingPoint:(CGPoint)point
 {
     const CGFloat kHexagonInset = 2.0f;
     HDHexagon *selectedHexagon = nil;
-    for (HDHexagon *hex in _hexagons)
-    {
-        if (CGRectContainsPoint(CGRectInset(hex.node.frame, kHexagonInset, kHexagonInset), point))
-        {
+    for (HDHexagon *hex in _hexagons) {
+        if (CGRectContainsPoint(CGRectInset(hex.node.frame, kHexagonInset, kHexagonInset), point)) {
             selectedHexagon = hex;
         }
     }
@@ -253,11 +278,10 @@ static const CGFloat kTileHeightInsetMultiplier = .845f;
         // Won Game
         
         self.animating = YES;
-        
-        [self runAction:self.completionZing withKey:HDSoundActionKey];
         [tile.node runAction:[SKAction scaleTo:.9f duration:.1f] completion:^{
             [tile.node runAction:[SKAction scaleTo:1.0f duration:.1f] completion:^{
                 
+                [self runAction:self.completionZing withKey:HDSoundActionKey];
                 
                 BOOL lastLevel = (_levelIndex == [[HDMapManager sharedManager] numberOfLevels]);
                 HDAlertNode *alertNode = [[HDAlertNode alloc] initWithColor:[UIColor clearColor]
@@ -394,9 +418,9 @@ static const CGFloat kTileHeightInsetMultiplier = .845f;
     self.countDownSoundIndex = NO;
     
     [HDHelper completionAnimationWithTiles:_hexagons completion:^{
-        // Reduce retainCount
-        [self.gameLayer removeAllChildren];
         
+        // Reduce Count
+        [self.gameLayer removeAllChildren];
         // Call parent to refill model with next level's data, then call us back
         if (self.delegate && [self.delegate respondsToSelector:@selector(scene:proceededToLevel:)]) {
             [self.delegate scene:self proceededToLevel:self.levelIndex];
@@ -502,9 +526,7 @@ static const CGFloat kTileHeightInsetMultiplier = .845f;
         for (NSString *note in notes) {
             NSString *filePath = [NSString stringWithFormat:@"%@%d.m4a",note,i];
             SKAction *sound = [SKAction playSoundFileNamed:filePath waitForCompletion:YES];
-            if (sound) {
-                [sounds addObject:sound];
-            }
+            [sounds addObject:sound];
         }
     }
     return sounds;

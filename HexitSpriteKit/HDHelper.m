@@ -42,6 +42,24 @@
     return [_path CGPath];
 }
 
++ (UIBezierPath *)bezierHexagonInFrame:(CGRect)frame
+{
+    const CGFloat kWidth   = CGRectGetWidth(frame);
+    const CGFloat kHeight  = CGRectGetHeight(frame);
+    const CGFloat kPadding = kWidth / 8 / 2;
+    
+    UIBezierPath *_path = [UIBezierPath bezierPath];
+    [_path moveToPoint:   CGPointMake(CGRectGetMinX(frame) + (kWidth / 2),        CGRectGetMinY(frame))];
+    [_path addLineToPoint:CGPointMake(CGRectGetMinX(frame) + (kWidth - kPadding), CGRectGetMinY(frame) + (kHeight / 4))];
+    [_path addLineToPoint:CGPointMake(CGRectGetMinX(frame) + (kWidth - kPadding), CGRectGetMinY(frame) + (kHeight * 3 / 4))];
+    [_path addLineToPoint:CGPointMake(CGRectGetMinX(frame) + (kWidth / 2),        CGRectGetMinY(frame) + kHeight)];
+    [_path addLineToPoint:CGPointMake(CGRectGetMinX(frame) + kPadding,            CGRectGetMinY(frame) + (kHeight * .75))];
+    [_path addLineToPoint:CGPointMake(CGRectGetMinX(frame) + kPadding,            CGRectGetMinY(frame) + (kHeight / 4))];
+    [_path closePath];
+    
+    return _path;
+}
+
 + (UIBezierPath *)hexagonPathWithRect:(CGRect)square cornerRadius:(CGFloat)cornerRadius
 {
     UIBezierPath *path  = [UIBezierPath bezierPath];
@@ -154,7 +172,7 @@
 + (CGPathRef)starPathForBounds:(CGRect)bounds
 {
     UIBezierPath *starPath = [UIBezierPath bezierPath];
-   
+    
     const CGPoint center = CGPointMake(CGRectGetMidX(bounds), CGRectGetMidY(bounds));
     
     const NSUInteger numberOfPoints = 5;
@@ -186,7 +204,7 @@
         pt = CGPointMake(center.x + (outerRadius * cosf(theta)), center.y + (outerRadius * sinf(theta)));
         [starPath addLineToPoint:CGPointMake(pt.x, pt.y)];
     }
-   
+    
     return [starPath CGPath];
 }
 
@@ -214,11 +232,6 @@
         }
     }
     
-    //
-    SKAction *waitAction   = [SKAction waitForDuration:.4f];
-    SKAction *doubleAction = [SKAction moveTo:CGPointMake(1.0f, 1.0f) duration:.3f];
-    SKAction *tripleAction = [SKAction sequence: @[waitAction, doubleAction]];
-
     // Loop through tiles and scale to zilch
     __block NSInteger index = 0;
     for (NSInteger row = minRow; row < maxRow + 1; row++) {
@@ -229,39 +242,19 @@
                 SKAction *dropPositionY = [SKAction moveTo:hexagon.node.defaultPosition duration:.3f];
                 SKAction *sequence      = [SKAction sequence:@[wait, dropPositionY]];
                 
-                dropPositionY.timingMode = SKActionTimingEaseInEaseOut;
-                
                 CGPoint position = CGPointMake(
-                                              hexagon.node.position.x,
-                                              CGRectGetHeight([[UIScreen mainScreen] bounds]) + CGRectGetHeight(hexagon.node.frame)/2 + 5.0f
-                                              );
+                                               hexagon.node.position.x,
+                                               CGRectGetHeight([[UIScreen mainScreen] bounds]) + CGRectGetHeight(hexagon.node.frame)/2 + 5.0f
+                                               );
                 
                 hexagon.node.hidden = NO;
                 hexagon.node.position = position;
                 [hexagon.node runAction:sequence completion:^{
                     
                     if (index == countTo) {
-                        NSTimeInterval completionTime = 0.0f;
-                        for (HDHexagon *hexagon in tiles) {
-                            [hexagon.node removeAllActions];
-                            
-                            NSTimeInterval current = completionTime;
-                            if ([hexagon.node childNodeWithName:HDDoubleKey]) {
-                                completionTime = (doubleAction.duration > completionTime) ? doubleAction.duration : current;
-                                [hexagon.node runAction:[SKAction runAction:doubleAction onChildWithName:HDDoubleKey]];
-                            }
-                            if ([[[hexagon.node children] lastObject] childNodeWithName:HDTripleKey]) {
-                                completionTime = (tripleAction.duration > completionTime) ? tripleAction.duration : current;
-                                [[[hexagon.node children] lastObject] runAction:[SKAction runAction:tripleAction onChildWithName:HDTripleKey]];
-                            }
-                            
-                            // SLOPPY need something like CATransaction, because this shit sucks
-                            dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(completionTime * NSEC_PER_SEC)),
-                                           dispatch_get_main_queue(), ^{
-                                               if (completion) {
-                                                   completion();
-                                               }
-                                           });
+                        
+                        if (completion) {
+                            completion();
                         }
                     }
                     index++;
@@ -283,7 +276,7 @@
     NSUInteger countTo = tiles.count -1;
     
     // Scale to zero
-    SKAction *scaleDown = [SKAction scaleTo:0.0f duration:.35f];
+    SKAction *scaleDown = [SKAction scaleTo:0.0f duration:.3f];
     
     // Loop through tiles and scale to zilch
     __block NSInteger index = 0;
@@ -294,19 +287,19 @@
         
         // Setup actions
         SKAction *hide     = [SKAction hide];
-        SKAction *sequence = [SKAction sequence:@[ scaleDown, hide]];
+        SKAction *sequence = [SKAction sequence:@[scaleDown, hide]];
         
         [(SKShapeNode *)tile.node runAction:sequence
-                  completion:^{
-                      tile.node.scale = 1.0f;
-                      [tile restoreToInitialState];
-                      if (index == countTo) {
-                          if (completion) {
-                              completion();
-                          }
-                      }
-                      index++;
-                  }];
+                                 completion:^{
+                                     tile.node.scale = 1.0f;
+                                     [tile restoreToInitialState];
+                                     if (index == countTo) {
+                                         if (completion) {
+                                             completion();
+                                         }
+                                     }
+                                     index++;
+                                 }];
     }
 }
 
@@ -342,20 +335,6 @@
         }
     }
     return hexagons;
-}
-
-+ (CGPoint)pointForColumn:(NSInteger)column
-                      row:(NSInteger)row
-          numberOfColumns:(NSUInteger)numberOfColumns
-             numberOfRows:(NSUInteger)numberOfRows
-{
-    const CGFloat kTileHeightInsetMultiplier = .855f;
-    const CGFloat tileSize = [[UIScreen mainScreen] bounds].size.width / (numberOfColumns - 1);
-    const CGFloat kOriginY = ((row * (tileSize * kTileHeightInsetMultiplier)) );
-    const CGFloat kOriginX = ((column * tileSize));
-    const CGFloat kAlternateOffset = (row % 2 == 0) ? tileSize/2 : 0.0f;
-    
-    return CGPointMake(kAlternateOffset + kOriginX, kOriginY);
 }
 
 

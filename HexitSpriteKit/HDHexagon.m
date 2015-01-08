@@ -60,18 +60,16 @@ NSString * const HDTripleKey = @"triple";
             [self.node setStrokeColor:[SKColor flatTurquoiseColor]
                             fillColor:[SKColor flatWetAsphaltColor]];
             
-            [self.node addDoubleNodeWithStroke:self.node.strokeColor
-                                          fill:[SKColor flatWetAsphaltColor]];
+            [self.node addHexaLayer];
+            
             break;
         case HDHexagonTypeTriple:
             [self.node setStrokeColor:[SKColor flatSilverColor]
                             fillColor:[SKColor flatWetAsphaltColor]];
             
-            [self.node addDoubleNodeWithStroke:self.node.strokeColor
-                                          fill:[SKColor flatWetAsphaltColor]];
+            [self.node addHexaLayer];
+            [self.node addHexaLayer];
             
-            [self.node addTripleNodeWithStroke:self.node.strokeColor
-                                          fill:[SKColor flatWetAsphaltColor]];
             break;
         case HDHexagonTypeEnd:
             self.state = HDHexagonStateDisabled;
@@ -116,7 +114,7 @@ NSString * const HDTripleKey = @"triple";
         case HDHexagonTypeDouble:
             switch (self.touchesCount) {
                 case 1:{
-                    SKShapeNode *shapeNode = (SKShapeNode *)[self.node childNodeWithName:HDDoubleKey];
+                    SKShapeNode *shapeNode = [[(SKShapeNode *)self.node children] firstObject];
                     [shapeNode removeFromParent];
                 } break;
                 case 2:

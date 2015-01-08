@@ -16,11 +16,9 @@
 @property (nonatomic, strong) UIView *container;
 @property (nonatomic, strong) UILabel *indexLabel;
 @property (nonatomic, strong) UIImageView *imageView;
-@property (nonatomic, assign) HDHexagonState state;
 @end
 
-@implementation HDHexagonView{
-    HDHexagonType _type;
+@implementation HDHexagonView {
     UIColor *_hexaStroke;
 }
 
@@ -34,10 +32,9 @@
     return (CAShapeLayer *)self.layer;
 }
 
-- (id)initWithFrame:(CGRect)frame type:(HDHexagonType)type strokeColor:(UIColor *)strokeColor
+- (id)initWithFrame:(CGRect)frame strokeColor:(UIColor *)strokeColor
 {
     if (self = [super initWithFrame:frame]) {
-        _type = type;
         _hexaStroke = strokeColor;
         [self _setup];
     }
@@ -46,13 +43,13 @@
 
 - (void)_setup
 {
-    [self.hexaLayer setFillColor:[[UIColor flatWetAsphaltColor] CGColor]];
-    [self.hexaLayer setPath:[[HDHelper roundedPolygonPathWithRect:self.bounds lineWidth:0 sides:6 cornerRadius:2.0f] CGPath]];
-    [self.hexaLayer setStrokeColor:[_hexaStroke CGColor]];
-    [self.hexaLayer setLineWidth:8.0f];
+    self.hexaLayer.path        = [HDHelper hexagonPathForBounds:self.bounds];
+    self.hexaLayer.fillColor   = [[UIColor flatWetAsphaltColor] CGColor];
+    self.hexaLayer.strokeColor = [_hexaStroke CGColor];
+    self.hexaLayer.lineWidth   = 8.0f;
     
     self.container = [[UIView alloc] initWithFrame:self.bounds];
-    self.container.userInteractionEnabled = NO;
+    self.container.userInteractionEnabled = YES;
     [self addSubview:self.container];
     
     self.imageView = [[UIImageView alloc] initWithFrame:self.bounds];
@@ -62,21 +59,21 @@
     
     self.indexLabel = [[UILabel alloc] initWithFrame:self.bounds];
     self.indexLabel.userInteractionEnabled = NO;
-    self.indexLabel.font = GILLSANS(CGRectGetWidth(self.bounds)/3);
+    self.indexLabel.hidden        = YES;
+    self.indexLabel.font          = GILLSANS(CGRectGetWidth(self.bounds)/3);
     self.indexLabel.textAlignment = NSTextAlignmentCenter;
-    self.indexLabel.textColor = [UIColor whiteColor];
+    self.indexLabel.textColor     = [UIColor flatWetAsphaltColor];
     [self.container addSubview:self.indexLabel];
-    
-    if (_type == HDHexagonTypePoint) {
-        self.container.transform = CGAffineTransformMakeRotation(-M_PI_2); 
-        self.transform = CGAffineTransformMakeRotation(M_PI_2);
-    }
 }
 
-- (void)setTag:(NSInteger)tag
+#pragma mark - Setters
+
+- (void)setIndex:(NSInteger)index
 {
-    [super setTag:tag];
-    [self.container setTag:tag];
+    _index = index;
+    
+    self.indexLabel.text = [NSString stringWithFormat:@"%zd", index];
+    self.container.tag = index;
 }
 
 - (void)setBackgroundColor:(UIColor *)backgroundColor
@@ -84,15 +81,17 @@
     NSAssert(NO, @"Use setFill: or setStroke: %@",NSStringFromSelector(_cmd));
 }
 
-- (void)setState:(HDHexagonState)state index:(NSInteger)index
+- (void)setState:(HDHexagonState)state
 {
-    [self setState:state];
+    _state = state;
+    
+    NSLog(@"%lu",state);
     
     if (state != HDHexagonStateLocked) {
-        self.hexaLayer.fillColor  = [[UIColor flatPeterRiverColor] CGColor];
-        self.hexaLayer.strokeColor = self.hexaLayer.fillColor;
-        self.indexLabel.textColor = [UIColor flatWetAsphaltColor];
-        self.indexLabel.text      = [NSString stringWithFormat:@"%lu", index];
+        
+        self.hexaLayer.fillColor   = [[UIColor flatPeterRiverColor] CGColor];
+        self.hexaLayer.strokeColor = [[UIColor flatPeterRiverColor] CGColor];;
+        self.indexLabel.hidden = NO;
         
         // Move text down to make room for completion start
         CGPoint labelPosition = self.indexLabel.center;
@@ -108,10 +107,8 @@
         
         return;
     }
-    
     self.hexaLayer.strokeColor = [[UIColor flatEmeraldColor] CGColor];
     self.imageView.image = [UIImage imageNamed:@"Locked"];
-
 }
 
 @end

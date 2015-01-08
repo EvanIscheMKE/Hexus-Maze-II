@@ -11,35 +11,103 @@
 #import "HDHexagonNode.h"
 #import "SKColor+HDColor.h"
 
-static const CGFloat kHexagonInset = 9.0f;
+static const CGFloat kPadding = 3.0f;
+static const CGFloat kHexagonInset = 9.0;
 
 @interface HDHexagonNode ()
-
+@property (nonatomic, strong) SKLabelNode *countLabel;
 @end
 
 @implementation HDHexagonNode {
-    SKShapeNode *_indicator;
+    SKSpriteNode *_indicator;
+    NSUInteger _layerIndex;
 }
 
-- (instancetype)init
+- (instancetype)initWithPath:(CGPathRef)pathRef
 {
     if (self = [super init]) {
-        self.lineWidth = 6;
+        
+        self.lineWidth = 6.0f;
+        self.pathRef   = pathRef;
+        self.fillColor = [UIColor yellowColor];
+
     }
     return self;
 }
 
++ (instancetype)shapeNodeWithPath:(CGPathRef)pathRef
+{
+    return [[HDHexagonNode alloc] initWithPath:pathRef];
+}
+
++ (SKTexture *)textureFromPath:(CGPathRef)pathRef
+                          size:(CGSize)size
+                   strokeColor:(UIColor *)strokeColor
+                     fillColor:(UIColor *)fillColor
+                     lineWidth:(CGFloat)lineWidth
+                numberOfLayers:(NSUInteger)layersCount
+{
+    if (!pathRef) {
+        return nil;
+    }
+    
+    if (lineWidth < 1) {
+        return nil;
+    }
+    
+    if (layersCount == 0) {
+        return nil;
+    }
+    
+    if (CGSizeEqualToSize(size, CGSizeZero)) {
+        return nil;
+    }
+    
+    if (strokeColor == nil) {
+        return nil;
+    }
+    
+    if (fillColor == nil) {
+        return nil;
+    }
+    
+    UIGraphicsBeginImageContextWithOptions(size, NO, [[UIScreen mainScreen] scale]);
+    
+    [fillColor setFill];
+    [strokeColor setStroke];
+    
+    UIBezierPath *path = [UIBezierPath bezierPathWithCGPath:pathRef];
+    path.lineWidth = lineWidth;
+    path.lineJoinStyle = kCGLineJoinRound;
+    [path fill];
+    [path stroke];
+    
+    UIImage *imageForTexture = UIGraphicsGetImageFromCurrentImageContext();
+    UIGraphicsEndImageContext();
+    
+    return [SKTexture textureWithImage:imageForTexture];
+}
+
 - (void)_setup
 {
-    CGRect pathFrame = CGRectMake(0.0, 0.0, CGRectGetWidth(self.frame)/4, CGRectGetWidth(self.frame)/4);
-    CGPathRef path = [HDHelper hexagonPathForBounds:pathFrame];
-    _indicator = [SKShapeNode shapeNodeWithPath:path centered:YES];
-    _indicator.strokeColor = [SKColor whiteColor];
-    _indicator.fillColor   = [SKColor flatWetAsphaltColor];
+    CGSize pathSize = CGSizeMake(CGRectGetWidth(self.frame)/4, CGRectGetWidth(self.frame)/4);
+    UIGraphicsBeginImageContextWithOptions(pathSize, NO, [[UIScreen mainScreen] scale]);
+    
+    [[UIColor whiteColor] setStroke];
+    
+    CGRect pathFrame = CGRectMake(2.0f, 2.0f, CGRectGetWidth(self.frame)/4 - 4.0f, CGRectGetWidth(self.frame)/4 - 4.0f);
+    CGPathRef path = [[HDHelper bezierHexagonInFrame:pathFrame] CGPath];
+    UIBezierPath *bezierDot = [UIBezierPath bezierPathWithCGPath:path];
+    bezierDot.lineWidth = 3.0f;
+    [bezierDot stroke];
+    
+    UIImage *indicator = UIGraphicsGetImageFromCurrentImageContext();
+    UIGraphicsEndImageContext();
+    
+    SKTexture *indicatorTexture = [SKTexture textureWithImage:indicator];
+    _indicator = [SKSpriteNode spriteNodeWithTexture:indicatorTexture];
     _indicator.position    = CGPointZero;
-    _indicator.lineWidth   = 4;
-    _indicator.hidden      = YES;
-    [self addChild:_indicator];
+    [self insertChild:_indicator atIndex:0];
 }
 
 - (void)setStrokeColor:(UIColor *)strokeColor fillColor:(UIColor *)fillColor
@@ -66,39 +134,27 @@ static const CGFloat kHexagonInset = 9.0f;
     }
 }
 
-- (void)addDoubleNodeWithStroke:(UIColor *)stroke fill:(UIColor *)fill
+- (void)addHexaLayer;
 {
-    const CGFloat kTileSizeWithInset = CGRectGetHeight(CGRectInset(self.frame,
-                                                                   kHexagonInset,
-                                                                   kHexagonInset)
-                                                       );
-    
-    CGPathRef pathRef = [HDHelper hexagonPathForBounds:CGRectMake(0.0f, 0.0f, kTileSizeWithInset, kTileSizeWithInset)];
-    SKShapeNode *hexagon = [SKShapeNode shapeNodeWithPath:pathRef centered:YES];
-    hexagon.name        = HDDoubleKey;
-    hexagon.antialiased = YES;
-    hexagon.position    = CGPointZero;
-    hexagon.strokeColor = stroke;
-    hexagon.fillColor   = fill;
-    hexagon.lineWidth   = self.lineWidth;
-    [self addChild:hexagon];
-}
 
-- (void)addTripleNodeWithStroke:(UIColor *)stroke fill:(UIColor *)fill;
-{
-    CGRect rectWithInset = CGRectInset([(SKShapeNode *)[[self children] lastObject] frame], kHexagonInset, kHexagonInset);
+    CGRect rectWithInset = CGRectInset([[self children] lastObject] ?
+                                       [(SKSpriteNode *)[[self children] lastObject] frame] : self.frame, kHexagonInset, kHexagonInset);
     
-    const CGFloat kTileSizeWithInset = CGRectGetHeight(rectWithInset);
+    CGRect pathFrame = CGRectMake(kPadding, kPadding, CGRectGetHeight(rectWithInset) - kPadding*2, CGRectGetHeight(rectWithInset) - kPadding*2);
     
-    CGPathRef pathRef = [HDHelper hexagonPathForBounds:CGRectMake(0.0f, 0.0f, kTileSizeWithInset, kTileSizeWithInset)];
-    SKShapeNode *hexagon = [SKShapeNode shapeNodeWithPath:pathRef centered:YES];
-    hexagon.name        = HDTripleKey;
-    hexagon.antialiased = YES;
-    hexagon.position    = CGPointZero;
-    hexagon.strokeColor = stroke;
-    hexagon.fillColor   = fill;
-    hexagon.lineWidth   = self.lineWidth;
-    [[[self children] lastObject] addChild:hexagon];
+    CGPathRef pathRef = [[HDHelper bezierHexagonInFrame:pathFrame] CGPath];
+    
+    SKTexture *imageTexture = [[self class] textureFromPath:pathRef
+                                                       size:CGSizeMake(CGRectGetHeight(rectWithInset),
+                                                                       CGRectGetHeight(rectWithInset))
+                                                strokeColor:self.strokeColor
+                                                  fillColor:self.fillColor
+                                                  lineWidth:6.0f
+                                             numberOfLayers:1];
+    
+    SKSpriteNode *hexagon = [SKSpriteNode spriteNodeWithTexture:imageTexture];
+    hexagon.position    = CGPointMake(1.0f, 1.0f);
+    [[[self children] lastObject] ? [[self children] lastObject] : self addChild:hexagon];
 }
 
 - (void)indicatorPositionFromHexagonType:(HDHexagonType)type
@@ -108,31 +164,57 @@ static const CGFloat kHexagonInset = 9.0f;
 
 - (void)indicatorPositionFromHexagonType:(HDHexagonType)type withTouchesCount:(NSInteger)count;
 {
-    if (!_indicator) {
-        [self _setup];
-    }
-
     if (type == HDHexagonTypeNone) {
         [_indicator removeFromParent];
         _indicator = nil;
     } else {
-        _indicator.hidden = NO;
-        
-        CGPoint position = CGPointZero;
-        switch (type) {
-            case HDHexagonTypeDouble:
-                if (count == 0) {
-                    position = CGPointMake(1.0f, 1.0f);
-                } break;
-            case HDHexagonTypeTriple:
-                if (count == 0) {
-                    position = CGPointMake(2.0f, 2.0f);
-                } else if (count == 1) {
-                    position = CGPointMake(1.0f, 1.0f);
-                } break;
-        }
-        _indicator.position = position;
+        [self _setup];
+        _indicator.position = CGPointMake(0.0f, 0.0f);
     }
+}
+
+- (void)_invalidate
+{
+  self.texture = [[self class] textureFromPath:self.pathRef
+                                          size:self.size
+                                   strokeColor:self.strokeColor
+                                     fillColor:self.fillColor
+                                     lineWidth:self.lineWidth
+                                numberOfLayers:1];
+}
+
+- (void)setStrokeColor:(UIColor *)strokeColor
+{
+    _strokeColor = strokeColor;
+    [self _invalidate];
+}
+
+- (void)setFillColor:(UIColor *)fillColor
+{
+    _fillColor = fillColor;
+    [self _invalidate];
+}
+
+- (void)setLineWidth:(CGFloat)lineWidth
+{
+    _lineWidth = lineWidth;
+    [self _invalidate];
+}
+
+- (void)setPathRef:(CGPathRef)pathRef
+{
+    if (_pathRef != nil) {
+        CGPathRelease(pathRef);
+    }
+    
+    _pathRef = CGPathRetain(pathRef);
+    [self _invalidate];
+}
+
+- (void)setSize:(CGSize)size
+{
+    [super setSize:size];
+    [self _invalidate];
 }
 
 @end

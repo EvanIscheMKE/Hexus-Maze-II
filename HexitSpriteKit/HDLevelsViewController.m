@@ -135,13 +135,11 @@ static const CGFloat kTileHeightInsetMultiplier = .855f;
             HDLevel *level = [[HDMapManager sharedManager] levelAtIndex:tagIndex - 1];
             
             CGRect bounds = CGRectMake(0.0f, 0.0f, kHexaSize - kPadding, kHexaSize - kPadding);
-            HDHexagonView *hexagon = [[HDHexagonView alloc] initWithFrame:bounds
-                                                                     type:HDHexagonTypePoint
-                                                              strokeColor:[UIColor flatPeterRiverColor]];
+            HDHexagonView *hexagon = [[HDHexagonView alloc] initWithFrame:bounds strokeColor:[UIColor flatPeterRiverColor]];
             hexagon.row    = row;
             hexagon.column = column;
-            hexagon.tag    = tagIndex;
             hexagon.hidden = YES;
+            hexagon.index  = tagIndex;
             hexagon.center = [HDLevelsViewController _pointForColumn:column row:row];
              
             [pageArray addObject:hexagon];
@@ -149,14 +147,14 @@ static const CGFloat kTileHeightInsetMultiplier = .855f;
             
             UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(_beginGame:)];
             tap.numberOfTapsRequired = 1;
-            [hexagon addGestureRecognizer:tap];
+            [hexagon.container addGestureRecognizer:tap];
             
             if (level.completed) {
-                [hexagon setState:HDHexagonStateCompleted index:tagIndex];
+                hexagon.state = HDHexagonStateCompleted;
             } else if (!level.completed && level.isUnlocked) {
-                [hexagon setState:HDHexagonStateUnlocked index:tagIndex];
+                hexagon.state = HDHexagonStateUnlocked;
             } else {
-                [hexagon setState:HDHexagonStateLocked index:tagIndex];
+                hexagon.state = HDHexagonStateLocked;
             }
             tagIndex++;
         }
@@ -172,7 +170,7 @@ static const CGFloat kTileHeightInsetMultiplier = .855f;
 
 - (void)_beginGame:(UITapGestureRecognizer *)sender
 {
-    self.view.userInteractionEnabled = ([(HDHexagonView *)sender.view state] == HDHexagonStateLocked);
+    _containerView.userInteractionEnabled = ([(HDHexagonView *)sender.view.superview state] == HDHexagonStateLocked);
     [self.delegate levelsViewController:self didSelectLevel:[sender.view tag]];
 }
 

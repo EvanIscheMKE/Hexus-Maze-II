@@ -56,7 +56,7 @@
     self.imageView.animationImages      = animationImages;
     self.imageView.animationRepeatCount = NSIntegerMax;
     self.imageView.animationDuration    = animationImages.count / 2;
-    self.imageView.center = CGPointMake(CGRectGetMidX(self.view.bounds), CGRectGetMidY(self.view.bounds) - 20.0f);
+    self.imageView.center = CGPointMake(CGRectGetMidX(self.view.bounds), CGRectGetMidY(self.view.bounds) + 78.0f);
     [self.view addSubview:self.imageView];
 }
 
