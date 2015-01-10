@@ -14,7 +14,8 @@
 		386CF62D1A3A250D006A8381 /* Mellowtron.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 386CF62C1A3A250D006A8381 /* Mellowtron.mp3 */; };
 		386CF62F1A3B6FA5006A8381 /* win.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 386CF62E1A3B6FA5006A8381 /* win.mp3 */; };
 		3874B9A61A20736000400CEB /* HDAlertNode.m in Sources */ = {isa = PBXBuildFile; fileRef = 3874B9A51A20736000400CEB /* HDAlertNode.m */; };
-		3880AE7A1A5DFCA90094C6F6 /* GameHexagon@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 3880AE791A5DFCA90094C6F6 /* GameHexagon@2x.png */; };
+		3879FECB1A6108F8002C2E1A /* HexusLogo@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 3879FECA1A6108F8002C2E1A /* HexusLogo@2x.png */; };
+		3879FECD1A6113DA002C2E1A /* FillInTile@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 3879FECC1A6113DA002C2E1A /* FillInTile@2x.png */; };
 		389E94F01A44A2F000F2DF05 /* HDGridScrollView.m in Sources */ = {isa = PBXBuildFile; fileRef = 389E94EF1A44A2F000F2DF05 /* HDGridScrollView.m */; };
 		389E94F61A47DE7F00F2DF05 /* CoreMotion.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 389E94F51A47DE7F00F2DF05 /* CoreMotion.framework */; };
 		389E94F81A488D5100F2DF05 /* Grid-76.json in Resources */ = {isa = PBXBuildFile; fileRef = 389E94F71A488D5100F2DF05 /* Grid-76.json */; };
@@ -31,7 +32,7 @@
 		389E95D71A4C1A7F00F2DF05 /* HDNavigationBar.m in Sources */ = {isa = PBXBuildFile; fileRef = 389E95D61A4C1A7F00F2DF05 /* HDNavigationBar.m */; };
 		38A50F291A57C66100DE9692 /* HDTutorialParentViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 38A50F281A57C66100DE9692 /* HDTutorialParentViewController.m */; };
 		38A50F2C1A57C66E00DE9692 /* HDTutorialChildViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 38A50F2B1A57C66E00DE9692 /* HDTutorialChildViewController.m */; };
-		38ABD5F21A4153A800C4321D /* HDHexagonView.m in Sources */ = {isa = PBXBuildFile; fileRef = 38ABD5F11A4153A800C4321D /* HDHexagonView.m */; };
+		38ABD5F21A4153A800C4321D /* HDHexagonButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 38ABD5F11A4153A800C4321D /* HDHexagonButton.m */; };
 		38ABD5F71A420A3500C4321D /* HDHexagonControl.m in Sources */ = {isa = PBXBuildFile; fileRef = 38ABD5F61A420A3500C4321D /* HDHexagonControl.m */; };
 		38BAF5281A1FE10B004D5660 /* GameKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 38BAF5271A1FE10B004D5660 /* GameKit.framework */; };
 		38BAF5411A1FFC64004D5660 /* HDGridViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 38BAF5401A1FFC64004D5660 /* HDGridViewController.m */; };
@@ -195,7 +196,8 @@
 		386CF62E1A3B6FA5006A8381 /* win.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = win.mp3; sourceTree = "<group>"; };
 		3874B9A41A20736000400CEB /* HDAlertNode.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HDAlertNode.h; sourceTree = "<group>"; };
 		3874B9A51A20736000400CEB /* HDAlertNode.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HDAlertNode.m; sourceTree = "<group>"; };
-		3880AE791A5DFCA90094C6F6 /* GameHexagon@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "GameHexagon@2x.png"; sourceTree = "<group>"; };
+		3879FECA1A6108F8002C2E1A /* HexusLogo@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "HexusLogo@2x.png"; sourceTree = "<group>"; };
+		3879FECC1A6113DA002C2E1A /* FillInTile@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "FillInTile@2x.png"; sourceTree = "<group>"; };
 		389E94EE1A44A2F000F2DF05 /* HDGridScrollView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HDGridScrollView.h; sourceTree = "<group>"; };
 		389E94EF1A44A2F000F2DF05 /* HDGridScrollView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HDGridScrollView.m; sourceTree = "<group>"; };
 		389E94F51A47DE7F00F2DF05 /* CoreMotion.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreMotion.framework; path = System/Library/Frameworks/CoreMotion.framework; sourceTree = SDKROOT; };
@@ -219,8 +221,8 @@
 		38A50F281A57C66100DE9692 /* HDTutorialParentViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HDTutorialParentViewController.m; sourceTree = "<group>"; };
 		38A50F2A1A57C66E00DE9692 /* HDTutorialChildViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HDTutorialChildViewController.h; sourceTree = "<group>"; };
 		38A50F2B1A57C66E00DE9692 /* HDTutorialChildViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HDTutorialChildViewController.m; sourceTree = "<group>"; };
-		38ABD5F01A4153A800C4321D /* HDHexagonView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HDHexagonView.h; sourceTree = "<group>"; };
-		38ABD5F11A4153A800C4321D /* HDHexagonView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HDHexagonView.m; sourceTree = "<group>"; };
+		38ABD5F01A4153A800C4321D /* HDHexagonButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HDHexagonButton.h; sourceTree = "<group>"; };
+		38ABD5F11A4153A800C4321D /* HDHexagonButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HDHexagonButton.m; sourceTree = "<group>"; };
 		38ABD5F51A420A3500C4321D /* HDHexagonControl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HDHexagonControl.h; sourceTree = "<group>"; };
 		38ABD5F61A420A3500C4321D /* HDHexagonControl.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HDHexagonControl.m; sourceTree = "<group>"; };
 		38BAF5271A1FE10B004D5660 /* GameKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = GameKit.framework; path = System/Library/Frameworks/GameKit.framework; sourceTree = SDKROOT; };
@@ -598,7 +600,6 @@
 		38C0A8351A07251600C552F1 = {
 			isa = PBXGroup;
 			children = (
-				3880AE791A5DFCA90094C6F6 /* GameHexagon@2x.png */,
 				38C0A8401A07251700C552F1 /* HexitSpriteKit */,
 				38C0A85A1A07251700C552F1 /* HexitSpriteKitTests */,
 				38C0A8671A07252E00C552F1 /* Frameworks */,
@@ -741,10 +742,11 @@
 				38C0A8771A075FBA00C552F1 /* HDHexagonNode.m */,
 				3874B9A41A20736000400CEB /* HDAlertNode.h */,
 				3874B9A51A20736000400CEB /* HDAlertNode.m */,
-				38ABD5F01A4153A800C4321D /* HDHexagonView.h */,
-				38ABD5F11A4153A800C4321D /* HDHexagonView.m */,
+				38ABD5F01A4153A800C4321D /* HDHexagonButton.h */,
+				38ABD5F11A4153A800C4321D /* HDHexagonButton.m */,
 				38ABD5F51A420A3500C4321D /* HDHexagonControl.h */,
 				38ABD5F61A420A3500C4321D /* HDHexagonControl.m */,
+				3879FECA1A6108F8002C2E1A /* HexusLogo@2x.png */,
 				389E94EE1A44A2F000F2DF05 /* HDGridScrollView.h */,
 				389E94EF1A44A2F000F2DF05 /* HDGridScrollView.m */,
 				389E953B1A496FF400F2DF05 /* HDLockedView.h */,
@@ -769,6 +771,7 @@
 				38C0A8741A0758AC00C552F1 /* HDGridManager.m */,
 				38F5A6BB1A08014F0036750A /* HDHexagon.h */,
 				38F5A6BC1A08014F0036750A /* HDHexagon.m */,
+				3879FECC1A6113DA002C2E1A /* FillInTile@2x.png */,
 				38C67CE11A0ABD050038526C /* HDHelper.h */,
 				38C67CE21A0ABD050038526C /* HDHelper.m */,
 				38C2E1391A2671F3008D5F33 /* HDLevelGenerator.h */,
@@ -910,7 +913,6 @@
 				38D4249C1A4F6C1A00FD21A2 /* C3.m4a in Resources */,
 				386CF62D1A3A250D006A8381 /* Mellowtron.mp3 in Resources */,
 				38C67CEF1A0ACE0C0038526C /* Grid-3.json in Resources */,
-				3880AE7A1A5DFCA90094C6F6 /* GameHexagon@2x.png in Resources */,
 				38D4247C1A4F6C1A00FD21A2 /* G2.m4a in Resources */,
 				38D424961A4F6C1A00FD21A2 /* B3.m4a in Resources */,
 				38C67CF91A0ACE340038526C /* Grid-8.json in Resources */,
@@ -981,6 +983,7 @@
 				38D4248E1A4F6C1A00FD21A2 /* C5.m4a in Resources */,
 				38BDDCE31A20FA3A005035EE /* Grid-49.json in Resources */,
 				38C67D011A0ACE530038526C /* Grid-12.json in Resources */,
+				3879FECD1A6113DA002C2E1A /* FillInTile@2x.png in Resources */,
 				38C67D071A0ACE690038526C /* Grid-15.json in Resources */,
 				38D4249B1A4F6C1A00FD21A2 /* D3.m4a in Resources */,
 				38BDDCF81A20FBAA005035EE /* Grid-58.json in Resources */,
@@ -997,6 +1000,7 @@
 				38D424911A4F6C1A00FD21A2 /* G4.m4a in Resources */,
 				38BDDCF01A20FB78005035EE /* Grid-54.json in Resources */,
 				38C67D0D1A0AE3990038526C /* Grid-18.json in Resources */,
+				3879FECB1A6108F8002C2E1A /* HexusLogo@2x.png in Resources */,
 				38BDDCC71A20F96D005035EE /* Grid-35.json in Resources */,
 				38BDDCE11A20FA32005035EE /* Grid-48.json in Resources */,
 				38BDDCEC1A20FB67005035EE /* Grid-52.json in Resources */,
@@ -1061,7 +1065,7 @@
 				38C67D2C1A0AEBD50038526C /* HDGameCenterManager.m in Sources */,
 				38A50F2C1A57C66E00DE9692 /* HDTutorialChildViewController.m in Sources */,
 				38C1223D1A2C29DC00224B33 /* HDSoundManager.m in Sources */,
-				38ABD5F21A4153A800C4321D /* HDHexagonView.m in Sources */,
+				38ABD5F21A4153A800C4321D /* HDHexagonButton.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

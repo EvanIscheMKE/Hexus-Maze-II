@@ -31,7 +31,3 @@ NSString * const HDVibrationKey      = @"vibrationKey";
 NSString * const HDSoundLoopKey = @"Mellowtron.mp3";
 NSString * const HDButtonSound = @"menuClicked.wav";
 NSString * const HDSwipeSound  = @"Swooshed.mp3";
-NSString * const HDC3         = @"C4.m4a";
-NSString * const HDD3         = @"D4.m4a";
-NSString * const HDE3         = @"E4.m4a";
-NSString * const HDF3         = @"F4.m4a";

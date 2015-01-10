@@ -56,8 +56,10 @@ static const NSInteger NumberOfColumns = 9;
 @property (nonatomic, readonly) NSInteger column;
 @property (nonatomic, readonly) NSInteger row;
 
-- (instancetype)initWithRow:(NSInteger)row column:(NSInteger)column NS_DESIGNATED_INITIALIZER;
+- (instancetype)initWithRow:(NSInteger)row column:(NSInteger)column type:(HDHexagonType)type NS_DESIGNATED_INITIALIZER;
 
+- (UIColor *)emitterColor;
+- (NSString *)defaultImagePath;
 - (BOOL)selectedAfterRecievingTouches;
 - (void)restoreToInitialState;
 

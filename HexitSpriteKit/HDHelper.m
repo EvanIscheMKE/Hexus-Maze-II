@@ -282,17 +282,16 @@
     __block NSInteger index = 0;
     for (HDHexagon *tile in tiles) {
         
-        tile.node.fillColor = tile.node.strokeColor;
         [[tile.node children] makeObjectsPerformSelector:@selector(removeFromParent)];
         
         // Setup actions
         SKAction *hide     = [SKAction hide];
         SKAction *sequence = [SKAction sequence:@[scaleDown, hide]];
         
-        [(SKShapeNode *)tile.node runAction:sequence
-                                 completion:^{
-                                     tile.node.scale = 1.0f;
-                                     [tile restoreToInitialState];
+        [tile.node runAction:sequence
+                  completion:^{
+                        tile.node.scale = 1.0f;
+                        [tile restoreToInitialState];
                                      if (index == countTo) {
                                          if (completion) {
                                              completion();

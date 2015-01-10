@@ -106,11 +106,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "HexitSpriteKit/HDScene.m"
-            timestampString = "442394263.339798"
+            timestampString = "442487204.559636"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "320"
-            endingLineNumber = "320"
+            startingLineNumber = "292"
+            endingLineNumber = "292"
             landmarkName = "-_checkGameStateForTile:"
             landmarkType = "5">
          </BreakpointContent>
@@ -148,11 +148,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "HexitSpriteKit/HDHexagonNode.m"
-            timestampString = "442401307.442481"
+            timestampString = "442473368.042751"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "171"
-            endingLineNumber = "171"
+            startingLineNumber = "62"
+            endingLineNumber = "62"
             landmarkName = "-indicatorPositionFromHexagonType:withTouchesCount:"
             landmarkType = "5">
          </BreakpointContent>
@@ -164,11 +164,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "HexitSpriteKit/HDScene.m"
-            timestampString = "442394263.339798"
+            timestampString = "442487204.559636"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "495"
-            endingLineNumber = "495"
+            startingLineNumber = "467"
+            endingLineNumber = "467"
             landmarkName = "-runAction:withKey:"
             landmarkType = "5">
          </BreakpointContent>
@@ -179,13 +179,13 @@
             shouldBeEnabled = "Yes"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
-            filePath = "HexitSpriteKit/HDHexagonNode.m"
-            timestampString = "442400565.019567"
+            filePath = "HexitSpriteKit/HDHexagon.m"
+            timestampString = "442570622.517912"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "74"
-            endingLineNumber = "74"
-            landmarkName = "+textureFromPath:size:strokeColor:fillColor:lineWidth:numberOfLayers:"
+            startingLineNumber = "287"
+            endingLineNumber = "287"
+            landmarkName = "-_disabledTile"
             landmarkType = "5">
          </BreakpointContent>
       </BreakpointProxy>
@@ -195,13 +195,29 @@
             shouldBeEnabled = "Yes"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
-            filePath = "HexitSpriteKit/HDHexagonView.m"
-            timestampString = "442448829.787377"
+            filePath = "HexitSpriteKit/HDHexagon.m"
+            timestampString = "442570622.517912"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "94"
-            endingLineNumber = "94"
-            landmarkName = "-setState:"
+            startingLineNumber = "277"
+            endingLineNumber = "277"
+            landmarkName = "-restoreToInitialState"
+            landmarkType = "5">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "HexitSpriteKit/HDHexagon.m"
+            timestampString = "442569755.529105"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "45"
+            endingLineNumber = "45"
+            landmarkName = "-setNode:"
             landmarkType = "5">
          </BreakpointContent>
       </BreakpointProxy>

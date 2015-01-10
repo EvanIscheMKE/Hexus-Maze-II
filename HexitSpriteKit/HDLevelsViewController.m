@@ -8,13 +8,13 @@
 
 #import "HDLevelsViewController.h"
 #import "HDMapManager.h"
-#import "HDHexagonView.h"
+#import "HDHexagonButton.h"
 #import "HDHelper.h"
 #import "UIColor+FlatColors.h"
 #import "HDLevel.h"
 #import "NSMutableArray+UniqueAdditions.h"
 
-static const CGFloat kPadding = 4.0f;
+static const CGFloat kPadding = 2.0f;
 static const CGFloat kTileHeightInsetMultiplier = .855f;
 
 #define kHexaSize [[UIScreen mainScreen] bounds].size.width / 6.0f
@@ -35,7 +35,7 @@ static const CGFloat kTileHeightInsetMultiplier = .855f;
     [CATransaction setCompletionBlock:completion];
     
     for (int row = 0; row < 7; row++) {
-        for (HDHexagonView *hexagon in self.containerView.subviews) {
+        for (HDHexagonButton *hexagon in self.containerView.subviews) {
             if (row == hexagon.row) {
                 
                 [hexagon performSelector:@selector(setHidden:) withObject:0 afterDelay:row * .1f];
@@ -57,7 +57,7 @@ static const CGFloat kTileHeightInsetMultiplier = .855f;
     [CATransaction begin];
     [CATransaction setCompletionBlock:completion];
     
-    for (HDHexagonView *hexa in self.containerView.subviews) {
+    for (HDHexagonButton *hexa in self.containerView.subviews) {
         
         dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(.3 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
             hexa.hidden = YES;
@@ -89,7 +89,6 @@ static const CGFloat kTileHeightInsetMultiplier = .855f;
 
 + (CGPoint)_pointForColumn:(NSInteger)column row:(NSInteger)row
 {
-    // Find position from Column/Row
     const CGFloat kOriginY = ((row * (kHexaSize * kTileHeightInsetMultiplier)) );
     const CGFloat kOriginX = kHexaSize/4 + ((column * kHexaSize));
     const CGFloat kAlternateOffset = (row % 2 == 0) ? kHexaSize / 2 : 0.0f;
@@ -134,28 +133,19 @@ static const CGFloat kTileHeightInsetMultiplier = .855f;
             
             HDLevel *level = [[HDMapManager sharedManager] levelAtIndex:tagIndex - 1];
             
-            CGRect bounds = CGRectMake(0.0f, 0.0f, kHexaSize - kPadding, kHexaSize - kPadding);
-            HDHexagonView *hexagon = [[HDHexagonView alloc] initWithFrame:bounds strokeColor:[UIColor flatPeterRiverColor]];
+            CGRect bounds = CGRectMake(0.0f, 0.0f, kHexaSize + kPadding, kHexaSize + kPadding);
+            HDHexagonButton *hexagon = [[HDHexagonButton alloc] initWithFrame:bounds];
+            [hexagon addTarget:self action:@selector(_beginGame:) forControlEvents:UIControlEventTouchDown];
+            hexagon.levelState  = level.state;
             hexagon.row    = row;
-            hexagon.column = column;
             hexagon.hidden = YES;
             hexagon.index  = tagIndex;
+            hexagon.tag    = tagIndex;
             hexagon.center = [HDLevelsViewController _pointForColumn:column row:row];
              
             [pageArray addObject:hexagon];
             [_containerView addSubview:hexagon];
             
-            UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(_beginGame:)];
-            tap.numberOfTapsRequired = 1;
-            [hexagon.container addGestureRecognizer:tap];
-            
-            if (level.completed) {
-                hexagon.state = HDHexagonStateCompleted;
-            } else if (!level.completed && level.isUnlocked) {
-                hexagon.state = HDHexagonStateUnlocked;
-            } else {
-                hexagon.state = HDHexagonStateLocked;
-            }
             tagIndex++;
         }
     }
@@ -164,14 +154,14 @@ static const CGFloat kTileHeightInsetMultiplier = .855f;
 - (void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
-    self.view.userInteractionEnabled = YES;
+    _containerView.userInteractionEnabled = YES;
     _containerView.center = CGPointMake(CGRectGetMidX(_levelsView.bounds), CGRectGetMidY(_levelsView.bounds));
 }
 
-- (void)_beginGame:(UITapGestureRecognizer *)sender
+- (void)_beginGame:(HDHexagonButton *)sender
 {
-    _containerView.userInteractionEnabled = ([(HDHexagonView *)sender.view.superview state] == HDHexagonStateLocked);
-    [self.delegate levelsViewController:self didSelectLevel:[sender.view tag]];
+    [self.delegate levelsViewController:self didSelectLevel:sender.tag];
+    _containerView.userInteractionEnabled = ([sender state] == HDLevelStateLocked);
 }
 
 @end

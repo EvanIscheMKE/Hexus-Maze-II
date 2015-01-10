@@ -13,7 +13,7 @@
 #import "HDMapManager.h"
 #import "HDHexagonControl.h"
 #import "HDSoundManager.h"
-#import "HDHexagonView.h"
+#import "HDHexagonButton.h"
 #import "HDNavigationBar.h"
 #import "HDGridScrollView.h"
 #import "UIColor+FlatColors.h"
@@ -25,17 +25,15 @@ static const NSUInteger kNumberOfLevelsPerPage = 28;
 static const CGFloat defaultContainerHeight   = 70.0f;
 static const CGFloat defaultPageControlHeight = 50.0f;
 
-@interface HDGridViewController () <UIScrollViewDelegate ,HDGridScrollViewDelegate, HDLevelsViewControllerDelegate, HDGridScrollViewDatasource>
-
+@interface HDGridViewController () <UIScrollViewDelegate ,HDGridScrollViewDelegate, HDLevelsViewControllerDelegate,HDGridScrollViewDatasource>
+@property (nonatomic, getter=isNavigationBarHidden, assign) BOOL navigationBarHidden;
 @property (nonatomic, strong) HDGridScrollView *scrollView;
 @property (nonatomic, strong) HDHexagonControl *control;
-
-@property (nonatomic, getter=isNavigationBarHidden, assign) BOOL navigationBarHidden;
-
-@property (nonatomic, strong) HDNavigationBar *container;
+@property (nonatomic, strong) HDNavigationBar  *container;
 @end
 
 @implementation HDGridViewController {
+    
     NSDictionary *_metrics;
     NSDictionary *_views;
     NSMutableArray *_pageViews;
@@ -47,7 +45,6 @@ static const CGFloat defaultPageControlHeight = 50.0f;
 - (void)viewDidLoad
 {
     self.view.backgroundColor = [UIColor flatWetAsphaltColor];
-    self.view.clipsToBounds = YES;
     [super viewDidLoad];
     [self _setup];
 }
@@ -245,7 +242,7 @@ static const CGFloat defaultPageControlHeight = 50.0f;
         [hexagons addObjectsFromArray:[[firstSubviews firstObject] subviews]];
     }
 
-    for (HDHexagonView *hexa in hexagons) {
+    for (HDHexagonButton *hexa in hexagons) {
         if (hexa.imageView) {
             [_imageViews addObject:hexa.imageView];
         }

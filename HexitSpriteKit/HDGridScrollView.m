@@ -7,7 +7,7 @@
 //
 
 #import "HDLevel.h"
-#import "HDHexagonView.h"
+#import "HDHexagonButton.h"
 #import "HDGridScrollView.h"
 #import "HDLockedView.h"
 #import "NSMutableArray+UniqueAdditions.h"

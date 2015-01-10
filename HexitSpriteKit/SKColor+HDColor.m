@@ -9,6 +9,7 @@
 #import "SKColor+HDColor.h"
 
 @implementation SKColor (HDColor)
+
 /* Blues */
 + (UIColor *)flatPeterRiverColor
 {

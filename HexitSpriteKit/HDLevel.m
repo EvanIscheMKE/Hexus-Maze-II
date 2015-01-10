@@ -15,6 +15,16 @@ NSString * const HDCountKey      = @"count";
 
 @implementation HDLevel
 
++ (HDLevel *)levelUnlocked:(BOOL)unlocked index:(NSInteger)index completed:(BOOL)completed
+{
+    HDLevel *level = [[self alloc] init];
+    [level setUnlocked:unlocked];
+    [level setLevelIndex:index];
+    [level setCompleted:completed];
+    
+    return level;
+}
+
 - (void)encodeWithCoder:(NSCoder *)encoder
 {
     [encoder encodeBool:self.unlocked      forKey:HDUnlockedKey];
@@ -32,14 +42,15 @@ NSString * const HDCountKey      = @"count";
     return self;
 }
 
-+ (HDLevel *)levelUnlocked:(BOOL)unlocked index:(NSInteger)index completed:(BOOL)completed
+- (HDLevelState)state
 {
-    HDLevel *level = [[self alloc] init];
-    [level setUnlocked:unlocked];
-    [level setLevelIndex:index];
-    [level setCompleted:completed];
-    
-    return level;
+    if (self.completed) {
+        return HDLevelStateCompleted;
+    } else if (!self.completed && self.isUnlocked) {
+        return HDLevelStateUnlocked;
+    } else {
+        return HDLevelStateLocked;
+    }
 }
 
 - (NSString *)description

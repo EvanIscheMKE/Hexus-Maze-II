@@ -6,7 +6,7 @@
 //  Copyright (c) 2015 Evan William Ische. All rights reserved.
 //
 
-#import "HDHexagonView.h"
+#import "HDHexagonButton.h"
 #import "UIColor+FlatColors.h"
 #import "HDSettingsViewController.h"
 
@@ -29,10 +29,6 @@ static const CGFloat defaultCellHeight = 70.0;
 
 - (void)_setup
 {
-    CGRect hexaFrame = CGRectMake(0.0f, 0.0f, CGRectGetHeight(self.bounds), CGRectGetHeight(self.bounds));
-    self.hexaToggle = [[HDHexagonView alloc] initWithFrame:hexaFrame
-                                               strokeColor:[UIColor whiteColor]];
-    [self addSubview:self.hexaToggle];
     
     CGRect descriptionFrame = CGRectMake(0.0f, 0.0f, CGRectGetWidth(self.bounds) - CGRectGetHeight(self.bounds), CGRectGetHeight(self.bounds));
     self.descriptionLabel = [[UILabel alloc] initWithFrame:descriptionFrame];

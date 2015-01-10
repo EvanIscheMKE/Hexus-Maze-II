@@ -47,8 +47,6 @@ static const CGFloat kTileHeightInsetMultiplier = .845f;
 @end
 
 @implementation HDScene {
-    NSMutableArray *_pool;
-    
     CGFloat _minViewAreaOriginX;
     CGFloat _maxViewAreaOriginX;
     CGFloat _minViewAreaOriginY;
@@ -65,8 +63,6 @@ static const CGFloat kTileHeightInsetMultiplier = .845f;
 - (id)initWithSize:(CGSize)size
 {
     if (self = [super initWithSize:size]) {
-        
-        _pool = [NSMutableArray array];
         
         self.countDownSoundIndex = NO;
         self.backgroundColor = [SKColor flatWetAsphaltColor];
@@ -87,32 +83,21 @@ static const CGFloat kTileHeightInsetMultiplier = .845f;
     
     self.userInteractionEnabled = NO;
     
-    if (self.hexagons) {
-        for (HDHexagon *hexagon in self.hexagons) {
-            if (hexagon.node) {
-                [[hexagon.node children] makeObjectsPerformSelector:@selector(removeFromParent)];
-                [_pool addObject:hexagon.node];
-            }
-        }
-    }
-    
-    self.hexagons = [NSArray arrayWithArray:grid];
+    self.hexagons = [NSMutableArray arrayWithArray:grid];
     
     NSInteger index = 0;
     for (HDHexagon *hexagon in grid) {
         
         // For each each hexagon model, create a shapenode and assign it to the model
         CGPoint center = [self _pointForColumn:hexagon.column row:hexagon.row];
-        HDHexagonNode *shapeNode = [self _getHexaNode];
-        shapeNode.hidden   = YES;
-        shapeNode.position = center;
-        shapeNode.name     = HEXAGON_TITLE((long)index);
+        HDHexagonNode *hexagonNode = [[HDHexagonNode alloc] initWithImageNamed:hexagon.defaultImagePath];
+        hexagonNode.hidden   = NO;
+        hexagonNode.position = center;
         
-        hexagon.node = shapeNode;
-        hexagon.type = (int)[self.gridManager hexagonTypeAtRow:hexagon.row column:hexagon.column];
+        hexagon.node = hexagonNode;
         hexagon.delegate = hexagon.isCountTile ? self : nil;
         
-        [self.gameLayer addChild:shapeNode];
+        [self.gameLayer addChild:hexagonNode];
         
         // Find the largest and smallest possible center position for all tiles, will be used to center map
         if ((center.x) < _minCenterX) { _minCenterX = (center.x); }
@@ -147,22 +132,6 @@ static const CGFloat kTileHeightInsetMultiplier = .845f;
     _maxCenterX  = 0.0f;
     _minCenterY  = MAXFLOAT;
     _maxCenterY  = 0.0f;
-}
-
-- (HDHexagonNode *)_getHexaNode
-{
-    if (_pool.count > 0) {
-        HDHexagonNode *hexa = [_pool firstObject];
-        [_pool removeObject:hexa];
-        return hexa;
-    }
-    
-    // if there is no nodes left in the pool, create a new one to return
-    CGPathRef pathRef = [[HDHelper bezierHexagonInFrame:CGRectMake(kPadding, kPadding, ceilf(kTileSize-kPadding), ceilf(kTileSize-kPadding))] CGPath];
-    HDHexagonNode *hexa = [HDHexagonNode shapeNodeWithPath:pathRef];
-    hexa.size = CGSizeMake(ceilf(kTileSize + kPadding), ceilf(kTileSize + kPadding));
-    
-    return hexa;
 }
 
 #pragma mark - UIResponder
@@ -211,7 +180,10 @@ static const CGFloat kTileHeightInsetMultiplier = .845f;
         
         // Check if FX are on before adding emitter effects
         if ([[HDSettingsManager sharedManager] fx]) {
-            [hexagon.node addChild:[SKEmitterNode hexaEmitterWithColor:hexagon.node.strokeColor scale:hexagon.selected ? .9f : .5f]];
+            SKEmitterNode *emitter = [SKEmitterNode hexaEmitterWithColor:hexagon.emitterColor
+                                                                   scale:hexagon.selected ? 1.f : .5f];
+            emitter.position = hexagon.node.position;
+            [self insertChild:emitter atIndex:0];
         }
         
         [self _checkGameStateForTile:hexagon];
@@ -320,8 +292,8 @@ static const CGFloat kTileHeightInsetMultiplier = .845f;
             [self.delegate scene:self gameEndedWithCompletion:NO];
         }
     }
-    [tile.node runAction:[SKAction scaleTo:.9f duration:.1f] completion:^{
-        [tile.node runAction:[SKAction scaleTo:1.0f duration:.1f]];
+    [tile.node runAction:[SKAction rotateByAngle:M_PI*2 duration:.3f] completion:^{
+        //[tile.node runAction:[SKAction scaleTo:1.0f duration:.1f]];
     }];
 }
 

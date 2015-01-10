@@ -8,9 +8,9 @@
 
 #import <UIKit/UIKit.h>
 
-@class HDHexagonView;
+@class HDHexagonButton;
 @interface HDSettingsControlsView : UIView
-@property (nonatomic, strong) HDHexagonView *hexaToggle;
+@property (nonatomic, strong) HDHexagonButton *hexaToggle;
 @property (nonatomic, strong) UILabel *descriptionLabel;
 @end
 

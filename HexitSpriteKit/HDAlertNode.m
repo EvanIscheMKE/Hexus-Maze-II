@@ -121,8 +121,7 @@ static const CGFloat cornerRadius = 15.0f;
     
     position = CGPointMake(0.0f, CGRectGetMaxY(self.restartButton.frame) + kStripeHeight / 2 );
     CGSize stripeSize = CGSizeMake(CGRectGetWidth(self.menuView.frame), kStripeHeight);
-    self.stripe = [SKSpriteNode spriteNodeWithColor:[SKColor flatAsbestosColor] size:stripeSize];
-    //self.stripe.name     = HDRestartLevelKey;
+    self.stripe = [SKSpriteNode spriteNodeWithColor:[SKColor flatPeterRiverColor] size:stripeSize];
     self.stripe.position = position;
     [self.menuView addChild:self.stripe];
     
@@ -187,7 +186,7 @@ static const CGFloat cornerRadius = 15.0f;
 
 - (void)show
 {
-    SKAction *scaleUpAction   = [SKAction scaleTo:1.2 duration:.4f];
+    SKAction *scaleUpAction   = [SKAction scaleTo:1.2f duration:.4f];
     SKAction *scaleDownAction = [SKAction scaleTo:1.0f duration:.2f];
     SKAction *sequenceAction  = [SKAction sequence:@[scaleUpAction, scaleDownAction]];
     

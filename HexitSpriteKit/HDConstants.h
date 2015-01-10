@@ -10,6 +10,13 @@ static inline CGFloat DEGREES_RADIANS(CGFloat degrees){
     return ((degrees * M_PI) / 180.0f);
 }
 
+typedef enum {
+    HDLevelStateLocked    = 0,
+    HDLevelStateUnlocked  = 1,
+    HDLevelStateCompleted = 2,
+    HDLevelStateNone      = 3
+} HDLevelState;
+
 //keys
 extern NSString * const HDIntroAnimationNotification;
 extern NSString * const HDAnimateLabelNotification;
@@ -39,10 +46,6 @@ extern NSString * const HDHexGridKey;
 extern NSString * const HDSoundLoopKey;
 extern NSString * const HDButtonSound;
 extern NSString * const HDSwipeSound;
-extern NSString * const HDC3;
-extern NSString * const HDD3;
-extern NSString * const HDE3;
-extern NSString * const HDF3;
 
 static const CGFloat kSmallButtonSize  = 34.0f;
 static const CGFloat kLargeButtonSize  = 42.0f;
@@ -54,4 +57,4 @@ static const CGFloat kButtonInset      = 20.0f;
 
 #define LEVEL_URL(x) [NSString stringWithFormat:@"Grid-%ld",x]
 
-#define SOUNDS_TO_PRELOAD @[HDButtonSound, HDSwipeSound, HDC3, HDD3, HDE3, HDF3]
+#define SOUNDS_TO_PRELOAD @[HDButtonSound, HDSwipeSound]
