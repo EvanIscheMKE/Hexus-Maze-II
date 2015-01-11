@@ -144,7 +144,8 @@ static const CGFloat defaultContainerHeight = 70.0f;
 - (void)_setup
 {
     CGRect navBarFrame = CGRectMake(0.0f, -defaultContainerHeight, CGRectGetWidth(self.view.bounds), defaultContainerHeight);
-    self.navigationBar = [HDNavigationBar viewWithToggleImage:[UIImage imageNamed:@"Grid"] activityImage:[UIImage imageNamed:@"Reset"]];
+    self.navigationBar = [HDNavigationBar viewWithToggleImage:[UIImage imageNamed:@"Grid"]
+                                                activityImage:[UIImage imageNamed:@"SoundIcon-OFF"]];
     self.navigationBar.frame = navBarFrame;
     [[self.navigationBar.subviews firstObject] addTarget:self
                                                   action:@selector(performExitAnimation)

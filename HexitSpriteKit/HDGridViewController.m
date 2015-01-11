@@ -60,13 +60,13 @@ static const CGFloat defaultPageControlHeight = 50.0f;
 {
     HDLevel *gamelevel = [[HDMapManager sharedManager] levelAtIndex:(NSInteger)level - 1];
     
-    //if (gamelevel.isUnlocked) {
+    if (gamelevel.isUnlocked) {
         self.navigationBarHidden = YES;
         [[HDSoundManager sharedManager] playSound:HDButtonSound];
         [self.scrollView performOutroAnimationWithCompletion:^{
             [ADelegate presentGameControllerToPlayLevel:level];
         }];
-   // }
+    }
 }
 
 - (void)setNavigationBarHidden:(BOOL)navigationBarHidden

@@ -38,7 +38,7 @@
     
     if (locked) {
         // Add lock
-        SKSpriteNode *lock = [SKSpriteNode spriteNodeWithImageNamed:@"Locked.png"];
+        SKSpriteNode *lock = [SKSpriteNode spriteNodeWithImageNamed:@"LockedEmerald.png"];
         [self addChild:lock];
     } else {
         // Remove Lock

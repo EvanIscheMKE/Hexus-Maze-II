@@ -14,8 +14,6 @@
 		386CF62D1A3A250D006A8381 /* Mellowtron.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 386CF62C1A3A250D006A8381 /* Mellowtron.mp3 */; };
 		386CF62F1A3B6FA5006A8381 /* win.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 386CF62E1A3B6FA5006A8381 /* win.mp3 */; };
 		3874B9A61A20736000400CEB /* HDAlertNode.m in Sources */ = {isa = PBXBuildFile; fileRef = 3874B9A51A20736000400CEB /* HDAlertNode.m */; };
-		3879FECB1A6108F8002C2E1A /* HexusLogo@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 3879FECA1A6108F8002C2E1A /* HexusLogo@2x.png */; };
-		3879FECD1A6113DA002C2E1A /* FillInTile@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 3879FECC1A6113DA002C2E1A /* FillInTile@2x.png */; };
 		389E94F01A44A2F000F2DF05 /* HDGridScrollView.m in Sources */ = {isa = PBXBuildFile; fileRef = 389E94EF1A44A2F000F2DF05 /* HDGridScrollView.m */; };
 		389E94F61A47DE7F00F2DF05 /* CoreMotion.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 389E94F51A47DE7F00F2DF05 /* CoreMotion.framework */; };
 		389E94F81A488D5100F2DF05 /* Grid-76.json in Resources */ = {isa = PBXBuildFile; fileRef = 389E94F71A488D5100F2DF05 /* Grid-76.json */; };
@@ -133,7 +131,6 @@
 		38C67D2C1A0AEBD50038526C /* HDGameCenterManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 38C67D2B1A0AEBD50038526C /* HDGameCenterManager.m */; };
 		38C67D2F1A0AF3960038526C /* NSMutableArray+UniqueAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 38C67D2E1A0AF3960038526C /* NSMutableArray+UniqueAdditions.m */; };
 		38C67D311A0B149F0038526C /* 104947__glaneur-de-sons__bubble-8.wav in Resources */ = {isa = PBXBuildFile; fileRef = 38C67D301A0B149F0038526C /* 104947__glaneur-de-sons__bubble-8.wav */; };
-		38D070931A578F37009F18FB /* HDSettingsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 38D070921A578F37009F18FB /* HDSettingsViewController.m */; };
 		38D4247A1A4F6C1A00FD21A2 /* B2.m4a in Resources */ = {isa = PBXBuildFile; fileRef = 38D424571A4F6C1A00FD21A2 /* B2.m4a */; };
 		38D4247B1A4F6C1A00FD21A2 /* A2.m4a in Resources */ = {isa = PBXBuildFile; fileRef = 38D424581A4F6C1A00FD21A2 /* A2.m4a */; };
 		38D4247C1A4F6C1A00FD21A2 /* G2.m4a in Resources */ = {isa = PBXBuildFile; fileRef = 38D424591A4F6C1A00FD21A2 /* G2.m4a */; };
@@ -196,8 +193,6 @@
 		386CF62E1A3B6FA5006A8381 /* win.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = win.mp3; sourceTree = "<group>"; };
 		3874B9A41A20736000400CEB /* HDAlertNode.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HDAlertNode.h; sourceTree = "<group>"; };
 		3874B9A51A20736000400CEB /* HDAlertNode.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HDAlertNode.m; sourceTree = "<group>"; };
-		3879FECA1A6108F8002C2E1A /* HexusLogo@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "HexusLogo@2x.png"; sourceTree = "<group>"; };
-		3879FECC1A6113DA002C2E1A /* FillInTile@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "FillInTile@2x.png"; sourceTree = "<group>"; };
 		389E94EE1A44A2F000F2DF05 /* HDGridScrollView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HDGridScrollView.h; sourceTree = "<group>"; };
 		389E94EF1A44A2F000F2DF05 /* HDGridScrollView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HDGridScrollView.m; sourceTree = "<group>"; };
 		389E94F51A47DE7F00F2DF05 /* CoreMotion.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreMotion.framework; path = System/Library/Frameworks/CoreMotion.framework; sourceTree = SDKROOT; };
@@ -345,8 +340,6 @@
 		38C67D2D1A0AF3960038526C /* NSMutableArray+UniqueAdditions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSMutableArray+UniqueAdditions.h"; sourceTree = "<group>"; };
 		38C67D2E1A0AF3960038526C /* NSMutableArray+UniqueAdditions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSMutableArray+UniqueAdditions.m"; sourceTree = "<group>"; };
 		38C67D301A0B149F0038526C /* 104947__glaneur-de-sons__bubble-8.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = "104947__glaneur-de-sons__bubble-8.wav"; sourceTree = "<group>"; };
-		38D070911A578F37009F18FB /* HDSettingsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HDSettingsViewController.h; sourceTree = "<group>"; };
-		38D070921A578F37009F18FB /* HDSettingsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HDSettingsViewController.m; sourceTree = "<group>"; };
 		38D424571A4F6C1A00FD21A2 /* B2.m4a */ = {isa = PBXFileReference; lastKnownFileType = file; path = B2.m4a; sourceTree = "<group>"; };
 		38D424581A4F6C1A00FD21A2 /* A2.m4a */ = {isa = PBXFileReference; lastKnownFileType = file; path = A2.m4a; sourceTree = "<group>"; };
 		38D424591A4F6C1A00FD21A2 /* G2.m4a */ = {isa = PBXFileReference; lastKnownFileType = file; path = G2.m4a; sourceTree = "<group>"; };
@@ -504,8 +497,6 @@
 				38BAF5401A1FFC64004D5660 /* HDGridViewController.m */,
 				38C0A8481A07251700C552F1 /* HDGameViewController.h */,
 				38C0A8491A07251700C552F1 /* HDGameViewController.m */,
-				38D070911A578F37009F18FB /* HDSettingsViewController.h */,
-				38D070921A578F37009F18FB /* HDSettingsViewController.m */,
 			);
 			name = "Game View Controllers";
 			sourceTree = "<group>";
@@ -746,7 +737,6 @@
 				38ABD5F11A4153A800C4321D /* HDHexagonButton.m */,
 				38ABD5F51A420A3500C4321D /* HDHexagonControl.h */,
 				38ABD5F61A420A3500C4321D /* HDHexagonControl.m */,
-				3879FECA1A6108F8002C2E1A /* HexusLogo@2x.png */,
 				389E94EE1A44A2F000F2DF05 /* HDGridScrollView.h */,
 				389E94EF1A44A2F000F2DF05 /* HDGridScrollView.m */,
 				389E953B1A496FF400F2DF05 /* HDLockedView.h */,
@@ -771,7 +761,6 @@
 				38C0A8741A0758AC00C552F1 /* HDGridManager.m */,
 				38F5A6BB1A08014F0036750A /* HDHexagon.h */,
 				38F5A6BC1A08014F0036750A /* HDHexagon.m */,
-				3879FECC1A6113DA002C2E1A /* FillInTile@2x.png */,
 				38C67CE11A0ABD050038526C /* HDHelper.h */,
 				38C67CE21A0ABD050038526C /* HDHelper.m */,
 				38C2E1391A2671F3008D5F33 /* HDLevelGenerator.h */,
@@ -983,7 +972,6 @@
 				38D4248E1A4F6C1A00FD21A2 /* C5.m4a in Resources */,
 				38BDDCE31A20FA3A005035EE /* Grid-49.json in Resources */,
 				38C67D011A0ACE530038526C /* Grid-12.json in Resources */,
-				3879FECD1A6113DA002C2E1A /* FillInTile@2x.png in Resources */,
 				38C67D071A0ACE690038526C /* Grid-15.json in Resources */,
 				38D4249B1A4F6C1A00FD21A2 /* D3.m4a in Resources */,
 				38BDDCF81A20FBAA005035EE /* Grid-58.json in Resources */,
@@ -1000,7 +988,6 @@
 				38D424911A4F6C1A00FD21A2 /* G4.m4a in Resources */,
 				38BDDCF01A20FB78005035EE /* Grid-54.json in Resources */,
 				38C67D0D1A0AE3990038526C /* Grid-18.json in Resources */,
-				3879FECB1A6108F8002C2E1A /* HexusLogo@2x.png in Resources */,
 				38BDDCC71A20F96D005035EE /* Grid-35.json in Resources */,
 				38BDDCE11A20FA32005035EE /* Grid-48.json in Resources */,
 				38BDDCEC1A20FB67005035EE /* Grid-52.json in Resources */,
@@ -1049,7 +1036,6 @@
 				38ABD5F71A420A3500C4321D /* HDHexagonControl.m in Sources */,
 				389E95D71A4C1A7F00F2DF05 /* HDNavigationBar.m in Sources */,
 				3874B9A61A20736000400CEB /* HDAlertNode.m in Sources */,
-				38D070931A578F37009F18FB /* HDSettingsViewController.m in Sources */,
 				38C67CE81A0ABF0E0038526C /* HDConstants.m in Sources */,
 				38C67D2F1A0AF3960038526C /* NSMutableArray+UniqueAdditions.m in Sources */,
 				38C0A8441A07251700C552F1 /* main.m in Sources */,
@@ -1173,10 +1159,12 @@
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				GCC_PREFIX_HEADER = "HexitSpriteKit/Hexit-Prefix.pch";
 				INFOPLIST_FILE = HexitSpriteKit/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				ONLY_ACTIVE_ARCH = YES;
 				PRODUCT_NAME = Hexus;
 				PROVISIONING_PROFILE = "";
+				TARGETED_DEVICE_FAMILY = 1;
 			};
 			name = Debug;
 		};
@@ -1189,10 +1177,12 @@
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				GCC_PREFIX_HEADER = "HexitSpriteKit/Hexit-Prefix.pch";
 				INFOPLIST_FILE = HexitSpriteKit/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				ONLY_ACTIVE_ARCH = YES;
 				PRODUCT_NAME = Hexus;
 				PROVISIONING_PROFILE = "";
+				TARGETED_DEVICE_FAMILY = 1;
 			};
 			name = Release;
 		};
@@ -1211,7 +1201,7 @@
 				INFOPLIST_FILE = HexitSpriteKitTests/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/HexitSpriteKit.app/HexitSpriteKit";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Hexus.app/Hexus";
 			};
 			name = Debug;
 		};
@@ -1226,7 +1216,7 @@
 				INFOPLIST_FILE = HexitSpriteKitTests/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/HexitSpriteKit.app/HexitSpriteKit";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Hexus.app/Hexus";
 			};
 			name = Release;
 		};

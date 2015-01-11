@@ -121,7 +121,7 @@ static const CGFloat cornerRadius = 15.0f;
     
     position = CGPointMake(0.0f, CGRectGetMaxY(self.restartButton.frame) + kStripeHeight / 2 );
     CGSize stripeSize = CGSizeMake(CGRectGetWidth(self.menuView.frame), kStripeHeight);
-    self.stripe = [SKSpriteNode spriteNodeWithColor:[SKColor flatPeterRiverColor] size:stripeSize];
+    self.stripe = [SKSpriteNode spriteNodeWithColor:[SKColor flatAlizarinColor] size:stripeSize];
     self.stripe.position = position;
     [self.menuView addChild:self.stripe];
     

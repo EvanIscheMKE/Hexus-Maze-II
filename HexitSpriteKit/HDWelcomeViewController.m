@@ -29,9 +29,9 @@
 
 - (void)viewDidLoad
 {
+    [self _setup];
     [super viewDidLoad];
     self.view.backgroundColor = [UIColor flatWetAsphaltColor];
-    [self _setup];
 }
 
 - (void)_setup
@@ -46,9 +46,9 @@
     [self.view addGestureRecognizer:tap];
     
     self.descriptionLabel = [[UILabel alloc] init];
-    self.descriptionLabel.text            = @"Tap to begin";
-    self.descriptionLabel.font            = GILLSANS(22.0f);
-    self.descriptionLabel.textColor       = [UIColor flatEmeraldColor];
+    self.descriptionLabel.text            = @"TAP TO BEGIN";
+    self.descriptionLabel.font            = GILLSANS(24.0f);
+    self.descriptionLabel.textColor       = [UIColor whiteColor];
     self.descriptionLabel.textAlignment   = NSTextAlignmentCenter;
     self.descriptionLabel.backgroundColor = [UIColor flatWetAsphaltColor];
     [self.descriptionLabel sizeToFit];
@@ -61,28 +61,38 @@
 - (void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
-    [self _prepareForIntroAnimations];
+    [self _hideActivityAnimated:NO];
 }
 
 - (void)viewDidAppear:(BOOL)animated
 {
     [super viewDidAppear:animated];
     [self _showActivityAnimated:YES];
-    
-////    if (![[NSUserDefaults standardUserDefaults] boolForKey:HDFirstRunKey]) {
-//        HDTutorialParentViewController *controller = [[HDTutorialParentViewController alloc] init];
-//        [self.navigationController presentViewController:controller animated:NO completion:nil];
-//        [[NSUserDefaults standardUserDefaults] setBool:YES forKey:HDFirstRunKey];
-////    }
+   // [self _checkForFirstRun];
 }
 
 #pragma mark - Private
+
+- (void)_animateDismissal
+{
+    [self _hideActivityAnimated:YES];
+    [ADelegate presentLevelViewController];
+}
+
+- (void)_checkForFirstRun
+{
+    if (![[NSUserDefaults standardUserDefaults] boolForKey:HDFirstRunKey]) {
+        HDTutorialParentViewController *controller = [[HDTutorialParentViewController alloc] init];
+        [self.navigationController presentViewController:controller animated:NO completion:nil];
+        [[NSUserDefaults standardUserDefaults] setBool:YES forKey:HDFirstRunKey];
+    }
+}
 
 - (void)_hideActivityAnimated:(BOOL)animated
 {
     dispatch_block_t animation = ^{
         self.descriptionLabel.center = CGPointMake(CGRectGetMidX(self.view.bounds),
-                                           CGRectGetHeight(self.view.bounds) + CGRectGetMidY(self.descriptionLabel.bounds));
+                                                   CGRectGetHeight(self.view.bounds) + CGRectGetMidY(self.descriptionLabel.bounds));
     };
     
     if (animation) {
@@ -95,29 +105,15 @@
 - (void)_showActivityAnimated:(BOOL)animated
 {
     dispatch_block_t animation = ^{
-        
         self.descriptionLabel.center = CGPointMake(CGRectGetMidX(self.view.bounds),
                                            CGRectGetHeight(self.view.bounds) - CGRectGetMidY(self.descriptionLabel.bounds) - 15.0f);
     };
     
     if (animated) {
-        [UIView animateWithDuration:.3f animations:animation completion:^(BOOL finished) {
-            
-        }];
+        [UIView animateWithDuration:.3f animations:animation];
     } else {
         animation();
     }
-}
-
-- (void)_presentSettingsViewController
-{
-    [self _hideActivityAnimated:YES];
-    [ADelegate presentSettingsViewController];
-}
-
-- (void)_prepareForIntroAnimations
-{
-    [self _hideActivityAnimated:NO];
 }
 
 @end

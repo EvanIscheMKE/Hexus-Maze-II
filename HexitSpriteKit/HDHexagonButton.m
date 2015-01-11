@@ -31,7 +31,7 @@
     self.imageView.contentMode = UIViewContentModeCenter;
     
     [self setTitleColor:[UIColor flatWetAsphaltColor] forState:UIControlStateNormal];
-    [self setBackgroundImage:[UIImage imageNamed:@"Default-Count"] forState:UIControlStateNormal];
+    [self setBackgroundImage:[UIImage imageNamed:@"Default-End"] forState:UIControlStateNormal];
     [self setImage:[UIImage imageNamed:@"Locked"] forState:UIControlStateNormal];
 }
 

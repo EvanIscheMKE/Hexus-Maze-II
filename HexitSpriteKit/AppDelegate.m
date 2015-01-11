@@ -15,12 +15,10 @@
 #import "HDGameCenterManager.h"
 #import "HDGameViewController.h"
 #import "HDGridViewController.h"
-#import "HDSettingsViewController.h"
 #import "HDWelcomeViewController.h"
 
 #define HEXUS_ID 945933714
-NSString * const iOS8AppStoreURLFormat = @"itms-apps://itunes.apple.com/app/id%d";
-
+NSString * const iOS8AppStoreURLFormat      = @"itms-apps://itunes.apple.com/app/id%d";
 NSString * const HDLeaderBoardIdentifierKey = @"LevelLeaderboard";
 
 @interface AppDelegate ()<GKGameCenterControllerDelegate>
@@ -59,11 +57,6 @@ NSString * const HDLeaderBoardIdentifierKey = @"LevelLeaderboard";
     [[HDGameCenterManager sharedManager] authenticateGameCenter];
 }
 
-- (void)presentSettingsViewController
-{
-    [self.window.rootViewController presentViewController:[HDSettingsViewController new] animated:NO completion:nil];
-}
-
 - (void)presentLevelViewController
 {
     [self.controller pushViewController:[HDGridViewController new] animated:NO];
@@ -82,13 +75,13 @@ NSString * const HDLeaderBoardIdentifierKey = @"LevelLeaderboard";
 {
     HDGameViewController *controller = [[HDGameViewController alloc] initWithLevel:level];
     [self.controller pushViewController:controller animated:NO];
-    
 }
 
 - (void)rateHEXUS
 {
-    if ([[UIApplication sharedApplication] canOpenURL:[NSURL URLWithString:iOS8AppStoreURLFormat]]) {
-      [[UIApplication sharedApplication] openURL:[NSURL URLWithString:iOS8AppStoreURLFormat]];
+    NSURL *rateMe = [NSURL URLWithString:iOS8AppStoreURLFormat];
+    if ([[UIApplication sharedApplication] canOpenURL:rateMe]) {
+        [[UIApplication sharedApplication] openURL:rateMe];
     }
 }
 
@@ -96,7 +89,7 @@ NSString * const HDLeaderBoardIdentifierKey = @"LevelLeaderboard";
 {
     [[HDSoundManager sharedManager] playSound:HDButtonSound];
     
-    NSString *shareText = [NSString stringWithFormat:@"I just completed level %lu on Hexus",index];
+    NSString *shareText = [NSString stringWithFormat:@"I just completed level %zd on Hexus",index];
     
     NSArray *activityItems = @[shareText, [self _screenshotOfFrontViewController]];
     UIActivityViewController *controller = [[UIActivityViewController alloc] initWithActivityItems:activityItems
