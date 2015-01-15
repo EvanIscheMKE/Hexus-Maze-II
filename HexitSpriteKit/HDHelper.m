@@ -13,6 +13,42 @@
 #import "HDHexagonNode.h"
 #import "UIColor+FlatColors.h"
 
+NSString *titleFromLevelIdx(NSUInteger levelIdx) {
+    switch (levelIdx) {
+        case HDLevelTypeDoubles:
+            return @"Two Touch Tile";
+            break;
+        case HDLevelTypeCount:
+            return @"Count Tile";
+            break;
+        case HDLevelTypeTriples:
+            return @"Three Touch Tile";
+            break;
+        case HDLevelTypeEnd:
+            return @"End Tile";
+            break;
+    }
+    return @"";
+}
+
+NSString *descriptionFromLevelIdx(NSUInteger levelIdx){
+    switch (levelIdx) {
+        case HDLevelTypeDoubles:
+            return @"Touch it twice";
+            break;
+        case HDLevelTypeCount:
+            return @"Touch the unlocked Tile to unlock the next locked tile";
+            break;
+        case HDLevelTypeTriples:
+            return @"Touch it three times";
+            break;
+        case HDLevelTypeEnd:
+            return @"You must end on this tile";
+            break;
+    }
+    return @"";
+};
+
 @implementation HDHelper
 
 + (CGFloat)sideMenuOffsetX

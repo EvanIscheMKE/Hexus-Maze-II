@@ -16,12 +16,7 @@
 
 - (void)configureSettingsForFirstRun
 {
-    [[NSUserDefaults standardUserDefaults] setBool:YES forKey:HDVibrationKey];
-    [[NSUserDefaults standardUserDefaults] setBool:YES forKey:HDEffectsKey];
     [[NSUserDefaults standardUserDefaults] setBool:YES forKey:HDSoundkey];
-    
-    self.vibe  =  [[NSUserDefaults standardUserDefaults] boolForKey:HDVibrationKey];
-    self.fx    =  [[NSUserDefaults standardUserDefaults] boolForKey:HDEffectsKey];
     self.sound =  [[NSUserDefaults standardUserDefaults] boolForKey:HDSoundkey];
 }
 
@@ -31,8 +26,6 @@
 - (instancetype)init
 {
     if (self = [super init]) {
-        self.vibe  =  [[NSUserDefaults standardUserDefaults] boolForKey:HDVibrationKey];
-        self.fx    =  [[NSUserDefaults standardUserDefaults] boolForKey:HDEffectsKey];
         self.sound =  [[NSUserDefaults standardUserDefaults] boolForKey:HDSoundkey];
         self.music = YES;
     }
@@ -51,22 +44,11 @@
 
 #pragma mark - Override Setters
 
-- (void)setFx:(BOOL)fx
-{
-    _fx = fx;
-    [[NSUserDefaults standardUserDefaults] setBool:_fx forKey:HDEffectsKey];
-}
-
 - (void)setSound:(BOOL)sound
 {
     _sound = sound;
     [[NSUserDefaults standardUserDefaults] setBool:_sound forKey:HDSoundkey];
 }
 
-- (void)setVibe:(BOOL)vibe
-{
-    _vibe = vibe;
-    [[NSUserDefaults standardUserDefaults] setBool:_vibe forKey:HDVibrationKey];
-}
 
 @end

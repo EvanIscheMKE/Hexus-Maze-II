@@ -11,7 +11,6 @@
 NSString * const HDCompletedKey  = @"completed";
 NSString * const HDUnlockedKey   = @"unlocked";
 NSString * const HDLevelIndexKey = @"levelIndex";
-NSString * const HDCountKey      = @"count";
 
 @implementation HDLevel
 

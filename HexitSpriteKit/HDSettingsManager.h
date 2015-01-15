@@ -12,8 +12,6 @@
 
 @property (nonatomic, assign) BOOL sound;
 @property (nonatomic, assign) BOOL music;
-@property (nonatomic, assign) BOOL fx;
-@property (nonatomic, assign) BOOL vibe;
 
 + (HDSettingsManager *)sharedManager;
 - (void)configureSettingsForFirstRun;

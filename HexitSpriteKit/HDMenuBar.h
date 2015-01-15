@@ -8,11 +8,16 @@
 
 #import <UIKit/UIKit.h>
 
-@interface HDNavigationBar : UIView
-@property (nonatomic, strong) UIImage *toggleImage;
+@interface HDMenuBar : UIView
+
 @property (nonatomic, strong) UIImage *activityImage;
+
 @property (nonatomic, readonly) UIButton *navigationButton;
 @property (nonatomic, readonly) UIButton *activityButton;
-+ (instancetype)viewWithToggleImage:(UIImage *)toggleImage activityImage:(UIImage *)activityImage;
-- (instancetype)initWithToggleImage:(UIImage *)toggleImage activityImage:(UIImage *)activityImage NS_DESIGNATED_INITIALIZER;
+@property (nonatomic, readonly) UIButton *musicButton;
+@property (nonatomic, readonly) UIButton *soundButton;
+
++ (instancetype)menuBarWithActivityImage:(UIImage *)activityImage;
+- (instancetype)initWithActivityImage:(UIImage *)activityImage NS_DESIGNATED_INITIALIZER;
+
 @end

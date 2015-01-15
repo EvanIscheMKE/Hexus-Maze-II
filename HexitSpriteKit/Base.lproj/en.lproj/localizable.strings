@@ -1,0 +1,19 @@
+/* 
+  localizable.strings
+  HexitSpriteKit
+
+  Created by Evan Ische on 1/14/15.
+  Copyright (c) 2015 Evan William Ische. All rights reserved.
+*/
+
+"congratulation1" = "Now you have it!";
+"congratulation2" = "You make it look easy.";
+"congratulation3" = "You're learning fast.";
+"congratulation4" = "That's the way!";
+"congratulation5" = "PERFECT!";
+"congratulation6" = "SENSATIONAL!";
+"congratulation7" = "You're doing beautifully.";
+"congratulation8" = "Good thinking!";
+"congratulation9" = "You've just about mastered that!";
+"congratulation10" = "GOOD WORK!";
+"congratulation11" = "Now that's what I call a fine job!";

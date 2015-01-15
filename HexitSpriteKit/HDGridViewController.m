@@ -14,10 +14,11 @@
 #import "HDHexagonControl.h"
 #import "HDSoundManager.h"
 #import "HDHexagonButton.h"
-#import "HDNavigationBar.h"
+#import "HDMenuBar.h"
 #import "HDGridScrollView.h"
 #import "UIColor+FlatColors.h"
 #import "HDGridViewController.h"
+#import "HDSettingsManager.h"
 #import "HDLevelsViewController.h"
 #import "HDLockedViewController.h"
 
@@ -29,7 +30,7 @@ static const CGFloat defaultPageControlHeight = 50.0f;
 @property (nonatomic, getter=isNavigationBarHidden, assign) BOOL navigationBarHidden;
 @property (nonatomic, strong) HDGridScrollView *scrollView;
 @property (nonatomic, strong) HDHexagonControl *control;
-@property (nonatomic, strong) HDNavigationBar  *container;
+@property (nonatomic, strong) HDMenuBar *menuBar;
 @end
 
 @implementation HDGridViewController {
@@ -56,17 +57,17 @@ static const CGFloat defaultPageControlHeight = 50.0f;
     [self beginLevel:level];
 }
 
-- (void)beginLevel:(NSUInteger)level
+- (void)beginLevel:(NSUInteger)levelIdx
 {
-    HDLevel *gamelevel = [[HDMapManager sharedManager] levelAtIndex:(NSInteger)level - 1];
+    HDLevel *gamelevel = [[HDMapManager sharedManager] levelAtIndex:(NSInteger)levelIdx - 1];
     
-    if (gamelevel.isUnlocked) {
+    //if (gamelevel.isUnlocked) {
         self.navigationBarHidden = YES;
         [[HDSoundManager sharedManager] playSound:HDButtonSound];
         [self.scrollView performOutroAnimationWithCompletion:^{
-            [ADelegate presentGameControllerToPlayLevel:level];
+            [ADelegate presentGameControllerToPlayLevel:levelIdx];
         }];
-    }
+   // }
 }
 
 - (void)setNavigationBarHidden:(BOOL)navigationBarHidden
@@ -100,22 +101,36 @@ static const CGFloat defaultPageControlHeight = 50.0f;
                                         CGRectGetMidX(self.view.bounds),
                                         CGRectGetHeight(self.view.bounds) + CGRectGetMidY(self.control.bounds)
                                         )];
+    self.control.frame = CGRectIntegral(self.control.frame);
     [self.view addSubview:self.control];
     
-    CGRect containerFrame = CGRectMake(0.0f, -defaultContainerHeight, CGRectGetWidth(self.view.bounds), defaultContainerHeight);
-    self.container = [HDNavigationBar viewWithToggleImage:[UIImage imageNamed:@"Grid"] activityImage:[UIImage imageNamed:@"Play"]];
-    self.container.frame = containerFrame;
-    [[self.container.subviews firstObject] addTarget:self
-                                              action:@selector(performExitAnimation)
-                                    forControlEvents:UIControlEventTouchUpInside];
-    [[self.container.subviews lastObject] addTarget:self
-                                              action:@selector(_beginLastUnlockedLevel)
-                                    forControlEvents:UIControlEventTouchUpInside];
-    self.container.backgroundColor = [UIColor clearColor];
-    [self.view addSubview:self.container];
+    CGRect menuBarFrame = CGRectMake(0.0f, -defaultContainerHeight, CGRectGetWidth(self.view.bounds), defaultContainerHeight);
+    self.menuBar = [HDMenuBar menuBarWithActivityImage:[UIImage imageNamed:@"Play"]];
+    self.menuBar.frame = menuBarFrame;
+    self.menuBar.musicButton.selected = [[HDSettingsManager sharedManager] music];
+    self.menuBar.soundButton.selected = [[HDSettingsManager sharedManager] sound];
+    [self.menuBar.navigationButton addTarget:self action:@selector(_performExitAnimation:) forControlEvents:UIControlEventTouchUpInside];
+    [self.menuBar.musicButton      addTarget:self action:@selector(_toggleMusic:)          forControlEvents:UIControlEventTouchUpInside];
+    [self.menuBar.soundButton      addTarget:self action:@selector(_toggleSound:)          forControlEvents:UIControlEventTouchUpInside];
+    [self.menuBar.activityButton   addTarget:self action:@selector(_beginUnlockedLevel:)   forControlEvents:UIControlEventTouchUpInside];
+    [self.view addSubview:self.menuBar];
 }
 
-- (void)performExitAnimation
+- (IBAction)_toggleSound:(UIButton *)sender
+{
+    [sender setSelected:!sender.selected];
+    [[HDSettingsManager sharedManager] setSound:![[HDSettingsManager sharedManager] sound]];
+    [[HDSoundManager sharedManager]    playSound:HDButtonSound];
+}
+
+- (IBAction)_toggleMusic:(UIButton *)sender
+{
+    [sender setSelected:!sender.selected];
+    [[HDSettingsManager sharedManager] setMusic:![[HDSettingsManager sharedManager] music]];
+    [[HDSoundManager sharedManager] setPlayLoop:[[HDSettingsManager sharedManager] music]];
+}
+
+- (IBAction)_performExitAnimation:(id)sender
 {
     self.navigationBarHidden = YES;
     [self.scrollView performOutroAnimationWithCompletion:^{
@@ -123,7 +138,7 @@ static const CGFloat defaultPageControlHeight = 50.0f;
     }];
 }
 
-- (void)_beginLastUnlockedLevel
+- (IBAction)_beginUnlockedLevel:(id)sender
 {
     [self beginLevel:[[HDMapManager sharedManager] indexOfCurrentLevel]];
 }
@@ -138,9 +153,9 @@ static const CGFloat defaultPageControlHeight = 50.0f;
 - (void)_hideAnimated:(BOOL)animated
 {
     dispatch_block_t animate = ^{
-        CGRect rect = self.container.frame;
+        CGRect rect = self.menuBar.frame;
         rect.origin.y = -defaultContainerHeight;
-        self.container.frame = rect;
+        self.menuBar.frame = rect;
         
         CGPoint center = self.control.center;
         center.y =  CGRectGetHeight(self.view.bounds) + 25.0f;
@@ -150,16 +165,16 @@ static const CGFloat defaultPageControlHeight = 50.0f;
     if (!animated) {
         animate();
     } else {
-        [UIView animateWithDuration:.3f animations:animate];
+        [UIView animateWithDuration:.300f animations:animate];
     }
 }
 
 - (void)_showAnimated:(BOOL)animated
 {
     dispatch_block_t animate = ^{
-        CGRect rect = self.container.frame;
+        CGRect rect = self.menuBar.frame;
         rect.origin.y = 0.0f;
-        self.container.frame = rect;
+        self.menuBar.frame = rect;
         
         CGPoint center = self.control.center;
         center.y = CGRectGetHeight(self.view.bounds) - 45.0f;
@@ -169,7 +184,7 @@ static const CGFloat defaultPageControlHeight = 50.0f;
     if (!animated) {
         animate();
     } else {
-        [UIView animateWithDuration:.3f animations:animate];
+        [UIView animateWithDuration:.300f animations:animate];
     }
 }
 
@@ -256,7 +271,7 @@ static const CGFloat defaultPageControlHeight = 50.0f;
 - (void)scrollViewDidScroll:(HDGridScrollView *)scrollView
 {
     CGFloat offset = fmod(ABS(scrollView.contentOffset.x), CGRectGetWidth(scrollView.bounds)) / CGRectGetWidth(scrollView.bounds);
-    if (offset > .5f) {
+    if (offset > .500f) {
         offset = 1 - offset;
     }
     

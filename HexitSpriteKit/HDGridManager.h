@@ -17,7 +17,6 @@
 - (NSInteger)hexagonTypeAtRow:(NSInteger)row column:(NSInteger)column;
 
 - (instancetype)initWithLevelNumber:(NSInteger)levelNumber;
-- (instancetype)initWithRandomLevel:(NSDictionary *)grid;
 - (instancetype)initWithLevel:(NSString *)level;
 
 @end

@@ -19,7 +19,7 @@ extern NSString * const HDGCAchievementsKey;
 @interface HDAlertNode : SKSpriteNode
 @property (nonatomic, weak) id<HDAlertnodeDelegate> delegate;
 @property (nonatomic, strong) SKLabelNode *levelLabel;
-- (instancetype)initWithColor:(UIColor *)color size:(CGSize)size lastLevel:(BOOL)lastLevel;
+- (instancetype)initWithSize:(CGSize)size lastLevel:(BOOL)lastLevel;
 - (void)show;
 @end
 

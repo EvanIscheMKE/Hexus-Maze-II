@@ -63,7 +63,6 @@ static const CGFloat kTileHeightInsetMultiplier = .845f;
 - (id)initWithSize:(CGSize)size
 {
     if (self = [super initWithSize:size]) {
-        
         self.countDownSoundIndex = NO;
         self.backgroundColor = [SKColor flatWetAsphaltColor];
         
@@ -72,7 +71,6 @@ static const CGFloat kTileHeightInsetMultiplier = .845f;
         
         self.gameLayer = [SKNode node];
         [self addChild:self.gameLayer];
-        
     }
     return self;
 }
@@ -121,6 +119,8 @@ static const CGFloat kTileHeightInsetMultiplier = .845f;
             self.animating = NO;
         }];
     }];
+    
+    NSLog(@"Count: %tu",[[self.gameLayer children] count]);
 }
 
 - (void)_setup
@@ -179,7 +179,7 @@ static const CGFloat kTileHeightInsetMultiplier = .845f;
     [self insertChild:emitter atIndex:0];
     
     NSTimeInterval delayInSeconds = emitter.numParticlesToEmit / emitter.particleBirthRate +
-    emitter.particleLifetime + emitter.particleLifetimeRange / 2;
+                                    emitter.particleLifetime + emitter.particleLifetimeRange / 2;
     
     [emitter performSelector:@selector(removeFromParent) withObject:nil afterDelay:delayInSeconds];
 }
@@ -205,14 +205,22 @@ static const CGFloat kTileHeightInsetMultiplier = .845f;
 
 - (HDHexagon *)_findHexagonContainingPoint:(CGPoint)point
 {
-    const CGFloat kHexagonInset = 2.0f;
+    const CGFloat smallHexagonInset = 10.0f;
+    const CGFloat largeHexagonInset = 15.0f;
     HDHexagon *selectedHexagon = nil;
     for (HDHexagon *hex in _hexagons) {
-        if (CGRectContainsPoint(CGRectInset(hex.node.frame, kHexagonInset, kHexagonInset), point)) {
+        if (CGRectContainsPoint(CGRectInset(hex.node.frame, smallHexagonInset, smallHexagonInset), point)) {
             selectedHexagon = hex;
         }
     }
-    [self _checkTileForRestart:selectedHexagon];
+    
+    if (selectedHexagon.type == HDHexagonTypeNone) {
+        if (CGRectContainsPoint(CGRectInset(selectedHexagon.node.frame, largeHexagonInset, largeHexagonInset), point)) {
+            [self _checkTileForRestart:selectedHexagon];
+            return nil;
+        }
+    }
+    
     return (selectedHexagon.isSelected || selectedHexagon.state == HDHexagonStateDisabled) ? nil : selectedHexagon;
 }
 
@@ -259,11 +267,9 @@ static const CGFloat kTileHeightInsetMultiplier = .845f;
     
     _soundIndex = self.countDownSoundIndex ? _soundIndex - 1 : _soundIndex + 1;
     
-    if (vibration && [[HDSettingsManager sharedManager] vibe]) {
         if (hexagon.isCountTile || hexagon.type == HDHexagonTypeStarter||[self _inPlayTileCount] == 0) {
             AudioServicesPlaySystemSound(kSystemSoundID_Vibrate);
         }
-    }
 }
 
 - (CGPoint)_pointForColumn:(NSInteger)column row:(NSInteger)row
@@ -312,10 +318,7 @@ static const CGFloat kTileHeightInsetMultiplier = .845f;
                 [self runAction:self.completionZing withKey:HDSoundActionKey];
                 
                 BOOL lastLevel = (_levelIndex == [[HDMapManager sharedManager] numberOfLevels]);
-                HDAlertNode *alertNode = [[HDAlertNode alloc] initWithColor:[UIColor clearColor]
-                                                                       size:self.frame.size
-                                                                  lastLevel:lastLevel];
-                
+                HDAlertNode *alertNode = [[HDAlertNode alloc] initWithSize:self.frame.size lastLevel:lastLevel];
                 alertNode.levelLabel.text = [NSString stringWithFormat:@"Level %zd", _levelIndex];
                 alertNode.delegate = self;
                 alertNode.position = CGPointMake(CGRectGetWidth(self.frame) / 2, CGRectGetHeight(self.frame) / 2);
@@ -477,9 +480,9 @@ static const CGFloat kTileHeightInsetMultiplier = .845f;
         // Animate restart once restored
         [HDHelper entranceAnimationWithTiles:_hexagons completion:^{
             self.animating = NO;
-            self.restarting = NO;
         }];
     }];
+    NSLog(@"RESTART Count: %tu",[[self.gameLayer children] count]);
 }
 
 - (void)performExitAnimationsWithCompletion:(dispatch_block_t)completion

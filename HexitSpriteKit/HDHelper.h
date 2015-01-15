@@ -9,6 +9,16 @@
 
 #import <Foundation/Foundation.h>
 
+NSString *titleFromLevelIdx(NSUInteger levelIdx);
+NSString *descriptionFromLevelIdx(NSUInteger levelIdx);
+
+typedef enum{
+    HDLevelTypeDoubles = 14,
+    HDLevelTypeCount   = 28,
+    HDLevelTypeTriples = 42,
+    HDLevelTypeEnd     = 56
+}HDLevelType;
+
 @class HDHexagon;
 @interface HDHelper : NSObject
 
@@ -27,7 +37,6 @@
 + (CGFloat)sideMenuOffsetX;
 + (void)entranceAnimationWithTiles:(NSArray *)tiles completion:(dispatch_block_t)completion;
 + (void)completionAnimationWithTiles:(NSArray *)tiles completion:(dispatch_block_t)completion;
-
 + (NSArray *)possibleMovesForHexagon:(HDHexagon *)hexagon inArray:(NSArray *)array;
 
 @end

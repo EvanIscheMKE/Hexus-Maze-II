@@ -6,18 +6,11 @@
 //  Copyright (c) 2014 Evan William Ische. All rights reserved.
 //
 
-@import iAd;
-@import QuartzCore;
-
-#import "HDSoundManager.h"
 #import "HDWelcomeViewController.h"
 #import "HDTutorialParentViewController.h"
-#import "HDHexagonButton.h"
 #import "UIColor+FlatColors.h"
 
-#define kPadding  [[UIScreen mainScreen] bounds].size.width < 321.0f ? 2.0f : 4.0f
-#define kHexaSize [[UIScreen mainScreen] bounds].size.width / 3.75f
-
+const CGFloat titleInset = 20.0f;
 
 @interface HDWelcomeViewController ()
 @property (nonatomic, strong) UILabel *descriptionLabel;
@@ -38,8 +31,48 @@
 {
     UIImage *welcome = [UIImage imageNamed:@"HexusLogo"];
     UIImageView *imageView = [[UIImageView alloc] initWithImage:welcome];
-    imageView.center = CGPointMake(CGRectGetMidX(self.view.bounds), CGRectGetMidY(self.view.bounds) - 20.0f);
+    imageView.translatesAutoresizingMaskIntoConstraints = NO;
     [self.view addSubview:imageView];
+    
+     NSLayoutConstraint *heightConstraint =
+    [NSLayoutConstraint constraintWithItem:imageView
+                                 attribute:NSLayoutAttributeHeight
+                                 relatedBy:NSLayoutRelationEqual
+                                    toItem:nil
+                                 attribute:NSLayoutAttributeNotAnAttribute
+                                multiplier:1.0f
+                                  constant:CGRectGetHeight(self.view.bounds)/5.7];
+    [imageView addConstraint:heightConstraint];
+    
+     NSLayoutConstraint *widthConstraint =
+    [NSLayoutConstraint constraintWithItem:imageView
+                                 attribute:NSLayoutAttributeWidth
+                                 relatedBy:NSLayoutRelationEqual
+                                    toItem:nil
+                                 attribute:NSLayoutAttributeNotAnAttribute
+                                multiplier:1.0f
+                                  constant:CGRectGetWidth(CGRectInset(self.view.bounds, titleInset, 0.0f))];
+    [imageView addConstraint:widthConstraint];
+    
+     NSLayoutConstraint *centerXConstraint =
+    [NSLayoutConstraint constraintWithItem:imageView
+                                 attribute:NSLayoutAttributeCenterX
+                                 relatedBy:NSLayoutRelationEqual
+                                    toItem:self.view
+                                 attribute:NSLayoutAttributeCenterX
+                                multiplier:1.0f
+                                  constant:0.0f];
+    [self.view addConstraint:centerXConstraint];
+    
+     NSLayoutConstraint *centerYConstraint =
+    [NSLayoutConstraint constraintWithItem:imageView
+                                 attribute:NSLayoutAttributeCenterY
+                                 relatedBy:NSLayoutRelationEqual
+                                    toItem:self.view
+                                 attribute:NSLayoutAttributeCenterY
+                                multiplier:1.0f
+                                  constant:0.0f];
+    [self.view addConstraint:centerYConstraint];
     
     UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc] initWithTarget:ADelegate action:@selector(presentLevelViewController)];
     tap.numberOfTapsRequired = 1;
@@ -92,7 +125,8 @@
 {
     dispatch_block_t animation = ^{
         self.descriptionLabel.center = CGPointMake(CGRectGetMidX(self.view.bounds),
-                                                   CGRectGetHeight(self.view.bounds) + CGRectGetMidY(self.descriptionLabel.bounds));
+                                                   CGRectGetHeight(self.view.bounds) +
+                                                   CGRectGetMidY(self.descriptionLabel.bounds));
     };
     
     if (animation) {
