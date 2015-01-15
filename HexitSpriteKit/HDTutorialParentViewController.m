@@ -21,14 +21,6 @@ static const CGFloat defaultPageControlHeight = 70.0f;
 
 @implementation HDTutorialParentViewController
 
-- (instancetype)init
-{
-    if (self = [super init]) {
-        
-    }
-    return self;
-}
-
 - (void)viewDidLoad
 {
     [super viewDidLoad];

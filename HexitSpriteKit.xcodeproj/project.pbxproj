@@ -8,7 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		3818A2221A671BFC009BFE31 /* HDTileDescriptorView.m in Sources */ = {isa = PBXBuildFile; fileRef = 3818A2211A671BFC009BFE31 /* HDTileDescriptorView.m */; };
-		3818A2251A676591009BFE31 /* localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 3818A2271A676591009BFE31 /* localizable.strings */; };
+		3818A2251A676591009BFE31 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 3818A2271A676591009BFE31 /* Localizable.strings */; };
 		3824A5DD1A538C3D00788E0E /* Grid-84.json in Resources */ = {isa = PBXBuildFile; fileRef = 3824A5DC1A538C3D00788E0E /* Grid-84.json */; };
 		386CF5D91A383A98006A8381 /* AudioToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 386CF5D81A383A98006A8381 /* AudioToolbox.framework */; };
 		386CF5DB1A383AFC006A8381 /* HDScene.m in Sources */ = {isa = PBXBuildFile; fileRef = 386CF5DA1A383AFC006A8381 /* HDScene.m */; };
@@ -188,8 +188,8 @@
 /* Begin PBXFileReference section */
 		3818A2201A671BFC009BFE31 /* HDTileDescriptorView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HDTileDescriptorView.h; sourceTree = "<group>"; };
 		3818A2211A671BFC009BFE31 /* HDTileDescriptorView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HDTileDescriptorView.m; sourceTree = "<group>"; };
-		3818A2261A676591009BFE31 /* Base */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = Base; path = Base.lproj/localizable.strings; sourceTree = "<group>"; };
-		3818A2281A67659A009BFE31 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/localizable.strings; sourceTree = "<group>"; };
+		3818A2261A676591009BFE31 /* Base */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = Base; path = Base.lproj/Localizable.strings; sourceTree = "<group>"; };
+		3818A2281A67659A009BFE31 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
 		3824A5DC1A538C3D00788E0E /* Grid-84.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = "Grid-84.json"; sourceTree = "<group>"; };
 		386CF5D81A383A98006A8381 /* AudioToolbox.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AudioToolbox.framework; path = System/Library/Frameworks/AudioToolbox.framework; sourceTree = SDKROOT; };
 		386CF5DA1A383AFC006A8381 /* HDScene.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HDScene.m; sourceTree = "<group>"; };
@@ -634,7 +634,7 @@
 				38C0A8421A07251700C552F1 /* Info.plist */,
 				38C0A8431A07251700C552F1 /* main.m */,
 				38C67CE51A0ABE820038526C /* Hexit-Prefix.pch */,
-				3818A2271A676591009BFE31 /* localizable.strings */,
+				3818A2271A676591009BFE31 /* Localizable.strings */,
 			);
 			name = "Supporting Files";
 			sourceTree = "<group>";
@@ -933,7 +933,7 @@
 				38BDDCBF1A20F93A005035EE /* Grid-31.json in Resources */,
 				38D424851A4F6C1A00FD21A2 /* E6.m4a in Resources */,
 				38C1223F1A2C2A0E00224B33 /* menuClicked.wav in Resources */,
-				3818A2251A676591009BFE31 /* localizable.strings in Resources */,
+				3818A2251A676591009BFE31 /* Localizable.strings in Resources */,
 				38D4248B1A4F6C1A00FD21A2 /* F5.m4a in Resources */,
 				38D424941A4F6C1A00FD21A2 /* D4.m4a in Resources */,
 				38BDDCD71A20F9F6005035EE /* Grid-43.json in Resources */,
@@ -1085,13 +1085,13 @@
 /* End PBXTargetDependency section */
 
 /* Begin PBXVariantGroup section */
-		3818A2271A676591009BFE31 /* localizable.strings */ = {
+		3818A2271A676591009BFE31 /* Localizable.strings */ = {
 			isa = PBXVariantGroup;
 			children = (
 				3818A2261A676591009BFE31 /* Base */,
 				3818A2281A67659A009BFE31 /* en */,
 			);
-			name = localizable.strings;
+			name = Localizable.strings;
 			path = Base.lproj;
 			sourceTree = "<group>";
 		};
