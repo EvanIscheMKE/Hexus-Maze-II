@@ -74,7 +74,6 @@ static const CGFloat cornerRadius = 15.0f;
         UIImage *nextLevelImage = [self _nextLevelImageTexture];
         self.nextButton = [SKSpriteNode spriteNodeWithTexture:[SKTexture textureWithImage:nextLevelImage]];
         self.nextButton.name        = HDNextLevelKey;
-        self.nextButton.anchorPoint = CGPointMake(0.5f, 0.5f);
         self.nextButton.position    = position;
         [self addChild:self.nextButton];
         
@@ -86,7 +85,6 @@ static const CGFloat cornerRadius = 15.0f;
         UIImage *menuButtonImage = [self _restartButtonTexture];
         self.restartButton = [SKSpriteNode spriteNodeWithTexture:[SKTexture textureWithImage:menuButtonImage]];
         self.restartButton.name        = HDRestartLevelKey;
-        self.restartButton.anchorPoint = CGPointMake(0.5f, 0.5f);
         self.restartButton.position    = position;
         [self addChild:self.restartButton];
         
@@ -95,7 +93,6 @@ static const CGFloat cornerRadius = 15.0f;
         position = CGPointMake(0.0f, -(CGRectGetHeight(self.frame)/2));
         self.restartButton = [SKSpriteNode spriteNodeWithTexture:[SKTexture textureWithImage:restartImage]];
         self.restartButton.name        = HDRestartLevelKey;
-        self.restartButton.anchorPoint = CGPointMake(0.5f, 0.5f);
         self.restartButton.position    = position;
         [self addChild:self.restartButton];
     }
@@ -152,14 +149,7 @@ static const CGFloat cornerRadius = 15.0f;
 
 - (void)dismissWithCompletion:(dispatch_block_t)completion
 {
-    SKAction *upAction      = [SKAction moveToY:15.0f duration:.300f];
-    SKAction *downAction    = [SKAction moveToY:-CGRectGetHeight(self.frame) duration:upAction.duration];
-    SKAction *sequeneAction = [SKAction sequence:@[upAction, downAction,]];
-    
-    upAction.timingMode   = SKActionTimingEaseIn;
-    downAction.timingMode = upAction.timingMode;
-    
-    [self runAction:sequeneAction completion:^{
+    [self runAction:[SKAction fadeOutWithDuration:.300f] completion:^{
         [self removeFromParent];
         if (completion) {
             completion();
