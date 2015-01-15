@@ -173,6 +173,17 @@
 		38F5A6BD1A08014F0036750A /* HDHexagon.m in Sources */ = {isa = PBXBuildFile; fileRef = 38F5A6BC1A08014F0036750A /* HDHexagon.m */; };
 		38F919251A37BF6A00249361 /* iAd.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 38F919241A37BF6A00249361 /* iAd.framework */; };
 		38FDF9B51A1BEF1F005CCFE1 /* HDSettingsManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 38FDF9B41A1BEF1F005CCFE1 /* HDSettingsManager.m */; };
+		C1F035241A676AB400EFD26B /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = C1F0351F1A676AB400EFD26B /* Localizable.strings */; };
+		C1F035251A676AB400EFD26B /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = C1F035221A676AB400EFD26B /* Localizable.strings */; };
+		C1F035421A676D0C00EFD26B /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = C1F035281A676D0C00EFD26B /* Localizable.strings */; };
+		C1F035431A676D0C00EFD26B /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = C1F0352B1A676D0C00EFD26B /* Localizable.strings */; };
+		C1F035441A676D0C00EFD26B /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = C1F0352E1A676D0C00EFD26B /* Localizable.strings */; };
+		C1F035451A676D0C00EFD26B /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = C1F035311A676D0C00EFD26B /* Localizable.strings */; };
+		C1F035461A676D0C00EFD26B /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = C1F035341A676D0C00EFD26B /* Localizable.strings */; };
+		C1F035471A676D0C00EFD26B /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = C1F035371A676D0C00EFD26B /* Localizable.strings */; };
+		C1F035481A676D0C00EFD26B /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = C1F0353A1A676D0C00EFD26B /* Localizable.strings */; };
+		C1F035491A676D0C00EFD26B /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = C1F0353D1A676D0C00EFD26B /* Localizable.strings */; };
+		C1F0354A1A676D0C00EFD26B /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = C1F035401A676D0C00EFD26B /* Localizable.strings */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -389,6 +400,17 @@
 		38F919241A37BF6A00249361 /* iAd.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = iAd.framework; path = System/Library/Frameworks/iAd.framework; sourceTree = SDKROOT; };
 		38FDF9B31A1BEF1F005CCFE1 /* HDSettingsManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HDSettingsManager.h; sourceTree = "<group>"; };
 		38FDF9B41A1BEF1F005CCFE1 /* HDSettingsManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HDSettingsManager.m; sourceTree = "<group>"; };
+		C1F035201A676AB400EFD26B /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = Localizable.strings; sourceTree = "<group>"; };
+		C1F035231A676AB400EFD26B /* fr */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = fr; path = Localizable.strings; sourceTree = "<group>"; };
+		C1F035291A676D0C00EFD26B /* de */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = de; path = Localizable.strings; sourceTree = "<group>"; };
+		C1F0352C1A676D0C00EFD26B /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = Localizable.strings; sourceTree = "<group>"; };
+		C1F0352F1A676D0C00EFD26B /* es */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = es; path = Localizable.strings; sourceTree = "<group>"; };
+		C1F035321A676D0C00EFD26B /* fr */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = fr; path = Localizable.strings; sourceTree = "<group>"; };
+		C1F035351A676D0C00EFD26B /* it */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = it; path = Localizable.strings; sourceTree = "<group>"; };
+		C1F035381A676D0C00EFD26B /* ja */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ja; path = Localizable.strings; sourceTree = "<group>"; };
+		C1F0353B1A676D0C00EFD26B /* pt-PT */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "pt-PT"; path = Localizable.strings; sourceTree = "<group>"; };
+		C1F0353E1A676D0C00EFD26B /* ru */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ru; path = Localizable.strings; sourceTree = "<group>"; };
+		C1F035411A676D0C00EFD26B /* zh-Hans */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hans"; path = Localizable.strings; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -628,6 +650,7 @@
 		38C0A8411A07251700C552F1 /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
+				C1F035261A676AD000EFD26B /* Localizations */,
 				38BDDCE71A20FACE005035EE /* Sounds */,
 				38C0A86F1A07343600C552F1 /* Categories */,
 				38C67CD41A0A2A290038526C /* Levels */,
@@ -801,6 +824,123 @@
 			name = Map;
 			sourceTree = "<group>";
 		};
+		C1F0351E1A676AB400EFD26B /* en.lproj */ = {
+			isa = PBXGroup;
+			children = (
+				C1F0351F1A676AB400EFD26B /* Localizable.strings */,
+			);
+			name = en.lproj;
+			path = Base.lproj/en.lproj;
+			sourceTree = "<group>";
+		};
+		C1F035211A676AB400EFD26B /* fr.lproj */ = {
+			isa = PBXGroup;
+			children = (
+				C1F035221A676AB400EFD26B /* Localizable.strings */,
+			);
+			name = fr.lproj;
+			path = Base.lproj/fr.lproj;
+			sourceTree = "<group>";
+		};
+		C1F035261A676AD000EFD26B /* Localizations */ = {
+			isa = PBXGroup;
+			children = (
+				C1F035271A676D0C00EFD26B /* de.lproj */,
+				C1F0352A1A676D0C00EFD26B /* en.lproj */,
+				C1F0352D1A676D0C00EFD26B /* es.lproj */,
+				C1F035301A676D0C00EFD26B /* fr.lproj */,
+				C1F035331A676D0C00EFD26B /* it.lproj */,
+				C1F035361A676D0C00EFD26B /* ja.lproj */,
+				C1F035391A676D0C00EFD26B /* pt-PT.lproj */,
+				C1F0353C1A676D0C00EFD26B /* ru.lproj */,
+				C1F0353F1A676D0C00EFD26B /* zh-Hans.lproj */,
+				C1F0351E1A676AB400EFD26B /* en.lproj */,
+				C1F035211A676AB400EFD26B /* fr.lproj */,
+			);
+			name = Localizations;
+			sourceTree = "<group>";
+		};
+		C1F035271A676D0C00EFD26B /* de.lproj */ = {
+			isa = PBXGroup;
+			children = (
+				C1F035281A676D0C00EFD26B /* Localizable.strings */,
+			);
+			name = de.lproj;
+			path = Base.lproj/de.lproj;
+			sourceTree = "<group>";
+		};
+		C1F0352A1A676D0C00EFD26B /* en.lproj */ = {
+			isa = PBXGroup;
+			children = (
+				C1F0352B1A676D0C00EFD26B /* Localizable.strings */,
+			);
+			name = en.lproj;
+			path = Base.lproj/en.lproj;
+			sourceTree = "<group>";
+		};
+		C1F0352D1A676D0C00EFD26B /* es.lproj */ = {
+			isa = PBXGroup;
+			children = (
+				C1F0352E1A676D0C00EFD26B /* Localizable.strings */,
+			);
+			name = es.lproj;
+			path = Base.lproj/es.lproj;
+			sourceTree = "<group>";
+		};
+		C1F035301A676D0C00EFD26B /* fr.lproj */ = {
+			isa = PBXGroup;
+			children = (
+				C1F035311A676D0C00EFD26B /* Localizable.strings */,
+			);
+			name = fr.lproj;
+			path = Base.lproj/fr.lproj;
+			sourceTree = "<group>";
+		};
+		C1F035331A676D0C00EFD26B /* it.lproj */ = {
+			isa = PBXGroup;
+			children = (
+				C1F035341A676D0C00EFD26B /* Localizable.strings */,
+			);
+			name = it.lproj;
+			path = Base.lproj/it.lproj;
+			sourceTree = "<group>";
+		};
+		C1F035361A676D0C00EFD26B /* ja.lproj */ = {
+			isa = PBXGroup;
+			children = (
+				C1F035371A676D0C00EFD26B /* Localizable.strings */,
+			);
+			name = ja.lproj;
+			path = Base.lproj/ja.lproj;
+			sourceTree = "<group>";
+		};
+		C1F035391A676D0C00EFD26B /* pt-PT.lproj */ = {
+			isa = PBXGroup;
+			children = (
+				C1F0353A1A676D0C00EFD26B /* Localizable.strings */,
+			);
+			name = "pt-PT.lproj";
+			path = "Base.lproj/pt-PT.lproj";
+			sourceTree = "<group>";
+		};
+		C1F0353C1A676D0C00EFD26B /* ru.lproj */ = {
+			isa = PBXGroup;
+			children = (
+				C1F0353D1A676D0C00EFD26B /* Localizable.strings */,
+			);
+			name = ru.lproj;
+			path = Base.lproj/ru.lproj;
+			sourceTree = "<group>";
+		};
+		C1F0353F1A676D0C00EFD26B /* zh-Hans.lproj */ = {
+			isa = PBXGroup;
+			children = (
+				C1F035401A676D0C00EFD26B /* Localizable.strings */,
+			);
+			name = "zh-Hans.lproj";
+			path = "Base.lproj/zh-Hans.lproj";
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -869,8 +1009,16 @@
 			developmentRegion = English;
 			hasScannedForEncodings = 0;
 			knownRegions = (
-				en,
 				Base,
+				en,
+				fr,
+				de,
+				es,
+				it,
+				ja,
+				"pt-PT",
+				ru,
+				"zh-Hans",
 			);
 			mainGroup = 38C0A8351A07251600C552F1;
 			productRefGroup = 38C0A83F1A07251700C552F1 /* Products */;
@@ -901,6 +1049,7 @@
 				38D424821A4F6C1A00FD21A2 /* A6.m4a in Resources */,
 				38D4248A1A4F6C1A00FD21A2 /* G5.m4a in Resources */,
 				38D424841A4F6C1A00FD21A2 /* F6.m4a in Resources */,
+				C1F035461A676D0C00EFD26B /* Localizable.strings in Resources */,
 				38C67D211A0AE3FD0038526C /* Grid-28.json in Resources */,
 				389E94FC1A488D6300F2DF05 /* Grid-78.json in Resources */,
 				38D424881A4F6C1A00FD21A2 /* B5.m4a in Resources */,
@@ -919,9 +1068,11 @@
 				389E94FA1A488D5A00F2DF05 /* Grid-77.json in Resources */,
 				38C122301A2C1CA200224B33 /* Grid-70.json in Resources */,
 				38C67CFF1A0ACE4D0038526C /* Grid-11.json in Resources */,
+				C1F035241A676AB400EFD26B /* Localizable.strings in Resources */,
 				38C67D1F1A0AE3F30038526C /* Grid-27.json in Resources */,
 				38C122201A2C1C3D00224B33 /* Grid-62.json in Resources */,
 				38C67CF31A0ACE1D0038526C /* Grid-5.json in Resources */,
+				C1F035441A676D0C00EFD26B /* Localizable.strings in Resources */,
 				389E95061A488D9800F2DF05 /* Grid-83.json in Resources */,
 				38BDDCD51A20F9E4005035EE /* Grid-42.json in Resources */,
 				38D424831A4F6C1A00FD21A2 /* G6.m4a in Resources */,
@@ -932,6 +1083,7 @@
 				38BDDCF21A20FB80005035EE /* Grid-55.json in Resources */,
 				38BDDCBF1A20F93A005035EE /* Grid-31.json in Resources */,
 				38D424851A4F6C1A00FD21A2 /* E6.m4a in Resources */,
+				C1F035421A676D0C00EFD26B /* Localizable.strings in Resources */,
 				38C1223F1A2C2A0E00224B33 /* menuClicked.wav in Resources */,
 				3818A2251A676591009BFE31 /* Localizable.strings in Resources */,
 				38D4248B1A4F6C1A00FD21A2 /* F5.m4a in Resources */,
@@ -940,6 +1092,7 @@
 				38D424901A4F6C1A00FD21A2 /* A4.m4a in Resources */,
 				38BDDCF41A20FB89005035EE /* Grid-56.json in Resources */,
 				38C67D111A0AE3A90038526C /* Grid-20.json in Resources */,
+				C1F035481A676D0C00EFD26B /* Localizable.strings in Resources */,
 				38C67CFD1A0ACE450038526C /* Grid-10.json in Resources */,
 				38BDDCFA1A20FBB2005035EE /* Grid-59.json in Resources */,
 				38C67D0F1A0AE3A00038526C /* Grid-19.json in Resources */,
@@ -958,6 +1111,7 @@
 				38BDDCDD1A20FA1D005035EE /* Grid-46.json in Resources */,
 				38C67D091A0AE3820038526C /* Grid-16.json in Resources */,
 				38C67D191A0AE3C90038526C /* Grid-24.json in Resources */,
+				C1F035471A676D0C00EFD26B /* Localizable.strings in Resources */,
 				38BDDCCB1A20F991005035EE /* Grid-37.json in Resources */,
 				38D4247F1A4F6C1A00FD21A2 /* D2.m4a in Resources */,
 				38D424921A4F6C1A00FD21A2 /* F4.m4a in Resources */,
@@ -968,6 +1122,8 @@
 				38BDDCC31A20F94D005035EE /* Grid-33.json in Resources */,
 				38C67CF51A0ACE230038526C /* Grid-6.json in Resources */,
 				38BDDCC11A20F943005035EE /* Grid-32.json in Resources */,
+				C1F0354A1A676D0C00EFD26B /* Localizable.strings in Resources */,
+				C1F035491A676D0C00EFD26B /* Localizable.strings in Resources */,
 				3824A5DD1A538C3D00788E0E /* Grid-84.json in Resources */,
 				389E95041A488D8B00F2DF05 /* Grid-82.json in Resources */,
 				38C1222E1A2C1C9400224B33 /* Grid-69.json in Resources */,
@@ -981,8 +1137,11 @@
 				38D424891A4F6C1A00FD21A2 /* A5.m4a in Resources */,
 				38D4248E1A4F6C1A00FD21A2 /* C5.m4a in Resources */,
 				38BDDCE31A20FA3A005035EE /* Grid-49.json in Resources */,
+				C1F035431A676D0C00EFD26B /* Localizable.strings in Resources */,
 				38C67D011A0ACE530038526C /* Grid-12.json in Resources */,
 				38C67D071A0ACE690038526C /* Grid-15.json in Resources */,
+				C1F035451A676D0C00EFD26B /* Localizable.strings in Resources */,
+				C1F035251A676AB400EFD26B /* Localizable.strings in Resources */,
 				38D4249B1A4F6C1A00FD21A2 /* D3.m4a in Resources */,
 				38BDDCF81A20FBAA005035EE /* Grid-58.json in Resources */,
 				38C67D171A0AE3C10038526C /* Grid-23.json in Resources */,
@@ -1088,8 +1247,7 @@
 		3818A2271A676591009BFE31 /* Localizable.strings */ = {
 			isa = PBXVariantGroup;
 			children = (
-				3818A2261A676591009BFE31 /* Base */,
-				3818A2281A67659A009BFE31 /* en */,
+				C1F035411A676D0C00EFD26B /* zh-Hans */,
 			);
 			name = Localizable.strings;
 			path = Base.lproj;
