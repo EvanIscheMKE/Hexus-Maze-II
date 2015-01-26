@@ -9,7 +9,6 @@
 
 #import <Foundation/Foundation.h>
 
-NSString *titleFromLevelIdx(NSUInteger levelIdx);
 NSString *descriptionFromLevelIdx(NSUInteger levelIdx);
 
 typedef enum{
@@ -21,7 +20,7 @@ typedef enum{
 
 @class HDHexagon;
 @interface HDHelper : NSObject
-
++ (UIImage *)iconForType:(HDLevelType)type;
 + (CGPathRef)hexagonPathForBounds:(CGRect)bounds;
 + (UIBezierPath *)bezierHexagonInFrame:(CGRect)frame;
 
@@ -32,7 +31,6 @@ typedef enum{
                                    lineWidth:(CGFloat)lineWidth
                                        sides:(NSInteger)sides
                                 cornerRadius:(CGFloat)cornerRadius;
-
 + (BOOL)isWideScreen;
 + (CGFloat)sideMenuOffsetX;
 + (void)entranceAnimationWithTiles:(NSArray *)tiles completion:(dispatch_block_t)completion;

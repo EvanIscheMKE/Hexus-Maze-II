@@ -25,9 +25,7 @@
 @protocol HDSceneDelegate <NSObject, SKSceneDelegate>
 @required
 - (void)scene:(HDScene *)scene proceededToLevel:(NSUInteger)level;
-- (void)scene:(HDScene *)scene updatedSelectedTileCount:(NSUInteger)count;
 - (void)scene:(HDScene *)scene gameEndedWithCompletion:(BOOL)completion;
-- (void)multipleTouchTileWasTouchedInScene:(HDScene *)scene;
 @optional
 - (void)gameWillResetInScene:(HDScene *)scene;
 @end

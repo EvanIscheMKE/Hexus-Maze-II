@@ -9,11 +9,8 @@
 #import <Foundation/Foundation.h>
 
 @interface HDSettingsManager : NSObject
-
 @property (nonatomic, assign) BOOL sound;
 @property (nonatomic, assign) BOOL music;
-
 + (HDSettingsManager *)sharedManager;
 - (void)configureSettingsForFirstRun;
-
 @end

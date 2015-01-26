@@ -11,7 +11,6 @@
 #import "HDGameCenterManager.h"
 
 NSString * const HDLeaderBoardKey = @"LevelLeaderboard";
-
 @implementation HDGameCenterManager
 
 + (HDGameCenterManager *)sharedManager
@@ -32,9 +31,9 @@ NSString * const HDLeaderBoardKey = @"LevelLeaderboard";
         __weak GKLocalPlayer *weakLocalPlayer = localPlayer;
         localPlayer.authenticateHandler = ^(UIViewController* viewController, NSError *error) {
             if (weakLocalPlayer.authenticated) {
-            
+                
             } else if(viewController) {
-              
+                
             }
         };
     }
@@ -42,6 +41,10 @@ NSString * const HDLeaderBoardKey = @"LevelLeaderboard";
 
 - (void)reportLevelCompletion:(int64_t)level
 {
+    if (level == 1) {
+        [self submitAchievementWithIdenifier:@"Achievement" completionBanner:YES percentComplete:100];
+    }
+    
     [self submitAchievementForLevel:level];
     
     if ([GKLocalPlayer localPlayer].isAuthenticated) {
@@ -64,9 +67,13 @@ NSString * const HDLeaderBoardKey = @"LevelLeaderboard";
         percentCompleted += 100;
     }
     
-    NSLog(@"Level:%lld//Index:%zd//Complete:%zd",level, identifierIndex, percentCompleted);
-    
-    NSString *identifier = [NSString stringWithFormat:@"Achievement%zd",identifierIndex];
+    [self submitAchievementWithIdenifier:[NSString stringWithFormat:@"Achievement%zd",identifierIndex]
+                        completionBanner:(percentCompleted == 100)
+                         percentComplete:percentCompleted];
+}
+
+- (void)submitAchievementWithIdenifier:(NSString *)identifier completionBanner:(BOOL)banner percentComplete:(NSUInteger)percentCompleted
+{
     GKAchievement *scoreAchievement = [[GKAchievement alloc] initWithIdentifier:identifier];
     scoreAchievement.showsCompletionBanner = (percentCompleted == 100);
     scoreAchievement.percentComplete = percentCompleted;

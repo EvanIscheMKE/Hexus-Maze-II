@@ -17,58 +17,58 @@
 
 - (void)viewDidLoad
 {
-    [super viewDidLoad];
     self.view.backgroundColor = [UIColor flatWetAsphaltColor];
-    
+    [super viewDidLoad];
+    [self _setup];
+}
+
+- (void)_setup
+{
     NSArray *animationImages = nil;
-    
     switch (self.index) {
         case 0:
-            animationImages = @[[UIImage imageNamed:@"Tutorial-ScreenOne-NonSelected@2x.png"],
-                                [UIImage imageNamed:@"Tutorial-ScreenOne-Selected@2x.png"]];
+            animationImages = @[[UIImage imageNamed:@"Tutorial-1-1"],
+                                [UIImage imageNamed:@"Tutorial-1-2"]];
             break;
         case 1:
-            animationImages = @[[UIImage imageNamed:@"Tutorial-ScreenOne-Selected@2x.png"],
-                                [UIImage imageNamed:@"Tutorial-PageTwo-One@2x"],
-                                [UIImage imageNamed:@"Tutorial-ScreenOne-Selected@2x.png"],
-                                [UIImage imageNamed:@"Tutorial-PageTwo-Two@2x"],
-                                [UIImage imageNamed:@"Tutorial-ScreenOne-Selected@2x.png"],
-                                [UIImage imageNamed:@"Tutorial-PageTwo-Three@2x"],
-                                [UIImage imageNamed:@"Tutorial-ScreenOne-Selected@2x.png"],
-                                [UIImage imageNamed:@"Tutorial-PageTwo-Four@2x"]];
+            animationImages = @[[UIImage imageNamed:@"Tutorial-1-2"],
+                                [UIImage imageNamed:@"Tutorial-2-1"]];
             break;
         case 2:
-            animationImages = @[[UIImage imageNamed:@"Tutorial-ScreenOne-NonSelected@2x.png"],
-                                [UIImage imageNamed:@"Tutorial-ScreenOne-Selected@2x.png"],
-                                [UIImage imageNamed:@"Tutorial-PageTwo-One@2x"],
-                                [UIImage imageNamed:@"Tutorial-PageThree-One@2x.png"],
-                                [UIImage imageNamed:@"Tutorial-PageThree-Two@2x.png"],
-                                [UIImage imageNamed:@"Tutorial-PageThree-Three@2x.png"],
-                                [UIImage imageNamed:@"Tutorial-PageThree-Four@2x.png"],
-                                [UIImage imageNamed:@"Tutorial-PageThree-Five@2x.png"],
-                                [UIImage imageNamed:@"Tutorial-PageThree-Six@2x.png"],
-                                [UIImage imageNamed:@"Tutorial-PageThree-Seven@2x.png"]];
+            animationImages = @[[UIImage imageNamed:@"Tutorial-1-1"],
+                                [UIImage imageNamed:@"Tutorial-1-2"],
+                                [UIImage imageNamed:@"Tutorial-2-1"],
+                                [UIImage imageNamed:@"Tutorial-3-1"],
+                                [UIImage imageNamed:@"Tutorial-3-2"],
+                                [UIImage imageNamed:@"Tutorial-3-3"],
+                                [UIImage imageNamed:@"Tutorial-3-4"],
+                                [UIImage imageNamed:@"Tutorial-3-5"],
+                                [UIImage imageNamed:@"Tutorial-3-6"],
+                                [UIImage imageNamed:@"Tutorial-3-7"],
+                                [UIImage imageNamed:@"Tutorial-3-8"]];
             break;
     }
     
-    UIImage *imageForSize = [UIImage imageNamed:@"Tutorial-ScreenOne-Selected@2x.png"];
+    UIImage *imageForSize = [UIImage imageNamed:@"Tutorial-1-1"];
     self.imageView = [[UIImageView alloc] initWithFrame:CGRectMake(0.0f, 0.0f, imageForSize.size.width, imageForSize.size.height)];
+     self.imageView.image               = imageForSize;
     self.imageView.animationImages      = animationImages;
     self.imageView.animationRepeatCount = NSIntegerMax;
     self.imageView.animationDuration    = animationImages.count / 2;
-    self.imageView.center = CGPointMake(CGRectGetMidX(self.view.bounds), CGRectGetMidY(self.view.bounds) + 78.0f);
+    self.imageView.center = CGPointMake(
+                                        CGRectGetMidX(self.view.bounds),
+                                        CGRectGetMidY(self.view.bounds) + CGRectGetHeight(self.view.bounds)/8.5f
+                                        );
+    self.imageView.frame = CGRectIntegral(self.imageView.frame);
+    self.imageView.transform = CGAffineTransformMakeScale(CGRectGetWidth(self.view.bounds) / (imageForSize.size.width + 70.0f),
+                                                          CGRectGetWidth(self.view.bounds) / (imageForSize.size.width + 70.0f));
+
     [self.view addSubview:self.imageView];
 }
 
-- (void)didReceiveMemoryWarning
+- (void)viewDidAppear:(BOOL)animated
 {
-    [super didReceiveMemoryWarning];
-    // Dispose of any resources that can be recreated.
-}
-
-- (void)viewWillAppear:(BOOL)animated
-{
-    [super viewWillAppear:animated];
+    [super viewDidAppear:animated];
     if (self.index == 0) {
         dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(.1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
             [self.imageView startAnimating];

@@ -13,43 +13,41 @@
 #import "HDHexagonNode.h"
 #import "UIColor+FlatColors.h"
 
-NSString *titleFromLevelIdx(NSUInteger levelIdx) {
-    switch (levelIdx) {
-        case HDLevelTypeDoubles:
-            return @"Two Touch Tile";
-            break;
-        case HDLevelTypeCount:
-            return @"Count Tile";
-            break;
-        case HDLevelTypeTriples:
-            return @"Three Touch Tile";
-            break;
-        case HDLevelTypeEnd:
-            return @"End Tile";
-            break;
-    }
-    return @"";
-}
-
 NSString *descriptionFromLevelIdx(NSUInteger levelIdx){
     switch (levelIdx) {
         case HDLevelTypeDoubles:
-            return @"Touch it twice";
+            return NSLocalizedString(@"level1", nil);
             break;
         case HDLevelTypeCount:
-            return @"Touch the unlocked Tile to unlock the next locked tile";
+            return NSLocalizedString(@"level2", nil);
             break;
         case HDLevelTypeTriples:
-            return @"Touch it three times";
+            return NSLocalizedString(@"level3", nil);
             break;
         case HDLevelTypeEnd:
-            return @"You must end on this tile";
+            return NSLocalizedString(@"level4", nil);
             break;
     }
     return @"";
 };
 
 @implementation HDHelper
+
++ (UIImage *)iconForType:(HDLevelType)type
+{
+    switch (type) {
+        case HDLevelTypeDoubles:
+            return [UIImage imageNamed:@"Double-260"];
+        case HDLevelTypeTriples:
+            return [UIImage imageNamed:@"Triple-260"];
+        case HDLevelTypeEnd:
+            return [UIImage imageNamed:@"End-260"];
+        case HDLevelTypeCount:
+            return [UIImage imageNamed:@"Count-260"];
+    }
+    NSAssert(NO, @"%@",NSStringFromSelector(_cmd));
+    return nil;
+}
 
 + (CGFloat)sideMenuOffsetX
 {
@@ -138,52 +136,6 @@ NSString *descriptionFromLevelIdx(NSUInteger levelIdx){
     return path;
 }
 
-
-+ (UIBezierPath *)roundedPolygonPathWithRect:(CGRect)square
-                                   lineWidth:(CGFloat)lineWidth
-                                       sides:(NSInteger)sides
-                                cornerRadius:(CGFloat)cornerRadius
-{
-    UIBezierPath *path  = [UIBezierPath bezierPath];
-    
-    CGFloat theta       = 2.0f * M_PI / sides;                           // how much to turn at every corner
-    CGFloat offset      = cornerRadius * tanf(theta / 2.0);             // offset from which to start rounding corners
-    CGFloat squareWidth = MIN(square.size.width, square.size.height);   // width of the square
-    
-    // calculate the length of the sides of the polygon
-    
-    CGFloat length      = squareWidth - lineWidth;
-    
-    if (sides % 4 != 0) {                                               // if not dealing with polygon which will be square with all sides ...
-        length = length * cosf(theta / 2.0) + offset/2.0;               // ... offset it inside a circle inside the square
-    }
-    
-    CGFloat sideLength = length * tanf(theta / 2.0);
-    
-    // start drawing at `point` in lower right corner
-    
-    CGPoint point = CGPointMake(squareWidth / 2.0 + sideLength / 2.0 - offset, squareWidth - (squareWidth - length) / 2.0);
-    CGFloat angle = M_PI;
-    [path moveToPoint:point];
-    
-    // draw the sides and rounded corners of the polygon
-    
-    for (NSInteger side = 0; side < sides; side++) {
-        point = CGPointMake(point.x + (sideLength - offset * 2.0) * cosf(angle), point.y + (sideLength - offset * 2.0) * sinf(angle));
-        [path addLineToPoint:point];
-        
-        CGPoint center = CGPointMake(point.x + cornerRadius * cosf(angle + M_PI_2), point.y + cornerRadius * sinf(angle + M_PI_2));
-        [path addArcWithCenter:center radius:cornerRadius startAngle:angle - M_PI_2 endAngle:angle + theta - M_PI_2 clockwise:YES];
-        
-        point = path.currentPoint; // we don't have to calculate where the arc ended ... UIBezierPath did that for us
-        angle += theta;
-    }
-    
-    [path closePath];
-    
-    return path;
-}
-
 + (UIBezierPath *)restartArrowAroundPoint:(CGPoint)center
 {
     const CGFloat offset = center.y * 2 / 5 /* Multiply the the center.y by 2 to get the height of container*/;
@@ -203,45 +155,6 @@ NSString *descriptionFromLevelIdx(NSUInteger levelIdx){
     [circle addLineToPoint:CGPointMake(endPoint.x - offset/2, endPoint.y - offset/1.85f)];
     
     return circle;
-}
-
-+ (CGPathRef)starPathForBounds:(CGRect)bounds
-{
-    UIBezierPath *starPath = [UIBezierPath bezierPath];
-    
-    const CGPoint center = CGPointMake(CGRectGetMidX(bounds), CGRectGetMidY(bounds));
-    
-    const NSUInteger numberOfPoints = 5;
-    const CGFloat innerRadius = CGRectGetWidth(bounds) / 3.8f;
-    const CGFloat outerRadius = CGRectGetMidX(bounds);
-    
-    CGFloat arcPerPoint = 2.0f * M_PI / 5;
-    CGFloat theta = M_PI / 2.0f;
-    
-    // Move to starting point (tip at 90 degrees on outside of star)
-    CGPoint pt = CGPointMake(center.x + (outerRadius * cosf(theta)), center.y + (outerRadius * sinf(theta)));
-    
-    [starPath moveToPoint:CGPointMake(pt.x, pt.y)];
-    
-    for (int i = 0; i < numberOfPoints; i++) {
-        // Calculate next inner point (moving clockwise), accounting for crossing of 0 degrees
-        theta = theta - (arcPerPoint / 2.0f);
-        if (theta < 0.0f) {
-            theta = theta + (2 * M_PI);
-        }
-        pt = CGPointMake(center.x + (innerRadius * cosf(theta)), center.y + (innerRadius * sinf(theta)));
-        [starPath addLineToPoint:CGPointMake(pt.x, pt.y)];
-        
-        // Calculate next outer point (moving clockwise), accounting for crossing of 0 degrees
-        theta = theta - (arcPerPoint / 2.0f);
-        if (theta < 0.0f) {
-            theta = theta + (2 * M_PI);
-        }
-        pt = CGPointMake(center.x + (outerRadius * cosf(theta)), center.y + (outerRadius * sinf(theta)));
-        [starPath addLineToPoint:CGPointMake(pt.x, pt.y)];
-    }
-    
-    return [starPath CGPath];
 }
 
 + (void)entranceAnimationWithTiles:(NSArray *)tiles completion:(dispatch_block_t)completion
@@ -268,14 +181,26 @@ NSString *descriptionFromLevelIdx(NSUInteger levelIdx){
         }
     }
     
+    // Sorting array before looping through it, to hopefully achieve a solid fall for each row
+    NSMutableArray *dealTheseTiles = [NSMutableArray arrayWithCapacity:tiles.count];
+    for (NSUInteger row = minRow; row < maxRow + 1; row++) {
+        for (HDHexagon *hexagon in tiles) {
+            if (hexagon.row == row) {
+                [dealTheseTiles addObject:hexagon];
+            }
+        }
+    }
+    
     // Loop through tiles and scale to zilch
     __block NSInteger index = 0;
     for (NSInteger row = minRow; row < maxRow + 1; row++) {
-        for (HDHexagon *hexagon in tiles) {
+        for (HDHexagon *hexagon in [dealTheseTiles copy]) {
             if (hexagon.row == row) {
                 
-                SKAction *wait          = [SKAction waitForDuration:row * .1f];
-                SKAction *dropPositionY = [SKAction moveTo:hexagon.node.defaultPosition duration:.3f];
+                [dealTheseTiles removeObjectIdenticalTo:hexagon];
+                
+                SKAction *wait          = [SKAction waitForDuration:row * .15f];
+                SKAction *dropPositionY = [SKAction moveTo:hexagon.node.defaultPosition duration:.25f];
                 SKAction *sequence      = [SKAction sequence:@[wait, dropPositionY]];
                 
                 CGPoint position = CGPointMake(
@@ -286,9 +211,7 @@ NSString *descriptionFromLevelIdx(NSUInteger levelIdx){
                 hexagon.node.hidden = NO;
                 hexagon.node.position = position;
                 [hexagon.node runAction:sequence completion:^{
-                    
                     if (index == countTo) {
-                        
                         if (completion) {
                             completion();
                         }
@@ -326,7 +249,6 @@ NSString *descriptionFromLevelIdx(NSUInteger levelIdx){
         
         [tile.node runAction:sequence
                   completion:^{
-                        tile.node.scale = 1.0f;
                         [tile restoreToInitialState];
                                      if (index == countTo) {
                                          if (completion) {

@@ -19,14 +19,6 @@
 
 @implementation HDSoundManager
 
-- (instancetype)init
-{
-    if (self = [super init]) {
-        
-    }
-    return self;
-}
-
 + (HDSoundManager *)sharedManager
 {
     static HDSoundManager *_soundController = nil;
@@ -46,7 +38,7 @@
     }
     
     _playLoop = playLoop;
-    if (playLoop && ![[self class] isOtherAudioPlaying]) {
+    if (playLoop && ![[self class] isOtherAudioPlaying] && [[HDSettingsManager sharedManager] music]) {
         [self.loopPlayer play];
     } else {
         [self.loopPlayer stop];
@@ -65,12 +57,15 @@
 
 - (void)preloadSounds:(NSArray *)soundNames
 {
+    if (![soundNames count]) {
+        return;
+    }
+    
     if (!_sounds) {
         _sounds = [NSMutableDictionary dictionary];
     }
     
     for (NSString *effect in soundNames) {
-        
         NSError *error = nil;
         NSString *soundPath = [[[NSBundle mainBundle] resourcePath] stringByAppendingPathComponent: effect];
         AVAudioPlayer *player = [[AVAudioPlayer alloc] initWithContentsOfURL:[NSURL fileURLWithPath:soundPath] error:&error];

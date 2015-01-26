@@ -26,7 +26,7 @@ static const NSUInteger kNumberOfLevelsPerPage = 28;
 static const CGFloat defaultContainerHeight   = 70.0f;
 static const CGFloat defaultPageControlHeight = 50.0f;
 
-@interface HDGridViewController () <UIScrollViewDelegate ,HDGridScrollViewDelegate, HDLevelsViewControllerDelegate,HDGridScrollViewDatasource>
+@interface HDGridViewController () <UIScrollViewDelegate ,HDGridScrollViewDelegate, HDLevelsViewControllerDelegate, HDGridScrollViewDatasource>
 @property (nonatomic, getter=isNavigationBarHidden, assign) BOOL navigationBarHidden;
 @property (nonatomic, strong) HDGridScrollView *scrollView;
 @property (nonatomic, strong) HDHexagonControl *control;
@@ -34,13 +34,12 @@ static const CGFloat defaultPageControlHeight = 50.0f;
 @end
 
 @implementation HDGridViewController {
-    
-    NSDictionary *_metrics;
-    NSDictionary *_views;
+    NSDictionary   *_metrics;
+    NSDictionary   *_views;
     NSMutableArray *_pageViews;
     NSMutableArray *_imageViews;
-    
-    NSInteger _previousPage;
+    NSInteger       _previousPage;
+    CGFloat         _currentScaleFactor;
 }
 
 - (void)viewDidLoad
@@ -107,8 +106,6 @@ static const CGFloat defaultPageControlHeight = 50.0f;
     CGRect menuBarFrame = CGRectMake(0.0f, -defaultContainerHeight, CGRectGetWidth(self.view.bounds), defaultContainerHeight);
     self.menuBar = [HDMenuBar menuBarWithActivityImage:[UIImage imageNamed:@"Play"]];
     self.menuBar.frame = menuBarFrame;
-    self.menuBar.musicButton.selected = [[HDSettingsManager sharedManager] music];
-    self.menuBar.soundButton.selected = [[HDSettingsManager sharedManager] sound];
     [self.menuBar.navigationButton addTarget:self action:@selector(_performExitAnimation:) forControlEvents:UIControlEventTouchUpInside];
     [self.menuBar.musicButton      addTarget:self action:@selector(_toggleMusic:)          forControlEvents:UIControlEventTouchUpInside];
     [self.menuBar.soundButton      addTarget:self action:@selector(_toggleSound:)          forControlEvents:UIControlEventTouchUpInside];
@@ -146,7 +143,9 @@ static const CGFloat defaultPageControlHeight = 50.0f;
 - (void)viewDidAppear:(BOOL)animated
 {
     [super viewDidAppear:animated];
-     self.navigationBarHidden = NO;
+    self.navigationBarHidden = NO;
+    self.menuBar.musicButton.selected = [[HDSettingsManager sharedManager] music];
+    self.menuBar.soundButton.selected = [[HDSettingsManager sharedManager] sound];
     [self.scrollView performIntroAnimationWithCompletion:nil];
 }
 
@@ -260,6 +259,9 @@ static const CGFloat defaultPageControlHeight = 50.0f;
     for (HDHexagonButton *hexa in hexagons) {
         if (hexa.imageView) {
             [_imageViews addObject:hexa.imageView];
+            if (_currentScaleFactor < .05) {
+                _currentScaleFactor = hexa.imageView.transform.a;
+            }
         }
     }
     
@@ -275,11 +277,11 @@ static const CGFloat defaultPageControlHeight = 50.0f;
         offset = 1 - offset;
     }
     
-    dispatch_async(dispatch_get_main_queue(), ^{
-        for (UIImageView *imageView in [self _imageViewsFromScrollView:scrollView]) {
-            imageView.transform = CGAffineTransformMakeScale(1.0f - offset, 1.0f - offset);
-        }
-    });
+    [CATransaction begin];
+    for (UIImageView *imageView in [self _imageViewsFromScrollView:scrollView]) {
+        imageView.transform = CGAffineTransformMakeScale(_currentScaleFactor - offset, _currentScaleFactor - offset);
+    }
+    [CATransaction commit];
     
     NSInteger page = 0;
     if (scrollView.isDragging || scrollView.isDecelerating){

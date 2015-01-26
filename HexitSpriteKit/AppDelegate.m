@@ -73,8 +73,7 @@ NSString * const HDLeaderBoardIdentifierKey = @"LevelLeaderboard";
 
 - (void)presentGameControllerToPlayLevel:(NSInteger)level
 {
-    HDGameViewController *controller = [[HDGameViewController alloc] initWithLevel:level];
-    [self.controller pushViewController:controller animated:NO];
+    [self.controller pushViewController:[[HDGameViewController alloc] initWithLevel:level] animated:NO];
 }
 
 - (void)rateHEXUS
@@ -108,10 +107,9 @@ NSString * const HDLeaderBoardIdentifierKey = @"LevelLeaderboard";
 
 - (UIImage *)_screenshotOfFrontViewController
 {
-    CGRect bounds = [[UIScreen mainScreen] bounds];
-    UIGraphicsBeginImageContextWithOptions(bounds.size, YES, [[UIScreen mainScreen] scale]);
+    UIGraphicsBeginImageContextWithOptions(self.window.bounds.size, YES, [[UIScreen mainScreen] scale]);
     
-    [self.controller.view drawViewHierarchyInRect:bounds afterScreenUpdates:YES];
+    [self.controller.view drawViewHierarchyInRect:self.window.bounds afterScreenUpdates:YES];
     
     UIImage *screenShot = UIGraphicsGetImageFromCurrentImageContext();
     UIGraphicsEndImageContext();

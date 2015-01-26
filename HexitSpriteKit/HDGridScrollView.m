@@ -31,8 +31,6 @@
     return self;
 }
 
-#pragma mark - Public
-
 - (void)performIntroAnimationWithCompletion:(dispatch_block_t)completion
 {
     NSArray *viewsCorrespondingToProtocol = [[self subviews] filteredArrayUsingPredicate:[NSPredicate predicateWithBlock:^BOOL(id evaluatedObject, NSDictionary *bindings) {

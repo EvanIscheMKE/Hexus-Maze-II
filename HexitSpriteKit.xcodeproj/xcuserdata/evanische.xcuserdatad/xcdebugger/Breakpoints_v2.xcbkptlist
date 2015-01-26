@@ -106,11 +106,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "HexitSpriteKit/HDScene.m"
-            timestampString = "442975374.10114"
+            timestampString = "443591877.176024"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "351"
-            endingLineNumber = "351"
+            startingLineNumber = "338"
+            endingLineNumber = "338"
             landmarkName = "-_checkGameStateForTile:"
             landmarkType = "5">
          </BreakpointContent>
@@ -132,11 +132,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "HexitSpriteKit/HDHelper.m"
-            timestampString = "442975374.10114"
+            timestampString = "443591877.176024"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "290"
-            endingLineNumber = "290"
+            startingLineNumber = "214"
+            endingLineNumber = "214"
             landmarkName = "+entranceAnimationWithTiles:completion:"
             landmarkType = "5">
          </BreakpointContent>
@@ -148,28 +148,12 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "HexitSpriteKit/HDHexagonNode.m"
-            timestampString = "442473368.042751"
+            timestampString = "442997115.668788"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "62"
-            endingLineNumber = "62"
+            startingLineNumber = "60"
+            endingLineNumber = "60"
             landmarkName = "-indicatorPositionFromHexagonType:withTouchesCount:"
-            landmarkType = "5">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            shouldBeEnabled = "No"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "HexitSpriteKit/HDScene.m"
-            timestampString = "442975374.10114"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "521"
-            endingLineNumber = "521"
-            landmarkName = "-runAction:withKey:"
             landmarkType = "5">
          </BreakpointContent>
       </BreakpointProxy>

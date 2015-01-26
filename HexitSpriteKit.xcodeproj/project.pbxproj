@@ -8,7 +8,6 @@
 
 /* Begin PBXBuildFile section */
 		3818A2221A671BFC009BFE31 /* HDTileDescriptorView.m in Sources */ = {isa = PBXBuildFile; fileRef = 3818A2211A671BFC009BFE31 /* HDTileDescriptorView.m */; };
-		3818A2251A676591009BFE31 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 3818A2271A676591009BFE31 /* Localizable.strings */; };
 		3824A5DD1A538C3D00788E0E /* Grid-84.json in Resources */ = {isa = PBXBuildFile; fileRef = 3824A5DC1A538C3D00788E0E /* Grid-84.json */; };
 		386CF5D91A383A98006A8381 /* AudioToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 386CF5D81A383A98006A8381 /* AudioToolbox.framework */; };
 		386CF5DB1A383AFC006A8381 /* HDScene.m in Sources */ = {isa = PBXBuildFile; fileRef = 386CF5DA1A383AFC006A8381 /* HDScene.m */; };
@@ -32,6 +31,9 @@
 		389E95D71A4C1A7F00F2DF05 /* HDMenuBar.m in Sources */ = {isa = PBXBuildFile; fileRef = 389E95D61A4C1A7F00F2DF05 /* HDMenuBar.m */; };
 		38A50F291A57C66100DE9692 /* HDTutorialParentViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 38A50F281A57C66100DE9692 /* HDTutorialParentViewController.m */; };
 		38A50F2C1A57C66E00DE9692 /* HDTutorialChildViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 38A50F2B1A57C66E00DE9692 /* HDTutorialChildViewController.m */; };
+		38A9BC9C1A71E127008A9DDF /* Locked@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 38A9BC9B1A71E127008A9DDF /* Locked@2x.png */; };
+		38A9BCD61A72441D008A9DDF /* SoundIcon-OFF@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 38A9BCD41A72441D008A9DDF /* SoundIcon-OFF@2x.png */; };
+		38A9BCDE1A724BF2008A9DDF /* MusicIcon-OFF@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 38A9BCDD1A724BF2008A9DDF /* MusicIcon-OFF@2x.png */; };
 		38ABD5F21A4153A800C4321D /* HDHexagonButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 38ABD5F11A4153A800C4321D /* HDHexagonButton.m */; };
 		38ABD5F71A420A3500C4321D /* HDHexagonControl.m in Sources */ = {isa = PBXBuildFile; fileRef = 38ABD5F61A420A3500C4321D /* HDHexagonControl.m */; };
 		38BAF5281A1FE10B004D5660 /* GameKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 38BAF5271A1FE10B004D5660 /* GameKit.framework */; };
@@ -199,8 +201,6 @@
 /* Begin PBXFileReference section */
 		3818A2201A671BFC009BFE31 /* HDTileDescriptorView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HDTileDescriptorView.h; sourceTree = "<group>"; };
 		3818A2211A671BFC009BFE31 /* HDTileDescriptorView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HDTileDescriptorView.m; sourceTree = "<group>"; };
-		3818A2261A676591009BFE31 /* Base */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = Base; path = Base.lproj/Localizable.strings; sourceTree = "<group>"; };
-		3818A2281A67659A009BFE31 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
 		3824A5DC1A538C3D00788E0E /* Grid-84.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = "Grid-84.json"; sourceTree = "<group>"; };
 		386CF5D81A383A98006A8381 /* AudioToolbox.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AudioToolbox.framework; path = System/Library/Frameworks/AudioToolbox.framework; sourceTree = SDKROOT; };
 		386CF5DA1A383AFC006A8381 /* HDScene.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HDScene.m; sourceTree = "<group>"; };
@@ -233,6 +233,9 @@
 		38A50F281A57C66100DE9692 /* HDTutorialParentViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HDTutorialParentViewController.m; sourceTree = "<group>"; };
 		38A50F2A1A57C66E00DE9692 /* HDTutorialChildViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HDTutorialChildViewController.h; sourceTree = "<group>"; };
 		38A50F2B1A57C66E00DE9692 /* HDTutorialChildViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HDTutorialChildViewController.m; sourceTree = "<group>"; };
+		38A9BC9B1A71E127008A9DDF /* Locked@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Locked@2x.png"; sourceTree = "<group>"; };
+		38A9BCD41A72441D008A9DDF /* SoundIcon-OFF@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "SoundIcon-OFF@2x.png"; sourceTree = "<group>"; };
+		38A9BCDD1A724BF2008A9DDF /* MusicIcon-OFF@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "MusicIcon-OFF@2x.png"; sourceTree = "<group>"; };
 		38ABD5F01A4153A800C4321D /* HDHexagonButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HDHexagonButton.h; sourceTree = "<group>"; };
 		38ABD5F11A4153A800C4321D /* HDHexagonButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HDHexagonButton.m; sourceTree = "<group>"; };
 		38ABD5F51A420A3500C4321D /* HDHexagonControl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HDHexagonControl.h; sourceTree = "<group>"; };
@@ -615,6 +618,8 @@
 		38C0A8351A07251600C552F1 = {
 			isa = PBXGroup;
 			children = (
+				38A9BCDD1A724BF2008A9DDF /* MusicIcon-OFF@2x.png */,
+				38A9BCD41A72441D008A9DDF /* SoundIcon-OFF@2x.png */,
 				38C0A8401A07251700C552F1 /* HexitSpriteKit */,
 				38C0A85A1A07251700C552F1 /* HexitSpriteKitTests */,
 				38C0A8671A07252E00C552F1 /* Frameworks */,
@@ -639,6 +644,7 @@
 				38C67CE61A0ABF0E0038526C /* HDConstants.h */,
 				38C67CE71A0ABF0E0038526C /* HDConstants.m */,
 				38C0A84E1A07251700C552F1 /* Images.xcassets */,
+				38A9BC9B1A71E127008A9DDF /* Locked@2x.png */,
 				38C0A8411A07251700C552F1 /* Supporting Files */,
 				38C67CD11A0A29D80038526C /* Controller */,
 				38C67CD21A0A29E70038526C /* Views */,
@@ -657,7 +663,6 @@
 				38C0A8421A07251700C552F1 /* Info.plist */,
 				38C0A8431A07251700C552F1 /* main.m */,
 				38C67CE51A0ABE820038526C /* Hexit-Prefix.pch */,
-				3818A2271A676591009BFE31 /* Localizable.strings */,
 			);
 			name = "Supporting Files";
 			sourceTree = "<group>";
@@ -1081,11 +1086,11 @@
 				389E95021A488D8300F2DF05 /* Grid-81.json in Resources */,
 				38BDDCC51A20F965005035EE /* Grid-34.json in Resources */,
 				38BDDCF21A20FB80005035EE /* Grid-55.json in Resources */,
+				38A9BCDE1A724BF2008A9DDF /* MusicIcon-OFF@2x.png in Resources */,
 				38BDDCBF1A20F93A005035EE /* Grid-31.json in Resources */,
 				38D424851A4F6C1A00FD21A2 /* E6.m4a in Resources */,
 				C1F035421A676D0C00EFD26B /* Localizable.strings in Resources */,
 				38C1223F1A2C2A0E00224B33 /* menuClicked.wav in Resources */,
-				3818A2251A676591009BFE31 /* Localizable.strings in Resources */,
 				38D4248B1A4F6C1A00FD21A2 /* F5.m4a in Resources */,
 				38D424941A4F6C1A00FD21A2 /* D4.m4a in Resources */,
 				38BDDCD71A20F9F6005035EE /* Grid-43.json in Resources */,
@@ -1109,6 +1114,7 @@
 				38D4247E1A4F6C1A00FD21A2 /* E2.m4a in Resources */,
 				38BDDCD11A20F9C7005035EE /* Grid-40.json in Resources */,
 				38BDDCDD1A20FA1D005035EE /* Grid-46.json in Resources */,
+				38A9BC9C1A71E127008A9DDF /* Locked@2x.png in Resources */,
 				38C67D091A0AE3820038526C /* Grid-16.json in Resources */,
 				38C67D191A0AE3C90038526C /* Grid-24.json in Resources */,
 				C1F035471A676D0C00EFD26B /* Localizable.strings in Resources */,
@@ -1159,6 +1165,7 @@
 				38C67D0D1A0AE3990038526C /* Grid-18.json in Resources */,
 				38BDDCC71A20F96D005035EE /* Grid-35.json in Resources */,
 				38BDDCE11A20FA32005035EE /* Grid-48.json in Resources */,
+				38A9BCD61A72441D008A9DDF /* SoundIcon-OFF@2x.png in Resources */,
 				38BDDCEC1A20FB67005035EE /* Grid-52.json in Resources */,
 				389E94F81A488D5100F2DF05 /* Grid-76.json in Resources */,
 				38C67D051A0ACE620038526C /* Grid-14.json in Resources */,
@@ -1244,13 +1251,92 @@
 /* End PBXTargetDependency section */
 
 /* Begin PBXVariantGroup section */
-		3818A2271A676591009BFE31 /* Localizable.strings */ = {
+		C1F0351F1A676AB400EFD26B /* Localizable.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				C1F035201A676AB400EFD26B /* en */,
+			);
+			name = Localizable.strings;
+			sourceTree = "<group>";
+		};
+		C1F035221A676AB400EFD26B /* Localizable.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				C1F035231A676AB400EFD26B /* fr */,
+			);
+			name = Localizable.strings;
+			sourceTree = "<group>";
+		};
+		C1F035281A676D0C00EFD26B /* Localizable.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				C1F035291A676D0C00EFD26B /* de */,
+			);
+			name = Localizable.strings;
+			sourceTree = "<group>";
+		};
+		C1F0352B1A676D0C00EFD26B /* Localizable.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				C1F0352C1A676D0C00EFD26B /* en */,
+			);
+			name = Localizable.strings;
+			sourceTree = "<group>";
+		};
+		C1F0352E1A676D0C00EFD26B /* Localizable.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				C1F0352F1A676D0C00EFD26B /* es */,
+			);
+			name = Localizable.strings;
+			sourceTree = "<group>";
+		};
+		C1F035311A676D0C00EFD26B /* Localizable.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				C1F035321A676D0C00EFD26B /* fr */,
+			);
+			name = Localizable.strings;
+			sourceTree = "<group>";
+		};
+		C1F035341A676D0C00EFD26B /* Localizable.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				C1F035351A676D0C00EFD26B /* it */,
+			);
+			name = Localizable.strings;
+			sourceTree = "<group>";
+		};
+		C1F035371A676D0C00EFD26B /* Localizable.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				C1F035381A676D0C00EFD26B /* ja */,
+			);
+			name = Localizable.strings;
+			sourceTree = "<group>";
+		};
+		C1F0353A1A676D0C00EFD26B /* Localizable.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				C1F0353B1A676D0C00EFD26B /* pt-PT */,
+			);
+			name = Localizable.strings;
+			sourceTree = "<group>";
+		};
+		C1F0353D1A676D0C00EFD26B /* Localizable.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				C1F0353E1A676D0C00EFD26B /* ru */,
+			);
+			name = Localizable.strings;
+			sourceTree = "<group>";
+		};
+		C1F035401A676D0C00EFD26B /* Localizable.strings */ = {
 			isa = PBXVariantGroup;
 			children = (
 				C1F035411A676D0C00EFD26B /* zh-Hans */,
 			);
 			name = Localizable.strings;
-			path = Base.lproj;
 			sourceTree = "<group>";
 		};
 /* End PBXVariantGroup section */

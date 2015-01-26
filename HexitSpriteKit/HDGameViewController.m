@@ -23,18 +23,13 @@
 static const CGFloat defaultContainerHeight = 70.0f;
 
 #define NC [NSNotificationCenter defaultCenter]
-
-@interface HDGameViewController () <ADBannerViewDelegate, HDSceneDelegate, HDTileDescriptorDelegate>
-
-@property (nonatomic, strong) HDMenuBar *menuBar;
+@interface HDGameViewController () <ADBannerViewDelegate, HDSceneDelegate>
+@property (nonatomic, strong) HDMenuBar     *menuBar;
 @property (nonatomic, strong) HDGridManager *gridManager;
-@property (nonatomic, strong) HDScene *scene;
-
-@property (nonatomic, strong) ADBannerView *bannerView;
-
+@property (nonatomic, strong) HDScene       *scene;
+@property (nonatomic, strong) ADBannerView  *bannerView;
 @property (nonatomic, assign) BOOL pauseGame;
 @property (nonatomic, assign) BOOL navigationBarHidden;
-
 @end
 
 @implementation HDGameViewController {
@@ -89,6 +84,7 @@ static const CGFloat defaultContainerHeight = 70.0f;
     [super viewWillLayoutSubviews];
     
     SKView * skView = (SKView *)self.view;
+    skView.showsFPS = YES;
     if (!skView.scene && self.gridManager) {
         
         self.scene = [HDScene sceneWithSize:self.view.bounds.size];
@@ -97,7 +93,7 @@ static const CGFloat defaultContainerHeight = 70.0f;
         self.scene.gridManager = self.gridManager;
         [skView presentScene:self.scene];
      
-         [self _beginGame];
+        [self _beginGame];
     }
     
     if (!self.bannerView) {
@@ -113,39 +109,6 @@ static const CGFloat defaultContainerHeight = 70.0f;
 
 #pragma mark - Private
 
-- (IBAction)_restart:(id)sender
-{
-    [self.scene restart];
-}
-
-- (IBAction)_toggleSound:(UIButton *)sender
-{
-    [sender setSelected:!sender.selected];
-    [[HDSettingsManager sharedManager] setSound:![[HDSettingsManager sharedManager] sound]];
-    [[HDSoundManager sharedManager]    playSound:HDButtonSound];
-}
-
-- (IBAction)_toggleMusic:(UIButton *)sender
-{
-    [sender setSelected:!sender.selected];
-    [[HDSettingsManager sharedManager] setMusic:![[HDSettingsManager sharedManager] music]];
-    [[HDSoundManager sharedManager] setPlayLoop:[[HDSettingsManager sharedManager] music]];
-}
-
-- (IBAction)_performExitAnimation:(id)sender
-{
-    self.navigationBarHidden = YES;
-    [UIView animateWithDuration:.3f animations:^{
-        CGRect bannerFrame = self.bannerView.frame;
-        bannerFrame.origin.y = CGRectGetHeight(self.view.bounds);
-        self.bannerView.frame = bannerFrame;
-    }];
-    
-    [self.scene performExitAnimationsWithCompletion:^{
-        [self.navigationController popViewControllerAnimated:NO];
-    }];
-}
-
 - (void)_setup
 {
     self.view.backgroundColor = [UIColor flatWetAsphaltColor];
@@ -153,7 +116,7 @@ static const CGFloat defaultContainerHeight = 70.0f;
     self.gridManager = [[HDGridManager alloc] initWithLevelNumber:_levelIdx];
     
     CGRect menuBarFrame = CGRectMake(0.0f, -defaultContainerHeight, CGRectGetWidth(self.view.bounds), defaultContainerHeight);
-    self.menuBar = [HDMenuBar menuBarWithActivityImage:[UIImage imageNamed:@""]];
+    self.menuBar = [HDMenuBar menuBarWithActivityImage:[UIImage imageNamed:@"RestartIcon-"]];
     self.menuBar.frame = menuBarFrame;
     self.menuBar.musicButton.selected = [[HDSettingsManager sharedManager] music];
     self.menuBar.soundButton.selected = [[HDSettingsManager sharedManager] sound];
@@ -163,21 +126,21 @@ static const CGFloat defaultContainerHeight = 70.0f;
     [self.menuBar.activityButton   addTarget:self action:@selector(_restart:)              forControlEvents:UIControlEventTouchUpInside];
     [self.view addSubview:self.menuBar];
     
-    [NC addObserver:self selector:@selector(_applicationWillResignActive) name:UIApplicationWillResignActiveNotification object:nil];
-    [NC addObserver:self selector:@selector(_applicationDidBecomeActive)  name:UIApplicationDidBecomeActiveNotification  object:nil];
+    [NC addObserver:self selector:@selector(_applicationWillResignActive:) name:UIApplicationWillResignActiveNotification object:nil];
+    [NC addObserver:self selector:@selector(_applicationDidBecomeActive:)  name:UIApplicationDidBecomeActiveNotification  object:nil];
 }
 
 - (void)_beginGame
 {
     NSUInteger previousLevelIdx = _levelIdx - 1;
     if (previousLevelIdx % 14 == 0 && previousLevelIdx >= 14) {
-        HDTileDescriptorView *alert = [[HDTileDescriptorView alloc] initWithTitle:titleFromLevelIdx(previousLevelIdx)
-                                                                      description:descriptionFromLevelIdx(previousLevelIdx)
-                                                                            image:[UIImage imageNamed:@"SoundIcon-ON"]];
-        alert.delegate = self;
-        [alert show];
-        [self.scene layoutNodesWithGrid:@[]];
-        return;
+       // if (![[NSUserDefaults standardUserDefaults] boolForKey:[NSString stringWithFormat:@"%tu",previousLevelIdx]]) {
+            HDTileDescriptorView *alert = [[HDTileDescriptorView alloc] initWithDescription:descriptionFromLevelIdx((int)previousLevelIdx)
+                                                                                      image:[HDHelper iconForType:(int)previousLevelIdx]];
+            alert.frame = self.view.bounds;
+            [self.view addSubview:alert];
+            [[NSUserDefaults standardUserDefaults] setBool:YES forKey:[NSString stringWithFormat:@"%tu",previousLevelIdx]];
+       // }
     }
     
     NSArray *hexagons = [self.gridManager hexagons];
@@ -214,15 +177,50 @@ static const CGFloat defaultContainerHeight = 70.0f;
     }
 }
 
+#pragma mark - Selectors
+
+- (IBAction)_restart:(id)sender
+{
+    [self.scene restart];
+}
+
+- (IBAction)_toggleSound:(UIButton *)sender
+{
+    [sender setSelected:!sender.selected];
+    [[HDSettingsManager sharedManager] setSound:![[HDSettingsManager sharedManager] sound]];
+    [[HDSoundManager sharedManager] playSound:HDButtonSound];
+}
+
+- (IBAction)_toggleMusic:(UIButton *)sender
+{
+    [sender setSelected:!sender.selected];
+    [[HDSettingsManager sharedManager] setMusic:![[HDSettingsManager sharedManager] music]];
+    [[HDSoundManager sharedManager] setPlayLoop:[[HDSettingsManager sharedManager] music]];
+}
+
+- (IBAction)_performExitAnimation:(id)sender
+{
+    self.navigationBarHidden = YES;
+    [UIView animateWithDuration:.300f animations:^{
+        CGRect bannerFrame = self.bannerView.frame;
+        bannerFrame.origin.y = CGRectGetHeight(self.view.bounds);
+        self.bannerView.frame = bannerFrame;
+    }];
+    
+    [self.scene performExitAnimationsWithCompletion:^{
+        [self.navigationController popViewControllerAnimated:NO];
+    }];
+}
+
 #pragma mark - Notifications
 
-- (void)_applicationDidBecomeActive
+- (void)_applicationDidBecomeActive:(NSNotification *)notification
 {
     self.pauseGame = NO;
     self.scene.view.paused = self.pauseGame;
 }
 
-- (void)_applicationWillResignActive
+- (void)_applicationWillResignActive:(NSNotification *)notification
 {
     self.pauseGame = YES;
     self.scene.view.paused = self.pauseGame;
@@ -276,17 +274,6 @@ static const CGFloat defaultContainerHeight = 70.0f;
         }];
         _isBannerVisible = NO;
     }
-}
-
-#pragma mark - <HDTileDescriptorDelegate>
-
-- (void)descriptorViewClickedDismissalButton:(HDTileDescriptorView *)view
-{
-    [view dismiss];
-    NSArray *hexagons = [self.gridManager hexagons];
-    [self.scene layoutNodesWithGrid:hexagons];
-    
-    NSLog(@"%@",view);
 }
 
 @end

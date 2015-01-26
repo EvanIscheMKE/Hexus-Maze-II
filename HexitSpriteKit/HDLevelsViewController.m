@@ -89,8 +89,8 @@ static const CGFloat kTileHeightInsetMultiplier = .855f;
 
 + (CGPoint)_pointForColumn:(NSInteger)column row:(NSInteger)row
 {
-    const CGFloat kOriginY = ((row * (kHexaSize * kTileHeightInsetMultiplier)) );
-    const CGFloat kOriginX = kHexaSize/4 + ((column * kHexaSize));
+    const CGFloat kOriginY = kHexaSize/2 + ((row * (kHexaSize * kTileHeightInsetMultiplier)) );
+    const CGFloat kOriginX = kHexaSize/2 + kHexaSize/4 + ((column * kHexaSize));
     const CGFloat kAlternateOffset = (row % 2 == 0) ? kHexaSize / 2 : 0.0f;
     
     return CGPointMake(kAlternateOffset + kOriginX, kOriginY);
@@ -111,12 +111,10 @@ static const CGFloat kTileHeightInsetMultiplier = .855f;
     self.view = [HDLevelsView new];
     _levelsView = (HDLevelsView *)self.view;
     
-    CGRect containerFrame =  CGRectMake(
+    CGRect containerFrame =  CGRectMake(0.0f,
                                         0.0f,
-                                        0.0f,
-                                        kHexaSize * self.columns,
-                                        kHexaSize * kTileHeightInsetMultiplier * (self.rows - 1)
-                                        );
+                                        kHexaSize * (self.columns + 1),
+                                        kHexaSize * kTileHeightInsetMultiplier * (self.rows));
     
     _containerView = [[HDLevelsContainerView alloc] initWithFrame:containerFrame];
     [_levelsView addSubview:_containerView];
@@ -126,7 +124,6 @@ static const CGFloat kTileHeightInsetMultiplier = .855f;
 {
     [super viewDidLoad];
     
-    NSMutableArray *pageArray = [NSMutableArray arrayWithCapacity:self.columns*self.rows];
     NSUInteger tagIndex = self.levelRange.location + 1;
     for (int row = 0; row < self.rows; row++) {
         for (int column = 0; column < self.columns; column++) {
@@ -142,8 +139,6 @@ static const CGFloat kTileHeightInsetMultiplier = .855f;
             hexagon.index  = tagIndex;
             hexagon.tag    = tagIndex;
             hexagon.center = [HDLevelsViewController _pointForColumn:column row:row];
-             
-            [pageArray addObject:hexagon];
             [_containerView addSubview:hexagon];
             
             tagIndex++;
@@ -154,14 +149,20 @@ static const CGFloat kTileHeightInsetMultiplier = .855f;
 - (void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
-    _containerView.userInteractionEnabled = YES;
     _containerView.center = CGPointMake(CGRectGetMidX(_levelsView.bounds), CGRectGetMidY(_levelsView.bounds));
+    
+    NSUInteger tagIndex = self.levelRange.location + 1;
+    for (HDHexagonButton *subView in _containerView.subviews) {
+        HDLevel *level = [[HDMapManager sharedManager] levelAtIndex:tagIndex - 1];
+        subView.levelState  = level.state;
+        subView.index  = tagIndex;
+        tagIndex++;
+    }
 }
 
 - (void)_beginGame:(HDHexagonButton *)sender
 {
     [self.delegate levelsViewController:self didSelectLevel:sender.tag];
-    _containerView.userInteractionEnabled = ([sender state] == HDLevelStateLocked);
 }
 
 @end

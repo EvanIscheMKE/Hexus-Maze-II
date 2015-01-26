@@ -12,29 +12,6 @@
 
 @implementation SKEmitterNode (EmitterAdditions)
 
-+ (SKEmitterNode *)starEmitter
-{
-    SKEmitterNode *emitter = [SKEmitterNode node];
-    [emitter setParticleBirthRate:50];
-    [emitter setParticleTexture:[SKTexture textureWithImage:[[self class] starImage]]];
-    [emitter setParticleColor:[SKColor flatEmeraldColor]];
-    [emitter setParticleLifetime:2.0f];
-    [emitter setAlpha:.5];
-    [emitter setName:@"STARKEY"];
-    [emitter setParticleAlphaRange:.5f];
-    [emitter setParticlePosition:CGPointZero];
-    [emitter setParticleSpeed:300.0f];
-    [emitter setEmissionAngle:89.0f];
-    [emitter setParticleScale:1.0f];
-    [emitter setEmissionAngleRange:350.0f];
-    [emitter setParticleBlendMode:SKBlendModeAlpha];
-    [emitter setParticleColorBlendFactor:1.0];
-    [emitter advanceSimulationTime:.5f];
-    [emitter setYAcceleration:0];
-    
-    return emitter;
-}
-
 + (SKEmitterNode *)hexaEmitterWithColor:(UIColor *)skColor scale:(CGFloat)scale
 {
     // shoots little hexagons when node is selected
@@ -56,20 +33,6 @@
     [emitter setYAcceleration:0];
     
     return emitter;
-}
-
-+ (UIImage *)starImage
-{
-    UIGraphicsBeginImageContextWithOptions(CGSizeMake(30.0f, 30.0f), NO, [[UIScreen mainScreen] scale]);
-    
-    [[UIColor flatEmeraldColor] setFill];
-    UIBezierPath *star = [UIBezierPath bezierPathWithCGPath:[HDHelper starPathForBounds:CGRectMake(0.0f, 0.0f, 30.0f, 30.0f)]];
-    [star fill];
-    
-    UIImage *finalImage = UIGraphicsGetImageFromCurrentImageContext();
-    UIGraphicsEndImageContext();
-    
-    return finalImage;
 }
 
 @end

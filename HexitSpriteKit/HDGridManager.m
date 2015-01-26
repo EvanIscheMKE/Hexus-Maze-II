@@ -34,7 +34,7 @@ typedef void(^CallbackBlock)(NSDictionary *dictionary, NSError *error);
         _levelCache = [NSMutableDictionary dictionary];
         
         NSDictionary *grid = [self _levelWithFileName:level];
-        [self layoutInitialGrid:grid];
+        [self _layoutInitialGrid:grid];
     }
     return self;
 }
@@ -42,28 +42,9 @@ typedef void(^CallbackBlock)(NSDictionary *dictionary, NSError *error);
 - (instancetype)initWithRandomLevel:(NSDictionary *)grid
 {
     if (self = [super init]) {
-        [self layoutInitialGrid:grid];
+        [self _layoutInitialGrid:grid];
     }
     return self;
-}
-
-- (void)layoutInitialGrid:(NSDictionary *)grid
-{
-    for (int row = 0; row < NumberOfRows; row++) {
-        
-        NSArray *rows = [grid[HDHexGridKey] objectAtIndex:row];
-        
-        for (int column = 0; column < NumberOfColumns; column++) {
-            
-            NSNumber *columns = [rows objectAtIndex:column];
-            
-            NSInteger tileRow = NumberOfRows - row - 1;
-            
-            if ([columns integerValue] != 0) {
-                _grid[tileRow][column] = columns;
-            }
-        }
-    }
 }
 
 - (NSArray *)hexagons
@@ -98,8 +79,26 @@ typedef void(^CallbackBlock)(NSDictionary *dictionary, NSError *error);
     return _hexagon[row][column];
 }
 
-#pragma mark -
-#pragma mark - < PRIVATE >
+#pragma mark - Private
+
+- (void)_layoutInitialGrid:(NSDictionary *)grid
+{
+    for (int row = 0; row < NumberOfRows; row++) {
+        
+        NSArray *rows = [grid[HDHexGridKey] objectAtIndex:row];
+        
+        for (int column = 0; column < NumberOfColumns; column++) {
+            
+            NSNumber *columns = [rows objectAtIndex:column];
+            
+            NSInteger tileRow = NumberOfRows - row - 1;
+            
+            if ([columns integerValue] != 0) {
+                _grid[tileRow][column] = columns;
+            }
+        }
+    }
+}
 
 - (NSDictionary *)_levelWithFileName:(NSString *)filename
 {

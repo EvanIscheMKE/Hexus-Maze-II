@@ -9,11 +9,10 @@
 #import "HDHexagonButton.h"
 #import <Foundation/Foundation.h>
 
-
 @interface HDLevel : NSObject <NSCoding>
 @property (nonatomic, assign) NSInteger levelIndex;
 @property (nonatomic, readonly) HDLevelState state;
 @property (nonatomic, getter=isUnlocked,  assign) BOOL unlocked;
 @property (nonatomic, getter=isCompleted, assign) BOOL completed;
-+ (HDLevel *)levelUnlocked:(BOOL)unlocked index:(NSInteger)index completed:(BOOL)completed;
++ (instancetype)levelUnlocked:(BOOL)unlocked index:(NSInteger)index completed:(BOOL)completed;
 @end

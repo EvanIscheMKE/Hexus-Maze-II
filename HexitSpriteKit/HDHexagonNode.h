@@ -12,7 +12,6 @@
 @property (nonatomic, assign) CGPoint defaultPosition;
 @property (nonatomic, getter=isLocked, assign) BOOL locked;
 
-- (void)addHexaLayer;
 - (void)indicatorPositionFromHexagonType:(HDHexagonType)type;
 - (void)indicatorPositionFromHexagonType:(HDHexagonType)type withTouchesCount:(NSInteger)count;
 

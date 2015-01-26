@@ -1,3 +1,4 @@
+
 "congratulation1" = "Now you have it!";
 "congratulation2" = "You make it look easy.";
 "congratulation3" = "You're learning fast.";
@@ -9,3 +10,18 @@
 "congratulation9" = "You've just about mastered that!";
 "congratulation10" = "GOOD WORK!";
 "congratulation11" = "Now that's what I call a fine job!";
+
+"continue" = "Continue";
+"begin"    = "Begin Game";
+
+"tutorial1" = "Begin by selecting a white tile.";
+"tutorial2" = "Move to an active hexagon that is touching the last tile.";
+"tutorial3" = "Continue until the path is completed!";
+
+"level1" = "Requires two taps for completion!";
+"level2" = "Touch the unlocked Tile to unlock the next locked tile!";
+"level3" = "Requires three taps for completion!";
+"level4" = "You must end on this tile!";
+
+"level" = "Level %tu";
+

@@ -11,8 +11,7 @@
 
 @implementation HDSettingsManager
 
-#pragma mark -
-#pragma mark - configure
+#pragma mark - Configure
 
 - (void)configureSettingsForFirstRun
 {
@@ -20,8 +19,7 @@
     self.sound =  [[NSUserDefaults standardUserDefaults] boolForKey:HDSoundkey];
 }
 
-#pragma mark -
-#pragma mark - initalizer
+#pragma mark - Initalizer
 
 - (instancetype)init
 {
@@ -49,6 +47,5 @@
     _sound = sound;
     [[NSUserDefaults standardUserDefaults] setBool:_sound forKey:HDSoundkey];
 }
-
 
 @end

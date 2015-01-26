@@ -30,16 +30,14 @@
 
 - (void)setLocked:(BOOL)locked
 {
-    if (_locked == locked) {
-        return;
-    }
-    
     _locked = locked;
     
     if (locked) {
         // Add lock
-        SKSpriteNode *lock = [SKSpriteNode spriteNodeWithImageNamed:@"LockedEmerald.png"];
-        [self addChild:lock];
+        if (![[self children] count]) {
+            SKSpriteNode *lock = [SKSpriteNode spriteNodeWithImageNamed:@"LockedEmerald.png"];
+            [self addChild:lock];
+        }
     } else {
         // Remove Lock
         [self.children makeObjectsPerformSelector:@selector(removeFromParent)];
@@ -71,6 +69,8 @@
                 } else if (count == 1) {
                     position = CGPointMake(1.0f, 1.0f);
                 } break;
+            default:
+                break;
         }
         _indicator.position = position;
     }

@@ -26,6 +26,20 @@
     BOOL _music;
 }
 
+#pragma mark - Layer Class
+
++ (Class)layerClass
+{
+    return [CAGradientLayer class];
+}
+
+- (CAGradientLayer *)gradientLayer
+{
+    return (CAGradientLayer *)self.layer;
+}
+
+#pragma mark - Custom Initalizers
+
 + (instancetype)menuBarWithActivityImage:(UIImage *)activityImage;
 {
     return [[HDMenuBar alloc] initWithActivityImage:activityImage];
@@ -40,8 +54,16 @@
     return self;
 }
 
+#pragma mark - Private
+
 - (void)_setup
 {
+    self.gradientLayer.locations = @[@0,@.5,@.8f,@.95f];
+    self.gradientLayer.colors    = @[(id)[UIColor flatWetAsphaltColor].CGColor,
+                                     (id)[[UIColor flatWetAsphaltColor]colorWithAlphaComponent:.8f].CGColor,
+                                     (id)[[UIColor flatWetAsphaltColor]colorWithAlphaComponent:.4f].CGColor,
+                                     (id)[[UIColor flatWetAsphaltColor]colorWithAlphaComponent:.2f].CGColor];
+    
      self.navigationButton = [UIButton buttonWithType:UIButtonTypeCustom];
     [self.navigationButton setBackgroundImage:[UIImage imageNamed:@"Grid"] forState:UIControlStateNormal];
 
@@ -71,7 +93,7 @@
     UIButton *music  = self.musicButton;
     UIButton *sound  = self.soundButton;
     
-    CGFloat buttonHeight = ![HDHelper isWideScreen] ? kSmallButtonSize : kLargeButtonSize;
+    CGFloat buttonHeight = [UIImage imageNamed:@"MusicIcon-ON"].size.width;
     
     _views = NSDictionaryOfVariableBindings(toggle, share, music, sound);
     _metrics = @{ @"buttonHeight" : @(buttonHeight),
@@ -109,6 +131,10 @@
                                                                                  metrics:_metrics
                                                                                    views:_views];
     [self addConstraints:shareVerticalConstraint];
+    
+    for (UIButton *subView in self.subviews) {
+        subView.transform = CGAffineTransformMakeScale(CGRectGetWidth(self.bounds)/375.0f, CGRectGetWidth(self.bounds)/375.0f);
+    }
 }
 
 - (void)willMoveToSuperview:(UIView *)newSuperview
@@ -122,6 +148,11 @@
 }
 
 #pragma mark - Override Setters
+
+- (void)setBackgroundColor:(UIColor *)backgroundColor
+{
+    NSAssert(NO, @"Use CAGradientLayer's location and colors");
+}
 
 - (void)setActivityImage:(UIImage *)activityImage
 {

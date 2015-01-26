@@ -9,10 +9,11 @@
 #import <Foundation/Foundation.h>
 
 @interface HDGameCenterManager : NSObject
-
 + (HDGameCenterManager *)sharedManager;
 - (void)authenticateGameCenter;
 - (void)reportLevelCompletion:(int64_t)level;
-
+- (void)submitAchievementWithIdenifier:(NSString *)identifier
+                      completionBanner:(BOOL)banner
+                       percentComplete:(NSUInteger)percentCompleted;
 @end
 

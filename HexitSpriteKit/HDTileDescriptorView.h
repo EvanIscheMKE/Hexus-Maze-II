@@ -8,16 +8,8 @@
 
 #import <UIKit/UIKit.h>
 
-@protocol HDTileDescriptorDelegate;
 @interface HDTileDescriptorView : UIView
-- (instancetype)initWithTitle:(NSString *)title
-                  description:(NSString *)description
-                        image:(UIImage *)image NS_DESIGNATED_INITIALIZER;
-@property (nonatomic, weak) id<HDTileDescriptorDelegate> delegate;
-- (void)show;
-- (void)dismiss;
-@end
-
-@protocol HDTileDescriptorDelegate <NSObject>
-- (void)descriptorViewClickedDismissalButton:(HDTileDescriptorView *)view;
+- (instancetype)initWithDescription:(NSString *)description
+                              image:(UIImage *)image NS_DESIGNATED_INITIALIZER;
+@property (nonatomic, readonly) UILabel *descriptorLabel;
 @end

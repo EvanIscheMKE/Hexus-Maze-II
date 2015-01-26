@@ -6,56 +6,72 @@
 //  Copyright (c) 2014 Evan William Ische. All rights reserved.
 //
 
+@import  QuartzCore;
+
 #import "HDWelcomeViewController.h"
 #import "HDTutorialParentViewController.h"
 #import "UIColor+FlatColors.h"
 
 const CGFloat titleInset = 20.0f;
-
 @interface HDWelcomeViewController ()
 @property (nonatomic, strong) UILabel *descriptionLabel;
+@property (nonatomic, strong) UIImageView *imageView;
+@property (nonatomic, strong) UIButton *begin;
 @end
 
 @implementation HDWelcomeViewController
-
-#pragma mark - View Cycle
 
 - (void)viewDidLoad
 {
     [self _setup];
     [super viewDidLoad];
-    self.view.backgroundColor = [UIColor flatWetAsphaltColor];
 }
 
 - (void)_setup
 {
-    UIImage *welcome = [UIImage imageNamed:@"HexusLogo"];
-    UIImageView *imageView = [[UIImageView alloc] initWithImage:welcome];
-    imageView.translatesAutoresizingMaskIntoConstraints = NO;
-    [self.view addSubview:imageView];
+    self.view.backgroundColor = [UIColor flatWetAsphaltColor];
     
-     NSLayoutConstraint *heightConstraint =
-    [NSLayoutConstraint constraintWithItem:imageView
+    UIImage *welcome = [UIImage imageNamed:@"MenuVCIcon-600@2x.png"];
+    self.imageView     = [[UIImageView alloc] initWithImage:welcome];
+    
+    self.begin = [UIButton buttonWithType:UIButtonTypeCustom];
+    [self.begin addTarget:ADelegate action:@selector(presentLevelViewController) forControlEvents:UIControlEventTouchUpInside];
+    [self.begin setTitle:@"BEGIN" forState:UIControlStateNormal];
+    [self.begin setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
+    self.begin.titleLabel.textAlignment = NSTextAlignmentCenter;
+    self.begin.titleLabel.font = GILLSANS_LIGHT(20.0f);
+    self.begin.backgroundColor = [UIColor flatPeterRiverColor];
+    self.begin.layer.cornerRadius = 20.0f;
+    
+    for (UIView *subView in @[self.imageView, self.begin]) {
+        subView.transform = CGAffineTransformMakeScale(CGRectGetWidth(self.view.bounds)/375.0f, CGRectGetWidth(self.view.bounds)/375.0f);
+        subView.translatesAutoresizingMaskIntoConstraints = NO;
+        [self.view addSubview:subView];
+    }
+    
+    //ImageView
+    NSLayoutConstraint *heightConstraint =
+    [NSLayoutConstraint constraintWithItem:self.imageView
                                  attribute:NSLayoutAttributeHeight
                                  relatedBy:NSLayoutRelationEqual
                                     toItem:nil
                                  attribute:NSLayoutAttributeNotAnAttribute
                                 multiplier:1.0f
-                                  constant:CGRectGetHeight(self.view.bounds)/5.7];
-    [imageView addConstraint:heightConstraint];
+                                  constant:welcome.size.height];
+    [self.imageView addConstraint:heightConstraint];
     
-     NSLayoutConstraint *widthConstraint =
-    [NSLayoutConstraint constraintWithItem:imageView
+    NSLayoutConstraint *widthConstraint =
+    [NSLayoutConstraint constraintWithItem:self.imageView
                                  attribute:NSLayoutAttributeWidth
                                  relatedBy:NSLayoutRelationEqual
                                     toItem:nil
                                  attribute:NSLayoutAttributeNotAnAttribute
                                 multiplier:1.0f
-                                  constant:CGRectGetWidth(CGRectInset(self.view.bounds, titleInset, 0.0f))];
-    [imageView addConstraint:widthConstraint];
+                                  constant:welcome.size.width];
+    [self.imageView addConstraint:widthConstraint];
     
-     NSLayoutConstraint *centerXConstraint =
-    [NSLayoutConstraint constraintWithItem:imageView
+    NSLayoutConstraint *centerXConstraint =
+    [NSLayoutConstraint constraintWithItem:self.imageView
                                  attribute:NSLayoutAttributeCenterX
                                  relatedBy:NSLayoutRelationEqual
                                     toItem:self.view
@@ -64,44 +80,70 @@ const CGFloat titleInset = 20.0f;
                                   constant:0.0f];
     [self.view addConstraint:centerXConstraint];
     
-     NSLayoutConstraint *centerYConstraint =
-    [NSLayoutConstraint constraintWithItem:imageView
+    NSLayoutConstraint *centerYConstraint =
+    [NSLayoutConstraint constraintWithItem:self.imageView
                                  attribute:NSLayoutAttributeCenterY
                                  relatedBy:NSLayoutRelationEqual
                                     toItem:self.view
                                  attribute:NSLayoutAttributeCenterY
                                 multiplier:1.0f
-                                  constant:0.0f];
+                                  constant:-20.0f];
     [self.view addConstraint:centerYConstraint];
     
-    UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc] initWithTarget:ADelegate action:@selector(presentLevelViewController)];
-    tap.numberOfTapsRequired = 1;
-    [self.view addGestureRecognizer:tap];
+    //Button
+    NSLayoutConstraint *buttonHeightConstraint =
+    [NSLayoutConstraint constraintWithItem:self.begin
+                                 attribute:NSLayoutAttributeHeight
+                                 relatedBy:NSLayoutRelationEqual
+                                    toItem:nil
+                                 attribute:NSLayoutAttributeNotAnAttribute
+                                multiplier:1.0f
+                                  constant:40.0f];
+    [self.begin addConstraint:buttonHeightConstraint];
     
-    self.descriptionLabel = [[UILabel alloc] init];
-    self.descriptionLabel.text            = @"TAP TO BEGIN";
-    self.descriptionLabel.font            = GILLSANS(24.0f);
-    self.descriptionLabel.textColor       = [UIColor whiteColor];
-    self.descriptionLabel.textAlignment   = NSTextAlignmentCenter;
-    self.descriptionLabel.backgroundColor = [UIColor flatWetAsphaltColor];
-    [self.descriptionLabel sizeToFit];
-    self.descriptionLabel.center = CGPointMake(CGRectGetMidX(self.view.bounds),
-                                               CGRectGetHeight(self.view.bounds) + CGRectGetMidY(self.descriptionLabel.bounds));
-    self.descriptionLabel.frame = CGRectIntegral(self.descriptionLabel.frame);
-    [self.view addSubview:self.descriptionLabel];
+    NSLayoutConstraint *buttonWidthConstraint =
+    [NSLayoutConstraint constraintWithItem:self.begin
+                                 attribute:NSLayoutAttributeWidth
+                                 relatedBy:NSLayoutRelationEqual
+                                    toItem:nil
+                                 attribute:NSLayoutAttributeNotAnAttribute
+                                multiplier:1.0f
+                                  constant:160.0f];
+    [self.begin addConstraint:buttonWidthConstraint];
+    
+    NSLayoutConstraint *buttonCenterXConstraint =
+    [NSLayoutConstraint constraintWithItem:self.begin
+                                 attribute:NSLayoutAttributeCenterX
+                                 relatedBy:NSLayoutRelationEqual
+                                    toItem:self.view
+                                 attribute:NSLayoutAttributeCenterX
+                                multiplier:1.0f
+                                  constant:0.0f];
+    [self.view addConstraint:buttonCenterXConstraint];
+    
+    NSLayoutConstraint *buttonCenterYConstraint =
+    [NSLayoutConstraint constraintWithItem:self.begin
+                                 attribute:NSLayoutAttributeCenterY
+                                 relatedBy:NSLayoutRelationEqual
+                                    toItem:self.view
+                                 attribute:NSLayoutAttributeCenterY
+                                multiplier:1.65f
+                                  constant:0];
+    [self.view addConstraint:buttonCenterYConstraint];
 }
 
 - (void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
-    [self _hideActivityAnimated:NO];
+    [self _prepareForIntroAnimations];
 }
 
 - (void)viewDidAppear:(BOOL)animated
 {
     [super viewDidAppear:animated];
-    [self _showActivityAnimated:YES];
-   // [self _checkForFirstRun];
+    if (![self _checkForFirstRun]) {
+        [self _performIntroAnimations];
+    }
 }
 
 #pragma mark - Private
@@ -112,13 +154,26 @@ const CGFloat titleInset = 20.0f;
     [ADelegate presentLevelViewController];
 }
 
-- (void)_checkForFirstRun
+- (BOOL)_checkForFirstRun
 {
     if (![[NSUserDefaults standardUserDefaults] boolForKey:HDFirstRunKey]) {
-        HDTutorialParentViewController *controller = [[HDTutorialParentViewController alloc] init];
-        [self.navigationController presentViewController:controller animated:NO completion:nil];
+        [self.navigationController pushViewController:[HDTutorialParentViewController new] animated:NO];
         [[NSUserDefaults standardUserDefaults] setBool:YES forKey:HDFirstRunKey];
+        return YES;
     }
+    return NO;
+}
+
+- (void)_prepareForIntroAnimations
+{
+    self.imageView.alpha = 0.0f;
+    [self _hideActivityAnimated:NO];
+}
+
+- (void)_performIntroAnimations
+{
+    [UIView animateWithDuration:.300f animations:^{ self.imageView.alpha = 1.0f; }];
+    [self _showActivityAnimated:YES];
 }
 
 - (void)_hideActivityAnimated:(BOOL)animated
@@ -129,8 +184,10 @@ const CGFloat titleInset = 20.0f;
                                                    CGRectGetMidY(self.descriptionLabel.bounds));
     };
     
-    if (animation) {
-        [UIView animateWithDuration:.3f animations:animation];
+    if (animated) {
+        [UIView animateWithDuration:.300f animations:animation completion:^(BOOL finished) {
+            [self.descriptionLabel.layer removeAllAnimations];
+        }];
     } else {
         animation();
     }
@@ -140,11 +197,19 @@ const CGFloat titleInset = 20.0f;
 {
     dispatch_block_t animation = ^{
         self.descriptionLabel.center = CGPointMake(CGRectGetMidX(self.view.bounds),
-                                           CGRectGetHeight(self.view.bounds) - CGRectGetMidY(self.descriptionLabel.bounds) - 15.0f);
+                                                   CGRectGetHeight(self.view.bounds) - CGRectGetMidY(self.descriptionLabel.bounds) - 8.0f);
     };
     
     if (animated) {
-        [UIView animateWithDuration:.3f animations:animation];
+        [UIView animateWithDuration:.300f animations:animation completion:^(BOOL finished) {
+            CABasicAnimation *scale = [CABasicAnimation animationWithKeyPath:@"transform.scale.x"];
+            scale.toValue   = @1.1f;
+            scale.fromValue = @1.0f;
+            scale.autoreverses = YES;
+            scale.repeatCount = CGFLOAT_MAX;
+            scale.duration  = .300f;
+            [self.descriptionLabel.layer addAnimation:scale forKey:scale.keyPath];
+        }];
     } else {
         animation();
     }

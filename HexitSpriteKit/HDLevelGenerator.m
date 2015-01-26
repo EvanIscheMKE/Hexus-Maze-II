@@ -132,7 +132,6 @@
         rootNode.numberOfHitsNeeded = 2;
         
         _HDHexaNode *currentNode = rootNode;
-        
         for (NSUInteger i = 0; i < MIN(self.numberOfTiles, 162); i++) {
             //Create a new node.
             _HDHexaNode *newNode = [_HDHexaNode new];
