@@ -21,11 +21,11 @@
 #import "HDSettingsManager.h"
 #import "HDLevelsViewController.h"
 #import "HDLockedViewController.h"
+#import "HDContainerViewController.h"
 
 static const NSUInteger kNumberOfLevelsPerPage = 28;
 static const CGFloat defaultContainerHeight   = 70.0f;
 static const CGFloat defaultPageControlHeight = 50.0f;
-
 @interface HDGridViewController () <UIScrollViewDelegate ,HDGridScrollViewDelegate, HDLevelsViewControllerDelegate, HDGridScrollViewDatasource>
 @property (nonatomic, getter=isNavigationBarHidden, assign) BOOL navigationBarHidden;
 @property (nonatomic, strong) HDGridScrollView *scrollView;
@@ -51,6 +51,16 @@ static const CGFloat defaultPageControlHeight = 50.0f;
 
 #pragma mark - Public
 
+- (void)performExitAnimationWithCompletion:(dispatch_block_t)completion
+{
+    self.navigationBarHidden = YES;
+    [self.scrollView performOutroAnimationWithCompletion:^{
+        if (completion) {
+            completion();
+        }
+    }];
+}
+
 - (void)levelsViewController:(HDLevelsViewController *)viewController didSelectLevel:(NSUInteger)level
 {
     [self beginLevel:level];
@@ -60,13 +70,13 @@ static const CGFloat defaultPageControlHeight = 50.0f;
 {
     HDLevel *gamelevel = [[HDMapManager sharedManager] levelAtIndex:(NSInteger)levelIdx - 1];
     
-    //if (gamelevel.isUnlocked) {
+    if (gamelevel.isUnlocked) {
         self.navigationBarHidden = YES;
         [[HDSoundManager sharedManager] playSound:HDButtonSound];
         [self.scrollView performOutroAnimationWithCompletion:^{
-            [ADelegate presentGameControllerToPlayLevel:levelIdx];
+            [ADelegate beginGameWithLevel:levelIdx];
         }];
-   // }
+    }
 }
 
 - (void)setNavigationBarHidden:(BOOL)navigationBarHidden
@@ -103,13 +113,12 @@ static const CGFloat defaultPageControlHeight = 50.0f;
     self.control.frame = CGRectIntegral(self.control.frame);
     [self.view addSubview:self.control];
     
+    HDContainerViewController *container = self.containerViewController;
+    
     CGRect menuBarFrame = CGRectMake(0.0f, -defaultContainerHeight, CGRectGetWidth(self.view.bounds), defaultContainerHeight);
     self.menuBar = [HDMenuBar menuBarWithActivityImage:[UIImage imageNamed:@"Play"]];
     self.menuBar.frame = menuBarFrame;
-    [self.menuBar.navigationButton addTarget:self action:@selector(_performExitAnimation:) forControlEvents:UIControlEventTouchUpInside];
-    [self.menuBar.musicButton      addTarget:self action:@selector(_toggleMusic:)          forControlEvents:UIControlEventTouchUpInside];
-    [self.menuBar.soundButton      addTarget:self action:@selector(_toggleSound:)          forControlEvents:UIControlEventTouchUpInside];
-    [self.menuBar.activityButton   addTarget:self action:@selector(_beginUnlockedLevel:)   forControlEvents:UIControlEventTouchUpInside];
+    [self.menuBar.navigationButton addTarget:container action:@selector(toggleMenuViewController) forControlEvents:UIControlEventTouchUpInside];
     [self.view addSubview:self.menuBar];
 }
 
@@ -127,14 +136,6 @@ static const CGFloat defaultPageControlHeight = 50.0f;
     [[HDSoundManager sharedManager] setPlayLoop:[[HDSettingsManager sharedManager] music]];
 }
 
-- (IBAction)_performExitAnimation:(id)sender
-{
-    self.navigationBarHidden = YES;
-    [self.scrollView performOutroAnimationWithCompletion:^{
-        [self.navigationController popViewControllerAnimated:NO];
-    }];
-}
-
 - (IBAction)_beginUnlockedLevel:(id)sender
 {
     [self beginLevel:[[HDMapManager sharedManager] indexOfCurrentLevel]];
@@ -144,8 +145,6 @@ static const CGFloat defaultPageControlHeight = 50.0f;
 {
     [super viewDidAppear:animated];
     self.navigationBarHidden = NO;
-    self.menuBar.musicButton.selected = [[HDSettingsManager sharedManager] music];
-    self.menuBar.soundButton.selected = [[HDSettingsManager sharedManager] sound];
     [self.scrollView performIntroAnimationWithCompletion:nil];
 }
 
@@ -185,12 +184,6 @@ static const CGFloat defaultPageControlHeight = 50.0f;
     } else {
         [UIView animateWithDuration:.300f animations:animate];
     }
-}
-
-- (void)didReceiveMemoryWarning
-{
-    [super didReceiveMemoryWarning];
-    // Dispose of any resources that can be recreated.
 }
 
 #pragma mark - <HDGridScrollViewDelegate>

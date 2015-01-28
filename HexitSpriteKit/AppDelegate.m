@@ -8,6 +8,8 @@
 
 @import SpriteKit;
 
+#define HEXUS_ID 945933714
+
 #import "AppDelegate.h"
 #import "HDMapManager.h"
 #import "HDSoundManager.h"
@@ -16,13 +18,15 @@
 #import "HDGameViewController.h"
 #import "HDGridViewController.h"
 #import "HDWelcomeViewController.h"
+#import "HDContainerViewController.h"
+#import "HDRearViewController.h"
 
-#define HEXUS_ID 945933714
 NSString * const iOS8AppStoreURLFormat      = @"itms-apps://itunes.apple.com/app/id%d";
 NSString * const HDLeaderBoardIdentifierKey = @"LevelLeaderboard";
-
-@interface AppDelegate ()<GKGameCenterControllerDelegate>
-@property (nonatomic, strong) UINavigationController *controller;
+@interface AppDelegate ()<GKGameCenterControllerDelegate, HDContainerViewControllerDelegate>
+@property (nonatomic, strong) HDContainerViewController *controller;
+@property (nonatomic, strong) HDGridViewController *gridController;
+@property (nonatomic, strong) HDRearViewController *rearController;
 @end
 
 @implementation AppDelegate
@@ -31,11 +35,8 @@ NSString * const HDLeaderBoardIdentifierKey = @"LevelLeaderboard";
 {
     application.statusBarHidden = YES;
     
-    self.controller = [[UINavigationController alloc] initWithRootViewController:[HDWelcomeViewController new]];
-    self.controller.navigationBarHidden = YES;
-    
      self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
-    self.window.rootViewController = self.controller;
+    self.window.rootViewController = [HDWelcomeViewController new];
     [self.window makeKeyAndVisible];
     
     [self _setup];
@@ -59,7 +60,12 @@ NSString * const HDLeaderBoardIdentifierKey = @"LevelLeaderboard";
 
 - (void)presentLevelViewController
 {
-    [self.controller pushViewController:[HDGridViewController new] animated:NO];
+    self.gridController = [HDGridViewController new];
+    
+    self.controller = [[HDContainerViewController alloc] initWithFrontViewController:self.gridController
+                                                                  rearViewController:[HDRearViewController new]];
+    self.controller.delegate = self;
+    [self.window.rootViewController presentViewController:self.controller animated:YES completion:nil];
 }
 
 - (void)presentGameCenterControllerForState:(GKGameCenterViewControllerState)state
@@ -73,7 +79,7 @@ NSString * const HDLeaderBoardIdentifierKey = @"LevelLeaderboard";
 
 - (void)presentGameControllerToPlayLevel:(NSInteger)level
 {
-    [self.controller pushViewController:[[HDGameViewController alloc] initWithLevel:level] animated:NO];
+   // [self.controller pushViewController:[[HDGameViewController alloc] initWithLevel:level] animated:NO];
 }
 
 - (void)rateHEXUS
@@ -115,6 +121,87 @@ NSString * const HDLeaderBoardIdentifierKey = @"LevelLeaderboard";
     UIGraphicsEndImageContext();
     
     return screenShot;
+}
+
+- (void)beginGameWithLevel:(NSInteger)level
+{
+    [self.controller setFrontMostViewController:[[HDGameViewController alloc] initWithLevel:level]];
+}
+
+- (IBAction)restartCurrentLevel:(id)sender
+{
+    [[HDSoundManager sharedManager] playSound:HDButtonSound];
+    if (self.controller.isExpanded) {
+        [self.controller toggleMenuViewControllerWithCompletion:^{
+            [(HDGameViewController *)self.controller.frontViewController restart:nil];
+        }];
+    }
+}
+
+- (IBAction)popToRootViewController:(id)sender
+{
+    if (self.controller.isExpanded) {
+        [self.controller toggleMenuViewControllerWithCompletion:^{
+            if ([self.controller.frontViewController isKindOfClass:[HDGridViewController class]]) {
+                HDGridViewController *controller = (HDGridViewController *)self.controller.frontViewController;
+                [controller performExitAnimationWithCompletion:^{
+                    [self.window.rootViewController dismissViewControllerAnimated:NO completion:nil];
+                }];
+            }
+        }];
+    }
+}
+
+- (IBAction)animateToLevelViewController:(id)sender
+{
+    if (self.controller.isExpanded) {
+        [self.controller toggleMenuViewControllerWithCompletion:^{
+            if ([self.controller.frontViewController isKindOfClass:[HDGameViewController class]]) {
+                HDGameViewController *controller = (HDGameViewController *)self.controller.frontViewController;
+                [controller performExitAnimationWithCompletion:^{
+                    [self.controller setFrontMostViewController:self.gridController];
+                }];
+            }
+        }];
+    }
+}
+
+- (IBAction)openAcheivementsController:(id)sender
+{
+    if (self.controller.isExpanded) {
+        [self.controller toggleMenuViewControllerWithCompletion:^{
+            [self presentGameCenterControllerForState:GKGameCenterViewControllerStateAchievements];
+        }];
+    }
+}
+
+#pragma mark - <HDContainerViewControllerDelegate>
+
+- (void)container:(HDContainerViewController *)container willChangeExpandedState:(BOOL)expanded
+{
+    if (expanded) {
+        if ([container.frontViewController isKindOfClass:[HDGameViewController class]]) {
+            [[(SKView *)container.frontViewController.view scene] setPaused:expanded];
+        } else {
+            for (id subView in container.frontViewController.view.subviews) {
+                if ([subView isKindOfClass:[UIScrollView class]]) {
+                    [subView setUserInteractionEnabled:!expanded];
+                    break;
+                }
+            }
+        }
+    } 
+}
+
+- (void)container:(HDContainerViewController *)container
+transitionedFromController:(UIViewController *)fromController
+     toController:(UIViewController *)toController
+{
+    if ([fromController isKindOfClass:[HDGridViewController class]] && [toController isKindOfClass:[HDGameViewController class]]) {
+        [(HDRearViewController *)self.controller.rearViewController setGameInterfaceHidden:NO];
+    } else if ([toController isKindOfClass:[HDGridViewController class]] && [fromController isKindOfClass:[HDGameViewController class]]) {
+        [(HDRearViewController *)self.controller.rearViewController setGameInterfaceHidden:YES];
+    }
 }
 
 #pragma mark - <GKGameCenterControllerDelegate>

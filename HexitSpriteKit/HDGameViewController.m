@@ -14,11 +14,11 @@
 #import "HDMenuBar.h"
 #import "UIColor+FlatColors.h"
 #import "HDGameViewController.h"
+#import "HDContainerViewController.h"
 #import "HDSoundManager.h"
 #import "HDSettingsManager.h"
 #import "HDGridManager.h"
 #import "HDScene.h"
-#import "HDTileDescriptorView.h"
 
 static const CGFloat defaultContainerHeight = 70.0f;
 
@@ -49,6 +49,23 @@ static const CGFloat defaultContainerHeight = 70.0f;
         _levelIdx = level;
     }
     return self;
+}
+
+- (void)performExitAnimationWithCompletion:(dispatch_block_t)completion
+{
+    self.navigationBarHidden = YES;
+    
+    [UIView animateWithDuration:.300f animations:^{
+        CGRect bannerFrame = self.bannerView.frame;
+        bannerFrame.origin.y = CGRectGetHeight(self.view.bounds);
+        self.bannerView.frame = bannerFrame;
+    }];
+    
+    [self.scene performExitAnimationsWithCompletion:^{
+        if (completion) {
+            completion();
+        }
+    }];
 }
 
 - (void)loadView
@@ -115,15 +132,13 @@ static const CGFloat defaultContainerHeight = 70.0f;
     
     self.gridManager = [[HDGridManager alloc] initWithLevelNumber:_levelIdx];
     
+    HDContainerViewController *container = self.containerViewController;
+    
     CGRect menuBarFrame = CGRectMake(0.0f, -defaultContainerHeight, CGRectGetWidth(self.view.bounds), defaultContainerHeight);
     self.menuBar = [HDMenuBar menuBarWithActivityImage:[UIImage imageNamed:@"RestartIcon-"]];
     self.menuBar.frame = menuBarFrame;
-    self.menuBar.musicButton.selected = [[HDSettingsManager sharedManager] music];
-    self.menuBar.soundButton.selected = [[HDSettingsManager sharedManager] sound];
-    [self.menuBar.navigationButton addTarget:self action:@selector(_performExitAnimation:) forControlEvents:UIControlEventTouchUpInside];
-    [self.menuBar.musicButton      addTarget:self action:@selector(_toggleMusic:)          forControlEvents:UIControlEventTouchUpInside];
-    [self.menuBar.soundButton      addTarget:self action:@selector(_toggleSound:)          forControlEvents:UIControlEventTouchUpInside];
-    [self.menuBar.activityButton   addTarget:self action:@selector(_restart:)              forControlEvents:UIControlEventTouchUpInside];
+    [self.menuBar.navigationButton addTarget:container action:@selector(toggleMenuViewController) forControlEvents:UIControlEventTouchUpInside];
+    [self.menuBar.activityButton addTarget:self action:@selector(restart:) forControlEvents:UIControlEventTouchUpInside];
     [self.view addSubview:self.menuBar];
     
     [NC addObserver:self selector:@selector(_applicationWillResignActive:) name:UIApplicationWillResignActiveNotification object:nil];
@@ -131,18 +146,7 @@ static const CGFloat defaultContainerHeight = 70.0f;
 }
 
 - (void)_beginGame
-{
-    NSUInteger previousLevelIdx = _levelIdx - 1;
-    if (previousLevelIdx % 14 == 0 && previousLevelIdx >= 14) {
-       // if (![[NSUserDefaults standardUserDefaults] boolForKey:[NSString stringWithFormat:@"%tu",previousLevelIdx]]) {
-            HDTileDescriptorView *alert = [[HDTileDescriptorView alloc] initWithDescription:descriptionFromLevelIdx((int)previousLevelIdx)
-                                                                                      image:[HDHelper iconForType:(int)previousLevelIdx]];
-            alert.frame = self.view.bounds;
-            [self.view addSubview:alert];
-            [[NSUserDefaults standardUserDefaults] setBool:YES forKey:[NSString stringWithFormat:@"%tu",previousLevelIdx]];
-       // }
-    }
-    
+{    
     NSArray *hexagons = [self.gridManager hexagons];
     [self.scene layoutNodesWithGrid:hexagons];
 }
@@ -179,7 +183,7 @@ static const CGFloat defaultContainerHeight = 70.0f;
 
 #pragma mark - Selectors
 
-- (IBAction)_restart:(id)sender
+- (IBAction)restart:(id)sender
 {
     [self.scene restart];
 }
@@ -196,20 +200,6 @@ static const CGFloat defaultContainerHeight = 70.0f;
     [sender setSelected:!sender.selected];
     [[HDSettingsManager sharedManager] setMusic:![[HDSettingsManager sharedManager] music]];
     [[HDSoundManager sharedManager] setPlayLoop:[[HDSettingsManager sharedManager] music]];
-}
-
-- (IBAction)_performExitAnimation:(id)sender
-{
-    self.navigationBarHidden = YES;
-    [UIView animateWithDuration:.300f animations:^{
-        CGRect bannerFrame = self.bannerView.frame;
-        bannerFrame.origin.y = CGRectGetHeight(self.view.bounds);
-        self.bannerView.frame = bannerFrame;
-    }];
-    
-    [self.scene performExitAnimationsWithCompletion:^{
-        [self.navigationController popViewControllerAnimated:NO];
-    }];
 }
 
 #pragma mark - Notifications
@@ -241,7 +231,7 @@ static const CGFloat defaultContainerHeight = 70.0f;
     if (completion) {
         self.navigationBarHidden = YES;
     } else {
-        [self performSelector:@selector(_restart:) withObject:nil afterDelay:.300f];
+        [self performSelector:@selector(restart:) withObject:nil afterDelay:.300f];
     }
 }
 

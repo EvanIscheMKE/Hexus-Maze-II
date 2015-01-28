@@ -15,7 +15,13 @@
 - (void)presentShareViewControllerWithLevelIndex:(NSInteger)index;
 - (void)presentGameControllerToPlayLevel:(NSInteger)level;
 - (void)presentLevelViewController;
+- (void)beginGameWithLevel:(NSInteger)level;
 - (void)rateHEXUS;
+
+- (IBAction)openAcheivementsController:(id)sender;
+- (IBAction)animateToLevelViewController:(id)sender;
+- (IBAction)popToRootViewController:(id)sender;
+- (IBAction)restartCurrentLevel:(id)sender;
 
 @end
 

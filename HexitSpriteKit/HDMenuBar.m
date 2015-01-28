@@ -14,16 +14,11 @@
 @interface HDMenuBar ()
 @property (nonatomic, strong) UIButton *navigationButton;
 @property (nonatomic, strong) UIButton *activityButton;
-@property (nonatomic, strong) UIButton *soundButton;
-@property (nonatomic, strong) UIButton *musicButton;
 @end
 
 @implementation HDMenuBar{
     NSDictionary *_views;
     NSDictionary *_metrics;
-    
-    BOOL _sound;
-    BOOL _music;
 }
 
 #pragma mark - Layer Class
@@ -70,15 +65,8 @@
      self.activityButton = [UIButton buttonWithType:UIButtonTypeCustom];
     [self.activityButton setBackgroundImage:self.activityImage forState:UIControlStateNormal];
     
-     self.soundButton = [UIButton buttonWithType:UIButtonTypeCustom];
-    [self.soundButton setBackgroundImage:[UIImage imageNamed:@"SoundIcon-ON"] forState:UIControlStateSelected];
-    [self.soundButton setBackgroundImage:[UIImage imageNamed:@"SoundIcon-OFF"] forState:UIControlStateNormal];
-    
-     self.musicButton = [UIButton buttonWithType:UIButtonTypeCustom];
-    [self.musicButton setBackgroundImage:[UIImage imageNamed:@"MusicIcon-ON"] forState:UIControlStateSelected];
-    [self.musicButton setBackgroundImage:[UIImage imageNamed:@"MusicIcon-OFF"] forState:UIControlStateNormal];
-    
-    for (UIButton *subView in @[self.navigationButton, self.activityButton, self.soundButton, self.musicButton]) {
+
+    for (UIButton *subView in @[self.navigationButton, self.activityButton]) {
         subView.adjustsImageWhenDisabled = NO;
         subView.adjustsImageWhenHighlighted = NO;
         subView.translatesAutoresizingMaskIntoConstraints = NO;
@@ -90,41 +78,29 @@
 {
     UIButton *toggle = self.navigationButton;
     UIButton *share  = self.activityButton;
-    UIButton *music  = self.musicButton;
-    UIButton *sound  = self.soundButton;
     
-    CGFloat buttonHeight = [UIImage imageNamed:@"MusicIcon-ON"].size.width;
+    _views = NSDictionaryOfVariableBindings(toggle, share);
+    _metrics = @{ @"buttonHeight" : @([UIImage imageNamed:@"Grid"].size.height),
+                  @"inset"        : @(kButtonInset) };
     
-    _views = NSDictionaryOfVariableBindings(toggle, share, music, sound);
-    _metrics = @{ @"buttonHeight" : @(buttonHeight),
-                  @"inset"        : @(kButtonInset),
-                  @"spacing"      : @(floorf(((CGRectGetWidth(self.bounds) - (buttonHeight*4 + kButtonInset*2))/3))) };
-    
-    NSString *layoutVisualFormatString = @"H:|-inset-[toggle(buttonHeight)]-spacing-[sound(buttonHeight)]-spacing-[music(buttonHeight)]-spacing-[share(buttonHeight)]";
-    
-    NSArray *horizontalConstraint = [NSLayoutConstraint constraintsWithVisualFormat:layoutVisualFormatString
+
+    NSArray *toggleHorizontalConstraint = [NSLayoutConstraint constraintsWithVisualFormat:@"H:|-inset-[toggle(buttonHeight)]"
                                                                             options:0
                                                                             metrics:_metrics
                                                                               views:_views];
-    [self addConstraints:horizontalConstraint];
+    [self addConstraints:toggleHorizontalConstraint];
+    
+    NSArray *activityHorizontalConstraint = [NSLayoutConstraint constraintsWithVisualFormat:@"H:[share(buttonHeight)]-inset-|"
+                                                                            options:0
+                                                                            metrics:_metrics
+                                                                              views:_views];
+    [self addConstraints:activityHorizontalConstraint];
     
     NSArray *toggleVerticalConstraint   = [NSLayoutConstraint constraintsWithVisualFormat:@"V:|-inset-[toggle(buttonHeight)]"
                                                                                   options:0
                                                                                   metrics:_metrics
                                                                                     views:_views];
     [self addConstraints:toggleVerticalConstraint];
-    
-    NSArray *musicVerticalConstraint   = [NSLayoutConstraint constraintsWithVisualFormat:@"V:|-inset-[music(buttonHeight)]"
-                                                                                 options:0
-                                                                                 metrics:_metrics
-                                                                                   views:_views];
-    [self addConstraints:musicVerticalConstraint];
-    
-    NSArray *soundVerticalConstraint   = [NSLayoutConstraint constraintsWithVisualFormat:@"V:|-inset-[sound(buttonHeight)]"
-                                                                                 options:0
-                                                                                 metrics:_metrics
-                                                                                   views:_views];
-    [self addConstraints:soundVerticalConstraint];
     
     NSArray *shareVerticalConstraint   = [NSLayoutConstraint constraintsWithVisualFormat:@"V:|-inset-[share(buttonHeight)]"
                                                                                  options:0

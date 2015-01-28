@@ -9,6 +9,8 @@
 #import <UIKit/UIKit.h>
 
 @interface HDGameViewController : UIViewController
+- (void)performExitAnimationWithCompletion:(dispatch_block_t)completion;
 - (instancetype)initWithLevel:(NSInteger)level;
+- (IBAction)restart:(id)sender;
 @end
 

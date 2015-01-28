@@ -7,8 +7,11 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		3818A2221A671BFC009BFE31 /* HDTileDescriptorView.m in Sources */ = {isa = PBXBuildFile; fileRef = 3818A2211A671BFC009BFE31 /* HDTileDescriptorView.m */; };
 		3824A5DD1A538C3D00788E0E /* Grid-84.json in Resources */ = {isa = PBXBuildFile; fileRef = 3824A5DC1A538C3D00788E0E /* Grid-84.json */; };
+		383199F31A7853CC004CF3E2 /* AlertNodeTexture@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 383199F21A7853CC004CF3E2 /* AlertNodeTexture@2x.png */; };
+		383199F61A785828004CF3E2 /* HDContainerViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 383199F41A785828004CF3E2 /* HDContainerViewController.m */; };
+		383199F91A785867004CF3E2 /* HDSwitch.m in Sources */ = {isa = PBXBuildFile; fileRef = 383199F81A785867004CF3E2 /* HDSwitch.m */; };
+		383199FC1A785875004CF3E2 /* HDRearViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 383199FB1A785875004CF3E2 /* HDRearViewController.m */; };
 		386CF5D91A383A98006A8381 /* AudioToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 386CF5D81A383A98006A8381 /* AudioToolbox.framework */; };
 		386CF5DB1A383AFC006A8381 /* HDScene.m in Sources */ = {isa = PBXBuildFile; fileRef = 386CF5DA1A383AFC006A8381 /* HDScene.m */; };
 		386CF6291A3982BA006A8381 /* SKEmitterNode+EmitterAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 386CF6281A3982BA006A8381 /* SKEmitterNode+EmitterAdditions.m */; };
@@ -31,9 +34,6 @@
 		389E95D71A4C1A7F00F2DF05 /* HDMenuBar.m in Sources */ = {isa = PBXBuildFile; fileRef = 389E95D61A4C1A7F00F2DF05 /* HDMenuBar.m */; };
 		38A50F291A57C66100DE9692 /* HDTutorialParentViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 38A50F281A57C66100DE9692 /* HDTutorialParentViewController.m */; };
 		38A50F2C1A57C66E00DE9692 /* HDTutorialChildViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 38A50F2B1A57C66E00DE9692 /* HDTutorialChildViewController.m */; };
-		38A9BC9C1A71E127008A9DDF /* Locked@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 38A9BC9B1A71E127008A9DDF /* Locked@2x.png */; };
-		38A9BCD61A72441D008A9DDF /* SoundIcon-OFF@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 38A9BCD41A72441D008A9DDF /* SoundIcon-OFF@2x.png */; };
-		38A9BCDE1A724BF2008A9DDF /* MusicIcon-OFF@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 38A9BCDD1A724BF2008A9DDF /* MusicIcon-OFF@2x.png */; };
 		38ABD5F21A4153A800C4321D /* HDHexagonButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 38ABD5F11A4153A800C4321D /* HDHexagonButton.m */; };
 		38ABD5F71A420A3500C4321D /* HDHexagonControl.m in Sources */ = {isa = PBXBuildFile; fileRef = 38ABD5F61A420A3500C4321D /* HDHexagonControl.m */; };
 		38BAF5281A1FE10B004D5660 /* GameKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 38BAF5271A1FE10B004D5660 /* GameKit.framework */; };
@@ -199,9 +199,14 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
-		3818A2201A671BFC009BFE31 /* HDTileDescriptorView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HDTileDescriptorView.h; sourceTree = "<group>"; };
-		3818A2211A671BFC009BFE31 /* HDTileDescriptorView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HDTileDescriptorView.m; sourceTree = "<group>"; };
 		3824A5DC1A538C3D00788E0E /* Grid-84.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = "Grid-84.json"; sourceTree = "<group>"; };
+		383199F21A7853CC004CF3E2 /* AlertNodeTexture@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "AlertNodeTexture@2x.png"; sourceTree = "<group>"; };
+		383199F41A785828004CF3E2 /* HDContainerViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = HDContainerViewController.m; path = ../HDContainerViewController.m; sourceTree = "<group>"; };
+		383199F51A785828004CF3E2 /* HDContainerViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = HDContainerViewController.h; path = ../HDContainerViewController.h; sourceTree = "<group>"; };
+		383199F71A785867004CF3E2 /* HDSwitch.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = HDSwitch.h; path = ../HDSwitch.h; sourceTree = "<group>"; };
+		383199F81A785867004CF3E2 /* HDSwitch.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = HDSwitch.m; path = ../HDSwitch.m; sourceTree = "<group>"; };
+		383199FA1A785875004CF3E2 /* HDRearViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HDRearViewController.h; sourceTree = "<group>"; };
+		383199FB1A785875004CF3E2 /* HDRearViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HDRearViewController.m; sourceTree = "<group>"; };
 		386CF5D81A383A98006A8381 /* AudioToolbox.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AudioToolbox.framework; path = System/Library/Frameworks/AudioToolbox.framework; sourceTree = SDKROOT; };
 		386CF5DA1A383AFC006A8381 /* HDScene.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HDScene.m; sourceTree = "<group>"; };
 		386CF6271A3982BA006A8381 /* SKEmitterNode+EmitterAdditions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "SKEmitterNode+EmitterAdditions.h"; sourceTree = "<group>"; };
@@ -233,9 +238,6 @@
 		38A50F281A57C66100DE9692 /* HDTutorialParentViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HDTutorialParentViewController.m; sourceTree = "<group>"; };
 		38A50F2A1A57C66E00DE9692 /* HDTutorialChildViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HDTutorialChildViewController.h; sourceTree = "<group>"; };
 		38A50F2B1A57C66E00DE9692 /* HDTutorialChildViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HDTutorialChildViewController.m; sourceTree = "<group>"; };
-		38A9BC9B1A71E127008A9DDF /* Locked@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Locked@2x.png"; sourceTree = "<group>"; };
-		38A9BCD41A72441D008A9DDF /* SoundIcon-OFF@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "SoundIcon-OFF@2x.png"; sourceTree = "<group>"; };
-		38A9BCDD1A724BF2008A9DDF /* MusicIcon-OFF@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "MusicIcon-OFF@2x.png"; sourceTree = "<group>"; };
 		38ABD5F01A4153A800C4321D /* HDHexagonButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HDHexagonButton.h; sourceTree = "<group>"; };
 		38ABD5F11A4153A800C4321D /* HDHexagonButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HDHexagonButton.m; sourceTree = "<group>"; };
 		38ABD5F51A420A3500C4321D /* HDHexagonControl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HDHexagonControl.h; sourceTree = "<group>"; };
@@ -520,6 +522,10 @@
 		38A50F2E1A57C69500DE9692 /* Game View Controllers */ = {
 			isa = PBXGroup;
 			children = (
+				383199FA1A785875004CF3E2 /* HDRearViewController.h */,
+				383199FB1A785875004CF3E2 /* HDRearViewController.m */,
+				383199F41A785828004CF3E2 /* HDContainerViewController.m */,
+				383199F51A785828004CF3E2 /* HDContainerViewController.h */,
 				38C67CD51A0AB8D80038526C /* HDWelcomeViewController.h */,
 				38C67CD61A0AB8D80038526C /* HDWelcomeViewController.m */,
 				38BAF53F1A1FFC64004D5660 /* HDGridViewController.h */,
@@ -618,8 +624,7 @@
 		38C0A8351A07251600C552F1 = {
 			isa = PBXGroup;
 			children = (
-				38A9BCDD1A724BF2008A9DDF /* MusicIcon-OFF@2x.png */,
-				38A9BCD41A72441D008A9DDF /* SoundIcon-OFF@2x.png */,
+				383199F21A7853CC004CF3E2 /* AlertNodeTexture@2x.png */,
 				38C0A8401A07251700C552F1 /* HexitSpriteKit */,
 				38C0A85A1A07251700C552F1 /* HexitSpriteKitTests */,
 				38C0A8671A07252E00C552F1 /* Frameworks */,
@@ -644,7 +649,6 @@
 				38C67CE61A0ABF0E0038526C /* HDConstants.h */,
 				38C67CE71A0ABF0E0038526C /* HDConstants.m */,
 				38C0A84E1A07251700C552F1 /* Images.xcassets */,
-				38A9BC9B1A71E127008A9DDF /* Locked@2x.png */,
 				38C0A8411A07251700C552F1 /* Supporting Files */,
 				38C67CD11A0A29D80038526C /* Controller */,
 				38C67CD21A0A29E70038526C /* Views */,
@@ -762,14 +766,14 @@
 		38C67CD21A0A29E70038526C /* Views */ = {
 			isa = PBXGroup;
 			children = (
+				383199F71A785867004CF3E2 /* HDSwitch.h */,
+				383199F81A785867004CF3E2 /* HDSwitch.m */,
 				38C0A86C1A0727FA00C552F1 /* HDScene.h */,
 				386CF5DA1A383AFC006A8381 /* HDScene.m */,
 				38C0A8761A075FBA00C552F1 /* HDHexagonNode.h */,
 				38C0A8771A075FBA00C552F1 /* HDHexagonNode.m */,
 				3874B9A41A20736000400CEB /* HDAlertNode.h */,
 				3874B9A51A20736000400CEB /* HDAlertNode.m */,
-				3818A2201A671BFC009BFE31 /* HDTileDescriptorView.h */,
-				3818A2211A671BFC009BFE31 /* HDTileDescriptorView.m */,
 				38ABD5F01A4153A800C4321D /* HDHexagonButton.h */,
 				38ABD5F11A4153A800C4321D /* HDHexagonButton.m */,
 				38ABD5F51A420A3500C4321D /* HDHexagonControl.h */,
@@ -1080,13 +1084,13 @@
 				C1F035441A676D0C00EFD26B /* Localizable.strings in Resources */,
 				389E95061A488D9800F2DF05 /* Grid-83.json in Resources */,
 				38BDDCD51A20F9E4005035EE /* Grid-42.json in Resources */,
+				383199F31A7853CC004CF3E2 /* AlertNodeTexture@2x.png in Resources */,
 				38D424831A4F6C1A00FD21A2 /* G6.m4a in Resources */,
 				38C122341A2C1CB500224B33 /* Grid-72.json in Resources */,
 				38BDDCF61A20FBA2005035EE /* Grid-57.json in Resources */,
 				389E95021A488D8300F2DF05 /* Grid-81.json in Resources */,
 				38BDDCC51A20F965005035EE /* Grid-34.json in Resources */,
 				38BDDCF21A20FB80005035EE /* Grid-55.json in Resources */,
-				38A9BCDE1A724BF2008A9DDF /* MusicIcon-OFF@2x.png in Resources */,
 				38BDDCBF1A20F93A005035EE /* Grid-31.json in Resources */,
 				38D424851A4F6C1A00FD21A2 /* E6.m4a in Resources */,
 				C1F035421A676D0C00EFD26B /* Localizable.strings in Resources */,
@@ -1114,7 +1118,6 @@
 				38D4247E1A4F6C1A00FD21A2 /* E2.m4a in Resources */,
 				38BDDCD11A20F9C7005035EE /* Grid-40.json in Resources */,
 				38BDDCDD1A20FA1D005035EE /* Grid-46.json in Resources */,
-				38A9BC9C1A71E127008A9DDF /* Locked@2x.png in Resources */,
 				38C67D091A0AE3820038526C /* Grid-16.json in Resources */,
 				38C67D191A0AE3C90038526C /* Grid-24.json in Resources */,
 				C1F035471A676D0C00EFD26B /* Localizable.strings in Resources */,
@@ -1165,7 +1168,6 @@
 				38C67D0D1A0AE3990038526C /* Grid-18.json in Resources */,
 				38BDDCC71A20F96D005035EE /* Grid-35.json in Resources */,
 				38BDDCE11A20FA32005035EE /* Grid-48.json in Resources */,
-				38A9BCD61A72441D008A9DDF /* SoundIcon-OFF@2x.png in Resources */,
 				38BDDCEC1A20FB67005035EE /* Grid-52.json in Resources */,
 				389E94F81A488D5100F2DF05 /* Grid-76.json in Resources */,
 				38C67D051A0ACE620038526C /* Grid-14.json in Resources */,
@@ -1197,12 +1199,14 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				383199FC1A785875004CF3E2 /* HDRearViewController.m in Sources */,
+				383199F91A785867004CF3E2 /* HDSwitch.m in Sources */,
 				389E95401A4A106200F2DF05 /* HDLockedViewController.m in Sources */,
 				38F5A6B61A076B960036750A /* HDLevel.m in Sources */,
 				38BAF5411A1FFC64004D5660 /* HDGridViewController.m in Sources */,
 				38C0A84A1A07251700C552F1 /* HDGameViewController.m in Sources */,
+				383199F61A785828004CF3E2 /* HDContainerViewController.m in Sources */,
 				386CF5DB1A383AFC006A8381 /* HDScene.m in Sources */,
-				3818A2221A671BFC009BFE31 /* HDTileDescriptorView.m in Sources */,
 				38C0A8781A075FBA00C552F1 /* HDHexagonNode.m in Sources */,
 				38C67CD71A0AB8D80038526C /* HDWelcomeViewController.m in Sources */,
 				38C0A8471A07251700C552F1 /* AppDelegate.m in Sources */,
@@ -1431,7 +1435,7 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				ONLY_ACTIVE_ARCH = YES;
 				PRODUCT_NAME = Hexus;
-				PROVISIONING_PROFILE = "";
+				PROVISIONING_PROFILE = "4d085b33-82d6-4c39-ac8d-940ca7f99ec1";
 				TARGETED_DEVICE_FAMILY = 1;
 			};
 			name = Debug;
@@ -1449,7 +1453,7 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				ONLY_ACTIVE_ARCH = YES;
 				PRODUCT_NAME = Hexus;
-				PROVISIONING_PROFILE = "";
+				PROVISIONING_PROFILE = "4d085b33-82d6-4c39-ac8d-940ca7f99ec1";
 				TARGETED_DEVICE_FAMILY = 1;
 			};
 			name = Release;

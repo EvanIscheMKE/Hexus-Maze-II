@@ -21,10 +21,11 @@ NSString * const HDGCAchievementsKey  = @"Achievements";
 static const CGFloat cornerRadius = 15.0f;
 @interface HDAlertNode ()
 @property (nonatomic, strong) SKSpriteNode *star;
+@property (nonatomic, strong) SKSpriteNode *menuView;
 @property (nonatomic, strong) SKSpriteNode *nextButton;
 @property (nonatomic, strong) SKSpriteNode *restartButton;
 @property (nonatomic, strong) SKSpriteNode *stripe;
-@property (nonatomic, strong) SKLabelNode  *descriptionLabel;
+@property (nonatomic, strong) SKLabelNode *descriptionLabel;
 @end
 
 @implementation HDAlertNode {
@@ -34,11 +35,10 @@ static const CGFloat cornerRadius = 15.0f;
 
 - (instancetype)initWithSize:(CGSize)size lastLevel:(BOOL)lastLevel
 {
-    if (self = [super initWithColor:[UIColor colorWithWhite:0.0f alpha:.850f] size:size]) {
+    if (self = [super initWithColor:[UIColor colorWithWhite:0.0f alpha:.4f] size:size]) {
         
         self.userInteractionEnabled = YES;
         self.anchorPoint = CGPointMake(.5f, .5f);
-        self.alpha = 0.0f;
         
         _isLastLevel = lastLevel;
         _descriptionArray = @[NSLocalizedString(@"congratulation1", nil),
@@ -62,94 +62,109 @@ static const CGFloat cornerRadius = 15.0f;
 
 - (void)_setup
 {
-    CGPoint position  = CGPointZero;
+    self.menuView = [SKSpriteNode spriteNodeWithImageNamed:@"AlertNodeTexture"];
+    self.menuView.position = CGPointMake(0.0f, CGRectGetHeight(self.frame));
+    self.menuView.scale = CGRectGetWidth(self.frame)/375;
+    [self addChild:self.menuView];
+    
+    NSLog(@"%@",NSStringFromCGRect(self.menuView.frame));
+    
+    CGPoint position = CGPointZero;
+    CGFloat buttonHeight = CGRectGetHeight(self.menuView.frame) / 4.5f;
     if (!_isLastLevel) {
         
         position = CGPointMake(
-                                CGRectGetWidth(self.frame)/4,
-                               -(CGRectGetHeight(self.frame)/3.25f)
+                               CGRectGetWidth(self.menuView.frame)/2  - CGRectGetWidth(self.menuView.frame)/1.5,
+                               -(CGRectGetHeight(self.menuView.frame)/2 - buttonHeight/2)
                                );
         
         UIImage *nextLevelImage = [self _nextLevelImageTexture];
         self.nextButton = [SKSpriteNode spriteNodeWithTexture:[SKTexture textureWithImage:nextLevelImage]];
         self.nextButton.name        = HDNextLevelKey;
+        self.nextButton.anchorPoint = CGPointMake(.0f, .5f);
         self.nextButton.position    = position;
-        [self addChild:self.nextButton];
+      //  [self.menuView addChild:self.nextButton];
         
         position = CGPointMake(
-                               -(CGRectGetWidth(self.frame)/4),
-                               -(CGRectGetHeight(self.frame)/3.25f)
+                               -(CGRectGetWidth(self.menuView.frame)/2),
+                               -(CGRectGetHeight(self.menuView.frame)/2 - buttonHeight/2)
                                );
         
         UIImage *menuButtonImage = [self _restartButtonTexture];
         self.restartButton = [SKSpriteNode spriteNodeWithTexture:[SKTexture textureWithImage:menuButtonImage]];
         self.restartButton.name        = HDRestartLevelKey;
+        self.restartButton.anchorPoint = CGPointMake(.0f, .5f);
         self.restartButton.position    = position;
-        [self addChild:self.restartButton];
+      //  [self.menuView addChild:self.restartButton];
         
     } else {
+        
         UIImage *restartImage = [self _fullWidthRestartTexture];
-        position = CGPointMake(0.0f, -(CGRectGetHeight(self.frame)/2));
+        
+        position = CGPointMake(0.0f, -(CGRectGetHeight(self.menuView.frame)/2 - buttonHeight/2));
         self.restartButton = [SKSpriteNode spriteNodeWithTexture:[SKTexture textureWithImage:restartImage]];
         self.restartButton.name        = HDRestartLevelKey;
         self.restartButton.position    = position;
-        [self addChild:self.restartButton];
+        [self.menuView addChild:self.restartButton];
+        
     }
     
-    const CGFloat kStripeHeight = [UIImage imageNamed:HDShareKey].size.height;
-    position = CGPointMake(0.0f, CGRectGetMaxY(self.restartButton.frame) + kStripeHeight);
-    CGSize stripeSize = CGSizeMake(CGRectGetWidth(self.frame), kStripeHeight);
+    const CGFloat kStripeHeight = CGRectGetHeight(self.menuView.frame) / 6.5f;
+    
+    position = CGPointMake(0.0f, CGRectGetMaxY(self.restartButton.frame) + kStripeHeight / 2 );
+    CGSize stripeSize = CGSizeMake(CGRectGetWidth(self.menuView.frame), kStripeHeight);
     self.stripe = [SKSpriteNode spriteNodeWithColor:[SKColor clearColor] size:stripeSize];
     self.stripe.position = position;
-    [self addChild:self.stripe];
+    [self.menuView addChild:self.stripe];
     
-    const CGFloat kMargin = (CGRectGetWidth(self.stripe.frame) / 5.0f);
+    const CGFloat kMargin   = (CGRectGetWidth(self.stripe.frame) / 5.0);
     NSArray *imagePaths = @[HDShareKey, HDGCLeaderboardKey, HDGCAchievementsKey, HDRateKey];
     for (int column = 0; column < 4; column++) {
+        
         CGPoint nodePosition = CGPointMake( (-kMargin * 1.5f) + (column * kMargin), 0.0f);
         NSString *imagePath = [imagePaths objectAtIndex:column];
         SKSpriteNode *node = [SKSpriteNode spriteNodeWithImageNamed:imagePath];
         node.name        = imagePath;
         node.anchorPoint = CGPointMake(.5f, .5f);
         node.position    = nodePosition;
-        node.scale       = self.size.width/375.0f;
-        [self.stripe addChild:node];
+       // [self.stripe addChild:node];
     }
-    
-    CGPoint descriptionCenter = CGPointMake(0.0f, CGRectGetMaxY(self.stripe.frame) + kStripeHeight*1.5f);
-    self.descriptionLabel = [SKLabelNode labelNodeWithText:[_descriptionArray objectAtIndex:arc4random() % _descriptionArray.count]];
-    self.descriptionLabel.fontName  = @"GillSans";
-    self.descriptionLabel.fontSize  = CGRectGetWidth(self.frame) / 14;
-    self.descriptionLabel.position  = descriptionCenter;
-    
-    self.levelLabel = [[SKLabelNode alloc] initWithFontNamed:@"GillSans-Light"];
-    self.levelLabel.position = CGPointMake(0.0f, CGRectGetHeight(self.frame)/2  - (CGRectGetHeight(self.frame)/13)/2 - 5.0f);
-    self.levelLabel.fontSize = CGRectGetWidth(self.frame) / 10;
-    
-    for (SKLabelNode *label in @[self.descriptionLabel, self.levelLabel]) {
-        label.fontColor = [SKColor whiteColor];
-        label.horizontalAlignmentMode = SKLabelHorizontalAlignmentModeCenter;
-        label.verticalAlignmentMode   = SKLabelVerticalAlignmentModeCenter;
-        [self addChild:label];
-    }
-    
-    const CGFloat descripMaxY = CGRectGetMaxY(self.descriptionLabel.frame);
-    const CGFloat titleMinY   = CGRectGetMinY(self.levelLabel.frame);
-    const CGFloat distance    = (titleMinY - descripMaxY)/2;
-    const CGFloat positionY   = ceilf(CGRectGetMaxY(self.descriptionLabel.frame) + distance);
     
     self.star = [SKSpriteNode spriteNodeWithImageNamed:@"CompletionStars"];
-    self.star.position  = CGPointMake(0.0f, positionY);
-    self.star.scale     = 0.0f;
-    [self addChild:self.star];
+    self.star.position = CGPointMake(0.0f, CGRectGetHeight(self.menuView.frame)/5.25);
+    self.star.scale = 0.0f;
+    //[self.menuView addChild:self.star];
     
+    CGPoint descriptionCenter = CGPointMake(0.0f, CGRectGetMaxY(self.stripe.frame) + (CGRectGetWidth(self.frame) / 21 / 2) + 5.0f);
+    self.descriptionLabel = [SKLabelNode labelNodeWithText:[_descriptionArray objectAtIndex:arc4random() % _descriptionArray.count]];
+    self.descriptionLabel.fontName  = @"GillSans-Light";
+    self.descriptionLabel.fontSize  = CGRectGetWidth(self.frame) / 21;
+    self.descriptionLabel.position  = descriptionCenter;
+    
+    self.levelLabel = [[SKLabelNode alloc] initWithFontNamed:@"GillSans"];
+    self.levelLabel.position = CGPointMake(0.0f, CGRectGetHeight(self.menuView.frame) / 2.2f);
+    self.levelLabel.fontSize = CGRectGetWidth(self.frame)/14;
+    
+    for (SKLabelNode *label in @[self.descriptionLabel, self.levelLabel]) {
+        label.fontColor = [SKColor blackColor];
+        label.horizontalAlignmentMode = SKLabelHorizontalAlignmentModeCenter;
+        label.verticalAlignmentMode = SKLabelVerticalAlignmentModeCenter;
+        [self.menuView addChild:label];
+    }
 }
 
 #pragma mark - Public
 
 - (void)dismissWithCompletion:(dispatch_block_t)completion
 {
-    [self runAction:[SKAction fadeOutWithDuration:.300f] completion:^{
+    SKAction *upAction      = [SKAction moveToY:15.0f duration:.3f];
+    SKAction *downAction    = [SKAction moveToY:-CGRectGetHeight(self.frame) duration:upAction.duration];
+    SKAction *sequeneAction = [SKAction sequence:@[upAction, downAction,]];
+    
+    upAction.timingMode   = SKActionTimingEaseIn;
+    downAction.timingMode = upAction.timingMode;
+    
+    [self.menuView runAction:sequeneAction completion:^{
         [self removeFromParent];
         if (completion) {
             completion();
@@ -159,18 +174,22 @@ static const CGFloat cornerRadius = 15.0f;
 
 - (void)show
 {
-    [self runAction:[SKAction fadeInWithDuration:.300f]];
-    
-    SKAction *scaleUpAction   = [SKAction scaleTo:(CGRectGetWidth(self.frame) / ([UIImage imageNamed:@"CompletionStars"].size.width + 50.0f)) + .2f
+    SKAction *scaleUpAction   = [SKAction scaleTo:(CGRectGetWidth(self.frame) /
+                                                   ([UIImage imageNamed:@"CompletionStars"].size.width + 90.0f)) + .1f
                                          duration:.400f];
-    SKAction *scaleDownAction = [SKAction scaleTo:CGRectGetWidth(self.frame) / ([UIImage imageNamed:@"CompletionStars"].size.width + 50.0f)
+    SKAction *scaleDownAction = [SKAction scaleTo:CGRectGetWidth(self.frame) /
+                                                   ([UIImage imageNamed:@"CompletionStars"].size.width + 90.0f)
                                          duration:.200f];
     SKAction *sequenceAction  = [SKAction sequence:@[scaleUpAction, scaleDownAction]];
     
-    [self.star runAction:sequenceAction completion:^{
-        if (self.delegate && [self.delegate respondsToSelector:@selector(alertNodeFinishedIntroAnimation:)]) {
-            [self.delegate alertNodeFinishedIntroAnimation:self];
-        }
+    SKAction *positionAction  = [SKAction moveToY:0.0f duration:.5f];
+    
+    [self.menuView runAction:positionAction completion:^{
+        [self.star runAction:sequenceAction completion:^{
+            if (self.delegate && [self.delegate respondsToSelector:@selector(alertNodeFinishedIntroAnimation:)]) {
+                [self.delegate alertNodeFinishedIntroAnimation:self];
+            }
+        }];
     }];
 }
 
@@ -185,8 +204,8 @@ static const CGFloat cornerRadius = 15.0f;
         CGRect imageFrame = CGRectMake(
                                        0.0f,
                                        0.0f,
-                                       CGRectGetWidth(self.frame),
-                                       CGRectGetHeight(self.frame) / 5.0f
+                                       CGRectGetWidth(self.menuView.frame),
+                                       CGRectGetHeight(self.menuView.frame) / 4.25f
                                        );
         
         UIGraphicsBeginImageContextWithOptions(imageFrame.size, NO, [[UIScreen mainScreen] scale]);
@@ -196,7 +215,7 @@ static const CGFloat cornerRadius = 15.0f;
                                                            cornerRadii:CGSizeMake(cornerRadius, cornerRadius)];
         [button addClip];
         
-        [[UIColor flatPeterRiverColor] setStroke];
+        [[UIColor flatEmeraldColor] setStroke];
         
         CGPoint center = CGPointMake(CGRectGetWidth(imageFrame)/2, CGRectGetHeight(imageFrame)/2);
         UIBezierPath *circle = [HDHelper restartArrowAroundPoint:center];
@@ -218,13 +237,18 @@ static const CGFloat cornerRadius = 15.0f;
         CGRect imageFrame = CGRectMake(
                                        0.0f,
                                        0.0f,
-                                       CGRectGetWidth(self.frame)  / 2.0f,
-                                       CGRectGetHeight(self.frame) / 5.0f
+                                       CGRectGetWidth(self.menuView.frame) / 3,
+                                       CGRectGetHeight(self.menuView.frame) / 4.5f
                                        );
         
         UIGraphicsBeginImageContextWithOptions(imageFrame.size, NO, [[UIScreen mainScreen] scale]);
         
-        [[UIColor flatAlizarinColor] setStroke];
+        UIBezierPath *button = [UIBezierPath bezierPathWithRoundedRect:imageFrame
+                                                     byRoundingCorners:UIRectCornerBottomLeft
+                                                           cornerRadii:CGSizeMake(cornerRadius, cornerRadius)];
+        [button addClip];
+        
+        [[UIColor flatEmeraldColor] setStroke];
         
         CGPoint center = CGPointMake(CGRectGetWidth(imageFrame)/2, CGRectGetHeight(imageFrame)/2);
         UIBezierPath *circle = [HDHelper restartArrowAroundPoint:center];
@@ -245,14 +269,22 @@ static const CGFloat cornerRadius = 15.0f;
         CGRect imageFrame = CGRectMake(
                                        0.0f,
                                        0.0f,
-                                       CGRectGetWidth(self.frame)  / 2.0f,
-                                       CGRectGetHeight(self.frame) / 5.f
+                                       CGRectGetWidth(self.menuView.frame) / 1.5f,
+                                       CGRectGetHeight(self.menuView.frame) / 4.5f
                                        );
         
         UIGraphicsBeginImageContextWithOptions(imageFrame.size, NO, [[UIScreen mainScreen] scale]);
         
-        const CGFloat endPoint   = CGRectGetWidth(imageFrame) - CGRectGetWidth(imageFrame)/2.5f;
-        const CGFloat offset     = CGRectGetHeight(imageFrame) / 4;
+        [[UIColor flatEmeraldColor] setFill];
+        UIBezierPath *button = [UIBezierPath bezierPathWithRoundedRect:imageFrame
+                                                     byRoundingCorners:UIRectCornerBottomRight
+                                                           cornerRadii:CGSizeMake(cornerRadius, cornerRadius)];
+        [button fill];
+        [button addClip];
+        
+        const CGFloat startPoint = CGRectGetWidth(imageFrame)/2 - CGRectGetWidth(imageFrame)/7;
+        const CGFloat endPoint   = CGRectGetWidth(imageFrame)/2 + CGRectGetWidth(imageFrame)/7;
+        const CGFloat offset     = CGRectGetHeight(imageFrame)/5;
         
         [[UIColor whiteColor] setStroke];
         
@@ -261,12 +293,12 @@ static const CGFloat cornerRadius = 15.0f;
         rightArrow.lineCapStyle  = kCGLineCapRound;
         rightArrow.lineJoinStyle = kCGLineJoinRound;
         
-        [rightArrow moveToPoint:CGPointMake(5.0f, CGRectGetHeight(imageFrame)/2)];
+        [rightArrow moveToPoint:CGPointMake(startPoint,  CGRectGetHeight(imageFrame)/2)];
         [rightArrow addLineToPoint:CGPointMake(endPoint, CGRectGetHeight(imageFrame)/2)];
         
-        [rightArrow moveToPoint:   CGPointMake(endPoint - offset, CGRectGetHeight(imageFrame)/3.5f)];
+        [rightArrow moveToPoint:   CGPointMake(endPoint - offset, CGRectGetHeight(imageFrame)/3)];
         [rightArrow addLineToPoint:CGPointMake(endPoint, CGRectGetHeight(imageFrame)/2)];
-        [rightArrow addLineToPoint:CGPointMake(endPoint - offset, CGRectGetHeight(imageFrame) - CGRectGetHeight(imageFrame)/3.5f)];
+        [rightArrow addLineToPoint:CGPointMake(endPoint - offset, CGRectGetHeight(imageFrame) - CGRectGetHeight(imageFrame)/3)];
         [rightArrow stroke];
         
         nextLevel = UIGraphicsGetImageFromCurrentImageContext();
