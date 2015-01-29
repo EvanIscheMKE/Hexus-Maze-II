@@ -9,3 +9,9 @@
 "congratulation9" = "你只是掌握了！";
 "congratulation10" = "良好的工作！";
 "congratulation11" = "现在，就是我所说的非常出色！";
+"continue" = "继续";
+"begin" = "开始游戏";
+"tutorial1" = "通过选择一个白色瓷砖开始。";
+"tutorial2" = "移动到主动的瓦片被触摸的最后一个瓦片。";
+"tutorial3" = "继续下去，直到路径完成！";
+"level" = "级别 %tu";

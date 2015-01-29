@@ -22,7 +22,6 @@
 @implementation HDRearViewController {
     NSDictionary *_views;
     NSDictionary *_metrics;
-    NSArray *_switches;
 }
 
 - (void)viewDidLoad
@@ -96,8 +95,8 @@
         
         CGRect squareFrame = CGRectMake(0.0f,
                                         0.0f,
-                                        [UIImage imageNamed:@"MusicON@2x.png"].size.width,
-                                        [UIImage imageNamed:@"MusicON@2x.png"].size.height);
+                                        [UIImage imageNamed:@"MusicON"].size.width,
+                                        [UIImage imageNamed:@"MusicON"].size.height);
         
         UIButton *square = [UIButton buttonWithType:UIButtonTypeCustom];
         square.frame = squareFrame;
@@ -110,25 +109,25 @@
         switch (row) {
             case 0:
                  self.top = square;
-                [self.top setBackgroundImage:[UIImage imageNamed:@"LeaderboardIcon@2x.png"]  forState:UIControlStateNormal];
+                [self.top setBackgroundImage:[UIImage imageNamed:@"LeaderboardIcon"]  forState:UIControlStateNormal];
                 [self.top addTarget:ADelegate action:@selector(openAcheivementsController:)  forControlEvents:UIControlEventTouchUpInside];
                 break;
             case 1:
                  self.bottom = square;
-                [self.bottom setBackgroundImage:[UIImage imageNamed:@"AchievementsIcon@2x.png"] forState:UIControlStateNormal];
+                [self.bottom setBackgroundImage:[UIImage imageNamed:@"AchievementsIcon"] forState:UIControlStateNormal];
                 [self.bottom addTarget:ADelegate action:@selector(openLeaderboardController:)   forControlEvents:UIControlEventTouchUpInside];
                 break;
             case 2:
                 square.selected = [[HDSettingsManager sharedManager] music];
                 [square addTarget:self action:@selector(_toggleMusic:) forControlEvents:UIControlEventTouchUpInside];
-                [square setBackgroundImage:[UIImage imageNamed:@"MusicOFF@2x.png"]  forState:UIControlStateNormal];
-                [square setBackgroundImage:[UIImage imageNamed:@"MusicON@2x.png"] forState:UIControlStateSelected];
+                [square setBackgroundImage:[UIImage imageNamed:@"MusicOFF"]  forState:UIControlStateNormal];
+                [square setBackgroundImage:[UIImage imageNamed:@"MusicON"] forState:UIControlStateSelected];
                 break;
             default:
                 square.selected = [[HDSettingsManager sharedManager] sound];
                 [square addTarget:self action:@selector(_toggleSound:) forControlEvents:UIControlEventTouchUpInside];
-                [square setBackgroundImage:[UIImage imageNamed:@"SoundOFF@2x.png"]  forState:UIControlStateNormal];
-                [square setBackgroundImage:[UIImage imageNamed:@"SoundON@2x.png"] forState:UIControlStateSelected];
+                [square setBackgroundImage:[UIImage imageNamed:@"SoundOFF"]  forState:UIControlStateNormal];
+                [square setBackgroundImage:[UIImage imageNamed:@"SoundON"] forState:UIControlStateSelected];
                 break;
         }
     }

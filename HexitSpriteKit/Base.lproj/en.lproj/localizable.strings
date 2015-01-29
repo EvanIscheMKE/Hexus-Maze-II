@@ -15,7 +15,7 @@
 "begin"    = "Begin Game";
 
 "tutorial1" = "Begin by selecting a white tile.";
-"tutorial2" = "Move to an active hexagon that is touching the last tile.";
+"tutorial2" = "Move to an active tile that is touching the last tile.";
 "tutorial3" = "Continue until the path is completed!";
 
 "level" = "Level %tu";

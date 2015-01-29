@@ -1,6 +1,6 @@
 "congratulation1" = "Ahora lo tienes!";
 "congratulation2" = "Usted hace que parezca fácil.";
-"congratulation3" = "Estás aprendiendo rápido.";
+"congratulation3" = "You're learning fast.";
 "congratulation4" = "Ese es el camino!";
 "congratulation5" = "PERFECTO!";
 "congratulation6" = "SENSACIONAL!";
@@ -9,3 +9,9 @@
 "congratulation9" = "Usted ha casi dominado eso!";
 "congratulation10" = "BUEN TRABAJO!";
 "congratulation11" = "Ahora que es lo que yo llamo un buen trabajo!";
+"continue" = "Continuar";
+"begin" = "Comenzar juego";
+"tutorial1" = "Comience por seleccionar un azulejo blanco.";
+"tutorial2" = "Vaya a un mosaico activo que está en contacto con la última ficha.";
+"tutorial3" = "Continúe hasta que se complete el camino!";
+"level" = "Nivel %tu";
