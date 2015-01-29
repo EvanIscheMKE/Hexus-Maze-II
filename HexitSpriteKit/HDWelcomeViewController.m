@@ -157,7 +157,7 @@ const CGFloat titleInset = 20.0f;
 - (BOOL)_checkForFirstRun
 {
     if (![[NSUserDefaults standardUserDefaults] boolForKey:HDFirstRunKey]) {
-        [self.navigationController pushViewController:[HDTutorialParentViewController new] animated:NO];
+        [ADelegate presentTutorialViewControllerForFirstRun];
         [[NSUserDefaults standardUserDefaults] setBool:YES forKey:HDFirstRunKey];
         return YES;
     }

@@ -13,18 +13,14 @@
 static const CGFloat kPadding = 5.0f;
 
 @interface HDSwitch ()
-
 @property (nonatomic, strong) UILabel *onLabel;
 @property (nonatomic, strong) UILabel *offLabel;
-
 @property (nonatomic, strong) UIView *slidingView;
-
 @end
 
 @implementation HDSwitch {
     UIColor *_onColor;
     UIColor *_offColor;
-    
     BOOL _animating;
     BOOL _toggleValue;
 }
@@ -48,9 +44,7 @@ static const CGFloat kPadding = 5.0f;
         
         self.on = YES;
         self.backgroundColor = _onColor;
-        
-        CALayer *layer = [self layer];
-        layer.cornerRadius = 5.0f;
+        self.layer.cornerRadius = 5.0f;
         
         [self _setup];
     }
@@ -95,22 +89,18 @@ static const CGFloat kPadding = 5.0f;
     
     if (!_animating) {
     
-        self.offLabel.frame = CGRectMake(
-                                        CGRectGetWidth(self.bounds)/3,
-                                        0.0f,
-                                        CGRectGetWidth(self.bounds)/1.5f,
-                                        CGRectGetHeight(self.bounds)
-                                        );
+        self.offLabel.frame = CGRectMake(CGRectGetWidth(self.bounds)/3,
+                                         0.0f,
+                                         CGRectGetWidth(self.bounds)/1.5f,
+                                         CGRectGetHeight(self.bounds));
         
         self.onLabel.frame = CGRectMake(0.0f, 0.0f, CGRectGetWidth(self.bounds)/1.5f, CGRectGetHeight(self.bounds));
         
         if (self.isON) {
-            CGRect slidingViewFrame = CGRectMake(
-                                                 CGRectGetWidth(self.bounds) - (CGRectGetWidth(self.slidingView.bounds) + kPadding),
+            CGRect slidingViewFrame = CGRectMake(CGRectGetWidth(self.bounds) - (CGRectGetWidth(self.slidingView.bounds) + kPadding),
                                                  kPadding,
                                                  CGRectGetWidth(self.bounds)/3,
-                                                 CGRectGetHeight(self.bounds)-(kPadding*2)
-                                                 );
+                                                 CGRectGetHeight(self.bounds)-(kPadding*2));
             
             self.slidingView.frame = slidingViewFrame;
         } else {

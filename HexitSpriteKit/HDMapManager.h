@@ -11,11 +11,8 @@
 @class HDLevel;
 @interface HDMapManager : NSObject
 @property (nonatomic, readonly) NSUInteger numberOfLevels;
-
 + (HDMapManager *)sharedManager;
 - (void)completedLevelAtIndex:(NSInteger)index;
-
 - (HDLevel *)levelAtIndex:(NSInteger)index;
 - (NSInteger)indexOfCurrentLevel;
-
 @end

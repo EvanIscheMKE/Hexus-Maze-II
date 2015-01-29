@@ -130,7 +130,7 @@ static const CGFloat defaultContainerHeight = 70.0f;
 {
     self.view.backgroundColor = [UIColor flatWetAsphaltColor];
     
-    self.gridManager = [[HDGridManager alloc] initWithLevelNumber:_levelIdx];
+    self.gridManager = [[HDGridManager alloc] initWithLevelIndex:_levelIdx];
     
     HDContainerViewController *container = self.containerViewController;
     
@@ -188,20 +188,6 @@ static const CGFloat defaultContainerHeight = 70.0f;
     [self.scene restart];
 }
 
-- (IBAction)_toggleSound:(UIButton *)sender
-{
-    [sender setSelected:!sender.selected];
-    [[HDSettingsManager sharedManager] setSound:![[HDSettingsManager sharedManager] sound]];
-    [[HDSoundManager sharedManager] playSound:HDButtonSound];
-}
-
-- (IBAction)_toggleMusic:(UIButton *)sender
-{
-    [sender setSelected:!sender.selected];
-    [[HDSettingsManager sharedManager] setMusic:![[HDSettingsManager sharedManager] music]];
-    [[HDSoundManager sharedManager] setPlayLoop:[[HDSettingsManager sharedManager] music]];
-}
-
 #pragma mark - Notifications
 
 - (void)_applicationDidBecomeActive:(NSNotification *)notification
@@ -221,7 +207,7 @@ static const CGFloat defaultContainerHeight = 70.0f;
 -(void)scene:(HDScene *)scene proceededToLevel:(NSUInteger)level
 {
     _levelIdx += 1;
-    self.gridManager = [[HDGridManager alloc] initWithLevelNumber:level];
+    self.gridManager = [[HDGridManager alloc] initWithLevelIndex:level];
     self.scene.gridManager = self.gridManager;
     [self _beginGame];
 }
@@ -244,7 +230,8 @@ static const CGFloat defaultContainerHeight = 70.0f;
 
 - (void)bannerViewDidLoadAd:(ADBannerView *)banner
 {
-    if (!_isBannerVisible) {
+    /// NO, before submitting
+    if (_isBannerVisible) {
         [UIView animateWithDuration:.300f animations:^{
             CGRect bannerFrame = self.bannerView.frame;
             bannerFrame.origin.y = CGRectGetHeight(self.view.bounds) - CGRectGetHeight(self.bannerView.bounds);

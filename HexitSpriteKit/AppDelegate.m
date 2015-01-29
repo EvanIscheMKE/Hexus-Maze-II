@@ -19,6 +19,7 @@
 #import "HDGridViewController.h"
 #import "HDWelcomeViewController.h"
 #import "HDContainerViewController.h"
+#import "HDTutorialParentViewController.h"
 #import "HDRearViewController.h"
 
 NSString * const iOS8AppStoreURLFormat      = @"itms-apps://itunes.apple.com/app/id%d";
@@ -65,7 +66,7 @@ NSString * const HDLeaderBoardIdentifierKey = @"LevelLeaderboard";
     self.controller = [[HDContainerViewController alloc] initWithFrontViewController:self.gridController
                                                                   rearViewController:[HDRearViewController new]];
     self.controller.delegate = self;
-    [self.window.rootViewController presentViewController:self.controller animated:YES completion:nil];
+    [self.window.rootViewController presentViewController:self.controller animated:NO completion:nil];
 }
 
 - (void)presentGameCenterControllerForState:(GKGameCenterViewControllerState)state
@@ -75,11 +76,6 @@ NSString * const HDLeaderBoardIdentifierKey = @"LevelLeaderboard";
     controller.leaderboardIdentifier = HDLeaderBoardIdentifierKey;
     controller.viewState             = state;
     [self.controller presentViewController:controller animated:YES completion:nil];
-}
-
-- (void)presentGameControllerToPlayLevel:(NSInteger)level
-{
-   // [self.controller pushViewController:[[HDGameViewController alloc] initWithLevel:level] animated:NO];
 }
 
 - (void)rateHEXUS
@@ -123,6 +119,11 @@ NSString * const HDLeaderBoardIdentifierKey = @"LevelLeaderboard";
     return screenShot;
 }
 
+- (void)presentTutorialViewControllerForFirstRun
+{
+    [self.window.rootViewController presentViewController:[HDTutorialParentViewController new] animated:NO completion:nil];
+}
+
 - (void)beginGameWithLevel:(NSInteger)level
 {
     [self.controller setFrontMostViewController:[[HDGameViewController alloc] initWithLevel:level]];
@@ -134,20 +135,6 @@ NSString * const HDLeaderBoardIdentifierKey = @"LevelLeaderboard";
     if (self.controller.isExpanded) {
         [self.controller toggleMenuViewControllerWithCompletion:^{
             [(HDGameViewController *)self.controller.frontViewController restart:nil];
-        }];
-    }
-}
-
-- (IBAction)popToRootViewController:(id)sender
-{
-    if (self.controller.isExpanded) {
-        [self.controller toggleMenuViewControllerWithCompletion:^{
-            if ([self.controller.frontViewController isKindOfClass:[HDGridViewController class]]) {
-                HDGridViewController *controller = (HDGridViewController *)self.controller.frontViewController;
-                [controller performExitAnimationWithCompletion:^{
-                    [self.window.rootViewController dismissViewControllerAnimated:NO completion:nil];
-                }];
-            }
         }];
     }
 }
@@ -168,9 +155,19 @@ NSString * const HDLeaderBoardIdentifierKey = @"LevelLeaderboard";
 
 - (IBAction)openAcheivementsController:(id)sender
 {
+   [self _activityControllerForType:GKGameCenterViewControllerStateAchievements];
+}
+
+- (IBAction)openLeaderboardController:(id)sender
+{
+    [self _activityControllerForType:GKGameCenterViewControllerStateLeaderboards];
+}
+
+- (void)_activityControllerForType:(GKGameCenterViewControllerState)state
+{
     if (self.controller.isExpanded) {
         [self.controller toggleMenuViewControllerWithCompletion:^{
-            [self presentGameCenterControllerForState:GKGameCenterViewControllerStateAchievements];
+            [self presentGameCenterControllerForState:state];
         }];
     }
 }
@@ -181,16 +178,27 @@ NSString * const HDLeaderBoardIdentifierKey = @"LevelLeaderboard";
 {
     if (expanded) {
         if ([container.frontViewController isKindOfClass:[HDGameViewController class]]) {
-            [[(SKView *)container.frontViewController.view scene] setPaused:expanded];
+            [[(SKView *)container.frontViewController.view scene] setPaused:YES];
         } else {
             for (id subView in container.frontViewController.view.subviews) {
                 if ([subView isKindOfClass:[UIScrollView class]]) {
-                    [subView setUserInteractionEnabled:!expanded];
+                    [subView setUserInteractionEnabled:NO];
                     break;
                 }
             }
         }
-    } 
+    } else {
+        if ([container.frontViewController isKindOfClass:[HDGameViewController class]]) {
+            [[(SKView *)container.frontViewController.view scene] setPaused:NO];
+        } else {
+            for (id subView in container.frontViewController.view.subviews) {
+                if ([subView isKindOfClass:[UIScrollView class]]) {
+                    [subView setUserInteractionEnabled:YES];
+                    break;
+                }
+            }
+        }
+    }
 }
 
 - (void)container:(HDContainerViewController *)container

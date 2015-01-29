@@ -21,13 +21,14 @@
     UIViewController *parent = self;
     Class containerClass = [HDContainerViewController class];
     while ( nil != (parent = [parent parentViewController]) && ![parent isKindOfClass:containerClass] ) { }
-    
     return (id)parent;
 }
 
 @end
 
-@interface HDContainerViewController ()
+@interface HDContainerViewController ()<UIGestureRecognizerDelegate>
+@property (nonatomic, strong) UIScreenEdgePanGestureRecognizer *leftScreenEdgeGestureRecognizer;
+@property (nonatomic, strong) UIScreenEdgePanGestureRecognizer *rightScreenEdgeGestureRecognizer;
 @property (nonatomic, strong) UIViewController *frontViewController;
 @property (nonatomic, strong) UIViewController *rearViewController;
 @property (nonatomic, setter=setExpanded:, assign) BOOL isExpanded;
@@ -36,9 +37,7 @@
 @implementation HDContainerViewController {
     NSDictionary *_metrics;
     NSDictionary *_views;
-    
     CGFloat _menuOffsetX;
-    
     BOOL _isExpanded;
 }
 
@@ -60,6 +59,16 @@
 {
     [super viewDidLoad];
     
+    self.leftScreenEdgeGestureRecognizer = [[UIScreenEdgePanGestureRecognizer alloc] initWithTarget:self action:@selector(handleScreenEdgePan:)];
+    self.leftScreenEdgeGestureRecognizer.edges = UIRectEdgeLeft;
+    self.leftScreenEdgeGestureRecognizer.delegate = self;
+    [self.view addGestureRecognizer:self.leftScreenEdgeGestureRecognizer];
+    
+    self.rightScreenEdgeGestureRecognizer = [[UIScreenEdgePanGestureRecognizer alloc] initWithTarget:self action:@selector(handleScreenEdgePan:)];
+    self.rightScreenEdgeGestureRecognizer.edges = UIRectEdgeRight;
+    self.rightScreenEdgeGestureRecognizer.delegate = self;
+    [self.view addGestureRecognizer:self.rightScreenEdgeGestureRecognizer];
+    
     [self addChildViewController:self.rearViewController];
     [self addChildViewController:self.frontViewController];
     
@@ -70,9 +79,24 @@
     [self.frontViewController didMoveToParentViewController:self];
 }
 
-- (void)didReceiveMemoryWarning
+#pragma mark - UIGestureRecognizerDelegate Methods
+
+-(BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldReceiveTouch:(UITouch *)touch
 {
-    [super didReceiveMemoryWarning];
+    if (gestureRecognizer == self.leftScreenEdgeGestureRecognizer && self.isExpanded == NO) {
+        return YES;
+    } else if (gestureRecognizer == self.rightScreenEdgeGestureRecognizer && self.isExpanded == YES) {
+        return YES;
+    }
+    
+    return NO;
+}
+
+-(void)handleScreenEdgePan:(UIScreenEdgePanGestureRecognizer *)gestureRecognizer
+{
+    if (gestureRecognizer.state == UIGestureRecognizerStateBegan) {
+        [self toggleMenuViewController];
+    }
 }
 
 #pragma mark - Public
@@ -144,13 +168,7 @@
     if (!animated) {
         closeAnimation();
     } else {
-        [UIView animateWithDuration:.3f
-                              delay:.0f
-             usingSpringWithDamping:.8f
-              initialSpringVelocity:.05f
-                            options:0
-                         animations:closeAnimation
-                         completion:nil];
+        [UIView animateWithDuration:.3f animations:closeAnimation];
     }
 }
 
@@ -158,20 +176,14 @@
 {
     dispatch_block_t expandAnimation = ^{
         CGRect rect = self.frontViewController.view.frame;
-        rect.origin.x = [HDHelper sideMenuOffsetX];
+        rect.origin.x = CGRectGetMidY(self.view.bounds)/2;;
         self.frontViewController.view.frame = rect;
     };
     
     if (!animated) {
         expandAnimation();
     } else {
-        [UIView animateWithDuration:.3f
-                              delay:.0f
-             usingSpringWithDamping:.8f
-              initialSpringVelocity:.05f
-                            options:0
-                         animations:expandAnimation
-                         completion:nil];
+        [UIView animateWithDuration:.3f animations:expandAnimation];
     }
 }
 

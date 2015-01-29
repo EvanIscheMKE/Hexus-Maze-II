@@ -18,10 +18,5 @@
 "tutorial2" = "Move to an active hexagon that is touching the last tile.";
 "tutorial3" = "Continue until the path is completed!";
 
-"level1" = "Requires two taps for completion!";
-"level2" = "Touch the unlocked Tile to unlock the next locked tile!";
-"level3" = "Requires three taps for completion!";
-"level4" = "You must end on this tile!";
-
 "level" = "Level %tu";
 

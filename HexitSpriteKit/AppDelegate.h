@@ -12,15 +12,15 @@
 @interface AppDelegate : UIResponder <UIApplicationDelegate>
 @property (nonatomic, strong) UIWindow *window;
 - (void)presentGameCenterControllerForState:(GKGameCenterViewControllerState)state;
+- (void)presentTutorialViewControllerForFirstRun;
 - (void)presentShareViewControllerWithLevelIndex:(NSInteger)index;
 - (void)presentGameControllerToPlayLevel:(NSInteger)level;
 - (void)presentLevelViewController;
 - (void)beginGameWithLevel:(NSInteger)level;
 - (void)rateHEXUS;
-
 - (IBAction)openAcheivementsController:(id)sender;
+- (IBAction)openLeaderboardController:(id)sender;
 - (IBAction)animateToLevelViewController:(id)sender;
-- (IBAction)popToRootViewController:(id)sender;
 - (IBAction)restartCurrentLevel:(id)sender;
 
 @end

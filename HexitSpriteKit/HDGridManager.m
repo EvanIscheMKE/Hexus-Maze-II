@@ -22,26 +22,16 @@ typedef void(^CallbackBlock)(NSDictionary *dictionary, NSError *error);
     
 }
 
-- (instancetype)initWithLevelNumber:(NSInteger)levelNumber
+- (instancetype)initWithLevelIndex:(NSInteger)index
 {
-    return [self initWithLevel:LEVEL_URL((long)levelNumber)];
+    return [self initWithLevel:LEVEL_URL((long)index)];
 }
 
 - (instancetype)initWithLevel:(NSString *)level
 {
     if (self = [super init]) {
-        
         _levelCache = [NSMutableDictionary dictionary];
-        
         NSDictionary *grid = [self _levelWithFileName:level];
-        [self _layoutInitialGrid:grid];
-    }
-    return self;
-}
-
-- (instancetype)initWithRandomLevel:(NSDictionary *)grid
-{
-    if (self = [super init]) {
         [self _layoutInitialGrid:grid];
     }
     return self;

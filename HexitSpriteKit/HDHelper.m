@@ -51,7 +51,7 @@ NSString *descriptionFromLevelIdx(NSUInteger levelIdx){
 
 + (CGFloat)sideMenuOffsetX
 {
-    CGFloat buttonSize = [[self class] isWideScreen] ? kLargeButtonSize : kSmallButtonSize;
+    CGFloat buttonSize = kLargeButtonSize * (CGRectGetWidth([[UIScreen mainScreen] bounds])/ 375);
     return  CGRectGetWidth([[UIScreen mainScreen] bounds]) - (buttonSize + (kButtonInset * 2));
 }
 
@@ -92,48 +92,6 @@ NSString *descriptionFromLevelIdx(NSUInteger levelIdx){
     [_path closePath];
     
     return _path;
-}
-
-+ (UIBezierPath *)hexagonPathWithRect:(CGRect)square cornerRadius:(CGFloat)cornerRadius
-{
-    UIBezierPath *path  = [UIBezierPath bezierPath];
-    
-    CGFloat squareWidth = MIN(square.size.width, square.size.height);
-    CGFloat sideLength = squareWidth/2;
-    
-    const NSInteger sides = 6;
-    
-    /*
-     for each 0 ≤ i < 6:
-     angle = 2 * PI / 6 * (i + 0.5)
-     x_i = center_x + size * cos(angle)
-     y_i = center_y + size * sin(angle)
-     if i == 0:
-     moveTo(x_i, y_i)
-     else:
-     lineTo(x_i, y_i)
-     */
-    
-    
-    // draw the sides and rounded corners of the polygon
-    for (NSInteger side = 0; side < sides; side++) {
-        
-        CGFloat angle = 2 * M_PI / sides * (side + .5f);
-        
-        CGPoint point = CGPointMake(
-                                    squareWidth/2 + sideLength * cosf(angle),
-                                    squareWidth/2 + sideLength * sinf(angle)
-                                    );
-        if (side == 0) {
-            [path moveToPoint:point];
-        } else {
-            [path addLineToPoint:point];
-        }
-    }
-    
-    [path closePath];
-    
-    return path;
 }
 
 + (UIBezierPath *)restartArrowAroundPoint:(CGPoint)center

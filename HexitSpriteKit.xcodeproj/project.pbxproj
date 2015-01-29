@@ -8,7 +8,6 @@
 
 /* Begin PBXBuildFile section */
 		3824A5DD1A538C3D00788E0E /* Grid-84.json in Resources */ = {isa = PBXBuildFile; fileRef = 3824A5DC1A538C3D00788E0E /* Grid-84.json */; };
-		383199F31A7853CC004CF3E2 /* AlertNodeTexture@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 383199F21A7853CC004CF3E2 /* AlertNodeTexture@2x.png */; };
 		383199F61A785828004CF3E2 /* HDContainerViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 383199F41A785828004CF3E2 /* HDContainerViewController.m */; };
 		383199F91A785867004CF3E2 /* HDSwitch.m in Sources */ = {isa = PBXBuildFile; fileRef = 383199F81A785867004CF3E2 /* HDSwitch.m */; };
 		383199FC1A785875004CF3E2 /* HDRearViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 383199FB1A785875004CF3E2 /* HDRearViewController.m */; };
@@ -200,7 +199,6 @@
 
 /* Begin PBXFileReference section */
 		3824A5DC1A538C3D00788E0E /* Grid-84.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = "Grid-84.json"; sourceTree = "<group>"; };
-		383199F21A7853CC004CF3E2 /* AlertNodeTexture@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "AlertNodeTexture@2x.png"; sourceTree = "<group>"; };
 		383199F41A785828004CF3E2 /* HDContainerViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = HDContainerViewController.m; path = ../HDContainerViewController.m; sourceTree = "<group>"; };
 		383199F51A785828004CF3E2 /* HDContainerViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = HDContainerViewController.h; path = ../HDContainerViewController.h; sourceTree = "<group>"; };
 		383199F71A785867004CF3E2 /* HDSwitch.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = HDSwitch.h; path = ../HDSwitch.h; sourceTree = "<group>"; };
@@ -524,8 +522,8 @@
 			children = (
 				383199FA1A785875004CF3E2 /* HDRearViewController.h */,
 				383199FB1A785875004CF3E2 /* HDRearViewController.m */,
-				383199F41A785828004CF3E2 /* HDContainerViewController.m */,
 				383199F51A785828004CF3E2 /* HDContainerViewController.h */,
+				383199F41A785828004CF3E2 /* HDContainerViewController.m */,
 				38C67CD51A0AB8D80038526C /* HDWelcomeViewController.h */,
 				38C67CD61A0AB8D80038526C /* HDWelcomeViewController.m */,
 				38BAF53F1A1FFC64004D5660 /* HDGridViewController.h */,
@@ -624,7 +622,6 @@
 		38C0A8351A07251600C552F1 = {
 			isa = PBXGroup;
 			children = (
-				383199F21A7853CC004CF3E2 /* AlertNodeTexture@2x.png */,
 				38C0A8401A07251700C552F1 /* HexitSpriteKit */,
 				38C0A85A1A07251700C552F1 /* HexitSpriteKitTests */,
 				38C0A8671A07252E00C552F1 /* Frameworks */,
@@ -1084,7 +1081,6 @@
 				C1F035441A676D0C00EFD26B /* Localizable.strings in Resources */,
 				389E95061A488D9800F2DF05 /* Grid-83.json in Resources */,
 				38BDDCD51A20F9E4005035EE /* Grid-42.json in Resources */,
-				383199F31A7853CC004CF3E2 /* AlertNodeTexture@2x.png in Resources */,
 				38D424831A4F6C1A00FD21A2 /* G6.m4a in Resources */,
 				38C122341A2C1CB500224B33 /* Grid-72.json in Resources */,
 				38BDDCF61A20FBA2005035EE /* Grid-57.json in Resources */,
@@ -1435,7 +1431,7 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				ONLY_ACTIVE_ARCH = YES;
 				PRODUCT_NAME = Hexus;
-				PROVISIONING_PROFILE = "4d085b33-82d6-4c39-ac8d-940ca7f99ec1";
+				PROVISIONING_PROFILE = "";
 				TARGETED_DEVICE_FAMILY = 1;
 			};
 			name = Debug;
@@ -1453,7 +1449,7 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				ONLY_ACTIVE_ARCH = YES;
 				PRODUCT_NAME = Hexus;
-				PROVISIONING_PROFILE = "4d085b33-82d6-4c39-ac8d-940ca7f99ec1";
+				PROVISIONING_PROFILE = "";
 				TARGETED_DEVICE_FAMILY = 1;
 			};
 			name = Release;

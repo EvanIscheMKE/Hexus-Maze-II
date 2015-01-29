@@ -123,13 +123,13 @@ static const NSInteger numberOfPages = 3;
 
 - (void)_changeButtonStateForDismissal
 {
-    [self.navigate addTarget:self action:@selector(_nextPage) forControlEvents:UIControlEventTouchUpInside];
+    [self.navigate addTarget:self action:@selector(_returnHome) forControlEvents:UIControlEventTouchUpInside];
     [self.navigate setTitle:NSLocalizedString(@"begin", nil) forState:UIControlStateNormal];
 }
 
 - (void)_returnHome
 {
-    [self.navigationController popToRootViewControllerAnimated:NO];
+    [self.presentingViewController dismissViewControllerAnimated:YES completion:nil];
 }
 
 @end

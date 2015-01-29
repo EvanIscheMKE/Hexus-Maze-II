@@ -21,18 +21,6 @@
     NSDictionary *_metrics;
 }
 
-#pragma mark - Layer Class
-
-+ (Class)layerClass
-{
-    return [CAGradientLayer class];
-}
-
-- (CAGradientLayer *)gradientLayer
-{
-    return (CAGradientLayer *)self.layer;
-}
-
 #pragma mark - Custom Initalizers
 
 + (instancetype)menuBarWithActivityImage:(UIImage *)activityImage;
@@ -53,11 +41,7 @@
 
 - (void)_setup
 {
-    self.gradientLayer.locations = @[@0,@.5,@.8f,@.95f];
-    self.gradientLayer.colors    = @[(id)[UIColor flatWetAsphaltColor].CGColor,
-                                     (id)[[UIColor flatWetAsphaltColor]colorWithAlphaComponent:.8f].CGColor,
-                                     (id)[[UIColor flatWetAsphaltColor]colorWithAlphaComponent:.4f].CGColor,
-                                     (id)[[UIColor flatWetAsphaltColor]colorWithAlphaComponent:.2f].CGColor];
+    self.backgroundColor = [UIColor clearColor];
     
      self.navigationButton = [UIButton buttonWithType:UIButtonTypeCustom];
     [self.navigationButton setBackgroundImage:[UIImage imageNamed:@"Grid"] forState:UIControlStateNormal];
@@ -65,7 +49,6 @@
      self.activityButton = [UIButton buttonWithType:UIButtonTypeCustom];
     [self.activityButton setBackgroundImage:self.activityImage forState:UIControlStateNormal];
     
-
     for (UIButton *subView in @[self.navigationButton, self.activityButton]) {
         subView.adjustsImageWhenDisabled = NO;
         subView.adjustsImageWhenHighlighted = NO;
@@ -121,13 +104,6 @@
     } else {
         //Tear Down
     }
-}
-
-#pragma mark - Override Setters
-
-- (void)setBackgroundColor:(UIColor *)backgroundColor
-{
-    NSAssert(NO, @"Use CAGradientLayer's location and colors");
 }
 
 - (void)setActivityImage:(UIImage *)activityImage
