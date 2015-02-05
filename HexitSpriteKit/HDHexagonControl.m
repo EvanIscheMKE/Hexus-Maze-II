@@ -29,9 +29,9 @@ static const CGFloat kSmallPageSpacing     = 28.0f;
     CGRect bounds = CGRectMake(0.0f, 0.0f, CGRectGetWidth(frame), CGRectGetHeight(frame));
     if (self = [super initWithFrame:bounds]) {
         
-        _kPageSize        = [HDHelper isWideScreen] ? kLargerPageSize : kSmallPageSize;
+        _kPageSize        = [HDHelper isWideScreen] ? kLargerPageSize       : kSmallPageSize;
         _kCurrentPageSize = [HDHelper isWideScreen] ? kLargeCurrentPageSize : kSmallCurrentPageSize;
-        _kPageSpacing     = [HDHelper isWideScreen] ? kLargePageSpacing : kSmallPageSpacing;
+        _kPageSpacing     = [HDHelper isWideScreen] ? kLargePageSpacing     : kSmallPageSpacing;
         
         self.backgroundColor = [UIColor flatWetAsphaltColor];
         self.currentPageTintColor = [UIColor whiteColor];

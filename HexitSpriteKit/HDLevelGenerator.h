@@ -15,12 +15,8 @@ typedef  enum {
 } HDLevelGeneratorDifficulty;
 
 typedef void(^CallbackBlock)(NSDictionary *dictionary, NSError *error);
-
 @interface HDLevelGenerator : NSObject
-
 @property (nonatomic, assign) NSUInteger numberOfTiles;
 @property (nonatomic, assign) HDLevelGeneratorDifficulty difficulty;
-
 - (void)generateWithCompletionHandler:(CallbackBlock)handler;
-
 @end

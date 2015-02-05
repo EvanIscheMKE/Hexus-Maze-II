@@ -22,6 +22,9 @@
 		38319A5F1A79F969004CF3E2 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 38319A5A1A79F969004CF3E2 /* Localizable.strings */; };
 		38319A601A79F969004CF3E2 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 38319A5D1A79F969004CF3E2 /* Localizable.strings */; };
 		38319A641A79F98D004CF3E2 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 38319A621A79F98D004CF3E2 /* Localizable.strings */; };
+		38319A6B1A79FBE5004CF3E2 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 38319A661A79FBE5004CF3E2 /* Localizable.strings */; };
+		38319A6C1A79FBE5004CF3E2 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 38319A691A79FBE5004CF3E2 /* Localizable.strings */; };
+		385EEEFA1A7CC01400479E0F /* CAEmitterCell+HD.m in Sources */ = {isa = PBXBuildFile; fileRef = 385EEEF91A7CC01400479E0F /* CAEmitterCell+HD.m */; };
 		386CF5D91A383A98006A8381 /* AudioToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 386CF5D81A383A98006A8381 /* AudioToolbox.framework */; };
 		386CF5DB1A383AFC006A8381 /* HDScene.m in Sources */ = {isa = PBXBuildFile; fileRef = 386CF5DA1A383AFC006A8381 /* HDScene.m */; };
 		386CF6291A3982BA006A8381 /* SKEmitterNode+EmitterAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 386CF6281A3982BA006A8381 /* SKEmitterNode+EmitterAdditions.m */; };
@@ -180,12 +183,14 @@
 		38D4249A1A4F6C1A00FD21A2 /* E3.m4a in Resources */ = {isa = PBXBuildFile; fileRef = 38D424771A4F6C1A00FD21A2 /* E3.m4a */; };
 		38D4249B1A4F6C1A00FD21A2 /* D3.m4a in Resources */ = {isa = PBXBuildFile; fileRef = 38D424781A4F6C1A00FD21A2 /* D3.m4a */; };
 		38D4249C1A4F6C1A00FD21A2 /* C3.m4a in Resources */ = {isa = PBXBuildFile; fileRef = 38D424791A4F6C1A00FD21A2 /* C3.m4a */; };
+		38EE04411A80EDB100F040A6 /* libFlurry_6.0.0.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 38EE04401A80EDB100F040A6 /* libFlurry_6.0.0.a */; };
+		38EE04451A81984B00F040A6 /* Security.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 38EE04441A81984B00F040A6 /* Security.framework */; };
+		38EE04471A81985B00F040A6 /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 38EE04461A81985B00F040A6 /* SystemConfiguration.framework */; };
 		38F5A6B61A076B960036750A /* HDLevel.m in Sources */ = {isa = PBXBuildFile; fileRef = 38F5A6B51A076B960036750A /* HDLevel.m */; };
 		38F5A6B91A07F2FA0036750A /* Grid-1.json in Resources */ = {isa = PBXBuildFile; fileRef = 38F5A6B71A07F2FA0036750A /* Grid-1.json */; };
 		38F5A6BD1A08014F0036750A /* HDHexagon.m in Sources */ = {isa = PBXBuildFile; fileRef = 38F5A6BC1A08014F0036750A /* HDHexagon.m */; };
 		38F919251A37BF6A00249361 /* iAd.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 38F919241A37BF6A00249361 /* iAd.framework */; };
 		38FDF9B51A1BEF1F005CCFE1 /* HDSettingsManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 38FDF9B41A1BEF1F005CCFE1 /* HDSettingsManager.m */; };
-		C1F035251A676AB400EFD26B /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = C1F035221A676AB400EFD26B /* Localizable.strings */; };
 		C1F035421A676D0C00EFD26B /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = C1F035281A676D0C00EFD26B /* Localizable.strings */; };
 		C1F035431A676D0C00EFD26B /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = C1F0352B1A676D0C00EFD26B /* Localizable.strings */; };
 		C1F035441A676D0C00EFD26B /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = C1F0352E1A676D0C00EFD26B /* Localizable.strings */; };
@@ -225,6 +230,10 @@
 		38319A5B1A79F969004CF3E2 /* zh-Hant */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hant"; path = Localizable.strings; sourceTree = "<group>"; };
 		38319A5E1A79F969004CF3E2 /* zh-TW */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-TW"; path = Localizable.strings; sourceTree = "<group>"; };
 		38319A631A79F98D004CF3E2 /* fi */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = fi; path = Localizable.strings; sourceTree = "<group>"; };
+		38319A671A79FBE5004CF3E2 /* ar */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ar; path = Localizable.strings; sourceTree = "<group>"; };
+		38319A6A1A79FBE5004CF3E2 /* da */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = da; path = Localizable.strings; sourceTree = "<group>"; };
+		385EEEF81A7CC01400479E0F /* CAEmitterCell+HD.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "CAEmitterCell+HD.h"; sourceTree = "<group>"; };
+		385EEEF91A7CC01400479E0F /* CAEmitterCell+HD.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "CAEmitterCell+HD.m"; sourceTree = "<group>"; };
 		386CF5D81A383A98006A8381 /* AudioToolbox.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AudioToolbox.framework; path = System/Library/Frameworks/AudioToolbox.framework; sourceTree = SDKROOT; };
 		386CF5DA1A383AFC006A8381 /* HDScene.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HDScene.m; sourceTree = "<group>"; };
 		386CF6271A3982BA006A8381 /* SKEmitterNode+EmitterAdditions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "SKEmitterNode+EmitterAdditions.h"; sourceTree = "<group>"; };
@@ -293,7 +302,7 @@
 		38BDDCF71A20FBAA005035EE /* Grid-58.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = "Grid-58.json"; sourceTree = "<group>"; };
 		38BDDCF91A20FBB2005035EE /* Grid-59.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = "Grid-59.json"; sourceTree = "<group>"; };
 		38BDDCFB1A20FBB8005035EE /* Grid-60.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = "Grid-60.json"; sourceTree = "<group>"; };
-		38C0A83E1A07251700C552F1 /* Hexus.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Hexus.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		38C0A83E1A07251700C552F1 /* HEXUS.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = HEXUS.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		38C0A8421A07251700C552F1 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		38C0A8431A07251700C552F1 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		38C0A8451A07251700C552F1 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
@@ -415,6 +424,10 @@
 		38D424771A4F6C1A00FD21A2 /* E3.m4a */ = {isa = PBXFileReference; lastKnownFileType = file; path = E3.m4a; sourceTree = "<group>"; };
 		38D424781A4F6C1A00FD21A2 /* D3.m4a */ = {isa = PBXFileReference; lastKnownFileType = file; path = D3.m4a; sourceTree = "<group>"; };
 		38D424791A4F6C1A00FD21A2 /* C3.m4a */ = {isa = PBXFileReference; lastKnownFileType = file; path = C3.m4a; sourceTree = "<group>"; };
+		38EE043F1A80EDB100F040A6 /* Flurry.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Flurry.h; sourceTree = "<group>"; };
+		38EE04401A80EDB100F040A6 /* libFlurry_6.0.0.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libFlurry_6.0.0.a; sourceTree = "<group>"; };
+		38EE04441A81984B00F040A6 /* Security.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Security.framework; path = System/Library/Frameworks/Security.framework; sourceTree = SDKROOT; };
+		38EE04461A81985B00F040A6 /* SystemConfiguration.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SystemConfiguration.framework; path = System/Library/Frameworks/SystemConfiguration.framework; sourceTree = SDKROOT; };
 		38F5A6B41A076B960036750A /* HDLevel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HDLevel.h; sourceTree = "<group>"; };
 		38F5A6B51A076B960036750A /* HDLevel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HDLevel.m; sourceTree = "<group>"; };
 		38F5A6B71A07F2FA0036750A /* Grid-1.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = "Grid-1.json"; sourceTree = "<group>"; };
@@ -423,7 +436,6 @@
 		38F919241A37BF6A00249361 /* iAd.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = iAd.framework; path = System/Library/Frameworks/iAd.framework; sourceTree = SDKROOT; };
 		38FDF9B31A1BEF1F005CCFE1 /* HDSettingsManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HDSettingsManager.h; sourceTree = "<group>"; };
 		38FDF9B41A1BEF1F005CCFE1 /* HDSettingsManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HDSettingsManager.m; sourceTree = "<group>"; };
-		C1F035231A676AB400EFD26B /* fr */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = fr; path = Localizable.strings; sourceTree = "<group>"; };
 		C1F035291A676D0C00EFD26B /* de */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = de; path = Localizable.strings; sourceTree = "<group>"; };
 		C1F0352C1A676D0C00EFD26B /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = Localizable.strings; sourceTree = "<group>"; };
 		C1F0352F1A676D0C00EFD26B /* es */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = es; path = Localizable.strings; sourceTree = "<group>"; };
@@ -440,10 +452,13 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				38EE04471A81985B00F040A6 /* SystemConfiguration.framework in Frameworks */,
+				38EE04451A81984B00F040A6 /* Security.framework in Frameworks */,
+				38C122481A2C519D00224B33 /* QuartzCore.framework in Frameworks */,
 				389E94F61A47DE7F00F2DF05 /* CoreMotion.framework in Frameworks */,
 				386CF5D91A383A98006A8381 /* AudioToolbox.framework in Frameworks */,
 				38F919251A37BF6A00249361 /* iAd.framework in Frameworks */,
-				38C122481A2C519D00224B33 /* QuartzCore.framework in Frameworks */,
+				38EE04411A80EDB100F040A6 /* libFlurry_6.0.0.a in Frameworks */,
 				38C122461A2C4D8300224B33 /* AVFoundation.framework in Frameworks */,
 				38C0A86B1A0726A300C552F1 /* SpriteKit.framework in Frameworks */,
 				38BAF5281A1FE10B004D5660 /* GameKit.framework in Frameworks */,
@@ -566,6 +581,24 @@
 			);
 			name = fi.lproj;
 			path = Base.lproj/fi.lproj;
+			sourceTree = "<group>";
+		};
+		38319A651A79FBE5004CF3E2 /* ar.lproj */ = {
+			isa = PBXGroup;
+			children = (
+				38319A661A79FBE5004CF3E2 /* Localizable.strings */,
+			);
+			name = ar.lproj;
+			path = Base.lproj/ar.lproj;
+			sourceTree = "<group>";
+		};
+		38319A681A79FBE5004CF3E2 /* da.lproj */ = {
+			isa = PBXGroup;
+			children = (
+				38319A691A79FBE5004CF3E2 /* Localizable.strings */,
+			);
+			name = da.lproj;
+			path = Base.lproj/da.lproj;
 			sourceTree = "<group>";
 		};
 		38520E4A1A3CD2480057C415 /* Extras */ = {
@@ -759,7 +792,7 @@
 		38C0A83F1A07251700C552F1 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				38C0A83E1A07251700C552F1 /* Hexus.app */,
+				38C0A83E1A07251700C552F1 /* HEXUS.app */,
 				38C0A8571A07251700C552F1 /* HexitSpriteKitTests.xctest */,
 			);
 			name = Products;
@@ -784,6 +817,7 @@
 		38C0A8411A07251700C552F1 /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
+				38EE043F1A80EDB100F040A6 /* Flurry.h */,
 				C1F035261A676AD000EFD26B /* Localizations */,
 				38BDDCE71A20FACE005035EE /* Sounds */,
 				38C0A86F1A07343600C552F1 /* Categories */,
@@ -815,6 +849,9 @@
 		38C0A8671A07252E00C552F1 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				38EE04461A81985B00F040A6 /* SystemConfiguration.framework */,
+				38EE04441A81984B00F040A6 /* Security.framework */,
+				38EE04401A80EDB100F040A6 /* libFlurry_6.0.0.a */,
 				389E94F51A47DE7F00F2DF05 /* CoreMotion.framework */,
 				386CF5D81A383A98006A8381 /* AudioToolbox.framework */,
 				38F919241A37BF6A00249361 /* iAd.framework */,
@@ -838,6 +875,8 @@
 				38C0A8711A07348400C552F1 /* SKColor+HDColor.m */,
 				386CF6271A3982BA006A8381 /* SKEmitterNode+EmitterAdditions.h */,
 				386CF6281A3982BA006A8381 /* SKEmitterNode+EmitterAdditions.m */,
+				385EEEF81A7CC01400479E0F /* CAEmitterCell+HD.h */,
+				385EEEF91A7CC01400479E0F /* CAEmitterCell+HD.m */,
 			);
 			name = Categories;
 			sourceTree = "<group>";
@@ -955,18 +994,11 @@
 			name = Map;
 			sourceTree = "<group>";
 		};
-		C1F035211A676AB400EFD26B /* fr.lproj */ = {
-			isa = PBXGroup;
-			children = (
-				C1F035221A676AB400EFD26B /* Localizable.strings */,
-			);
-			name = fr.lproj;
-			path = Base.lproj/fr.lproj;
-			sourceTree = "<group>";
-		};
 		C1F035261A676AD000EFD26B /* Localizations */ = {
 			isa = PBXGroup;
 			children = (
+				38319A651A79FBE5004CF3E2 /* ar.lproj */,
+				38319A681A79FBE5004CF3E2 /* da.lproj */,
 				38319A611A79F98D004CF3E2 /* fi.lproj */,
 				38319A591A79F969004CF3E2 /* zh-Hant.lproj */,
 				38319A5C1A79F969004CF3E2 /* zh-TW.lproj */,
@@ -988,7 +1020,6 @@
 				C1F035391A676D0C00EFD26B /* pt-PT.lproj */,
 				C1F0353C1A676D0C00EFD26B /* ru.lproj */,
 				C1F0353F1A676D0C00EFD26B /* zh-Hans.lproj */,
-				C1F035211A676AB400EFD26B /* fr.lproj */,
 			);
 			name = Localizations;
 			sourceTree = "<group>";
@@ -1091,7 +1122,7 @@
 			);
 			name = HexitSpriteKit;
 			productName = HexitSpriteKit;
-			productReference = 38C0A83E1A07251700C552F1 /* Hexus.app */;
+			productReference = 38C0A83E1A07251700C552F1 /* HEXUS.app */;
 			productType = "com.apple.product-type.application";
 		};
 		38C0A8561A07251700C552F1 /* HexitSpriteKitTests */ = {
@@ -1164,6 +1195,8 @@
 				"zh-Hant",
 				"zh-TW",
 				fi,
+				ar,
+				da,
 			);
 			mainGroup = 38C0A8351A07251600C552F1;
 			productRefGroup = 38C0A83F1A07251700C552F1 /* Products */;
@@ -1242,6 +1275,7 @@
 				38BDDCD71A20F9F6005035EE /* Grid-43.json in Resources */,
 				38D424901A4F6C1A00FD21A2 /* A4.m4a in Resources */,
 				38319A641A79F98D004CF3E2 /* Localizable.strings in Resources */,
+				38319A6B1A79FBE5004CF3E2 /* Localizable.strings in Resources */,
 				38BDDCF41A20FB89005035EE /* Grid-56.json in Resources */,
 				38C67D111A0AE3A90038526C /* Grid-20.json in Resources */,
 				C1F035481A676D0C00EFD26B /* Localizable.strings in Resources */,
@@ -1280,6 +1314,7 @@
 				C1F0354A1A676D0C00EFD26B /* Localizable.strings in Resources */,
 				C1F035491A676D0C00EFD26B /* Localizable.strings in Resources */,
 				3824A5DD1A538C3D00788E0E /* Grid-84.json in Resources */,
+				38319A6C1A79FBE5004CF3E2 /* Localizable.strings in Resources */,
 				389E95041A488D8B00F2DF05 /* Grid-82.json in Resources */,
 				38C1222E1A2C1C9400224B33 /* Grid-69.json in Resources */,
 				38C122281A2C1C6000224B33 /* Grid-66.json in Resources */,
@@ -1296,7 +1331,6 @@
 				38C67D011A0ACE530038526C /* Grid-12.json in Resources */,
 				38C67D071A0ACE690038526C /* Grid-15.json in Resources */,
 				C1F035451A676D0C00EFD26B /* Localizable.strings in Resources */,
-				C1F035251A676AB400EFD26B /* Localizable.strings in Resources */,
 				38D4249B1A4F6C1A00FD21A2 /* D3.m4a in Resources */,
 				38BDDCF81A20FBAA005035EE /* Grid-58.json in Resources */,
 				38C67D171A0AE3C10038526C /* Grid-23.json in Resources */,
@@ -1365,6 +1399,7 @@
 				38C67CE81A0ABF0E0038526C /* HDConstants.m in Sources */,
 				38C67D2F1A0AF3960038526C /* NSMutableArray+UniqueAdditions.m in Sources */,
 				38C0A8441A07251700C552F1 /* main.m in Sources */,
+				385EEEFA1A7CC01400479E0F /* CAEmitterCell+HD.m in Sources */,
 				38C0A8721A07348400C552F1 /* SKColor+HDColor.m in Sources */,
 				38F5A6BD1A08014F0036750A /* HDHexagon.m in Sources */,
 				38A50F291A57C66100DE9692 /* HDTutorialParentViewController.m in Sources */,
@@ -1496,10 +1531,18 @@
 			name = Localizable.strings;
 			sourceTree = "<group>";
 		};
-		C1F035221A676AB400EFD26B /* Localizable.strings */ = {
+		38319A661A79FBE5004CF3E2 /* Localizable.strings */ = {
 			isa = PBXVariantGroup;
 			children = (
-				C1F035231A676AB400EFD26B /* fr */,
+				38319A671A79FBE5004CF3E2 /* ar */,
+			);
+			name = Localizable.strings;
+			sourceTree = "<group>";
+		};
+		38319A691A79FBE5004CF3E2 /* Localizable.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				38319A6A1A79FBE5004CF3E2 /* da */,
 			);
 			name = Localizable.strings;
 			sourceTree = "<group>";
@@ -1664,10 +1707,14 @@
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				GCC_PREFIX_HEADER = "HexitSpriteKit/Hexit-Prefix.pch";
 				INFOPLIST_FILE = HexitSpriteKit/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/HexitSpriteKit",
+				);
 				ONLY_ACTIVE_ARCH = YES;
-				PRODUCT_NAME = Hexus;
+				PRODUCT_NAME = HEXUS;
 				PROVISIONING_PROFILE = "";
 				TARGETED_DEVICE_FAMILY = 1;
 			};
@@ -1682,10 +1729,14 @@
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				GCC_PREFIX_HEADER = "HexitSpriteKit/Hexit-Prefix.pch";
 				INFOPLIST_FILE = HexitSpriteKit/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/HexitSpriteKit",
+				);
 				ONLY_ACTIVE_ARCH = YES;
-				PRODUCT_NAME = Hexus;
+				PRODUCT_NAME = HEXUS;
 				PROVISIONING_PROFILE = "";
 				TARGETED_DEVICE_FAMILY = 1;
 			};

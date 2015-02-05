@@ -50,10 +50,15 @@ static const CGFloat kSmallButtonSize  = 34.0f;
 static const CGFloat kLargeButtonSize  = 42.0f;
 static const CGFloat kButtonInset      = 20.0f;
 
+#define sound0 @"C4.m4a"
+#define sound1 @"D4.m4a"
+#define sound2 @"E4.m4a"
+#define sound3 @"win.mp3"
+
 //MarkerFelt-Thin
 #define GILLSANS(x)       [UIFont fontWithName:@"GillSans" size:x]
 #define GILLSANS_LIGHT(x) [UIFont fontWithName:@"GillSans-Light" size:x]
 
 #define LEVEL_URL(x) [NSString stringWithFormat:@"Grid-%ld",x]
 
-#define SOUNDS_TO_PRELOAD @[HDButtonSound, HDSwipeSound]
+#define SOUNDS_TO_PRELOAD @[HDButtonSound, HDSwipeSound, sound1, sound2, sound3, sound0]

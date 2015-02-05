@@ -15,3 +15,7 @@
 "tutorial2" = "Sposta una tessera attiva che tocca l'ultima tessera.";
 "tutorial3" = "Continuare fino a quando il percorso è completato!";
 "level" = "Livello %tu";
+
+"sign"  = "Nuovi livelli \n Coming Soon ..";
+"tap"   = "TAP";
+"share" = "Parts";

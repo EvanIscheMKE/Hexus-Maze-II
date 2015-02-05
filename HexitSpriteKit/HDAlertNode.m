@@ -18,13 +18,15 @@ NSString * const HDGCLeaderboardKey   = @"leaderboard";
 NSString * const HDRateKey            = @"heart";
 NSString * const HDGCAchievementsKey  = @"Achievements";
 
-static const CGFloat cornerRadius = 15.0f;
+const CGFloat TILE_DIVIDEN = 3.41;
+const CGFloat TILE_COUNT = 7;
+const CGFloat TILE_MULTIPLIER = .845f;
+
+#define TILE_SIZE [[UIScreen mainScreen] bounds].size.width/TILE_DIVIDEN
+
 @interface HDAlertNode ()
+@property (nonatomic, strong) SKLabelNode  *descriptionLabel;
 @property (nonatomic, strong) SKSpriteNode *star;
-@property (nonatomic, strong) SKSpriteNode *menuView;
-@property (nonatomic, strong) SKSpriteNode *nextButton;
-@property (nonatomic, strong) SKSpriteNode *restartButton;
-@property (nonatomic, strong) SKLabelNode *descriptionLabel;
 @end
 
 @implementation HDAlertNode {
@@ -34,8 +36,7 @@ static const CGFloat cornerRadius = 15.0f;
 
 - (instancetype)initWithSize:(CGSize)size lastLevel:(BOOL)lastLevel
 {
-    if (self = [super initWithColor:[UIColor colorWithWhite:0.0f alpha:.4f] size:size]) {
-        
+    if (self = [super initWithColor:[SKColor flatMidnightBlueColor] size:size]) {
         self.userInteractionEnabled = YES;
         self.anchorPoint = CGPointMake(.5f, .5f);
         
@@ -51,7 +52,6 @@ static const CGFloat cornerRadius = 15.0f;
                               NSLocalizedString(@"congratulation9", nil),
                               NSLocalizedString(@"congratulation10", nil),
                               NSLocalizedString(@"congratulation11", nil)];
-        
         [self _setup];
     }
     return self;
@@ -61,89 +61,96 @@ static const CGFloat cornerRadius = 15.0f;
 
 - (void)_setup
 {
-    self.menuView = [SKSpriteNode spriteNodeWithImageNamed:@"AlertNodeTexture"];
-    self.menuView.position = CGPointMake(0.0f, CGRectGetHeight(self.frame));
-    self.menuView.scale = CGRectGetWidth(self.frame)/375;
-    [self addChild:self.menuView];
+    CGFloat kPositionX[7];
+    kPositionX[0] = -TILE_SIZE/2;
+    kPositionX[1] = TILE_SIZE/2;
+    kPositionX[2] = -TILE_SIZE;
+    kPositionX[3] = 0.0f;
+    kPositionX[4] = TILE_SIZE;
+    kPositionX[5] = -TILE_SIZE/2;;
+    kPositionX[6] = TILE_SIZE/2;
     
-//    CGPoint position = CGPointZero;
-//    CGFloat buttonHeight = CGRectGetHeight(self.menuView.frame) / 5.5f;
-//    if (!_isLastLevel) {
-//        
-//        position = CGPointMake(
-//                               CGRectGetWidth(self.menuView.frame)/2  - CGRectGetWidth(self.menuView.frame)/1.5,
-//                               -(CGRectGetHeight(self.menuView.frame)/2 - buttonHeight/2)
-//                               );
-//        
-//        UIImage *nextLevelImage = [self _nextLevelImageTexture];
-//        self.nextButton = [SKSpriteNode spriteNodeWithTexture:[SKTexture textureWithImage:nextLevelImage]];
-//        self.nextButton.name        = HDNextLevelKey;
-//        self.nextButton.anchorPoint = CGPointMake(.0f, .5f);
-//        self.nextButton.position    = position;
-//      //  [self.menuView addChild:self.nextButton];
-//        
-//        position = CGPointMake(
-//                               -(CGRectGetWidth(self.menuView.frame)/2),
-//                               -(CGRectGetHeight(self.menuView.frame)/2 - buttonHeight/2)
-//                               );
-//        
-//        UIImage *menuButtonImage = [self _restartButtonTexture];
-//        self.restartButton = [SKSpriteNode spriteNodeWithTexture:[SKTexture textureWithImage:menuButtonImage]];
-//        self.restartButton.name        = HDRestartLevelKey;
-//        self.restartButton.anchorPoint = CGPointMake(.0f, .5f);
-//        self.restartButton.position    = position;
-//      //  [self.menuView addChild:self.restartButton];
-//        
-//    } else {
-//        position = CGPointMake(0.0f, -(CGRectGetHeight(self.menuView.frame)/2 - buttonHeight/2));
-//        self.restartButton = [SKSpriteNode spriteNodeWithTexture:[SKTexture textureWithImage:restartImage]];
-//        self.restartButton.name        = HDRestartLevelKey;
-//        self.restartButton.position    = position;
-//        [self.menuView addChild:self.restartButton];
-//    }
+    CGFloat kPositionY[7];
+    kPositionY[0] = -(TILE_SIZE*TILE_MULTIPLIER);
+    kPositionY[1] = -(TILE_SIZE*TILE_MULTIPLIER);
+    kPositionY[2] = 0.0f;
+    kPositionY[3] = 0.0f;
+    kPositionY[4] = 0.0f;
+    kPositionY[5] = (TILE_SIZE*TILE_MULTIPLIER);
+    kPositionY[6] = (TILE_SIZE*TILE_MULTIPLIER);
     
-    const CGFloat kSpacing = CGRectGetWidth(self.frame) / 5;
-    NSArray *imagePaths = @[HDShareKey, HDGCLeaderboardKey, HDGCAchievementsKey, HDRateKey];
-    for (int column = 0; column < 4; column++) {
+    for (NSUInteger i = 0; i < TILE_COUNT; i++) {
+        SKSpriteNode *tile = [SKSpriteNode spriteNodeWithImageNamed:@"Alert-Rate-220"];
+        tile.position = CGPointMake(kPositionX[i], kPositionY[i]);
+        tile.scale    = CGRectGetWidth([[UIScreen mainScreen] bounds])/375.0f;
+        tile.texture  = [SKTexture textureWithImageNamed:[self _textureForIndex:i]];
+        tile.name     = [self _spriteNameForIndex:i];
+        [self addChild:tile];
         
-        CGPoint nodePosition = CGPointMake( (-kSpacing * 1.5f) + (column * kSpacing), -105);
-        NSString *imagePath = [imagePaths objectAtIndex:column];
-        SKSpriteNode *node = [SKSpriteNode spriteNodeWithImageNamed:imagePath];
-        node.name        = imagePath;
-        node.position    = nodePosition;
-        [self.menuView addChild:node];
+        if (i == 5) {
+            [self _addLevelLabelToSuperView:tile];
+        }
     }
     
-    CGPoint descriptionCenter = CGPointMake(0.0f, 0.0f);
+    CGPoint descriptionCenter = CGPointMake(0.0f, -CGRectGetHeight(self.frame)/3);
     self.descriptionLabel = [SKLabelNode labelNodeWithText:[_descriptionArray objectAtIndex:arc4random() % _descriptionArray.count]];
-    self.descriptionLabel.fontName  = @"GillSans-Light";
-    self.descriptionLabel.fontSize  = CGRectGetWidth(self.frame) / 21;
+    self.descriptionLabel.fontName  = @"GillSans";
+    self.descriptionLabel.fontSize  = 26.0f;
     self.descriptionLabel.position  = descriptionCenter;
+    self.descriptionLabel.fontColor = [SKColor whiteColor];
+    self.descriptionLabel.horizontalAlignmentMode = SKLabelHorizontalAlignmentModeCenter;
+    self.descriptionLabel.verticalAlignmentMode = SKLabelVerticalAlignmentModeCenter;
+    self.descriptionLabel.scale = CGRectGetWidth([[UIScreen mainScreen] bounds])/375.0f;
+    [self addChild:self.descriptionLabel];
     
-    self.levelLabel = [[SKLabelNode alloc] initWithFontNamed:@"GillSans"];
-    self.levelLabel.position = CGPointMake(0.0f, CGRectGetHeight(self.menuView.frame) / 2.2f);
-    self.levelLabel.fontSize = 24.0f;
+    self.star = [SKSpriteNode spriteNodeWithImageNamed:@"CompletionStars"];
+    self.star.position  = CGPointMake(0.0f, CGRectGetHeight(self.frame)/2.65f);
+    self.star.scale     = 0.0f;
+    [self addChild:self.star];
     
-    for (SKLabelNode *label in @[self.descriptionLabel, self.levelLabel]) {
-        label.fontColor = [SKColor flatWetAsphaltColor];
-        label.horizontalAlignmentMode = SKLabelHorizontalAlignmentModeCenter;
-        label.verticalAlignmentMode = SKLabelVerticalAlignmentModeCenter;
-        [self.menuView addChild:label];
-    }
+    self.scale = 0.0f;
+}
+
+- (void)_addLevelLabelToSuperView:(SKNode *)node
+{
+    self.levelLabel = [SKLabelNode labelNodeWithFontNamed:@"GillSans"];
+    self.levelLabel.horizontalAlignmentMode = SKLabelHorizontalAlignmentModeCenter;
+    self.levelLabel.verticalAlignmentMode = SKLabelVerticalAlignmentModeCenter;
+    self.levelLabel.fontColor = [UIColor whiteColor];
+    self.levelLabel.fontSize = TILE_SIZE/2.25f;
+    self.levelLabel.scale = CGRectGetWidth([[UIScreen mainScreen] bounds])/375.0f;
+    [node addChild:self.levelLabel];
+}
+
+- (NSString *)_textureForIndex:(NSUInteger)index
+{
+    NSArray *paths = @[@"Alert-Restart-220",
+                       @"Alert-Next-220",
+                       @"Alert-Leaderboard-220",
+                       @"END-MIDDLE",
+                       @"Alert-Rate-220",
+                       @"Alert-Blank-220",
+                       @"Alert-Share-220"];
+    return paths[index];
+}
+
+- (NSString *)_spriteNameForIndex:(NSUInteger)index
+{
+    NSArray *paths = @[HDRestartLevelKey,
+                       HDNextLevelKey,
+                       HDGCLeaderboardKey,
+                       @"blank",
+                       HDRateKey,
+                       @"title",
+                       HDShareKey];
+    return paths[index];
 }
 
 #pragma mark - Public
 
 - (void)dismissWithCompletion:(dispatch_block_t)completion
 {
-    SKAction *upAction      = [SKAction moveToY:15.0f duration:.3f];
-    SKAction *downAction    = [SKAction moveToY:-CGRectGetHeight(self.frame) duration:upAction.duration];
-    SKAction *sequeneAction = [SKAction sequence:@[upAction, downAction,]];
-    
-    upAction.timingMode   = SKActionTimingEaseIn;
-    downAction.timingMode = upAction.timingMode;
-    
-    [self.menuView runAction:sequeneAction completion:^{
+    [self runAction:[SKAction scaleTo:0.0f duration:.3f] completion:^{
         [self removeFromParent];
         if (completion) {
             completion();
@@ -153,12 +160,15 @@ static const CGFloat cornerRadius = 15.0f;
 
 - (void)show
 {
-    SKAction *positionAction = [SKAction moveToY:0.0f duration:.5f];
-    [self.menuView runAction:positionAction completion:^{
-            if (self.delegate && [self.delegate respondsToSelector:@selector(alertNodeFinishedIntroAnimation:)]) {
-                [self.delegate alertNodeFinishedIntroAnimation:self];
-            }
-        }];
+    CGFloat scale = CGRectGetWidth([[UIScreen mainScreen] bounds])/375.0f;
+    SKAction *scaleUpAction   = [SKAction scaleTo:scale + .4f duration:.4f];
+    SKAction *scaleDownAction = [SKAction scaleTo:scale + .2f duration:.2f];
+    
+    [self runAction:[SKAction scaleTo:1.0f duration:.3f] completion:^{
+        SKAction *sequenceAction  = [SKAction sequence:@[scaleUpAction, scaleDownAction]];
+        [self.star runAction:sequenceAction];
+        [[self childNodeWithName:@"blank"] runAction:sequenceAction];
+    }];
 }
 
 #pragma mark - UIResponder

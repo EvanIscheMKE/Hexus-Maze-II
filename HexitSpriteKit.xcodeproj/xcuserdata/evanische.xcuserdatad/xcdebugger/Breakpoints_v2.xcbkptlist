@@ -106,11 +106,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "HexitSpriteKit/HDScene.m"
-            timestampString = "443591877.176024"
+            timestampString = "444788588.80601"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "338"
-            endingLineNumber = "338"
+            startingLineNumber = "327"
+            endingLineNumber = "327"
             landmarkName = "-_checkGameStateForTile:"
             landmarkType = "5">
          </BreakpointContent>
@@ -123,6 +123,16 @@
             continueAfterRunningActions = "No"
             symbolName = "[NSException raise]"
             moduleName = "">
+            <Locations>
+               <Location
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "-[NSException raise]"
+                  moduleName = "CoreFoundation"
+                  offsetFromSymbolStart = "0">
+               </Location>
+            </Locations>
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -132,11 +142,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "HexitSpriteKit/HDHelper.m"
-            timestampString = "444106819.259381"
+            timestampString = "444203791.381023"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "172"
-            endingLineNumber = "172"
+            startingLineNumber = "132"
+            endingLineNumber = "132"
             landmarkName = "+entranceAnimationWithTiles:completion:"
             landmarkType = "5">
          </BreakpointContent>
@@ -148,11 +158,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "HexitSpriteKit/HDHexagonNode.m"
-            timestampString = "442997115.668788"
+            timestampString = "444788588.80601"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "60"
-            endingLineNumber = "60"
+            startingLineNumber = "62"
+            endingLineNumber = "62"
             landmarkName = "-indicatorPositionFromHexagonType:withTouchesCount:"
             landmarkType = "5">
          </BreakpointContent>
@@ -160,16 +170,32 @@
       <BreakpointProxy
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
-            shouldBeEnabled = "No"
+            shouldBeEnabled = "Yes"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
-            filePath = "HexitSpriteKit/HDWelcomeViewController.m"
-            timestampString = "444162159.830458"
+            filePath = "HexitSpriteKit/HDSoundManager.m"
+            timestampString = "444521765.010637"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "160"
-            endingLineNumber = "160"
-            landmarkName = "-_checkForFirstRun"
+            startingLineNumber = "104"
+            endingLineNumber = "104"
+            landmarkName = "-startAudio"
+            landmarkType = "5">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "HexitSpriteKit/HDSoundManager.m"
+            timestampString = "444521766.784538"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "123"
+            endingLineNumber = "123"
+            landmarkName = "-stopAudio"
             landmarkType = "5">
          </BreakpointContent>
       </BreakpointProxy>

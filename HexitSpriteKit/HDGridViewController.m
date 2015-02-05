@@ -26,7 +26,10 @@
 static const NSUInteger kNumberOfLevelsPerPage = 28;
 static const CGFloat defaultContainerHeight   = 70.0f;
 static const CGFloat defaultPageControlHeight = 50.0f;
-@interface HDGridViewController () <UIScrollViewDelegate ,HDGridScrollViewDelegate, HDLevelsViewControllerDelegate, HDGridScrollViewDatasource>
+@interface HDGridViewController () <UIScrollViewDelegate,
+                                    HDGridScrollViewDelegate,
+                                    HDLevelsViewControllerDelegate,
+                                    HDGridScrollViewDatasource>
 @property (nonatomic, getter=isNavigationBarHidden, assign) BOOL navigationBarHidden;
 @property (nonatomic, strong) HDGridScrollView *scrollView;
 @property (nonatomic, strong) HDHexagonControl *control;
@@ -96,6 +99,8 @@ static const CGFloat defaultPageControlHeight = 50.0f;
 {
     NSUInteger numberOfPages = [self pageViewsForGridScrollView:self.scrollView].count;
     
+    HDContainerViewController *container = self.containerViewController;
+    
     CGRect scrollViewRect = CGRectInset(self.view.bounds, 0.0f, CGRectGetHeight(self.view.bounds) / 7.4f);
     self.scrollView = [[HDGridScrollView alloc] initWithFrame:scrollViewRect];
     self.scrollView.delegate = self;
@@ -113,27 +118,12 @@ static const CGFloat defaultPageControlHeight = 50.0f;
     self.control.frame = CGRectIntegral(self.control.frame);
     [self.view addSubview:self.control];
     
-    HDContainerViewController *container = self.containerViewController;
-    
     CGRect menuBarFrame = CGRectMake(0.0f, -defaultContainerHeight, CGRectGetWidth(self.view.bounds), defaultContainerHeight);
     self.menuBar = [HDMenuBar menuBarWithActivityImage:[UIImage imageNamed:@"Play"]];
     self.menuBar.frame = menuBarFrame;
-    [self.menuBar.navigationButton addTarget:container action:@selector(toggleMenuViewController) forControlEvents:UIControlEventTouchUpInside];
+    [self.menuBar.navigationButton addTarget:container action:@selector(toggleMenuViewController)forControlEvents:UIControlEventTouchUpInside];
+    [self.menuBar.activityButton addTarget:self action:@selector(_beginUnlockedLevel:) forControlEvents:UIControlEventTouchUpInside];
     [self.view addSubview:self.menuBar];
-}
-
-- (IBAction)_toggleSound:(UIButton *)sender
-{
-    [sender setSelected:!sender.selected];
-    [[HDSettingsManager sharedManager] setSound:![[HDSettingsManager sharedManager] sound]];
-    [[HDSoundManager sharedManager]    playSound:HDButtonSound];
-}
-
-- (IBAction)_toggleMusic:(UIButton *)sender
-{
-    [sender setSelected:!sender.selected];
-    [[HDSettingsManager sharedManager] setMusic:![[HDSettingsManager sharedManager] music]];
-    [[HDSoundManager sharedManager] setPlayLoop:[[HDSettingsManager sharedManager] music]];
 }
 
 - (IBAction)_beginUnlockedLevel:(id)sender

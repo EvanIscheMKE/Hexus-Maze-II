@@ -13,47 +13,7 @@
 #import "HDHexagonNode.h"
 #import "UIColor+FlatColors.h"
 
-NSString *descriptionFromLevelIdx(NSUInteger levelIdx){
-    switch (levelIdx) {
-        case HDLevelTypeDoubles:
-            return NSLocalizedString(@"level1", nil);
-            break;
-        case HDLevelTypeCount:
-            return NSLocalizedString(@"level2", nil);
-            break;
-        case HDLevelTypeTriples:
-            return NSLocalizedString(@"level3", nil);
-            break;
-        case HDLevelTypeEnd:
-            return NSLocalizedString(@"level4", nil);
-            break;
-    }
-    return @"";
-};
-
 @implementation HDHelper
-
-+ (UIImage *)iconForType:(HDLevelType)type
-{
-    switch (type) {
-        case HDLevelTypeDoubles:
-            return [UIImage imageNamed:@"Double-260"];
-        case HDLevelTypeTriples:
-            return [UIImage imageNamed:@"Triple-260"];
-        case HDLevelTypeEnd:
-            return [UIImage imageNamed:@"End-260"];
-        case HDLevelTypeCount:
-            return [UIImage imageNamed:@"Count-260"];
-    }
-    NSAssert(NO, @"%@",NSStringFromSelector(_cmd));
-    return nil;
-}
-
-+ (CGFloat)sideMenuOffsetX
-{
-    CGFloat buttonSize = kLargeButtonSize * (CGRectGetWidth([[UIScreen mainScreen] bounds])/ 375);
-    return  CGRectGetWidth([[UIScreen mainScreen] bounds]) - (buttonSize + (kButtonInset * 2));
-}
 
 + (BOOL)isWideScreen
 {

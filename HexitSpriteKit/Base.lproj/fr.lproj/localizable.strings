@@ -9,3 +9,14 @@
 "congratulation9" = "Vous avez à peu près maîtrisé ça!";
 "congratulation10" = "BON TRAVAIL!";
 "congratulation11" = "Maintenant que ce est ce que je appelle un excellent travail!";
+"continue" = "Continuer";
+"begin" = "Commencez jeu";
+"tutorial1" = "Commencez par sélectionner un carreau blanc.";
+"tutorial2" = "Déplacer vers une tuile active qui est en contact avec la dernière tuile.";
+"tutorial3" = "Continuez jusqu'à ce que le chemin est terminé!";
+"level" = "Niveau %tu";
+
+"sign"  = "Nouveaux niveaux \n Prochainement ..";
+"tap"   = "TAP";
+"share" = "Parts";
+

@@ -7,6 +7,7 @@
 //
 
 @import CoreMotion;
+@import QuartzCore;
 
 #import "HDLockedView.h"
 #import "UIColor+FlatColors.h"
@@ -63,7 +64,6 @@ static const CGFloat kPadding = 4.0f;
 
 - (void)_setup
 {
-    
     UIImageView *pictureFrame = [[UIImageView alloc] initWithImage:[self _levelsComingSoonSign]];
     [pictureFrame setCenter:CGPointMake(CGRectGetMidX(self.bounds), CGRectGetHeight(self.bounds)/3)];
     pictureFrame.layer.allowsEdgeAntialiasing = YES;
@@ -78,7 +78,7 @@ static const CGFloat kPadding = 4.0f;
                                   CGRectGetHeight(pictureFrame.bounds)/1.5f
                                   );
     UILabel *pictureFramesMessage = [[UILabel alloc] initWithFrame:signFrame];
-    pictureFramesMessage.text = NSLocalizedString(@"New Levels \n Coming Soon..", nil);
+    pictureFramesMessage.text = NSLocalizedString(@"sign", nil);
     pictureFramesMessage.numberOfLines = 0;
     pictureFramesMessage.textColor     = [UIColor whiteColor];
     pictureFramesMessage.font          = [UIFont fontWithName:@"MarkerFelt-Thin" size:CGRectGetWidth(self.bounds)/9];

@@ -13,13 +13,10 @@
 @property (nonatomic, getter=isPlayingLoop, assign) BOOL playLoop;
 @property (nonatomic, strong) NSMutableDictionary *sounds;
 + (HDSoundManager *)sharedManager;
-
 - (void)playSound:(NSString *)soundName;
 - (void)preloadSounds:(NSArray *)preloadedSounds;
 - (void)preloadLoopWithName:(NSString *)filename;
-
 + (BOOL)isOtherAudioPlaying;
 - (void)startAudio;
 - (void)stopAudio;
-
 @end

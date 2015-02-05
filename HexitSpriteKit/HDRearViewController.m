@@ -43,41 +43,7 @@
     }
 }
 
-- (IBAction)_toggleSound:(UIButton *)sender
-{
-    [sender setSelected:!sender.selected];
-    [[HDSettingsManager sharedManager] setSound:![[HDSettingsManager sharedManager] sound]];
-    [[HDSoundManager sharedManager] playSound:HDButtonSound];
-}
-
-- (IBAction)_toggleMusic:(UIButton *)sender
-{
-    [sender setSelected:!sender.selected];
-    [[HDSettingsManager sharedManager] setMusic:![[HDSettingsManager sharedManager] music]];
-    [[HDSoundManager sharedManager] setPlayLoop:[[HDSettingsManager sharedManager] music]];
-}
-
 #pragma mark - Private
-
-- (void)_hideGameInterface
-{
-    [self.top setBackgroundImage:[UIImage imageNamed:@"LeaderboardIcon@2x.png"]         forState:UIControlStateNormal];
-    [self.bottom setBackgroundImage:[UIImage imageNamed:@"AchievementsIcon@2x.png"]     forState:UIControlStateNormal];
-    [self.top    removeTarget:ADelegate action:@selector(restartCurrentLevel:)          forControlEvents:UIControlEventTouchUpInside];
-    [self.bottom removeTarget:ADelegate action:@selector(animateToLevelViewController:) forControlEvents:UIControlEventTouchUpInside];
-    [self.top    addTarget:ADelegate action:@selector(openAcheivementsController:)      forControlEvents:UIControlEventTouchUpInside];
-    [self.bottom addTarget:ADelegate action:@selector(openLeaderboardController:)       forControlEvents:UIControlEventTouchUpInside];
-}
-
-- (void)_showGameInterface
-{
-    [self.top setBackgroundImage:[UIImage imageNamed:@"LeaderboardIcon@2x.png"]       forState:UIControlStateNormal];
-    [self.bottom setBackgroundImage:[UIImage imageNamed:@"AchievementsIcon@2x.png"]   forState:UIControlStateNormal];
-    [self.top    removeTarget:ADelegate action:@selector(openAcheivementsController:) forControlEvents:UIControlEventTouchUpInside];
-    [self.bottom removeTarget:ADelegate action:@selector(openLeaderboardController:)  forControlEvents:UIControlEventTouchUpInside];
-    [self.top    addTarget:ADelegate action:@selector(restartCurrentLevel:)           forControlEvents:UIControlEventTouchUpInside];
-    [self.bottom addTarget:ADelegate action:@selector(animateToLevelViewController:)  forControlEvents:UIControlEventTouchUpInside];
-}
 
 - (void)_setup
 {
@@ -108,12 +74,12 @@
         
         switch (row) {
             case 0:
-                 self.top = square;
+                self.top = square;
                 [self.top setBackgroundImage:[UIImage imageNamed:@"LeaderboardIcon"]  forState:UIControlStateNormal];
                 [self.top addTarget:ADelegate action:@selector(openAcheivementsController:)  forControlEvents:UIControlEventTouchUpInside];
                 break;
             case 1:
-                 self.bottom = square;
+                self.bottom = square;
                 [self.bottom setBackgroundImage:[UIImage imageNamed:@"AchievementsIcon"] forState:UIControlStateNormal];
                 [self.bottom addTarget:ADelegate action:@selector(openLeaderboardController:)   forControlEvents:UIControlEventTouchUpInside];
                 break;
@@ -131,6 +97,40 @@
                 break;
         }
     }
+}
+
+- (IBAction)_toggleSound:(UIButton *)sender
+{
+    [sender setSelected:!sender.selected];
+    [[HDSettingsManager sharedManager] setSound:![[HDSettingsManager sharedManager] sound]];
+    [[HDSoundManager sharedManager] playSound:HDButtonSound];
+}
+
+- (IBAction)_toggleMusic:(UIButton *)sender
+{
+    [sender setSelected:!sender.selected];
+    [[HDSettingsManager sharedManager] setMusic:![[HDSettingsManager sharedManager] music]];
+    [[HDSoundManager sharedManager] setPlayLoop:[[HDSettingsManager sharedManager] music]];
+}
+
+- (void)_hideGameInterface
+{
+    [self.top setBackgroundImage:[UIImage imageNamed:@"LeaderboardIcon"]                forState:UIControlStateNormal];
+    [self.bottom setBackgroundImage:[UIImage imageNamed:@"AchievementsIcon"]            forState:UIControlStateNormal];
+    [self.top    removeTarget:ADelegate action:@selector(restartCurrentLevel:)          forControlEvents:UIControlEventTouchUpInside];
+    [self.bottom removeTarget:ADelegate action:@selector(animateToLevelViewController:) forControlEvents:UIControlEventTouchUpInside];
+    [self.top    addTarget:ADelegate action:@selector(openAcheivementsController:)      forControlEvents:UIControlEventTouchUpInside];
+    [self.bottom addTarget:ADelegate action:@selector(openLeaderboardController:)       forControlEvents:UIControlEventTouchUpInside];
+}
+
+- (void)_showGameInterface
+{
+    [self.top    setBackgroundImage:[UIImage imageNamed:@"RestartCurrentGame"]        forState:UIControlStateNormal];
+    [self.bottom setBackgroundImage:[UIImage imageNamed:@"ReturnToMenu"]              forState:UIControlStateNormal];
+    [self.top    removeTarget:ADelegate action:@selector(openAcheivementsController:) forControlEvents:UIControlEventTouchUpInside];
+    [self.bottom removeTarget:ADelegate action:@selector(openLeaderboardController:)  forControlEvents:UIControlEventTouchUpInside];
+    [self.top    addTarget:ADelegate action:@selector(restartCurrentLevel:)           forControlEvents:UIControlEventTouchUpInside];
+    [self.bottom addTarget:ADelegate action:@selector(animateToLevelViewController:)  forControlEvents:UIControlEventTouchUpInside];
 }
 
 @end

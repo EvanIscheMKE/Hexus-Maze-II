@@ -15,3 +15,7 @@
 "tutorial2" = "Mover-se para uma telha ativa que está tocando a última peça.";
 "tutorial3" = "Continue até que o caminho é realizado com sucesso!";
 "level" = "Nível %tu";
+
+"sign"  = "Novos Níveis \n Em breve ..";
+"tap"   = "Tap";
+"share" = "Share";

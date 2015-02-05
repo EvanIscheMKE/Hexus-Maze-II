@@ -13,17 +13,13 @@
 
 typedef void(^CallbackBlock)(NSDictionary *dictionary, NSError *error);
 @implementation HDGridManager {
-    
     NSMutableDictionary *_levelCache;
     NSMutableArray *_hexagons;
-    
     HDHexagon *_hexagon[18][9];
     NSNumber *_grid[18][9];
-    
 }
 
-- (instancetype)initWithLevelIndex:(NSInteger)index
-{
+- (instancetype)initWithLevelIndex:(NSInteger)index {
     return [self initWithLevel:LEVEL_URL((long)index)];
 }
 
@@ -42,20 +38,17 @@ typedef void(^CallbackBlock)(NSDictionary *dictionary, NSError *error);
     if (_hexagons) {
         return _hexagons;
     }
-        _hexagons = [NSMutableArray array];
-        
-        for (NSInteger row = 0; row < NumberOfRows; row++) {
-            
-            for (NSInteger column = 0; column < NumberOfColumns; column++) {
-                
-                if (_grid[row][column] != nil) {
-                    
-                    HDHexagon *hexagon = [self _createHexagonAtRow:row column:column type:[_grid[row][column]intValue]];
-                    _hexagon[row][column] = hexagon;
-                    [_hexagons addObject:hexagon];
-                }
+    
+    _hexagons = [NSMutableArray array];
+    for (NSInteger row = 0; row < NumberOfRows; row++) {
+        for (NSInteger column = 0; column < NumberOfColumns; column++) {
+            if (_grid[row][column] != nil) {
+                HDHexagon *hexagon = [self _createHexagonAtRow:row column:column type:[_grid[row][column] intValue]];
+                _hexagon[row][column] = hexagon;
+                [_hexagons addObject:hexagon];
             }
         }
+    }
     return _hexagons;
 }
 
@@ -74,17 +67,13 @@ typedef void(^CallbackBlock)(NSDictionary *dictionary, NSError *error);
 - (void)_layoutInitialGrid:(NSDictionary *)grid
 {
     for (int row = 0; row < NumberOfRows; row++) {
-        
         NSArray *rows = [grid[HDHexGridKey] objectAtIndex:row];
-        
         for (int column = 0; column < NumberOfColumns; column++) {
-            
-            NSNumber *columns = [rows objectAtIndex:column];
-            
+            NSNumber *index = [rows objectAtIndex:column];
             NSInteger tileRow = NumberOfRows - row - 1;
             
-            if ([columns integerValue] != 0) {
-                _grid[tileRow][column] = columns;
+            if ([index integerValue] != 0) {
+                _grid[tileRow][column] = index;
             }
         }
     }
@@ -93,18 +82,17 @@ typedef void(^CallbackBlock)(NSDictionary *dictionary, NSError *error);
 - (NSDictionary *)_levelWithFileName:(NSString *)filename
 {
     __block NSDictionary *gridInfo;
-    [self _loadJSON:filename withCallback:^(NSDictionary *dictionary, NSError *error) {
+    [self _loadJSON:filename callback:^(NSDictionary *dictionary, NSError *error) {
         if (!error) {
             gridInfo = [[NSDictionary alloc] initWithDictionary:dictionary];
         } else {
             NSLog(@"%@",[error localizedDescription]);
         }
     }];
-    
     return gridInfo;
 }
 
-- (void)_loadJSON:(NSString *)filename withCallback:(CallbackBlock)callback
+- (void)_loadJSON:(NSString *)filename callback:(CallbackBlock)callback
 {
     if (_levelCache[filename]) {
         if (callback) {

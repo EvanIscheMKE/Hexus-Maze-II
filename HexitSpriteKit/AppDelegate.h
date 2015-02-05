@@ -14,7 +14,6 @@
 - (void)presentGameCenterControllerForState:(GKGameCenterViewControllerState)state;
 - (void)presentTutorialViewControllerForFirstRun;
 - (void)presentShareViewControllerWithLevelIndex:(NSInteger)index;
-- (void)presentGameControllerToPlayLevel:(NSInteger)level;
 - (void)presentLevelViewController;
 - (void)beginGameWithLevel:(NSInteger)level;
 - (void)rateHEXUS;

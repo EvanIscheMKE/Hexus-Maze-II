@@ -12,6 +12,7 @@
 #import "HDHelper.h"
 #import "HDHexagonButton.h"
 #import "UIColor+FlatColors.h"
+#import "CAEmitterCell+HD.h"
 
 @implementation HDHexagonButton
 
@@ -27,10 +28,12 @@
 
 - (void)_setup
 {
-    self.titleLabel.textAlignment = NSTextAlignmentCenter;
-    self.titleLabel.font = GILLSANS(CGRectGetWidth(self.bounds)/3);
-    self.imageView.clipsToBounds = NO;
-    self.imageView.contentMode = UIViewContentModeCenter;
+    self.titleLabel.textAlignment    = NSTextAlignmentCenter;
+    self.titleLabel.font             = GILLSANS(CGRectGetWidth(self.bounds)/3);
+    self.imageView.clipsToBounds     = NO;
+    self.imageView.contentMode       = UIViewContentModeCenter;
+    self.adjustsImageWhenDisabled    = NO;
+    self.adjustsImageWhenHighlighted = NO;
     
     CGAffineTransform scale =  CGAffineTransformMakeScale(CGRectGetWidth(self.bounds) / 64.5f, CGRectGetWidth(self.bounds)/ 64.5f);
     self.imageView.transform  = scale;

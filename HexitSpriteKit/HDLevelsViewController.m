@@ -48,7 +48,6 @@ static const CGFloat kTileHeightInsetMultiplier = .855f;
             }
         }
     }
-    
     [CATransaction commit];
 }
 
@@ -70,7 +69,6 @@ static const CGFloat kTileHeightInsetMultiplier = .855f;
         scale.removedOnCompletion = NO;
         scale.fillMode = kCAFillModeForwards;
         [hexa.layer addAnimation:scale forKey:scale.keyPath];
-    
     }
     [CATransaction commit];
 }
@@ -81,8 +79,7 @@ static const CGFloat kTileHeightInsetMultiplier = .855f;
 
 @end
 
-@implementation HDLevelsViewController
-{
+@implementation HDLevelsViewController {
     HDLevelsContainerView *_containerView;
     __weak HDLevelsView *_levelsView;
 }
@@ -162,7 +159,9 @@ static const CGFloat kTileHeightInsetMultiplier = .855f;
 
 - (void)_beginGame:(HDHexagonButton *)sender
 {
-    [self.delegate levelsViewController:self didSelectLevel:sender.tag];
+    if (self.delegate && [self.delegate respondsToSelector:@selector(levelsViewController:didSelectLevel:)]) {
+         [self.delegate levelsViewController:self didSelectLevel:sender.tag];
+    }
 }
 
 @end

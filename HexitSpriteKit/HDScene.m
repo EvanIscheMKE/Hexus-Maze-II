@@ -59,6 +59,7 @@ static const CGFloat kTileHeightInsetMultiplier = .845f;
 - (id)initWithSize:(CGSize)size
 {
     if (self = [super initWithSize:size]) {
+        
         self.countDownSoundIndex = NO;
         self.backgroundColor = [SKColor flatWetAsphaltColor];
         
@@ -67,6 +68,7 @@ static const CGFloat kTileHeightInsetMultiplier = .845f;
         
         self.gameLayer = [SKNode node];
         [self addChild:self.gameLayer];
+        
     }
     return self;
 }
@@ -225,23 +227,19 @@ static const CGFloat kTileHeightInsetMultiplier = .845f;
             if (hexagon.type == HDHexagonTypeNone) {
                 
                 [hexagon.node runAction:rotation];
-                
                 SKEmitterNode *emitter = [SKEmitterNode hexaEmitterWithColor:[SKColor flatAlizarinColor] scale:1.5f];
                 emitter.position = hexagon.node.position;
                 [self insertChild:emitter atIndex:0];
                 
                 NSTimeInterval delayInSeconds = emitter.numParticlesToEmit / emitter.particleBirthRate +
                                                 emitter.particleLifetime + emitter.particleLifetimeRange / 2;
+                [emitter performSelector:@selector(removeFromParent) withObject:nil afterDelay:delayInSeconds];
                 
                 index++;
-                
-                [emitter performSelector:@selector(removeFromParent) withObject:nil afterDelay:delayInSeconds];
             }
         }
-        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(rotation.duration * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-            self.animating = NO;
-            [self restart];
-        });
+        [self performSelector:@selector(setAnimating:) withObject:0   afterDelay:rotation.duration];
+        [self performSelector:@selector(restart)       withObject:nil afterDelay:rotation.duration];
     }
 }
 
@@ -297,51 +295,40 @@ static const CGFloat kTileHeightInsetMultiplier = .845f;
 - (void)_checkGameStateForTile:(HDHexagon *)tile
 {
     if ([self _inPlayTileCount] == 0) {
-        // Won Game
         
         self.animating = YES;
         [tile.node runAction:[SKAction scaleTo:.9f duration:.100f] completion:^{
             [tile.node runAction:[SKAction scaleTo:1.0f duration:.100f] completion:^{
-                
                 [self runAction:self.completionZing withKey:HDSoundActionKey];
                 
                 BOOL lastLevel = (_levelIndex == [[HDMapManager sharedManager] numberOfLevels]);
                 HDAlertNode *alertNode = [[HDAlertNode alloc] initWithSize:self.frame.size lastLevel:lastLevel];
-                alertNode.levelLabel.text = [NSString stringWithFormat:NSLocalizedString(@"level", nil), _levelIndex];
+                alertNode.levelLabel.text = [NSString stringWithFormat:@"%zd", self.levelIndex];
                 alertNode.delegate = self;
                 alertNode.position = CGPointMake(CGRectGetWidth(self.frame) / 2, CGRectGetHeight(self.frame) / 2);
                 [self addChild:alertNode];
                 [alertNode show];
-                
             }];
         }];
         
+        [[HDMapManager sharedManager] completedLevelAtIndex:self.levelIndex-1];
         if (self.delegate && [self.delegate respondsToSelector:@selector(scene:gameEndedWithCompletion:)]) {
             [self.delegate scene:self gameEndedWithCompletion:YES];
         }
-        
-        [[HDMapManager sharedManager] completedLevelAtIndex:self.levelIndex-1];
-        
         return;
-        
     } else if ([self _inPlayTileCount] == 1 && self.includeEndTile) {
-        
         for (HDHexagon *hexagon in _hexagons) {
             if (hexagon.type == HDHexagonTypeEnd) {
                 hexagon.state = HDHexagonStateEnabled;
                 break;
             }
         }
-        
     } else if ([self isGameOverAfterPlacingTile:tile]) {
-        // Lost Game
         if (self.delegate && [self.delegate respondsToSelector:@selector(scene:gameEndedWithCompletion:)]) {
             [self.delegate scene:self gameEndedWithCompletion:NO];
         }
     }
-    [tile.node runAction:[SKAction rotateByAngle:M_PI*2 duration:.300f] completion:^{
-        //[tile.node runAction:[SKAction scaleTo:1.0f duration:.1f]];
-    }];
+    [tile.node runAction:[SKAction rotateByAngle:M_PI*2 duration:.300f]];
 }
 
 - (BOOL)isGameOverAfterPlacingTile:(HDHexagon *)hexagon
@@ -398,7 +385,7 @@ static const CGFloat kTileHeightInsetMultiplier = .845f;
 - (BOOL)_validateNextMoveToHexagon:(HDHexagon *)toHexagon fromHexagon:(HDHexagon *)fromHexagon
 {
     if ( toHexagon.node == nil || (( ![_selectedHexagons count] ) && toHexagon.type != HDHexagonTypeStarter ))
-    return NO;
+        return NO;
     
     // Find possible moves from currently selected tile
     NSArray *possibleMoves = [HDHelper possibleMovesForHexagon:fromHexagon inArray:_hexagons];
@@ -469,7 +456,7 @@ static const CGFloat kTileHeightInsetMultiplier = .845f;
     
     // Clear out Arrays
     [_selectedHexagons removeAllObjects];
-
+    
     // Animate out
     [HDHelper completionAnimationWithTiles:_hexagons completion:^{
         // Animate restart once restored
@@ -484,7 +471,6 @@ static const CGFloat kTileHeightInsetMultiplier = .845f;
 
 - (void)performExitAnimationsWithCompletion:(dispatch_block_t)completion
 {
-    // Animate out
     [HDHelper completionAnimationWithTiles:_hexagons completion:completion];
 }
 
@@ -494,6 +480,7 @@ static const CGFloat kTileHeightInsetMultiplier = .845f;
 {
     self.animating = NO;
     
+    [self runAction:[SKAction playSoundFileNamed:HDButtonSound waitForCompletion:NO] withKey:HDSoundActionKey];
     if ([title isEqualToString:HDRestartLevelKey]) {
         [self restart];
         if (self.delegate && [self.delegate respondsToSelector:@selector(gameWillResetInScene:)]) {
@@ -502,7 +489,7 @@ static const CGFloat kTileHeightInsetMultiplier = .845f;
         [self _nextLevel];
     } else if ([title isEqualToString:HDShareKey]) {
         [ADelegate presentShareViewControllerWithLevelIndex:self.levelIndex];
-    } else if ([title isEqualToString:HDGCAchievementsKey]) {
+    }  else if ([title isEqualToString:HDGCAchievementsKey]) {
         [ADelegate presentGameCenterControllerForState:GKGameCenterViewControllerStateAchievements];
     } else if ([title isEqualToString:HDGCLeaderboardKey]) {
         [ADelegate presentGameCenterControllerForState:GKGameCenterViewControllerStateLeaderboards];

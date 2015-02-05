@@ -57,20 +57,17 @@
 
 - (void)preloadSounds:(NSArray *)soundNames
 {
-    if (![soundNames count]) {
-        return;
-    }
-    
     if (!_sounds) {
+        
         _sounds = [NSMutableDictionary dictionary];
-    }
-    
-    for (NSString *effect in soundNames) {
-        NSError *error = nil;
-        NSString *soundPath = [[[NSBundle mainBundle] resourcePath] stringByAppendingPathComponent: effect];
-        AVAudioPlayer *player = [[AVAudioPlayer alloc] initWithContentsOfURL:[NSURL fileURLWithPath:soundPath] error:&error];
-        [player prepareToPlay];
-        _sounds[effect] = player;
+        
+        for (NSString *effect in soundNames) {
+            NSError *error = nil;
+            NSString *soundPath = [[[NSBundle mainBundle] resourcePath] stringByAppendingPathComponent: effect];
+            AVAudioPlayer *player = [[AVAudioPlayer alloc] initWithContentsOfURL:[NSURL fileURLWithPath:soundPath] error:&error];
+            [player prepareToPlay];
+            _sounds[effect] = player;
+        }
     }
 }
 
@@ -103,7 +100,9 @@
         [audioSession setCategory: AVAudioSessionCategorySoloAmbient error:&error];
     }
     
-    if (!error) {
+    if (error) {
+        [self startAudio];
+    } else {
         [audioSession setActive:YES error:&error];
         self.soundSessionActive = YES;
         self.playLoop = YES;

@@ -104,7 +104,6 @@
 - (void)setFrontMostViewController:(UIViewController *)controller
 {
     UIViewController *oldController = self.frontViewController;
-    
     self.frontViewController = controller;
     
     [oldController willMoveToParentViewController:nil];

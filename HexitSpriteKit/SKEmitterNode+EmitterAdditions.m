@@ -18,7 +18,7 @@
     SKEmitterNode *emitter = [SKEmitterNode node];
     [emitter setNumParticlesToEmit:20];
     [emitter setParticleBirthRate:20];
-    [emitter setParticleTexture:[SKTexture textureWithImageNamed:@"hexagon.png"]];
+    [emitter setParticleTexture:[SKTexture textureWithImageNamed:@"hexagon"]];
     [emitter setParticleColor:skColor];
     [emitter setParticleLifetime:1.0f];
     [emitter setParticleAlphaRange:.5f];

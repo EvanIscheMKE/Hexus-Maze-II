@@ -7,9 +7,12 @@
 //
 
 @import SpriteKit;
+@import Security;
+@import MobileCoreServices;
 
 #define HEXUS_ID 945933714
 
+#import "Flurry.h"
 #import "AppDelegate.h"
 #import "HDMapManager.h"
 #import "HDSoundManager.h"
@@ -22,7 +25,8 @@
 #import "HDTutorialParentViewController.h"
 #import "HDRearViewController.h"
 
-NSString * const iOS8AppStoreURLFormat      = @"itms-apps://itunes.apple.com/app/id%d";
+NSString * const HDFLURRYAPIKEY = @"B3JYMFF9NC3R57HX825G";
+NSString * const iOS8AppStoreURLFormat = @"itms-apps://itunes.apple.com/app/id%d";
 NSString * const HDLeaderBoardIdentifierKey = @"LevelLeaderboard";
 @interface AppDelegate ()<GKGameCenterControllerDelegate, HDContainerViewControllerDelegate>
 @property (nonatomic, strong) HDContainerViewController *controller;
@@ -47,6 +51,8 @@ NSString * const HDLeaderBoardIdentifierKey = @"LevelLeaderboard";
 
 - (void)_setup
 {
+    [Flurry startSession:HDFLURRYAPIKEY];
+    
     if (![[NSUserDefaults standardUserDefaults] boolForKey:HDFirstRunKey]) {
         [[HDSettingsManager sharedManager] configureSettingsForFirstRun];
     }
@@ -63,7 +69,7 @@ NSString * const HDLeaderBoardIdentifierKey = @"LevelLeaderboard";
 {
     self.gridController = [HDGridViewController new];
     
-    self.controller = [[HDContainerViewController alloc] initWithFrontViewController:self.gridController
+    self.controller = [[HDContainerViewController alloc] initWithFrontViewController:[HDGridViewController new]
                                                                   rearViewController:[HDRearViewController new]];
     self.controller.delegate = self;
     [self.window.rootViewController presentViewController:self.controller animated:NO completion:nil];
@@ -90,9 +96,7 @@ NSString * const HDLeaderBoardIdentifierKey = @"LevelLeaderboard";
 {
     [[HDSoundManager sharedManager] playSound:HDButtonSound];
     
-    NSString *shareText = [NSString stringWithFormat:@"I just completed level %zd on Hexus",index];
-    
-    NSArray *activityItems = @[shareText, [self _screenshotOfFrontViewController]];
+    NSArray *activityItems = @[[self _screenshotOfFrontViewController]];
     UIActivityViewController *controller = [[UIActivityViewController alloc] initWithActivityItems:activityItems
                                                                              applicationActivities:nil];
     controller.excludedActivityTypes = @[UIActivityTypePostToWeibo,
@@ -146,7 +150,7 @@ NSString * const HDLeaderBoardIdentifierKey = @"LevelLeaderboard";
             if ([self.controller.frontViewController isKindOfClass:[HDGameViewController class]]) {
                 HDGameViewController *controller = (HDGameViewController *)self.controller.frontViewController;
                 [controller performExitAnimationWithCompletion:^{
-                    [self.controller setFrontMostViewController:self.gridController];
+                    [self.controller setFrontMostViewController:[HDGridViewController new]];
                 }];
             }
         }];
@@ -176,26 +180,13 @@ NSString * const HDLeaderBoardIdentifierKey = @"LevelLeaderboard";
 
 - (void)container:(HDContainerViewController *)container willChangeExpandedState:(BOOL)expanded
 {
-    if (expanded) {
-        if ([container.frontViewController isKindOfClass:[HDGameViewController class]]) {
-            [[(SKView *)container.frontViewController.view scene] setPaused:YES];
-        } else {
-            for (id subView in container.frontViewController.view.subviews) {
-                if ([subView isKindOfClass:[UIScrollView class]]) {
-                    [subView setUserInteractionEnabled:NO];
-                    break;
-                }
-            }
-        }
+    if ([container.frontViewController isKindOfClass:[HDGameViewController class]]) {
+        [[(SKView *)container.frontViewController.view scene] setPaused:expanded ? YES : NO];
     } else {
-        if ([container.frontViewController isKindOfClass:[HDGameViewController class]]) {
-            [[(SKView *)container.frontViewController.view scene] setPaused:NO];
-        } else {
-            for (id subView in container.frontViewController.view.subviews) {
-                if ([subView isKindOfClass:[UIScrollView class]]) {
-                    [subView setUserInteractionEnabled:YES];
-                    break;
-                }
+        for (id subView in container.frontViewController.view.subviews) {
+            if ([subView isKindOfClass:[UIScrollView class]]) {
+                [subView setUserInteractionEnabled:expanded ? NO : YES];
+                break;
             }
         }
     }

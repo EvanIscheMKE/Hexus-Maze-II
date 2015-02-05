@@ -20,9 +20,9 @@
 #import "HDGridManager.h"
 #import "HDScene.h"
 
-static const CGFloat defaultContainerHeight = 70.0f;
-
 #define NC [NSNotificationCenter defaultCenter]
+
+static const CGFloat defaultContainerHeight = 70.0f;
 @interface HDGameViewController () <ADBannerViewDelegate, HDSceneDelegate>
 @property (nonatomic, strong) HDMenuBar     *menuBar;
 @property (nonatomic, strong) HDGridManager *gridManager;
@@ -101,7 +101,6 @@ static const CGFloat defaultContainerHeight = 70.0f;
     [super viewWillLayoutSubviews];
     
     SKView * skView = (SKView *)self.view;
-    skView.showsFPS = YES;
     if (!skView.scene && self.gridManager) {
         
         self.scene = [HDScene sceneWithSize:self.view.bounds.size];
@@ -230,8 +229,7 @@ static const CGFloat defaultContainerHeight = 70.0f;
 
 - (void)bannerViewDidLoadAd:(ADBannerView *)banner
 {
-    /// NO, before submitting
-    if (_isBannerVisible) {
+    if (!_isBannerVisible) {
         [UIView animateWithDuration:.300f animations:^{
             CGRect bannerFrame = self.bannerView.frame;
             bannerFrame.origin.y = CGRectGetHeight(self.view.bounds) - CGRectGetHeight(self.bannerView.bounds);

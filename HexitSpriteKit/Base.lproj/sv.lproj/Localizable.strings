@@ -14,4 +14,8 @@
 "tutorial1" = "Börja med att välja ett vitt kakel.";
 "tutorial2" = "Flytta till en aktiv bricka som vidrör den sista brickan.";
 "tutorial3" = "Fortsätt tills vägen är klar!";
-"level" = "Nivå% tu";
+"level" = "Nivå %tu";
+"sign"  = "Nya Nivåer \n Kommer snart..";
+"tap"   = "TAP";
+"share" = "Dela";
+

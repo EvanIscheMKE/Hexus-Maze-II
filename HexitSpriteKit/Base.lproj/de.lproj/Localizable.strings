@@ -15,3 +15,7 @@
 "tutorial2" = "Umzug in eine aktive Kachel, die das letzte Plättchen berührt wird.";
 "tutorial3" = "Fortfahren, bis der Weg fertig ist!";
 "level" = "Stufe %tu";
+"sign"  = "Neue Levels \n Demnächst ..";
+"tap"   = "TAP";
+"share" = "Teilen";
+

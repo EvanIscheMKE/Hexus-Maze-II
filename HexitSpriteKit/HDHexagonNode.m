@@ -24,7 +24,8 @@
 {
     SKTexture *indicatorTexture = [SKTexture textureWithImageNamed:@"indicator"];
     _indicator = [SKSpriteNode spriteNodeWithTexture:indicatorTexture];
-    _indicator.position    = CGPointZero;
+    _indicator.scale    = CGRectGetWidth([[UIScreen mainScreen] bounds])/375.0f;
+    _indicator.position = CGPointZero;
     [self addChild:_indicator];
 }
 
@@ -36,6 +37,7 @@
         // Add lock
         if (![[self children] count]) {
             SKSpriteNode *lock = [SKSpriteNode spriteNodeWithImageNamed:@"LockedEmerald.png"];
+            lock.scale = CGRectGetWidth([[UIScreen mainScreen] bounds])/375.0f;
             [self addChild:lock];
         }
     } else {

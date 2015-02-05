@@ -15,3 +15,7 @@
 "tutorial2" = "Flytt til en aktiv flis som berører den siste brikken.";
 "tutorial3" = "Fortsette inntil banen er ferdig!";
 "level" = "Nivå %tu";
+
+"sign"  = "Nye Levels \n Kommer snart..";
+"tap"   = "Tap";
+"share" = "Dele";
