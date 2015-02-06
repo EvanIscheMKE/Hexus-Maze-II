@@ -72,9 +72,7 @@
     [super willMoveToSuperview:newSuperview];
     if (newSuperview) {
         [self _setup];
-    } else {
-        [self _teardown];
-    }
+    } 
 }
 
 - (void)_setup
@@ -103,9 +101,5 @@
     }
 }
 
-- (void)_teardown
-{
-    return;
-}
 
 @end

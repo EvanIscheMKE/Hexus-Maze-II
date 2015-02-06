@@ -41,9 +41,9 @@ static const CGFloat kPadding = 4.0f;
      ^(CMDeviceMotion *motion, NSError *error) {
              double angle = atan2(CGVectorMake(-motion.gravity.x, -motion.gravity.y).dy,
                                   CGVectorMake( motion.gravity.x,  motion.gravity.y).dx);
-             [self.floatingAnchorBehavior setAnchorPoint:[self _pointFromAngle:angle
-                                                                        center:self.attachmentBehavior.anchorPoint
-                                                                        radius:CGRectGetMidY(self.bounds)]];
+             [self.floatingAnchorBehavior setAnchorPoint:[[self class] _pointFromAngle:angle
+                                                                                center:self.attachmentBehavior.anchorPoint
+                                                                                radius:CGRectGetMidY(self.bounds)]];
          
      }];
     _isStarted = YES;
@@ -67,8 +67,6 @@ static const CGFloat kPadding = 4.0f;
     UIImageView *pictureFrame = [[UIImageView alloc] initWithImage:[self _levelsComingSoonSign]];
     [pictureFrame setCenter:CGPointMake(CGRectGetMidX(self.bounds), CGRectGetHeight(self.bounds)/3)];
     pictureFrame.layer.allowsEdgeAntialiasing = YES;
-    pictureFrame.layer.borderWidth = 10.0f;
-    pictureFrame.layer.borderColor = [[UIColor clearColor] CGColor];
     [self addSubview:pictureFrame];
     
     CGRect signFrame = CGRectMake(
@@ -91,6 +89,8 @@ static const CGFloat kPadding = 4.0f;
     nailLayer.cornerRadius = CGRectGetMidX(nailLayer.bounds);
     nailLayer.masksToBounds = YES;
     nailLayer.position = CGPointMake(CGRectGetMidX(self.bounds), CGRectGetHeight(self.bounds)/5);
+    nailLayer.transform = CATransform3DMakeScale(CGRectGetWidth([[UIScreen mainScreen]bounds])/375.0f,
+                                                 CGRectGetWidth([[UIScreen mainScreen]bounds])/375.0f, 1);
     [self.layer addSublayer:nailLayer];
     
     self.animator = [[UIDynamicAnimator alloc] initWithReferenceView:self];
@@ -101,10 +101,8 @@ static const CGFloat kPadding = 4.0f;
     
     self.attachmentBehavior = [[UIAttachmentBehavior alloc] initWithItem:pictureFrame
                                                         offsetFromCenter:UIOffsetMake(0.0f, -CGRectGetHeight(pictureFrame.bounds)/2.5f)
-                                                        attachedToAnchor:CGPointMake(
-                                                                                     CGRectGetMidX(self.bounds),
-                                                                                     CGRectGetHeight(self.bounds)/5
-                                                                                     )];
+                                                        attachedToAnchor:CGPointMake(CGRectGetMidX(self.bounds),
+                                                                                     CGRectGetHeight(self.bounds)/5)];
     self.attachmentBehavior.damping   = 0.0f;
     self.attachmentBehavior.length    = 0.0f;
     self.attachmentBehavior.frequency = 0.0f;
@@ -112,10 +110,8 @@ static const CGFloat kPadding = 4.0f;
     
     self.floatingAnchorBehavior = [[UIAttachmentBehavior alloc] initWithItem:pictureFrame
                                                             offsetFromCenter:UIOffsetMake(0.0f, CGRectGetHeight(pictureFrame.bounds)/2)
-                                                            attachedToAnchor:CGPointMake(
-                                                                                         CGRectGetWidth(self.bounds),
-                                                                                         CGRectGetHeight(self.bounds)
-                                                                                         )];
+                                                            attachedToAnchor:CGPointMake(CGRectGetWidth(self.bounds),
+                                                                                         CGRectGetHeight(self.bounds))];
     self.floatingAnchorBehavior.damping   = 0.2f;
     self.floatingAnchorBehavior.length    = 0.0f;
     self.floatingAnchorBehavior.frequency = 1.0f;
@@ -179,7 +175,7 @@ static const CGFloat kPadding = 4.0f;
     return comingSoonSign;
 }
 
-- (CGPoint)_pointFromAngle:(double)angleInRadians center:(CGPoint)centerPoint radius:(double)radius
++ (CGPoint)_pointFromAngle:(double)angleInRadians center:(CGPoint)centerPoint radius:(double)radius
 {
     return CGPointMake(radius * cos(angleInRadians) + centerPoint.x, radius * sin(angleInRadians) + centerPoint.y);
 }

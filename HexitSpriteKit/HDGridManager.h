@@ -17,7 +17,7 @@
 - (NSInteger)hexagonTypeAtRow:(NSInteger)row column:(NSInteger)column;
 
 - (instancetype)initWithLevelIndex:(NSInteger)index;
-- (instancetype)initWithLevel:(NSString *)level;
+
 
 @end
 

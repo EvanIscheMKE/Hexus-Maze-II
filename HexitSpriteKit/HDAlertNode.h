@@ -27,4 +27,5 @@ extern NSString * const HDGCAchievementsKey;
 @optional
 - (void)alertNode:(HDAlertNode *)alertNode clickedButtonWithTitle:(NSString *)title;
 - (void)alertNodeFinishedIntroAnimation:(HDAlertNode *)alertNode;
+- (void)alertNodeWasSelected:(HDAlertNode *)alertNode;
 @end

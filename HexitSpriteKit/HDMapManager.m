@@ -47,7 +47,6 @@
     }
     
     _levels = [NSMutableArray array];
-    
     for (NSData *data in [[NSUserDefaults standardUserDefaults] objectForKey:HDDefaultLevelKey]) {
         HDLevel *level = (HDLevel *)[NSKeyedUnarchiver unarchiveObjectWithData:data];
         [_levels addObject:level];

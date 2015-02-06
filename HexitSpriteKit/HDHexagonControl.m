@@ -10,32 +10,18 @@
 #import "HDHexagonControl.h"
 #import "UIColor+FlatColors.h"
 
-static const CGFloat kLargeCurrentPageSize = 25.0f;
-static const CGFloat kLargerPageSize       = 16.0f;
-static const CGFloat kLargePageSpacing     = 34.0f;
-
-static const CGFloat kSmallCurrentPageSize = 20.0f;
-static const CGFloat kSmallPageSize        = 12.0f;
-static const CGFloat kSmallPageSpacing     = 28.0f;
-
-@implementation HDHexagonControl{
-    CGFloat _kPageSpacing;
-    CGFloat _kCurrentPageSize;
-    CGFloat _kPageSize;
-}
+#define _kCurrentPageSize 25.0f * [[UIScreen mainScreen] bounds].size.width / 375.0f
+#define _kPageSize        16.0f * [[UIScreen mainScreen] bounds].size.width / 375.0f
+#define _kPageSpacing     34.0f * [[UIScreen mainScreen] bounds].size.width / 375.0f
+@implementation HDHexagonControl
 
 - (instancetype)initWithFrame:(CGRect)frame
 {
     CGRect bounds = CGRectMake(0.0f, 0.0f, CGRectGetWidth(frame), CGRectGetHeight(frame));
     if (self = [super initWithFrame:bounds]) {
-        
-        _kPageSize        = [HDHelper isWideScreen] ? kLargerPageSize       : kSmallPageSize;
-        _kCurrentPageSize = [HDHelper isWideScreen] ? kLargeCurrentPageSize : kSmallCurrentPageSize;
-        _kPageSpacing     = [HDHelper isWideScreen] ? kLargePageSpacing     : kSmallPageSpacing;
-        
-        self.backgroundColor = [UIColor flatWetAsphaltColor];
-        self.currentPageTintColor = [UIColor whiteColor];
-        self.tintColor = [UIColor whiteColor];
+        self.backgroundColor      = [UIColor flatWetAsphaltColor];
+        self.currentPageTintColor = [UIColor flatPeterRiverColor];
+        self.tintColor            = [UIColor whiteColor];
     }
     return self;
 }
@@ -88,7 +74,7 @@ static const CGFloat kSmallPageSpacing     = 28.0f;
             hexagon = [self _bezierHexagonInFrame:rect];
             
         }
-        [hexagon setLineWidth:[HDHelper isWideScreen] ? 6.0f : 4.0f];
+        [hexagon setLineWidth:lroundf(6.0f * CGRectGetWidth(self.bounds)/375)];
         [hexagon stroke];
     }
 }

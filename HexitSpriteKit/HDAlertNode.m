@@ -18,8 +18,8 @@ NSString * const HDGCLeaderboardKey   = @"leaderboard";
 NSString * const HDRateKey            = @"heart";
 NSString * const HDGCAchievementsKey  = @"Achievements";
 
+const NSUInteger TILE_COUNT = 7;
 const CGFloat TILE_DIVIDEN = 3.41;
-const CGFloat TILE_COUNT = 7;
 const CGFloat TILE_MULTIPLIER = .845f;
 
 #define TILE_SIZE [[UIScreen mainScreen] bounds].size.width/TILE_DIVIDEN
@@ -36,7 +36,8 @@ const CGFloat TILE_MULTIPLIER = .845f;
 
 - (instancetype)initWithSize:(CGSize)size lastLevel:(BOOL)lastLevel
 {
-    if (self = [super initWithColor:[SKColor flatMidnightBlueColor] size:size]) {
+    if (self = [super initWithColor:[SKColor colorWithWhite:0.f alpha:.9f] size:size]) {
+        
         self.userInteractionEnabled = YES;
         self.anchorPoint = CGPointMake(.5f, .5f);
         
@@ -61,7 +62,7 @@ const CGFloat TILE_MULTIPLIER = .845f;
 
 - (void)_setup
 {
-    CGFloat kPositionX[7];
+    CGFloat kPositionX[TILE_COUNT];
     kPositionX[0] = -TILE_SIZE/2;
     kPositionX[1] = TILE_SIZE/2;
     kPositionX[2] = -TILE_SIZE;
@@ -70,7 +71,7 @@ const CGFloat TILE_MULTIPLIER = .845f;
     kPositionX[5] = -TILE_SIZE/2;;
     kPositionX[6] = TILE_SIZE/2;
     
-    CGFloat kPositionY[7];
+    CGFloat kPositionY[TILE_COUNT];
     kPositionY[0] = -(TILE_SIZE*TILE_MULTIPLIER);
     kPositionY[1] = -(TILE_SIZE*TILE_MULTIPLIER);
     kPositionY[2] = 0.0f;
@@ -93,8 +94,8 @@ const CGFloat TILE_MULTIPLIER = .845f;
     }
     
     CGPoint descriptionCenter = CGPointMake(0.0f, -CGRectGetHeight(self.frame)/3);
-    self.descriptionLabel = [SKLabelNode labelNodeWithText:[_descriptionArray objectAtIndex:arc4random() % _descriptionArray.count]];
-    self.descriptionLabel.fontName  = @"GillSans";
+    self.descriptionLabel = [SKLabelNode labelNodeWithFontNamed:@"GillSans"];
+    self.descriptionLabel.text      = [_descriptionArray objectAtIndex:arc4random() % _descriptionArray.count];
     self.descriptionLabel.fontSize  = 26.0f;
     self.descriptionLabel.position  = descriptionCenter;
     self.descriptionLabel.fontColor = [SKColor whiteColor];
@@ -150,7 +151,7 @@ const CGFloat TILE_MULTIPLIER = .845f;
 
 - (void)dismissWithCompletion:(dispatch_block_t)completion
 {
-    [self runAction:[SKAction scaleTo:0.0f duration:.3f] completion:^{
+    [self runAction:[SKAction fadeAlphaTo:0.0f duration:.4f] completion:^{
         [self removeFromParent];
         if (completion) {
             completion();
@@ -161,10 +162,10 @@ const CGFloat TILE_MULTIPLIER = .845f;
 - (void)show
 {
     CGFloat scale = CGRectGetWidth([[UIScreen mainScreen] bounds])/375.0f;
-    SKAction *scaleUpAction   = [SKAction scaleTo:scale + .4f duration:.4f];
-    SKAction *scaleDownAction = [SKAction scaleTo:scale + .2f duration:.2f];
+    SKAction *scaleUpAction   = [SKAction scaleTo:scale + .4f duration:.400f];
+    SKAction *scaleDownAction = [SKAction scaleTo:scale + .2f duration:.200f];
     
-    [self runAction:[SKAction scaleTo:1.0f duration:.3f] completion:^{
+    [self runAction:[SKAction scaleTo:1.0f duration:.300f] completion:^{
         SKAction *sequenceAction  = [SKAction sequence:@[scaleUpAction, scaleDownAction]];
         [self.star runAction:sequenceAction];
         [[self childNodeWithName:@"blank"] runAction:sequenceAction];
@@ -181,10 +182,12 @@ const CGFloat TILE_MULTIPLIER = .845f;
     SKNode *node = [self nodeAtPoint:location];
     if (self.delegate && [self.delegate respondsToSelector:@selector(alertNode:clickedButtonWithTitle:)]) {
         if ([node.name isEqualToString:HDNextLevelKey]||[node.name isEqualToString:HDRestartLevelKey]) {
+            [self.delegate alertNodeWasSelected:self];
             [self dismissWithCompletion:^{
                 [self.delegate alertNode:self clickedButtonWithTitle:node.name];
             }];
-        } else {
+        } else if (node.name) {
+            [self.delegate alertNodeWasSelected:self];
             [self.delegate alertNode:self clickedButtonWithTitle:node.name];
         }
     }

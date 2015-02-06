@@ -15,12 +15,18 @@ typedef void(^CallbackBlock)(NSDictionary *dictionary, NSError *error);
 @implementation HDGridManager {
     NSMutableDictionary *_levelCache;
     NSMutableArray *_hexagons;
-    HDHexagon *_hexagon[18][9];
-    NSNumber *_grid[18][9];
+    HDHexagon *_hexagon[NumberOfRows][NumberOfColumns];
+    NSNumber *_grid[NumberOfRows][NumberOfColumns];
 }
 
-- (instancetype)initWithLevelIndex:(NSInteger)index {
-    return [self initWithLevel:LEVEL_URL((long)index)];
+- (instancetype)initWithLevelIndex:(NSInteger)index
+{
+    if (self = [super init]) {
+        _levelCache = [NSMutableDictionary dictionary];
+        NSDictionary *grid = [self _levelWithFileName:LEVEL_URL((long)index)];
+        [self _layoutInitialGrid:grid];
+    }
+    return self;
 }
 
 - (instancetype)initWithLevel:(NSString *)level

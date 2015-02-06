@@ -30,6 +30,10 @@
 		386CF6291A3982BA006A8381 /* SKEmitterNode+EmitterAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 386CF6281A3982BA006A8381 /* SKEmitterNode+EmitterAdditions.m */; };
 		386CF62D1A3A250D006A8381 /* Mellowtron.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 386CF62C1A3A250D006A8381 /* Mellowtron.mp3 */; };
 		386CF62F1A3B6FA5006A8381 /* win.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 386CF62E1A3B6FA5006A8381 /* win.mp3 */; };
+		387459E81A8411F500EAEEFE /* HDHintsView.m in Sources */ = {isa = PBXBuildFile; fileRef = 387459E71A8411F500EAEEFE /* HDHintsView.m */; };
+		387459F41A84B1BD00EAEEFE /* StoreKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 387459F31A84B1BD00EAEEFE /* StoreKit.framework */; };
+		387459F71A84B1EA00EAEEFE /* HDIAdHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = 387459F61A84B1EA00EAEEFE /* HDIAdHelper.m */; };
+		387459FA1A84B5B700EAEEFE /* HDHexusIAdHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = 387459F91A84B5B700EAEEFE /* HDHexusIAdHelper.m */; };
 		3874B9A61A20736000400CEB /* HDAlertNode.m in Sources */ = {isa = PBXBuildFile; fileRef = 3874B9A51A20736000400CEB /* HDAlertNode.m */; };
 		389E94F01A44A2F000F2DF05 /* HDGridScrollView.m in Sources */ = {isa = PBXBuildFile; fileRef = 389E94EF1A44A2F000F2DF05 /* HDGridScrollView.m */; };
 		389E94F61A47DE7F00F2DF05 /* CoreMotion.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 389E94F51A47DE7F00F2DF05 /* CoreMotion.framework */; };
@@ -110,7 +114,6 @@
 		38C122411A2C2EDE00224B33 /* Swooshed.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 38C122401A2C2EDE00224B33 /* Swooshed.mp3 */; };
 		38C122461A2C4D8300224B33 /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 38C122451A2C4D8300224B33 /* AVFoundation.framework */; };
 		38C122481A2C519D00224B33 /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 38C122471A2C519D00224B33 /* QuartzCore.framework */; };
-		38C2E13B1A2671F3008D5F33 /* HDLevelGenerator.m in Sources */ = {isa = PBXBuildFile; fileRef = 38C2E13A1A2671F3008D5F33 /* HDLevelGenerator.m */; };
 		38C67CD71A0AB8D80038526C /* HDWelcomeViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 38C67CD61A0AB8D80038526C /* HDWelcomeViewController.m */; };
 		38C67CDD1A0AB9350038526C /* UIColor+FlatColors.m in Sources */ = {isa = PBXBuildFile; fileRef = 38C67CDC1A0AB9350038526C /* UIColor+FlatColors.m */; };
 		38C67CE31A0ABD050038526C /* HDHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = 38C67CE21A0ABD050038526C /* HDHelper.m */; };
@@ -240,6 +243,13 @@
 		386CF6281A3982BA006A8381 /* SKEmitterNode+EmitterAdditions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "SKEmitterNode+EmitterAdditions.m"; sourceTree = "<group>"; };
 		386CF62C1A3A250D006A8381 /* Mellowtron.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = Mellowtron.mp3; sourceTree = "<group>"; };
 		386CF62E1A3B6FA5006A8381 /* win.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = win.mp3; sourceTree = "<group>"; };
+		387459E61A8411F500EAEEFE /* HDHintsView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HDHintsView.h; sourceTree = "<group>"; };
+		387459E71A8411F500EAEEFE /* HDHintsView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HDHintsView.m; sourceTree = "<group>"; };
+		387459F31A84B1BD00EAEEFE /* StoreKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = StoreKit.framework; path = System/Library/Frameworks/StoreKit.framework; sourceTree = SDKROOT; };
+		387459F51A84B1EA00EAEEFE /* HDIAdHelper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HDIAdHelper.h; sourceTree = "<group>"; };
+		387459F61A84B1EA00EAEEFE /* HDIAdHelper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HDIAdHelper.m; sourceTree = "<group>"; };
+		387459F81A84B5B700EAEEFE /* HDHexusIAdHelper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HDHexusIAdHelper.h; sourceTree = "<group>"; };
+		387459F91A84B5B700EAEEFE /* HDHexusIAdHelper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HDHexusIAdHelper.m; sourceTree = "<group>"; };
 		3874B9A41A20736000400CEB /* HDAlertNode.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HDAlertNode.h; sourceTree = "<group>"; };
 		3874B9A51A20736000400CEB /* HDAlertNode.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HDAlertNode.m; sourceTree = "<group>"; };
 		389E94EE1A44A2F000F2DF05 /* HDGridScrollView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HDGridScrollView.h; sourceTree = "<group>"; };
@@ -342,8 +352,6 @@
 		38C122401A2C2EDE00224B33 /* Swooshed.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = Swooshed.mp3; sourceTree = "<group>"; };
 		38C122451A2C4D8300224B33 /* AVFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVFoundation.framework; path = System/Library/Frameworks/AVFoundation.framework; sourceTree = SDKROOT; };
 		38C122471A2C519D00224B33 /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
-		38C2E1391A2671F3008D5F33 /* HDLevelGenerator.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HDLevelGenerator.h; sourceTree = "<group>"; };
-		38C2E13A1A2671F3008D5F33 /* HDLevelGenerator.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HDLevelGenerator.m; sourceTree = "<group>"; };
 		38C67CD51A0AB8D80038526C /* HDWelcomeViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HDWelcomeViewController.h; sourceTree = "<group>"; };
 		38C67CD61A0AB8D80038526C /* HDWelcomeViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HDWelcomeViewController.m; sourceTree = "<group>"; };
 		38C67CDB1A0AB9350038526C /* UIColor+FlatColors.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIColor+FlatColors.h"; sourceTree = "<group>"; };
@@ -452,6 +460,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				387459F41A84B1BD00EAEEFE /* StoreKit.framework in Frameworks */,
 				38EE04471A81985B00F040A6 /* SystemConfiguration.framework in Frameworks */,
 				38EE04451A81984B00F040A6 /* Security.framework in Frameworks */,
 				38C122481A2C519D00224B33 /* QuartzCore.framework in Frameworks */,
@@ -849,6 +858,7 @@
 		38C0A8671A07252E00C552F1 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				387459F31A84B1BD00EAEEFE /* StoreKit.framework */,
 				38EE04461A81985B00F040A6 /* SystemConfiguration.framework */,
 				38EE04441A81984B00F040A6 /* Security.framework */,
 				38EE04401A80EDB100F040A6 /* libFlurry_6.0.0.a */,
@@ -945,6 +955,8 @@
 				389E953C1A496FF400F2DF05 /* HDLockedView.m */,
 				389E95D51A4C1A7F00F2DF05 /* HDMenuBar.h */,
 				389E95D61A4C1A7F00F2DF05 /* HDMenuBar.m */,
+				387459E61A8411F500EAEEFE /* HDHintsView.h */,
+				387459E71A8411F500EAEEFE /* HDHintsView.m */,
 			);
 			name = Views;
 			sourceTree = "<group>";
@@ -965,8 +977,10 @@
 				38F5A6BC1A08014F0036750A /* HDHexagon.m */,
 				38C67CE11A0ABD050038526C /* HDHelper.h */,
 				38C67CE21A0ABD050038526C /* HDHelper.m */,
-				38C2E1391A2671F3008D5F33 /* HDLevelGenerator.h */,
-				38C2E13A1A2671F3008D5F33 /* HDLevelGenerator.m */,
+				387459F51A84B1EA00EAEEFE /* HDIAdHelper.h */,
+				387459F61A84B1EA00EAEEFE /* HDIAdHelper.m */,
+				387459F81A84B5B700EAEEFE /* HDHexusIAdHelper.h */,
+				387459F91A84B5B700EAEEFE /* HDHexusIAdHelper.m */,
 			);
 			name = Model;
 			sourceTree = "<group>";
@@ -1387,6 +1401,7 @@
 				383199F61A785828004CF3E2 /* HDContainerViewController.m in Sources */,
 				386CF5DB1A383AFC006A8381 /* HDScene.m in Sources */,
 				38C0A8781A075FBA00C552F1 /* HDHexagonNode.m in Sources */,
+				387459FA1A84B5B700EAEEFE /* HDHexusIAdHelper.m in Sources */,
 				38C67CD71A0AB8D80038526C /* HDWelcomeViewController.m in Sources */,
 				38C0A8471A07251700C552F1 /* AppDelegate.m in Sources */,
 				389E95441A4A128100F2DF05 /* HDLevelsViewController.m in Sources */,
@@ -1399,6 +1414,7 @@
 				38C67CE81A0ABF0E0038526C /* HDConstants.m in Sources */,
 				38C67D2F1A0AF3960038526C /* NSMutableArray+UniqueAdditions.m in Sources */,
 				38C0A8441A07251700C552F1 /* main.m in Sources */,
+				387459F71A84B1EA00EAEEFE /* HDIAdHelper.m in Sources */,
 				385EEEFA1A7CC01400479E0F /* CAEmitterCell+HD.m in Sources */,
 				38C0A8721A07348400C552F1 /* SKColor+HDColor.m in Sources */,
 				38F5A6BD1A08014F0036750A /* HDHexagon.m in Sources */,
@@ -1407,12 +1423,12 @@
 				38C67CE31A0ABD050038526C /* HDHelper.m in Sources */,
 				38C67D281A0AEA490038526C /* HDMapManager.m in Sources */,
 				386CF6291A3982BA006A8381 /* SKEmitterNode+EmitterAdditions.m in Sources */,
-				38C2E13B1A2671F3008D5F33 /* HDLevelGenerator.m in Sources */,
 				389E953D1A496FF400F2DF05 /* HDLockedView.m in Sources */,
 				38C67D2C1A0AEBD50038526C /* HDGameCenterManager.m in Sources */,
 				38A50F2C1A57C66E00DE9692 /* HDTutorialChildViewController.m in Sources */,
 				38C1223D1A2C29DC00224B33 /* HDSoundManager.m in Sources */,
 				38ABD5F21A4153A800C4321D /* HDHexagonButton.m in Sources */,
+				387459E81A8411F500EAEEFE /* HDHintsView.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1707,7 +1723,7 @@
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				GCC_PREFIX_HEADER = "HexitSpriteKit/Hexit-Prefix.pch";
 				INFOPLIST_FILE = HexitSpriteKit/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
@@ -1729,7 +1745,7 @@
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				GCC_PREFIX_HEADER = "HexitSpriteKit/Hexit-Prefix.pch";
 				INFOPLIST_FILE = HexitSpriteKit/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",

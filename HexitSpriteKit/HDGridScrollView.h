@@ -25,9 +25,7 @@
 
 @protocol HDGridScrollViewDelegate <NSObject, UIScrollViewDelegate>
 @required
-
 - (void)gridScrollView:(HDGridScrollView *)gridScrollView selectedLevelAtIndex:(NSUInteger)levelIndex;
-
 @end
 
 @protocol HDGridScrollViewDatasource <NSObject>

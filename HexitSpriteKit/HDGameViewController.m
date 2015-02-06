@@ -18,6 +18,7 @@
 #import "HDSoundManager.h"
 #import "HDSettingsManager.h"
 #import "HDGridManager.h"
+#import "HDHintsView.h"
 #import "HDScene.h"
 
 #define NC [NSNotificationCenter defaultCenter]
@@ -27,6 +28,7 @@ static const CGFloat defaultContainerHeight = 70.0f;
 @property (nonatomic, strong) HDMenuBar     *menuBar;
 @property (nonatomic, strong) HDGridManager *gridManager;
 @property (nonatomic, strong) HDScene       *scene;
+@property (nonatomic, strong) HDHintsView   *hintsView;
 @property (nonatomic, strong) ADBannerView  *bannerView;
 @property (nonatomic, assign) BOOL pauseGame;
 @property (nonatomic, assign) BOOL navigationBarHidden;
@@ -51,14 +53,20 @@ static const CGFloat defaultContainerHeight = 70.0f;
     return self;
 }
 
-- (void)performExitAnimationWithCompletion:(dispatch_block_t)completion
-{
-    self.navigationBarHidden = YES;
+- (void)performExitAnimationWithCompletion:(dispatch_block_t)completion {
     
+    self.navigationBarHidden = YES;
     [UIView animateWithDuration:.300f animations:^{
+        
         CGRect bannerFrame = self.bannerView.frame;
         bannerFrame.origin.y = CGRectGetHeight(self.view.bounds);
         self.bannerView.frame = bannerFrame;
+        
+        if (self.hintsView) {
+            CGRect frame = self.hintsView.frame;
+            frame.origin.y = CGRectGetHeight(self.view.bounds);
+            self.hintsView.frame = frame;
+        }
     }];
     
     [self.scene performExitAnimationsWithCompletion:^{
@@ -104,7 +112,7 @@ static const CGFloat defaultContainerHeight = 70.0f;
     if (!skView.scene && self.gridManager) {
         
         self.scene = [HDScene sceneWithSize:self.view.bounds.size];
-        self.scene.delegate = self;
+        self.scene.myDelegate = self;
         self.scene.levelIndex = _levelIdx;
         self.scene.gridManager = self.gridManager;
         [skView presentScene:self.scene];
@@ -148,10 +156,52 @@ static const CGFloat defaultContainerHeight = 70.0f;
 {    
     NSArray *hexagons = [self.gridManager hexagons];
     [self.scene layoutNodesWithGrid:hexagons];
+    
+  //  if (_levelIdx % 14 == 1 || _levelIdx == 1) {
+      //  if (![[NSUserDefaults standardUserDefaults] boolForKey:[NSString stringWithFormat:@"%zd",_levelIdx]]) {
+            [self _showTipsWithDescription:descriptionForLevelIdx(_levelIdx)
+                                     image:[HDHelper imageFromLevelIdx:_levelIdx]];
+            [[NSUserDefaults standardUserDefaults] setBool:YES forKey:[NSString stringWithFormat:@"%zd",_levelIdx]];
+  //      }
+  //  }
 }
 
-- (void)_hideAnimated:(BOOL)animated
+- (void)_showTipsWithDescription:(NSString *)description image:(UIImage *)image
 {
+    if (!self.hintsView) {
+        CGRect hintsFrame = CGRectMake(0.0f,
+                                       CGRectGetHeight(self.view.bounds),
+                                       CGRectGetWidth(self.view.bounds),
+                                       CGRectGetHeight(self.view.bounds)/5);
+        self.hintsView = [[HDHintsView alloc] initWithDescription:description];
+        self.hintsView.imageView.image = image;
+        self.hintsView.frame = hintsFrame;
+        [self.view insertSubview:self.hintsView atIndex:0];
+    }
+    
+    [UIView animateWithDuration:.3f delay:.75f options:UIViewAnimationOptionCurveEaseOut animations:^{
+        CGRect frame = self.hintsView.frame;
+        frame.origin.y = CGRectGetHeight(self.view.bounds)/1.25f - ((_isBannerVisible) ? self.bannerView.bounds.size.height : 0);
+        self.hintsView.frame = frame;
+    } completion:^(BOOL finished){
+   //     [self performSelector:@selector(_dismissHintsView) withObject:nil afterDelay:4.0f];
+    }];
+}
+
+- (void)_dismissHintsView {
+    
+    [UIView animateWithDuration:.3f animations:^{
+        CGRect frame = self.hintsView.frame;
+        frame.origin.y = CGRectGetHeight(self.view.bounds);
+        self.hintsView.frame = frame;
+    } completion:^(BOOL finished){
+        [self.hintsView removeFromSuperview];
+        self.hintsView = nil;
+    }];
+}
+
+- (void)_hideAnimated:(BOOL)animated {
+    
     dispatch_block_t animate = ^{
         CGRect rect = self.menuBar.frame;
         rect.origin.y = -defaultContainerHeight;
@@ -231,9 +281,17 @@ static const CGFloat defaultContainerHeight = 70.0f;
 {
     if (!_isBannerVisible) {
         [UIView animateWithDuration:.300f animations:^{
+            
             CGRect bannerFrame = self.bannerView.frame;
             bannerFrame.origin.y = CGRectGetHeight(self.view.bounds) - CGRectGetHeight(self.bannerView.bounds);
             self.bannerView.frame = bannerFrame;
+            
+            if (self.hintsView) {
+                CGRect frame = self.hintsView.frame;
+                frame.origin.y = CGRectGetHeight(self.view.bounds)/1.25f - CGRectGetHeight(self.bannerView.bounds);
+                self.hintsView.frame = frame;
+            }
+            
         }];
         _isBannerVisible = YES;
     }
@@ -243,9 +301,17 @@ static const CGFloat defaultContainerHeight = 70.0f;
 {
     if (_isBannerVisible) {
         [UIView animateWithDuration:.300f animations:^{
+            
             CGRect bannerFrame = self.bannerView.frame;
             bannerFrame.origin.y = CGRectGetHeight(self.view.bounds);
             self.bannerView.frame = bannerFrame;
+            
+            if (self.hintsView) {
+                CGRect frame = self.hintsView.frame;
+                frame.origin.y = CGRectGetHeight(self.view.bounds)/1.25f;
+                self.hintsView.frame = frame;
+            }
+            
         }];
         _isBannerVisible = NO;
     }

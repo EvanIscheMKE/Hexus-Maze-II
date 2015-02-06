@@ -10,12 +10,12 @@
 "congratulation10" = "Bra arbete!";
 "congratulation11" = "Det är vad jag kallar ett bra jobb!";
 "continue" = "Fortsätta";
-"begin" = "Begin Game";
+"begin" = "börja spelet";
 "tutorial1" = "Börja med att välja ett vitt kakel.";
 "tutorial2" = "Flytta till en aktiv bricka som vidrör den sista brickan.";
 "tutorial3" = "Fortsätt tills vägen är klar!";
 "level" = "Nivå %tu";
 "sign"  = "Nya Nivåer \n Kommer snart..";
-"tap"   = "TAP";
+"tap"   = "kran";
 "share" = "Dela";
 

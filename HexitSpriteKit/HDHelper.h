@@ -9,14 +9,23 @@
 
 #import <Foundation/Foundation.h>
 
-NSString *descriptionFromLevelIdx(NSUInteger levelIdx);
+NSString *descriptionForLevelIdx(NSUInteger levelIdx);
+
+typedef NS_ENUM(NSUInteger, HDLevelTip){
+    HDLevelTipOne   = 1,
+    HDLevelTipTwo   = 15,
+    HDLevelTipThree = 29,
+    HDLevelTipFour  = 43,
+    HDLevelTipFive  = 57,
+    HDLevelTipSix   = 71,
+    HDLevelTipSeven = 85,
+};
 
 @class HDHexagon;
 @interface HDHelper : NSObject
-+ (CGPathRef)hexagonPathForBounds:(CGRect)bounds;
-+ (UIBezierPath *)bezierHexagonInFrame:(CGRect)frame;
 + (UIBezierPath *)restartArrowAroundPoint:(CGPoint)center;
 + (BOOL)isWideScreen;
++ (UIImage *)imageFromLevelIdx:(NSUInteger)levelIdx;
 + (void)entranceAnimationWithTiles:(NSArray *)tiles completion:(dispatch_block_t)completion;
 + (void)completionAnimationWithTiles:(NSArray *)tiles completion:(dispatch_block_t)completion;
 + (NSArray *)possibleMovesForHexagon:(HDHexagon *)hexagon inArray:(NSArray *)array;

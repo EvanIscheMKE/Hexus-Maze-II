@@ -13,45 +13,55 @@
 #import "HDHexagonNode.h"
 #import "UIColor+FlatColors.h"
 
+NSString *descriptionForLevelIdx(NSUInteger levelIdx){
+    switch (levelIdx) {
+        case HDLevelTipOne:
+            return @"Watch out for the mines!";
+        case HDLevelTipTwo:
+            return @"Just tap it twice!";
+        case HDLevelTipThree:
+            return @"Search for the unlocked one first!";
+        case HDLevelTipFour:
+            return @"Just tap it three times!";
+        case HDLevelTipFive:
+            return @"Always end on the red hex!";
+        case HDLevelTipSix:
+            return @"You've got this!";
+        case HDLevelTipSeven:
+            return @"Looking like you'll need to teleport";
+        default:
+            break;
+    }
+    return nil;
+};
+
 @implementation HDHelper
+
++ (UIImage *)imageFromLevelIdx:(NSUInteger)levelIdx
+{
+    switch (levelIdx) {
+        case HDLevelTipOne:
+            return [UIImage imageNamed:@"FillInTile"];
+        case HDLevelTipTwo:
+            return [UIImage imageNamed:@"Default-Double"];
+        case HDLevelTipThree:
+            return [UIImage imageNamed:@"Default-Count"];
+        case HDLevelTipFour:
+            return [UIImage imageNamed:@"Default-Triple"];
+        case HDLevelTipFive:
+            return [UIImage imageNamed:@"Default-End"];
+        case HDLevelTipSix:
+            return [UIImage imageNamed:@"Default-End"];
+        case HDLevelTipSeven:
+            return [UIImage imageNamed:@"FillInTile"];
+        default:
+            return nil;
+    }
+}
 
 + (BOOL)isWideScreen
 {
     return (CGRectGetWidth([[UIScreen mainScreen] bounds]) > 320.0f);
-}
-
-+ (CGPathRef)hexagonPathForBounds:(CGRect)bounds
-{
-    const CGFloat kPadding = CGRectGetWidth(bounds) / 8 / 2;
-    UIBezierPath *_path = [UIBezierPath bezierPath];
-    [_path setLineJoinStyle:kCGLineJoinRound];
-    [_path moveToPoint:CGPointMake(CGRectGetWidth(bounds) / 2, 0)];
-    [_path addLineToPoint:CGPointMake(CGRectGetWidth(bounds) - kPadding, CGRectGetHeight(bounds) * .25f)];
-    [_path addLineToPoint:CGPointMake(CGRectGetWidth(bounds) - kPadding, CGRectGetHeight(bounds) * .75)];
-    [_path addLineToPoint:CGPointMake(CGRectGetWidth(bounds) / 2, CGRectGetHeight(bounds))];
-    [_path addLineToPoint:CGPointMake(kPadding, CGRectGetHeight(bounds) * .75f)];
-    [_path addLineToPoint:CGPointMake(kPadding, CGRectGetHeight(bounds) * .25f)];
-    [_path closePath];
-    
-    return [_path CGPath];
-}
-
-+ (UIBezierPath *)bezierHexagonInFrame:(CGRect)frame
-{
-    const CGFloat kWidth   = CGRectGetWidth(frame);
-    const CGFloat kHeight  = CGRectGetHeight(frame);
-    const CGFloat kPadding = kWidth / 8 / 2;
-    
-    UIBezierPath *_path = [UIBezierPath bezierPath];
-    [_path moveToPoint:   CGPointMake(CGRectGetMinX(frame) + (kWidth / 2),        CGRectGetMinY(frame))];
-    [_path addLineToPoint:CGPointMake(CGRectGetMinX(frame) + (kWidth - kPadding), CGRectGetMinY(frame) + (kHeight / 4))];
-    [_path addLineToPoint:CGPointMake(CGRectGetMinX(frame) + (kWidth - kPadding), CGRectGetMinY(frame) + (kHeight * 3 / 4))];
-    [_path addLineToPoint:CGPointMake(CGRectGetMinX(frame) + (kWidth / 2),        CGRectGetMinY(frame) + kHeight)];
-    [_path addLineToPoint:CGPointMake(CGRectGetMinX(frame) + kPadding,            CGRectGetMinY(frame) + (kHeight * .75))];
-    [_path addLineToPoint:CGPointMake(CGRectGetMinX(frame) + kPadding,            CGRectGetMinY(frame) + (kHeight / 4))];
-    [_path closePath];
-    
-    return _path;
 }
 
 + (UIBezierPath *)restartArrowAroundPoint:(CGPoint)center
@@ -159,13 +169,9 @@
     __block NSInteger index = 0;
     for (HDHexagon *tile in tiles) {
         
+        
         [[tile.node children] makeObjectsPerformSelector:@selector(removeFromParent)];
-        
-        // Setup actions
-        SKAction *hide     = [SKAction hide];
-        SKAction *sequence = [SKAction sequence:@[scaleDown, hide]];
-        
-        [tile.node runAction:sequence
+        [tile.node runAction:[SKAction sequence:@[scaleDown,[SKAction hide]]]
                   completion:^{
                         [tile restoreToInitialState];
                                      if (index == countTo) {

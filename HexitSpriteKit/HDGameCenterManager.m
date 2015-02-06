@@ -78,7 +78,7 @@ NSString * const HDLeaderBoardKey = @"LevelLeaderboard";
     scoreAchievement.showsCompletionBanner = (percentCompleted == 100);
     scoreAchievement.percentComplete = percentCompleted;
     [GKAchievement reportAchievements:@[scoreAchievement] withCompletionHandler:^(NSError *error) {
-        if (error != nil) {
+        if (error) {
             NSLog(@"%@",[error localizedDescription]);
         }
     }];

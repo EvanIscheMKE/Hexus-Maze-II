@@ -2,7 +2,7 @@
 "congratulation2" = "あなたはそれが簡単に見えるようにする。";
 "congratulation3" = "あなたは、高速学習している。";
 "congratulation4" = "それは方法です！";
-"congratulation5" = "PERFECT！";
+"congratulation5" = "それは方法です！";
 "congratulation6" = "センセーショナル！";
 "congratulation7" = "あなたは美しくやっている。";
 "congratulation8" = "グッド思考！";
@@ -17,5 +17,5 @@
 "level" = "レベル %tu";
 
 "sign"  = "新しいレベルは、n近日..";
-"tap"   = "TAP";
+"tap"   = "タップ";
 "share" = "共有";

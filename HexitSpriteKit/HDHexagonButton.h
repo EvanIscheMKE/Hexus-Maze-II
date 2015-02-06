@@ -12,7 +12,4 @@
 @property (nonatomic, assign) HDLevelState levelState;
 @property (nonatomic, assign) NSInteger index;
 @property (nonatomic, assign) NSInteger row;
-- (CAEmitterLayer *)emitterLayer;
-- (void)startEmitting;
-- (void)stopEmitting;
 @end

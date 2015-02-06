@@ -145,6 +145,7 @@ NSString * const HDLeaderBoardIdentifierKey = @"LevelLeaderboard";
 
 - (IBAction)animateToLevelViewController:(id)sender
 {
+    [[HDSoundManager sharedManager] playSound:HDButtonSound];
     if (self.controller.isExpanded) {
         [self.controller toggleMenuViewControllerWithCompletion:^{
             if ([self.controller.frontViewController isKindOfClass:[HDGameViewController class]]) {
@@ -159,11 +160,13 @@ NSString * const HDLeaderBoardIdentifierKey = @"LevelLeaderboard";
 
 - (IBAction)openAcheivementsController:(id)sender
 {
+    [[HDSoundManager sharedManager] playSound:HDButtonSound];
    [self _activityControllerForType:GKGameCenterViewControllerStateAchievements];
 }
 
 - (IBAction)openLeaderboardController:(id)sender
 {
+    [[HDSoundManager sharedManager] playSound:HDButtonSound];
     [self _activityControllerForType:GKGameCenterViewControllerStateLeaderboards];
 }
 

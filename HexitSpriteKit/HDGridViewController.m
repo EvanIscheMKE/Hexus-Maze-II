@@ -64,15 +64,13 @@ static const CGFloat defaultPageControlHeight = 50.0f;
     }];
 }
 
-- (void)levelsViewController:(HDLevelsViewController *)viewController didSelectLevel:(NSUInteger)level
-{
+- (void)levelsViewController:(HDLevelsViewController *)viewController didSelectLevel:(NSUInteger)level {
     [self beginLevel:level];
 }
 
-- (void)beginLevel:(NSUInteger)levelIdx
-{
-    HDLevel *gamelevel = [[HDMapManager sharedManager] levelAtIndex:(NSInteger)levelIdx - 1];
+- (void)beginLevel:(NSUInteger)levelIdx {
     
+    HDLevel *gamelevel = [[HDMapManager sharedManager] levelAtIndex:(NSInteger)levelIdx - 1];
     if (gamelevel.isUnlocked) {
         self.navigationBarHidden = YES;
         [[HDSoundManager sharedManager] playSound:HDButtonSound];
@@ -97,7 +95,7 @@ static const CGFloat defaultPageControlHeight = 50.0f;
 
 - (void)_setup
 {
-    NSUInteger numberOfPages = [self pageViewsForGridScrollView:self.scrollView].count;
+    (void)[self pageViewsForGridScrollView:self.scrollView].count;
     
     HDContainerViewController *container = self.containerViewController;
     
@@ -146,7 +144,7 @@ static const CGFloat defaultPageControlHeight = 50.0f;
         self.menuBar.frame = rect;
         
         CGPoint center = self.control.center;
-        center.y =  CGRectGetHeight(self.view.bounds) + 25.0f;
+        center.y =  CGRectGetHeight(self.view.bounds) + defaultContainerHeight/2;
         self.control.center = center;
     };
     
@@ -165,7 +163,7 @@ static const CGFloat defaultPageControlHeight = 50.0f;
         self.menuBar.frame = rect;
         
         CGPoint center = self.control.center;
-        center.y = CGRectGetHeight(self.view.bounds) - 45.0f;
+        center.y = CGRectGetHeight(self.view.bounds) - defaultContainerHeight;
         self.control.center = center;
     };
     
