@@ -69,7 +69,7 @@ static const NSInteger numberOfPages = 3;
     [self.navigate addTarget:self action:@selector(_nextPage) forControlEvents:UIControlEventTouchUpInside];
     self.navigate.titleLabel.font = GILLSANS(24.0f * CGRectGetWidth(self.view.bounds)/375.0f);
     self.navigate.titleLabel.textAlignment = NSTextAlignmentCenter;
-    self.navigate.backgroundColor = [UIColor flatPeterRiverColor];
+    self.navigate.backgroundColor = [UIColor colorWithWhite:0.0f alpha:.95f];
     [self.view addSubview:self.navigate];
 }
 

@@ -43,8 +43,8 @@ static const CGFloat kTileHeightInsetMultiplier = .845f;
 @property (nonatomic, strong) SKNode *gameLayer;
 @end
 
-@implementation HDScene
-{
+@implementation HDScene {
+    
     CGFloat _minViewAreaOriginX;
     CGFloat _maxViewAreaOriginX;
     CGFloat _minViewAreaOriginY;
@@ -56,6 +56,7 @@ static const CGFloat kTileHeightInsetMultiplier = .845f;
     CGFloat _maxCenterY;
     
     NSInteger _soundIndex;
+    
 }
 
 - (id)initWithSize:(CGSize)size
@@ -84,11 +85,10 @@ static const CGFloat kTileHeightInsetMultiplier = .845f;
     NSInteger index = 0;
     for (HDHexagon *hexagon in grid) {
         
-        // For each each hexagon model, create a shapenode and assign it to the model
         CGPoint center = [[self class] _pointForColumn:hexagon.column row:hexagon.row];
         HDHexagonNode *hexagonNode = [[HDHexagonNode alloc] initWithImageNamed:hexagon.defaultImagePath];
         hexagonNode.hidden   = NO;
-        hexagonNode.scale    = ((kTileSize + 2.4f)/49.0f);
+        hexagonNode.scale    = CGRectGetWidth(self.view.bounds)/375.0f;
         hexagonNode.position = center;
         hexagon.node = hexagonNode;
         hexagon.delegate = hexagon.isCountTile ? self : nil;

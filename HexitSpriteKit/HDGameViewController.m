@@ -39,14 +39,14 @@ static const CGFloat defaultContainerHeight = 70.0f;
     NSUInteger _levelIdx;
 }
 
-- (void)dealloc
-{
+- (void)dealloc {
+    
     [NC removeObserver:self name:UIApplicationWillResignActiveNotification object:nil];
     [NC removeObserver:self name:UIApplicationDidBecomeActiveNotification  object:nil];
 }
 
-- (instancetype)initWithLevel:(NSInteger)level
-{
+- (instancetype)initWithLevel:(NSInteger)level {
+    
     if (self = [super init]) {
         _levelIdx = level;
     }
@@ -157,13 +157,13 @@ static const CGFloat defaultContainerHeight = 70.0f;
     NSArray *hexagons = [self.gridManager hexagons];
     [self.scene layoutNodesWithGrid:hexagons];
     
-  //  if (_levelIdx % 14 == 1 || _levelIdx == 1) {
-      //  if (![[NSUserDefaults standardUserDefaults] boolForKey:[NSString stringWithFormat:@"%zd",_levelIdx]]) {
+    if (_levelIdx % 14 == 1 || _levelIdx == 1) {
+        if (![[NSUserDefaults standardUserDefaults] boolForKey:[NSString stringWithFormat:@"%zd",_levelIdx]]) {
             [self _showTipsWithDescription:descriptionForLevelIdx(_levelIdx)
                                      image:[HDHelper imageFromLevelIdx:_levelIdx]];
             [[NSUserDefaults standardUserDefaults] setBool:YES forKey:[NSString stringWithFormat:@"%zd",_levelIdx]];
-  //      }
-  //  }
+        }
+    }
 }
 
 - (void)_showTipsWithDescription:(NSString *)description image:(UIImage *)image
@@ -184,7 +184,7 @@ static const CGFloat defaultContainerHeight = 70.0f;
         frame.origin.y = CGRectGetHeight(self.view.bounds)/1.25f - ((_isBannerVisible) ? self.bannerView.bounds.size.height : 0);
         self.hintsView.frame = frame;
     } completion:^(BOOL finished){
-   //     [self performSelector:@selector(_dismissHintsView) withObject:nil afterDelay:4.0f];
+        [self performSelector:@selector(_dismissHintsView) withObject:nil afterDelay:3.5f];
     }];
 }
 

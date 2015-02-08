@@ -59,7 +59,6 @@ static const CGFloat kPadding = 4.0f;
     _isStarted = NO;
 }
 
-#pragma mark -
 #pragma mark - Private
 
 - (void)_setup
@@ -130,7 +129,7 @@ static const CGFloat kPadding = 4.0f;
     [[self subviews] makeObjectsPerformSelector:@selector(removeFromSuperview)];
 }
 
-#pragma -
+#pragma - Drawing
 
 - (UIImage *)_levelsComingSoonSign
 {
@@ -174,6 +173,8 @@ static const CGFloat kPadding = 4.0f;
     });
     return comingSoonSign;
 }
+
+#pragma mark - Class
 
 + (CGPoint)_pointFromAngle:(double)angleInRadians center:(CGPoint)centerPoint radius:(double)radius
 {
