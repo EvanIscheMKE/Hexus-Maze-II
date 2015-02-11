@@ -678,7 +678,7 @@
 			name = Extras;
 			sourceTree = "<group>";
 		};
-		3874B98A1A2046D000400CEB /* REGULAR TILES */ = {
+		3874B98A1A2046D000400CEB /* Base */ = {
 			isa = PBXGroup;
 			children = (
 				38F5A6B71A07F2FA0036750A /* Grid-1.json */,
@@ -696,10 +696,10 @@
 				38C67D021A0ACE5B0038526C /* Grid-13.json */,
 				38C67D041A0ACE620038526C /* Grid-14.json */,
 			);
-			name = "REGULAR TILES";
+			name = Base;
 			sourceTree = "<group>";
 		};
-		3874B98B1A2046DF00400CEB /* DOUBLE TILES */ = {
+		3874B98B1A2046DF00400CEB /* Double */ = {
 			isa = PBXGroup;
 			children = (
 				38C67D061A0ACE690038526C /* Grid-15.json */,
@@ -717,7 +717,7 @@
 				38C67D1E1A0AE3F30038526C /* Grid-27.json */,
 				38C67D201A0AE3FD0038526C /* Grid-28.json */,
 			);
-			name = "DOUBLE TILES";
+			name = Double;
 			sourceTree = "<group>";
 		};
 		389E95411A4A126100F2DF05 /* Grid View Controllers */ = {
@@ -759,7 +759,7 @@
 			name = "Game View Controllers";
 			sourceTree = "<group>";
 		};
-		38BDDCE61A20FA86005035EE /* COUNT GRID */ = {
+		38BDDCE61A20FA86005035EE /* Count */ = {
 			isa = PBXGroup;
 			children = (
 				38C67D221A0AE4060038526C /* Grid-29.json */,
@@ -777,7 +777,7 @@
 				38BDDCD21A20F9D2005035EE /* Grid-41.json */,
 				38BDDCD41A20F9E4005035EE /* Grid-42.json */,
 			);
-			name = "COUNT GRID";
+			name = Count;
 			sourceTree = "<group>";
 		};
 		38BDDCE71A20FACE005035EE /* Sounds */ = {
@@ -823,7 +823,7 @@
 			name = Sounds;
 			sourceTree = "<group>";
 		};
-		38BDDCE81A20FAE8005035EE /* TRIPLE GRID */ = {
+		38BDDCE81A20FAE8005035EE /* Triple */ = {
 			isa = PBXGroup;
 			children = (
 				38BDDCD61A20F9F6005035EE /* Grid-43.json */,
@@ -841,7 +841,7 @@
 				38BDDCF11A20FB80005035EE /* Grid-55.json */,
 				38BDDCF31A20FB89005035EE /* Grid-56.json */,
 			);
-			name = "TRIPLE GRID";
+			name = Triple;
 			sourceTree = "<group>";
 		};
 		38C0A8351A07251600C552F1 = {
@@ -947,7 +947,7 @@
 			name = Categories;
 			sourceTree = "<group>";
 		};
-		38C1221C1A2C1BF700224B33 /* EXTENDED TRIPLE */ = {
+		38C1221C1A2C1BF700224B33 /* End */ = {
 			isa = PBXGroup;
 			children = (
 				38BDDCF51A20FBA2005035EE /* Grid-57.json */,
@@ -978,9 +978,8 @@
 				389E95031A488D8B00F2DF05 /* Grid-82.json */,
 				389E95051A488D9800F2DF05 /* Grid-83.json */,
 				3824A5DC1A538C3D00788E0E /* Grid-84.json */,
-				38E738281A875013002EF301 /* Teleport */,
 			);
-			name = "EXTENDED TRIPLE";
+			name = End;
 			sourceTree = "<group>";
 		};
 		38C67CD11A0A29D80038526C /* Controller */ = {
@@ -1045,11 +1044,12 @@
 		38C67CD41A0A2A290038526C /* Levels */ = {
 			isa = PBXGroup;
 			children = (
-				3874B98A1A2046D000400CEB /* REGULAR TILES */,
-				3874B98B1A2046DF00400CEB /* DOUBLE TILES */,
-				38BDDCE61A20FA86005035EE /* COUNT GRID */,
-				38BDDCE81A20FAE8005035EE /* TRIPLE GRID */,
-				38C1221C1A2C1BF700224B33 /* EXTENDED TRIPLE */,
+				3874B98A1A2046D000400CEB /* Base */,
+				3874B98B1A2046DF00400CEB /* Double */,
+				38BDDCE61A20FA86005035EE /* Count */,
+				38BDDCE81A20FAE8005035EE /* Triple */,
+				38C1221C1A2C1BF700224B33 /* End */,
+				38E738281A875013002EF301 /* Teleport */,
 			);
 			name = Levels;
 			sourceTree = "<group>";

@@ -10,7 +10,7 @@
 
 @implementation HDHexusIAdHelper
 
-+ (HDHexusIAdHelper *)sharedInstance
++ (HDHexusIAdHelper *)sharedHelper
 {
     static HDHexusIAdHelper *helper;
     static dispatch_once_t onceToken;

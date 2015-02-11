@@ -49,21 +49,7 @@ NSString * const HDLeaderBoardIdentifierKey = @"LevelLeaderboard";
     return YES;
 }
 
-- (void)_setup
-{
-    [Flurry startSession:HDFLURRYAPIKEY];
-    
-    if (![[NSUserDefaults standardUserDefaults] boolForKey:HDFirstRunKey]) {
-        [[HDSettingsManager sharedManager] configureSettingsForFirstRun];
-    }
-    
-    [[HDSoundManager sharedManager] startAudio];
-    [[HDSoundManager sharedManager] preloadLoopWithName:HDSoundLoopKey];
-    [[HDSoundManager sharedManager] preloadSounds:SOUNDS_TO_PRELOAD];
-    [[HDSoundManager sharedManager] setPlayLoop:YES];
-    
-    [[HDGameCenterManager sharedManager] authenticateGameCenter];
-}
+#pragma mark - Public
 
 - (void)presentLevelViewController
 {
@@ -111,18 +97,6 @@ NSString * const HDLeaderBoardIdentifierKey = @"LevelLeaderboard";
     [self.controller presentViewController:controller animated:YES completion:nil];
 }
 
-- (UIImage *)_screenshotOfFrontViewController
-{
-    UIGraphicsBeginImageContextWithOptions(self.window.bounds.size, YES, [[UIScreen mainScreen] scale]);
-    
-    [self.controller.view drawViewHierarchyInRect:self.window.bounds afterScreenUpdates:YES];
-    
-    UIImage *screenShot = UIGraphicsGetImageFromCurrentImageContext();
-    UIGraphicsEndImageContext();
-    
-    return screenShot;
-}
-
 - (void)presentTutorialViewControllerForFirstRun
 {
     [self.window.rootViewController presentViewController:[HDTutorialParentViewController new] animated:NO completion:nil];
@@ -133,41 +107,34 @@ NSString * const HDLeaderBoardIdentifierKey = @"LevelLeaderboard";
     [self.controller setFrontMostViewController:[[HDGameViewController alloc] initWithLevel:level]];
 }
 
-- (IBAction)restartCurrentLevel:(id)sender
+#pragma mark - Private
+
+- (void)_setup
 {
-    [[HDSoundManager sharedManager] playSound:HDButtonSound];
-    if (self.controller.isExpanded) {
-        [self.controller toggleMenuViewControllerWithCompletion:^{
-            [(HDGameViewController *)self.controller.frontViewController restart:nil];
-        }];
+    [Flurry startSession:HDFLURRYAPIKEY];
+    
+    if (![[NSUserDefaults standardUserDefaults] boolForKey:HDFirstRunKey]) {
+        [[HDSettingsManager sharedManager] configureSettingsForFirstRun];
     }
+    
+    [[HDSoundManager sharedManager] startAudio];
+    [[HDSoundManager sharedManager] preloadLoopWithName:HDSoundLoopKey];
+    [[HDSoundManager sharedManager] preloadSounds:SOUNDS_TO_PRELOAD];
+    [[HDSoundManager sharedManager] setPlayLoop:YES];
+    
+    [[HDGameCenterManager sharedManager] authenticateGameCenter];
 }
 
-- (IBAction)animateToLevelViewController:(id)sender
+- (UIImage *)_screenshotOfFrontViewController
 {
-    [[HDSoundManager sharedManager] playSound:HDButtonSound];
-    if (self.controller.isExpanded) {
-        [self.controller toggleMenuViewControllerWithCompletion:^{
-            if ([self.controller.frontViewController isKindOfClass:[HDGameViewController class]]) {
-                HDGameViewController *controller = (HDGameViewController *)self.controller.frontViewController;
-                [controller performExitAnimationWithCompletion:^{
-                    [self.controller setFrontMostViewController:[HDGridViewController new]];
-                }];
-            }
-        }];
-    }
-}
-
-- (IBAction)openAcheivementsController:(id)sender
-{
-    [[HDSoundManager sharedManager] playSound:HDButtonSound];
-   [self _activityControllerForType:GKGameCenterViewControllerStateAchievements];
-}
-
-- (IBAction)openLeaderboardController:(id)sender
-{
-    [[HDSoundManager sharedManager] playSound:HDButtonSound];
-    [self _activityControllerForType:GKGameCenterViewControllerStateLeaderboards];
+    UIGraphicsBeginImageContextWithOptions(self.window.bounds.size, YES, [[UIScreen mainScreen] scale]);
+    
+    [self.controller.view drawViewHierarchyInRect:self.window.bounds afterScreenUpdates:YES];
+    
+    UIImage *screenShot = UIGraphicsGetImageFromCurrentImageContext();
+    UIGraphicsEndImageContext();
+    
+    return screenShot;
 }
 
 - (void)_activityControllerForType:(GKGameCenterViewControllerState)state
@@ -230,5 +197,45 @@ transitionedFromController:(UIViewController *)fromController
 - (void)applicationWillTerminate:(UIApplication *)application {
     [[HDSoundManager sharedManager] stopAudio];
 }
+
+#pragma mark - Selectors
+
+- (IBAction)restartCurrentLevel:(id)sender
+{
+    [[HDSoundManager sharedManager] playSound:HDButtonSound];
+    if (self.controller.isExpanded) {
+        [self.controller toggleMenuViewControllerWithCompletion:^{
+            [(HDGameViewController *)self.controller.frontViewController restart:nil];
+        }];
+    }
+}
+
+- (IBAction)animateToLevelViewController:(id)sender
+{
+    [[HDSoundManager sharedManager] playSound:HDButtonSound];
+    if (self.controller.isExpanded) {
+        [self.controller toggleMenuViewControllerWithCompletion:^{
+            if ([self.controller.frontViewController isKindOfClass:[HDGameViewController class]]) {
+                HDGameViewController *controller = (HDGameViewController *)self.controller.frontViewController;
+                [controller performExitAnimationWithCompletion:^{
+                    [self.controller setFrontMostViewController:[HDGridViewController new]];
+                }];
+            }
+        }];
+    }
+}
+
+- (IBAction)openAcheivementsController:(id)sender
+{
+    [[HDSoundManager sharedManager] playSound:HDButtonSound];
+    [self _activityControllerForType:GKGameCenterViewControllerStateAchievements];
+}
+
+- (IBAction)openLeaderboardController:(id)sender
+{
+    [[HDSoundManager sharedManager] playSound:HDButtonSound];
+    [self _activityControllerForType:GKGameCenterViewControllerStateLeaderboards];
+}
+
 
 @end

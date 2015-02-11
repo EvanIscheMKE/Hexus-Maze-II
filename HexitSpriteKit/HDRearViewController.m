@@ -19,13 +19,9 @@
 @property (nonatomic, strong) UIButton *bottom;
 @end
 
-@implementation HDRearViewController {
-    NSDictionary *_views;
-    NSDictionary *_metrics;
-}
+@implementation HDRearViewController
 
-- (void)viewDidLoad
-{
+- (void)viewDidLoad {
     [super viewDidLoad];
     [self _setup];
 }
@@ -92,8 +88,8 @@
             default:
                 square.selected = [[HDSettingsManager sharedManager] sound];
                 [square addTarget:self action:@selector(_toggleSound:) forControlEvents:UIControlEventTouchUpInside];
-                [square setBackgroundImage:[UIImage imageNamed:@"SoundOFF"]  forState:UIControlStateNormal];
-                [square setBackgroundImage:[UIImage imageNamed:@"SoundON"] forState:UIControlStateSelected];
+                [square setBackgroundImage:[UIImage imageNamed:@"SM-Sound-Off"]  forState:UIControlStateNormal];
+                [square setBackgroundImage:[UIImage imageNamed:@"SM-Sound-On"] forState:UIControlStateSelected];
                 break;
         }
     }
@@ -125,7 +121,7 @@
 
 - (void)_showGameInterface
 {
-    [self.top    setBackgroundImage:[UIImage imageNamed:@"RestartCurrentGame"]        forState:UIControlStateNormal];
+    [self.top    setBackgroundImage:[UIImage imageNamed:@"SM-Restart"]                forState:UIControlStateNormal];
     [self.bottom setBackgroundImage:[UIImage imageNamed:@"ReturnToMenu"]              forState:UIControlStateNormal];
     [self.top    removeTarget:ADelegate action:@selector(openAcheivementsController:) forControlEvents:UIControlEventTouchUpInside];
     [self.bottom removeTarget:ADelegate action:@selector(openLeaderboardController:)  forControlEvents:UIControlEventTouchUpInside];

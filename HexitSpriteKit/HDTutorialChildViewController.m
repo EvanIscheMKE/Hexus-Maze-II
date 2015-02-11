@@ -22,6 +22,8 @@
     [self _setup];
 }
 
+#pragma mark - _Private
+
 - (void)_setup
 {
     NSArray *animationImages = nil;
@@ -55,10 +57,8 @@
     self.imageView.animationImages      = animationImages;
     self.imageView.animationRepeatCount = NSIntegerMax;
     self.imageView.animationDuration    = animationImages.count / 2;
-    self.imageView.center = CGPointMake(
-                                        CGRectGetMidX(self.view.bounds),
-                                        CGRectGetMidY(self.view.bounds) + CGRectGetHeight(self.view.bounds)/8.5f
-                                        );
+    self.imageView.center = CGPointMake(CGRectGetMidX(self.view.bounds),
+                                        CGRectGetMidY(self.view.bounds) + CGRectGetHeight(self.view.bounds)/8.5f);
     self.imageView.frame = CGRectIntegral(self.imageView.frame);
     self.imageView.transform = CGAffineTransformMakeScale(CGRectGetWidth(self.view.bounds) / (imageForSize.size.width + 70.0f),
                                                           CGRectGetWidth(self.view.bounds) / (imageForSize.size.width + 70.0f));

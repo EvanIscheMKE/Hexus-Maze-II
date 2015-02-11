@@ -71,13 +71,13 @@ static const CGFloat defaultPageControlHeight = 50.0f;
 - (void)beginLevel:(NSUInteger)levelIdx {
     
     HDLevel *gamelevel = [[HDMapManager sharedManager] levelAtIndex:(NSInteger)levelIdx - 1];
-    if (gamelevel.isUnlocked) {
+   // if (gamelevel.isUnlocked) {
         self.navigationBarHidden = YES;
         [[HDSoundManager sharedManager] playSound:HDButtonSound];
         [self.scrollView performOutroAnimationWithCompletion:^{
             [ADelegate beginGameWithLevel:levelIdx];
         }];
-    }
+  //  }
 }
 
 - (void)setNavigationBarHidden:(BOOL)navigationBarHidden
@@ -227,7 +227,7 @@ static const CGFloat defaultPageControlHeight = 50.0f;
     
     _imageViews = [NSMutableArray array];
     
-    NSMutableArray *hexagons   = [NSMutableArray array];
+    NSMutableArray *hexagons = [NSMutableArray array];
     NSArray *viewsCorrespondingToProtocol = [[scrollView subviews] filteredArrayUsingPredicate:[NSPredicate predicateWithBlock:^BOOL(id evaluatedObject, NSDictionary *bindings) {
         return [evaluatedObject conformsToProtocol:@protocol(HDGridScrollViewChild)];
     }]];
@@ -240,7 +240,7 @@ static const CGFloat defaultPageControlHeight = 50.0f;
     for (HDHexagonButton *hexa in hexagons) {
         if (hexa.imageView) {
             [_imageViews addObject:hexa.imageView];
-            if (_currentScaleFactor < .05) {
+            if (_currentScaleFactor < .05f) {
                 _currentScaleFactor = hexa.imageView.transform.a;
             }
         }

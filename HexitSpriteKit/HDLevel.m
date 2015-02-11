@@ -14,6 +14,8 @@ NSString * const HDLevelIndexKey = @"levelIndex";
 
 @implementation HDLevel
 
+#pragma mark - Class Initalizer
+
 + (instancetype)levelUnlocked:(BOOL)unlocked index:(NSInteger)index completed:(BOOL)completed
 {
     HDLevel *level = [[self alloc] init];
@@ -22,6 +24,8 @@ NSString * const HDLevelIndexKey = @"levelIndex";
     level.completed  = completed;
     return level;
 }
+
+#pragma mark - NSCoding Protocol
 
 - (void)encodeWithCoder:(NSCoder *)encoder
 {
@@ -39,6 +43,8 @@ NSString * const HDLevelIndexKey = @"levelIndex";
     }
     return self;
 }
+
+#pragma mark - Getter
 
 - (HDLevelState)state
 {

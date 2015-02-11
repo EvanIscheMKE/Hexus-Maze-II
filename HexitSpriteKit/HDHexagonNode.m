@@ -20,6 +20,8 @@
     NSUInteger _layerIndex;
 }
 
+#pragma mark - Private
+
 - (void)_setup
 {
     SKTexture *indicatorTexture = [SKTexture textureWithImageNamed:@"indicator"];
@@ -29,6 +31,8 @@
     [self addChild:_indicator];
 }
 
+#pragma mark - Public
+
 - (void)setLocked:(BOOL)locked
 {
     _locked = locked;
@@ -36,7 +40,7 @@
     if (locked) {
         // Add lock
         if (![[self children] count]) {
-            SKSpriteNode *lock = [SKSpriteNode spriteNodeWithImageNamed:@"LockedEmerald.png"];
+            SKSpriteNode *lock = [SKSpriteNode spriteNodeWithImageNamed:@"Locked-22"];
             lock.scale = CGRectGetWidth([[UIScreen mainScreen] bounds])/375.0f;
             [self addChild:lock];
         }

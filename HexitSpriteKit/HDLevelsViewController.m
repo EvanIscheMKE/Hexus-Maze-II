@@ -84,15 +84,6 @@ static const CGFloat kTileHeightInsetMultiplier = .855f;
     __weak HDLevelsView *_levelsView;
 }
 
-+ (CGPoint)_pointForColumn:(NSInteger)column row:(NSInteger)row
-{
-    const CGFloat kOriginY = kHexaSize/2 + ((row * (kHexaSize * kTileHeightInsetMultiplier)) );
-    const CGFloat kOriginX = kHexaSize/2 + kHexaSize/4 + ((column * kHexaSize));
-    const CGFloat kAlternateOffset = (row % 2 == 0) ? kHexaSize / 2 : 0.0f;
-    
-    return CGPointMake(kAlternateOffset + kOriginX, kOriginY);
-}
-
 - (HDLevelsContainerView *)levelsContainerView
 {
     return (HDLevelsContainerView *)self.view;
@@ -157,11 +148,24 @@ static const CGFloat kTileHeightInsetMultiplier = .855f;
     }
 }
 
+#pragma mark - Private
+
 - (void)_beginGame:(HDHexagonButton *)sender
 {
     if (self.delegate && [self.delegate respondsToSelector:@selector(levelsViewController:didSelectLevel:)]) {
          [self.delegate levelsViewController:self didSelectLevel:sender.tag];
     }
+}
+
+#pragma mark - Class
+
++ (CGPoint)_pointForColumn:(NSInteger)column row:(NSInteger)row
+{
+    const CGFloat kOriginY = kHexaSize/2 + ((row * (kHexaSize * kTileHeightInsetMultiplier)) );
+    const CGFloat kOriginX = kHexaSize/2 + kHexaSize/4 + ((column * kHexaSize));
+    const CGFloat kAlternateOffset = (row % 2 == 0) ? kHexaSize / 2 : 0.0f;
+    
+    return CGPointMake(kAlternateOffset + kOriginX, kOriginY);
 }
 
 @end

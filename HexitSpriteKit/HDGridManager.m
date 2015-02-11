@@ -39,6 +39,8 @@ typedef void(^CallbackBlock)(NSDictionary *dictionary, NSError *error);
     return self;
 }
 
+#pragma mark - Getters/LazyLoad
+
 - (NSArray *)hexagons
 {
     if (_hexagons) {
@@ -57,6 +59,8 @@ typedef void(^CallbackBlock)(NSDictionary *dictionary, NSError *error);
     }
     return _hexagons;
 }
+
+#pragma mark - Public
 
 - (NSInteger)hexagonTypeAtRow:(NSInteger)row column:(NSInteger)column
 {

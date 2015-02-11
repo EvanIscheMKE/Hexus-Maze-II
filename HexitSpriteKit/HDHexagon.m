@@ -41,11 +41,15 @@ NSString * const HDTripleKey = @"triple";
     return self;
 }
 
+#pragma mark - Setter
+
 - (void)setNode:(HDHexagonNode *)node
 {
     _node = node;
     [self _setup];
 }
+
+#pragma mark - Public
 
 - (BOOL)selectedAfterRecievingTouches
 {
@@ -68,10 +72,10 @@ NSString * const HDTripleKey = @"triple";
         case HDHexagonTypeTriple:
             switch (self.touchesCount) {
                 case 1:
-                    self.node.texture = [SKTexture textureWithImageNamed:@"Triple-OneLeft"];
+                    self.node.texture = [SKTexture textureWithImageNamed:@"Triple-TwoLeft"];
                     break;
                 case 2:
-                    self.node.texture = [SKTexture textureWithImageNamed:@"Triple-TwoLeft"];
+                    self.node.texture = [SKTexture textureWithImageNamed:@"Triple-OneLeft"];
                     break;
                 case 3:
                     self.selected = YES;
@@ -89,26 +93,20 @@ NSString * const HDTripleKey = @"triple";
     switch (self.type) {
         case HDHexagonTypeRegular:
             return [UIColor flatPeterRiverColor];
-            break;
         case HDHexagonTypeStarter:
             return [UIColor whiteColor];
-            break;
         case HDHexagonTypeDouble:
             return [UIColor flatTurquoiseColor];
-            break;
         case HDHexagonTypeTriple:
             return [UIColor flatSilverColor];
-            break;
         case HDHexagonTypeEnd:
             return [UIColor flatAlizarinColor];
-            break;
         case HDHexagonTypeOne:
         case HDHexagonTypeTwo:
         case HDHexagonTypeThree:
         case HDHexagonTypeFour:
         case HDHexagonTypeFive:
             return [UIColor flatEmeraldColor];
-            break;
         default:
             break;
     }
@@ -151,26 +149,21 @@ NSString * const HDTripleKey = @"triple";
 {
     switch (self.type) {
         case HDHexagonTypeRegular:
-            return @"Stroke-OneTouch";
-            break;
+            return @"Default-OneTap";
         case HDHexagonTypeStarter:
-            return @"Stroke-Start";
-            break;
+            return @"Default-Start";
         case HDHexagonTypeDouble:
             return @"Default-Double";
-            break;
         case HDHexagonTypeTriple:
             return @"Default-Triple";
-            break;
         case HDHexagonTypeEnd:
             return @"Default-End";
-            break;
         case HDHexagonTypeNone:
-            return @"FillInTile";
-            break;
+            return @"Default-Mine";
+        case HDHexagonTypeTeleport:
+            return @"";
         default:
             return @"Default-Count";
-            break;
     }
     return nil;
 }
@@ -179,26 +172,21 @@ NSString * const HDTripleKey = @"triple";
 {
     switch (self.type) {
         case HDHexagonTypeRegular:
-            return @"Selected-OneTouch";
-            break;
+            return @"Selected-OneTap";
         case HDHexagonTypeStarter:
             return @"Selected-Start";
-            break;
         case HDHexagonTypeDouble:
             return @"Selected-Double";
-            break;
         case HDHexagonTypeTriple:
             return @"Selected-Triple";
-            break;
         case HDHexagonTypeEnd:
             return @"Selected-End";
-            break;
         case HDHexagonTypeNone:
-            return @"FillInTile";
-            break;
+            return @"Default-Mine";
+        case HDHexagonTypeTeleport:
+            return @"";
         default:
             return @"Selected-Count";
-            break;
     }
     return nil;
 }

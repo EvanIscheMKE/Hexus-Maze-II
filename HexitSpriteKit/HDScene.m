@@ -44,19 +44,15 @@ static const CGFloat kTileHeightInsetMultiplier = .845f;
 @end
 
 @implementation HDScene {
-    
     CGFloat _minViewAreaOriginX;
     CGFloat _maxViewAreaOriginX;
     CGFloat _minViewAreaOriginY;
     CGFloat _maxViewAreaOriginY;
-    
     CGFloat _minCenterX;
     CGFloat _maxCenterX;
     CGFloat _minCenterY;
     CGFloat _maxCenterY;
-    
     NSInteger _soundIndex;
-    
 }
 
 - (id)initWithSize:(CGSize)size

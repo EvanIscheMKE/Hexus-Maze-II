@@ -101,10 +101,10 @@
     [super willMoveToSuperview:newSuperview];
     if (newSuperview) {
         [self _layoutSubviews];
-    } else {
-        //Tear Down
     }
 }
+
+#pragma mark - Setters
 
 - (void)setActivityImage:(UIImage *)activityImage
 {

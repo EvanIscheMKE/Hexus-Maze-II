@@ -9,11 +9,8 @@
 #import <UIKit/UIKit.h>
 
 @interface HDHexagonControl : UIView
-
 @property (nonatomic, strong) UIColor *currentPageTintColor;
 @property (nonatomic, strong) UIColor *tintColor;
-
 @property (nonatomic, assign) NSUInteger numberOfPages;
 @property (nonatomic, assign) NSUInteger currentPage;
-
 @end

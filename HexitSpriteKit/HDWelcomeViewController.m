@@ -55,14 +55,10 @@
 
 @end
 
-
-
 @interface HDLabelContainer : UIView
 - (void)startAnimating;
 - (void)stopAnimating;
 @end
-
-
 
 @implementation HDLabelContainer {
     BOOL _beginAnimationWhenMovedToSuperView;
@@ -133,8 +129,6 @@
 
 @end
 
-
-
 @interface HDWelcomeViewController ()
 @property (nonatomic, strong) HDLabelContainer *container;
 @end
@@ -154,67 +148,6 @@
 {
     [self _setup];
     [super viewDidLoad];
-}
-
-- (void)_setup
-{
-    self.view.backgroundColor = [UIColor flatWetAsphaltColor];
-
-    const CGFloat kButtonSize = ceil(110.0f * CGRectGetWidth(self.view.bounds)/375.0f);
-    const NSUInteger kHexaCount = 4;
-    
-    _kSpacing = kButtonSize - 5.0f; /*Padding*/
-    
-    CGAffineTransform rotate = CGAffineTransformMakeRotation(M_PI/2);
-    for (NSUInteger row = 0; row < kHexaCount; row++) {
-        CGRect hexaFrame = CGRectMake(0.0f, 0.0f, kButtonSize, kButtonSize);
-        HDHexagonButton *hexagon = [[HDHexagonButton alloc] initWithFrame:hexaFrame];
-        hexagon.tag = row;
-        hexagon.userInteractionEnabled      = NO;
-        hexagon.adjustsImageWhenHighlighted = NO;
-        hexagon.adjustsImageWhenDisabled    = NO;
-        hexagon.center = CGPointMake((row % 2 == 0) ? -kButtonSize/2 : CGRectGetWidth(self.view.bounds) + kButtonSize/2,
-                                    (CGRectGetMidY(self.view.bounds) - ((kHexaCount-1)/2.0f) * _kSpacing) + (_kSpacing * row));
-        hexagon.transform = rotate;
-        [self.view addSubview:hexagon];
-        
-        switch (row) {
-            case 0:
-                [hexagon setImage:nil forState:UIControlStateNormal];
-                [hexagon setBackgroundImage:[UIImage imageNamed:@"WelcomeVC-White-122"]   forState:UIControlStateNormal];
-                [hexagon setBackgroundImage:[UIImage imageNamed:@"WelcomeVC-White-Selected-122"] forState:UIControlStateSelected];
-                break;
-            case 1:
-                [hexagon setImage:nil forState:UIControlStateNormal];
-                [hexagon setBackgroundImage:[UIImage imageNamed:@"WelcomeVC-blue-122"]   forState:UIControlStateNormal];
-                [hexagon setBackgroundImage:[UIImage imageNamed:@"WelcomeVC-blue-selected-122"] forState:UIControlStateSelected];
-                break;
-            case 2:
-                [hexagon setImage:nil forState:UIControlStateNormal];
-                [hexagon setBackgroundImage:[UIImage imageNamed:@"WelcomeVC-emerald-122"]  forState:UIControlStateNormal];
-                [hexagon setBackgroundImage:[UIImage imageNamed:@"WelcomeVC-emerald-selected-122"] forState:UIControlStateSelected];
-                break;
-            default:{
-                CGAffineTransform transform = CGAffineTransformConcat(
-                CGAffineTransformMakeScale(CGRectGetWidth(hexagon.bounds) / 64.5f, CGRectGetWidth(hexagon.bounds) / 64.5f),
-                CGAffineTransformMakeRotation(-M_PI/2));
-                hexagon.imageView.transform = transform;
-                [hexagon setBackgroundImage:[UIImage imageNamed:@"WelcomeVC-emerald-122"]  forState:UIControlStateNormal];
-                [hexagon setBackgroundImage:[UIImage imageNamed:@"WelcomeVC-emerald-selected-122"] forState:UIControlStateSelected];
-            } break;
-        }
-    }
-    
-    CGRect containerRect = CGRectMake(0.0f, 0.0f, CGRectGetWidth(self.view.bounds), 2.0f);
-    self.container = [[HDLabelContainer alloc] initWithFrame:containerRect];
-    self.container.center = CGPointMake(CGRectGetMidX(self.view.bounds), CGRectGetMidY(self.view.bounds) - ((kHexaCount-1)/2.0f) * _kSpacing);
-    self.container.alpha = 0;
-    [self.view addSubview:self.container];
-    
-    _containerView.emitterLayer.emitterCells    = @[[CAEmitterCell hexaEmitterWithColor:[UIColor whiteColor] scale:1]];
-    _containerView.emitterLayer.emitterSize     = self.view.bounds.size;
-    _containerView.emitterLayer.emitterPosition = self.container.center;
-    _containerView.emitterLayer.birthRate       = 0;
 }
 
 - (void)viewDidAppear:(BOOL)animated
@@ -246,6 +179,67 @@
 }
 
 #pragma mark - Private
+
+- (void)_setup
+{
+    self.view.backgroundColor = [UIColor flatWetAsphaltColor];
+    
+    const CGFloat kButtonSize = ceil(110.0f * CGRectGetWidth(self.view.bounds)/375.0f);
+    const NSUInteger kHexaCount = 4;
+    
+    _kSpacing = kButtonSize - 5.0f; /*Padding*/
+    
+    CGAffineTransform rotate = CGAffineTransformMakeRotation(M_PI/2);
+    for (NSUInteger row = 0; row < kHexaCount; row++) {
+        CGRect hexaFrame = CGRectMake(0.0f, 0.0f, kButtonSize, kButtonSize);
+        HDHexagonButton *hexagon = [[HDHexagonButton alloc] initWithFrame:hexaFrame];
+        hexagon.tag = row;
+        hexagon.userInteractionEnabled      = NO;
+        hexagon.adjustsImageWhenHighlighted = NO;
+        hexagon.adjustsImageWhenDisabled    = NO;
+        hexagon.center = CGPointMake((row % 2 == 0) ? -kButtonSize/2 : CGRectGetWidth(self.view.bounds) + kButtonSize/2,
+                                     (CGRectGetMidY(self.view.bounds) - ((kHexaCount-1)/2.0f) * _kSpacing) + (_kSpacing * row));
+        hexagon.transform = rotate;
+        [self.view addSubview:hexagon];
+        
+        switch (row) {
+            case 0:
+                [hexagon setImage:nil forState:UIControlStateNormal];
+                [hexagon setBackgroundImage:[UIImage imageNamed:@"WelcomeVC-White-122"]   forState:UIControlStateNormal];
+                [hexagon setBackgroundImage:[UIImage imageNamed:@"WelcomeVC-White-Selected-122"] forState:UIControlStateSelected];
+                break;
+            case 1:
+                [hexagon setImage:nil forState:UIControlStateNormal];
+                [hexagon setBackgroundImage:[UIImage imageNamed:@"WelcomeVC-blue-122"]   forState:UIControlStateNormal];
+                [hexagon setBackgroundImage:[UIImage imageNamed:@"WelcomeVC-blue-selected-122"] forState:UIControlStateSelected];
+                break;
+            case 2:
+                [hexagon setImage:nil forState:UIControlStateNormal];
+                [hexagon setBackgroundImage:[UIImage imageNamed:@"WelcomeVC-emerald-122"]  forState:UIControlStateNormal];
+                [hexagon setBackgroundImage:[UIImage imageNamed:@"WelcomeVC-emerald-selected-122"] forState:UIControlStateSelected];
+                break;
+            default:{
+                CGAffineTransform transform = CGAffineTransformConcat(
+                                                                      CGAffineTransformMakeScale(CGRectGetWidth(hexagon.bounds) / 64.5f, CGRectGetWidth(hexagon.bounds) / 64.5f),
+                                                                      CGAffineTransformMakeRotation(-M_PI/2));
+                hexagon.imageView.transform = transform;
+                [hexagon setBackgroundImage:[UIImage imageNamed:@"WelcomeVC-emerald-122"]  forState:UIControlStateNormal];
+                [hexagon setBackgroundImage:[UIImage imageNamed:@"WelcomeVC-emerald-selected-122"] forState:UIControlStateSelected];
+            } break;
+        }
+    }
+    
+    CGRect containerRect = CGRectMake(0.0f, 0.0f, CGRectGetWidth(self.view.bounds), 2.0f);
+    self.container = [[HDLabelContainer alloc] initWithFrame:containerRect];
+    self.container.center = CGPointMake(CGRectGetMidX(self.view.bounds), CGRectGetMidY(self.view.bounds) - ((kHexaCount-1)/2.0f) * _kSpacing);
+    self.container.alpha = 0;
+    [self.view addSubview:self.container];
+    
+    _containerView.emitterLayer.emitterCells    = @[[CAEmitterCell hexaEmitterWithColor:[UIColor whiteColor] scale:1]];
+    _containerView.emitterLayer.emitterSize     = self.view.bounds.size;
+    _containerView.emitterLayer.emitterPosition = self.container.center;
+    _containerView.emitterLayer.birthRate       = 0;
+}
 
 - (void)_performIntroAnimationWithCompletion:(dispatch_block_t)completion
 {
@@ -312,6 +306,7 @@
         CGPoint position = self.container.center;
         position.y += _kSpacing;
         self.container.center = position;
+        NSLog(@"%@",NSStringFromCGPoint(self.container.center));
     }];
 }
 

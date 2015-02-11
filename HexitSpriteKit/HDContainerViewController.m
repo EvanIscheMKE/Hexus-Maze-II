@@ -35,9 +35,6 @@
 @end
 
 @implementation HDContainerViewController {
-    NSDictionary *_metrics;
-    NSDictionary *_views;
-    CGFloat _menuOffsetX;
     BOOL _isExpanded;
 }
 

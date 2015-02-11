@@ -41,7 +41,7 @@ NSString *descriptionForLevelIdx(NSUInteger levelIdx){
 {
     switch (levelIdx) {
         case HDLevelTipOne:
-            return [UIImage imageNamed:@"FillInTile"];
+            return [UIImage imageNamed:@"Default-Mine"];
         case HDLevelTipTwo:
             return [UIImage imageNamed:@"Default-Double"];
         case HDLevelTipThree:
@@ -53,7 +53,7 @@ NSString *descriptionForLevelIdx(NSUInteger levelIdx){
         case HDLevelTipSix:
             return [UIImage imageNamed:@"Default-End"];
         case HDLevelTipSeven:
-            return [UIImage imageNamed:@"FillInTile"];
+            return [UIImage imageNamed:@"Default-Mine"];
         default:
             return nil;
     }

@@ -120,7 +120,7 @@ static const CGFloat defaultContainerHeight = 70.0f;
         [self _beginGame];
     }
     
-    if (!self.bannerView) {
+    if (!self.bannerView && ![[NSUserDefaults standardUserDefaults] boolForKey:@"AdsRemovedKey"]) {
         self.bannerView = [[ADBannerView alloc] init];
         self.bannerView.delegate = self;
         [self.view addSubview:self.bannerView];

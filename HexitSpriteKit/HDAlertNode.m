@@ -30,29 +30,15 @@ const CGFloat TILE_MULTIPLIER = .845f;
 @end
 
 @implementation HDAlertNode {
-    NSArray *_descriptionArray;
     BOOL _isLastLevel;
 }
 
 - (instancetype)initWithSize:(CGSize)size lastLevel:(BOOL)lastLevel
 {
     if (self = [super initWithColor:[SKColor colorWithWhite:0.f alpha:.9f] size:size]) {
-        
+         _isLastLevel = lastLevel;
         self.userInteractionEnabled = YES;
         self.anchorPoint = CGPointMake(.5f, .5f);
-        
-        _isLastLevel = lastLevel;
-        _descriptionArray = @[NSLocalizedString(@"congratulation1", nil),
-                              NSLocalizedString(@"congratulation2", nil),
-                              NSLocalizedString(@"congratulation3", nil),
-                              NSLocalizedString(@"congratulation4", nil),
-                              NSLocalizedString(@"congratulation5", nil),
-                              NSLocalizedString(@"congratulation6", nil),
-                              NSLocalizedString(@"congratulation7", nil),
-                              NSLocalizedString(@"congratulation8", nil),
-                              NSLocalizedString(@"congratulation9", nil),
-                              NSLocalizedString(@"congratulation10", nil),
-                              NSLocalizedString(@"congratulation11", nil)];
         [self _setup];
     }
     return self;
@@ -62,6 +48,8 @@ const CGFloat TILE_MULTIPLIER = .845f;
 
 - (void)_setup
 {
+    const CGFloat yOffset = -CGRectGetHeight(self.frame)/10;
+    
     CGFloat kPositionX[TILE_COUNT];
     kPositionX[0] = -TILE_SIZE/2;
     kPositionX[1] = TILE_SIZE/2;
@@ -72,13 +60,13 @@ const CGFloat TILE_MULTIPLIER = .845f;
     kPositionX[6] = TILE_SIZE/2;
     
     CGFloat kPositionY[TILE_COUNT];
-    kPositionY[0] = -(TILE_SIZE*TILE_MULTIPLIER);
-    kPositionY[1] = -(TILE_SIZE*TILE_MULTIPLIER);
-    kPositionY[2] = 0.0f;
-    kPositionY[3] = 0.0f;
-    kPositionY[4] = 0.0f;
-    kPositionY[5] = (TILE_SIZE*TILE_MULTIPLIER);
-    kPositionY[6] = (TILE_SIZE*TILE_MULTIPLIER);
+    kPositionY[0] = yOffset -(TILE_SIZE*TILE_MULTIPLIER);
+    kPositionY[1] = yOffset -(TILE_SIZE*TILE_MULTIPLIER);
+    kPositionY[2] = yOffset;
+    kPositionY[3] = yOffset;
+    kPositionY[4] = yOffset;
+    kPositionY[5] = yOffset +(TILE_SIZE*TILE_MULTIPLIER);
+    kPositionY[6] = yOffset +(TILE_SIZE*TILE_MULTIPLIER);
     
     for (NSUInteger i = 0; i < TILE_COUNT; i++) {
         SKSpriteNode *tile = [SKSpriteNode spriteNodeWithImageNamed:@"Alert-Rate-220"];
@@ -92,17 +80,6 @@ const CGFloat TILE_MULTIPLIER = .845f;
             [self _addLevelLabelToSuperView:tile];
         }
     }
-    
-    CGPoint descriptionCenter = CGPointMake(0.0f, -CGRectGetHeight(self.frame)/3);
-    self.descriptionLabel = [SKLabelNode labelNodeWithFontNamed:@"GillSans"];
-    self.descriptionLabel.text      = [_descriptionArray objectAtIndex:arc4random() % _descriptionArray.count];
-    self.descriptionLabel.fontSize  = 26.0f;
-    self.descriptionLabel.position  = descriptionCenter;
-    self.descriptionLabel.fontColor = [SKColor whiteColor];
-    self.descriptionLabel.horizontalAlignmentMode = SKLabelHorizontalAlignmentModeCenter;
-    self.descriptionLabel.verticalAlignmentMode = SKLabelVerticalAlignmentModeCenter;
-    self.descriptionLabel.scale = CGRectGetWidth([[UIScreen mainScreen] bounds])/375.0f;
-    [self addChild:self.descriptionLabel];
     
     self.star = [SKSpriteNode spriteNodeWithImageNamed:@"CompletionStars"];
     self.star.position  = CGPointMake(0.0f, CGRectGetHeight(self.frame)/2.65f);
@@ -119,7 +96,6 @@ const CGFloat TILE_MULTIPLIER = .845f;
     self.levelLabel.verticalAlignmentMode = SKLabelVerticalAlignmentModeCenter;
     self.levelLabel.fontColor = [UIColor whiteColor];
     self.levelLabel.fontSize = TILE_SIZE/2.25f;
-    self.levelLabel.scale = CGRectGetWidth([[UIScreen mainScreen] bounds])/375.0f;
     [node addChild:self.levelLabel];
 }
 
@@ -151,7 +127,12 @@ const CGFloat TILE_MULTIPLIER = .845f;
 
 - (void)dismissWithCompletion:(dispatch_block_t)completion
 {
-    [self runAction:[SKAction fadeAlphaTo:0.0f duration:.4f] completion:^{
+    SKAction *scale    = [SKAction scaleTo:.3f duration:.300f];
+    SKAction *rotate   = [SKAction rotateByAngle:((arc4random() % 2) == 0)?-M_PI_4:M_PI_4 duration:.500f];
+    SKAction *position = [SKAction moveToY:-CGRectGetHeight(self.frame)/1.35 duration:.700f];
+    
+    SKAction *animationGroup = [SKAction group:@[scale, rotate, position]];
+    [self runAction:animationGroup completion:^{
         [self removeFromParent];
         if (completion) {
             completion();

@@ -41,7 +41,7 @@
     
     [self setTitleColor:[UIColor flatWetAsphaltColor] forState:UIControlStateNormal];
     [self setBackgroundImage:[UIImage imageNamed:@"Default-Count"] forState:UIControlStateNormal];
-    [self setImage:[UIImage imageNamed:@"Locked"] forState:UIControlStateNormal];
+    [self setImage:[UIImage imageNamed:@"Locked-25"] forState:UIControlStateNormal];
 }
 
 - (void)layoutSubviews
@@ -74,7 +74,7 @@
 {
     _index = index;
     if (self.levelState != HDLevelStateLocked) {
-        [self setBackgroundImage:[UIImage imageNamed:@"Selected-OneTouch"] forState:UIControlStateNormal];
+        [self setBackgroundImage:[UIImage imageNamed:@"Selected-OneTap"] forState:UIControlStateNormal];
         [self setTitle:[NSString stringWithFormat:@"%zd", index] forState:UIControlStateNormal];
     } else {
         [self setTitle:nil forState:UIControlStateNormal];
@@ -85,7 +85,7 @@
 {
     _levelState = levelState;
     if (levelState != HDLevelStateLocked) {
-        [self setImage:[UIImage imageNamed:(levelState == HDLevelStateCompleted)? @"WhiteStar-" : @"BlueStar-"]
+        [self setImage:[UIImage imageNamed:(levelState == HDLevelStateCompleted)? @"WhiteStar" : @"BlueStar"]
               forState:UIControlStateNormal];
         return;
     }

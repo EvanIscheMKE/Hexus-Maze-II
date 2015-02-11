@@ -52,7 +52,7 @@ NSString * const HDTitleLocalizationKey = @"Tips";
     
     self.shapeLayer.lineWidth = 0;
     
-    self.imageView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"FillInTile"]];
+    self.imageView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"Default-Mine"]];
     [self addSubview:self.imageView];
     
     self.titleLabel = [[UILabel alloc] init];
