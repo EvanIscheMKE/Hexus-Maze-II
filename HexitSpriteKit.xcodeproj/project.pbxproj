@@ -151,6 +151,7 @@
 		38C67D2C1A0AEBD50038526C /* HDGameCenterManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 38C67D2B1A0AEBD50038526C /* HDGameCenterManager.m */; };
 		38C67D2F1A0AF3960038526C /* NSMutableArray+UniqueAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 38C67D2E1A0AF3960038526C /* NSMutableArray+UniqueAdditions.m */; };
 		38C67D311A0B149F0038526C /* 104947__glaneur-de-sons__bubble-8.wav in Resources */ = {isa = PBXBuildFile; fileRef = 38C67D301A0B149F0038526C /* 104947__glaneur-de-sons__bubble-8.wav */; };
+		38C7D1151A8C0439009CDD0B /* HDTileManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 38C7D1141A8C0439009CDD0B /* HDTileManager.m */; };
 		38D4247A1A4F6C1A00FD21A2 /* B2.m4a in Resources */ = {isa = PBXBuildFile; fileRef = 38D424571A4F6C1A00FD21A2 /* B2.m4a */; };
 		38D4247B1A4F6C1A00FD21A2 /* A2.m4a in Resources */ = {isa = PBXBuildFile; fileRef = 38D424581A4F6C1A00FD21A2 /* A2.m4a */; };
 		38D4247C1A4F6C1A00FD21A2 /* G2.m4a in Resources */ = {isa = PBXBuildFile; fileRef = 38D424591A4F6C1A00FD21A2 /* G2.m4a */; };
@@ -425,6 +426,8 @@
 		38C67D2D1A0AF3960038526C /* NSMutableArray+UniqueAdditions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSMutableArray+UniqueAdditions.h"; sourceTree = "<group>"; };
 		38C67D2E1A0AF3960038526C /* NSMutableArray+UniqueAdditions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSMutableArray+UniqueAdditions.m"; sourceTree = "<group>"; };
 		38C67D301A0B149F0038526C /* 104947__glaneur-de-sons__bubble-8.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = "104947__glaneur-de-sons__bubble-8.wav"; sourceTree = "<group>"; };
+		38C7D1131A8C0439009CDD0B /* HDTileManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HDTileManager.h; sourceTree = "<group>"; };
+		38C7D1141A8C0439009CDD0B /* HDTileManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HDTileManager.m; sourceTree = "<group>"; };
 		38D424571A4F6C1A00FD21A2 /* B2.m4a */ = {isa = PBXFileReference; lastKnownFileType = file; path = B2.m4a; sourceTree = "<group>"; };
 		38D424581A4F6C1A00FD21A2 /* A2.m4a */ = {isa = PBXFileReference; lastKnownFileType = file; path = A2.m4a; sourceTree = "<group>"; };
 		38D424591A4F6C1A00FD21A2 /* G2.m4a */ = {isa = PBXFileReference; lastKnownFileType = file; path = G2.m4a; sourceTree = "<group>"; };
@@ -1037,6 +1040,8 @@
 				387459F61A84B1EA00EAEEFE /* HDIAdHelper.m */,
 				387459F81A84B5B700EAEEFE /* HDHexusIAdHelper.h */,
 				387459F91A84B5B700EAEEFE /* HDHexusIAdHelper.m */,
+				38C7D1131A8C0439009CDD0B /* HDTileManager.h */,
+				38C7D1141A8C0439009CDD0B /* HDTileManager.m */,
 			);
 			name = Model;
 			sourceTree = "<group>";
@@ -1522,6 +1527,7 @@
 				386CF5DB1A383AFC006A8381 /* HDScene.m in Sources */,
 				38C0A8781A075FBA00C552F1 /* HDHexagonNode.m in Sources */,
 				387459FA1A84B5B700EAEEFE /* HDHexusIAdHelper.m in Sources */,
+				38C7D1151A8C0439009CDD0B /* HDTileManager.m in Sources */,
 				38C67CD71A0AB8D80038526C /* HDWelcomeViewController.m in Sources */,
 				38C0A8471A07251700C552F1 /* AppDelegate.m in Sources */,
 				389E95441A4A128100F2DF05 /* HDLevelsViewController.m in Sources */,

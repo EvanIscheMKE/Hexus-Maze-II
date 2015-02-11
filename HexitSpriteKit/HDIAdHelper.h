@@ -10,7 +10,6 @@
 #import <Foundation/Foundation.h>
 
 extern NSString * const IAPHelperProductPurchasedNotification;
-
 typedef void (^RequestProductsCompletionHandler)(BOOL success, NSArray * products);
 @interface HDIAdHelper : NSObject
 - (instancetype)initWithProductIdentifiers:(NSSet *)productIdentifiers;

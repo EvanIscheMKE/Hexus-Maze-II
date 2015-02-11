@@ -8,9 +8,9 @@
 
 
 // Notification Keys
-NSString * const HDSoundNotification          = @"TileWasSoundNotification";
-NSString * const HDVibrationNotification      = @"TileWasVibrationNotification";
-NSString * const HDRestartNotificaiton        = @"restartNotification";
+NSString * const HDSoundNotification      = @"TileWasSoundNotification";
+NSString * const HDVibrationNotification  = @"TileWasVibrationNotification";
+NSString * const HDRestartNotificaiton    = @"restartNotification";
 
 //Dictionary Keys
 NSString * const HDHexGridKey = @"grid";

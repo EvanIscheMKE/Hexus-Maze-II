@@ -16,6 +16,7 @@
 #import "HDSettingsManager.h"
 #import "HDSoundManager.h"
 #import "HDGameCenterManager.h"
+#import "HDTileManager.h"
 #import "SKEmitterNode+EmitterAdditions.h"
 #import "NSMutableArray+UniqueAdditions.h"
 #import "HDMapManager.h"
@@ -33,7 +34,6 @@ static const CGFloat kTileHeightInsetMultiplier = .845f;
 @interface HDScene ()<HDHexagonDelegate, HDAlertnodeDelegate>
 @property (nonatomic, strong) NSArray *sounds;
 @property (nonatomic, strong) NSArray *hexagons;
-@property (nonatomic, strong) NSMutableArray *selectedHexagons;
 @property (nonatomic, assign) BOOL restarting;
 @property (nonatomic, assign) BOOL animating;
 @property (nonatomic, assign) BOOL includeEndTile;
@@ -61,10 +61,8 @@ static const CGFloat kTileHeightInsetMultiplier = .845f;
         
         self.countDownSoundIndex = NO;
         self.backgroundColor = [SKColor flatWetAsphaltColor];
-        
-        self.selectedHexagons = [NSMutableArray array];
+
         self.sounds = [self _preloadedGameSounds];
-        
         self.gameLayer = [SKNode node];
         [self addChild:self.gameLayer];
         
@@ -130,7 +128,7 @@ static const CGFloat kTileHeightInsetMultiplier = .845f;
     _soundIndex = 0;
     
     // Clear out Arrays
-    [_selectedHexagons removeAllObjects];
+    [[HDTileManager sharedManager] clear];
     
     // Animate out
     [HDHelper completionAnimationWithTiles:_hexagons completion:^{
@@ -163,12 +161,12 @@ static const CGFloat kTileHeightInsetMultiplier = .845f;
     
     // Find the node located under the touch
     HDHexagon *currentTile  = [self _findHexagonContainingPoint:location];
-    HDHexagon *previousTile = [_selectedHexagons lastObject];
+    HDHexagon *previousTile = [[HDTileManager sharedManager] lastHexagonObject];
     
     // If the newly selected node is connected to previously selected node.. prooccceeed
     if ([self _validateNextMoveToHexagon:currentTile fromHexagon:previousTile]) {
         [currentTile selectedAfterRecievingTouches];
-        [_selectedHexagons addObject:currentTile];
+        [[HDTileManager sharedManager] addHexagon:currentTile];
         [self _performEffectsForTile:currentTile];
         [self _checkGameStateForTile:currentTile];
         [self _playSoundForHexagon:currentTile withVibration:YES];
@@ -434,7 +432,10 @@ static const CGFloat kTileHeightInsetMultiplier = .845f;
 
 - (BOOL)_validateNextMoveToHexagon:(HDHexagon *)toHexagon fromHexagon:(HDHexagon *)fromHexagon
 {
-    if ( toHexagon.node == nil || (( ![_selectedHexagons count] ) && toHexagon.type != HDHexagonTypeStarter )) {
+    NSParameterAssert(toHexagon);
+    NSParameterAssert(fromHexagon);
+    
+    if ([[HDTileManager sharedManager] isEmpty] && toHexagon.type != HDHexagonTypeStarter) {
         return NO;
     }
     
@@ -469,7 +470,7 @@ static const CGFloat kTileHeightInsetMultiplier = .845f;
     }
     
     // Clear out Arrays
-    [_selectedHexagons removeAllObjects];
+    [[HDTileManager sharedManager] clear];
     
     // We want to start at 0 and count up when the new levels layed out
     self.countDownSoundIndex = NO;
