@@ -13,6 +13,7 @@ NSString *descriptionForLevelIdx(NSUInteger levelIdx);
 
 typedef NS_ENUM(NSUInteger, HDLevelTip){
     HDLevelTipOne   = 1,
+    HDLevelTipWhite = 6,
     HDLevelTipTwo   = 15,
     HDLevelTipThree = 29,
     HDLevelTipFour  = 43,

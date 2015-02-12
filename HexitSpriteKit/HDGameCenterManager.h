@@ -6,6 +6,8 @@
 //  Copyright (c) 2014 Evan William Ische. All rights reserved.
 //
 
+@import GameKit;
+
 #import <Foundation/Foundation.h>
 
 @interface HDGameCenterManager : NSObject

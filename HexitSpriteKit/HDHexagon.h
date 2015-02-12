@@ -41,29 +41,21 @@ static const NSInteger NumberOfColumns = 9;
 @class HDHexagonNode;
 @protocol HDHexagonDelegate;
 @interface HDHexagon : NSObject
-
 @property (nonatomic, readonly) NSInteger touchesCount;
-
 @property (nonatomic, getter=isCountTile, assign) BOOL countTile;
 @property (nonatomic, getter=isSelected,  assign)  BOOL selected;
 @property (nonatomic, getter=isLocked,    assign)  BOOL locked;
-
 @property (nonatomic, weak) id<HDHexagonDelegate> delegate;
 @property (nonatomic, strong) HDHexagonNode *node;
-
 @property (nonatomic, assign) HDHexagonState state;
 @property (nonatomic, assign) HDHexagonType type;
-
 @property (nonatomic, readonly) NSInteger column;
 @property (nonatomic, readonly) NSInteger row;
-
 - (instancetype)initWithRow:(NSInteger)row column:(NSInteger)column type:(HDHexagonType)type NS_DESIGNATED_INITIALIZER;
-
 - (UIColor *)emitterColor;
 - (NSString *)defaultImagePath;
 - (BOOL)selectedAfterRecievingTouches;
 - (void)restoreToInitialState;
-
 @end
 
 @protocol HDHexagonDelegate <NSObject>

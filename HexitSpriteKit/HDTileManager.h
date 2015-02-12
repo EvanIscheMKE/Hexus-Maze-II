@@ -13,6 +13,8 @@
 @interface HDTileManager : NSObject
 + (HDTileManager *)sharedManager;
 - (HDHexagon *)lastHexagonObject;
+- (HDHexagon *)teleportTile;
+- (void)addTeleportTile:(HDHexagon *)hexagon;
 - (void)addHexagon:(HDHexagon *)hexagon;
 - (BOOL)isEmpty;
 - (void)clear;

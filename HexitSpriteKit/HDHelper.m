@@ -30,7 +30,8 @@ NSString *descriptionForLevelIdx(NSUInteger levelIdx){
         case HDLevelTipSeven:
             return @"Looking like you'll need to teleport";
         default:
-            break;
+            return @"There's more then one for a reason";
+        break;
     }
     return nil;
 };
@@ -55,7 +56,7 @@ NSString *descriptionForLevelIdx(NSUInteger levelIdx){
         case HDLevelTipSeven:
             return [UIImage imageNamed:@"Default-Mine"];
         default:
-            return nil;
+            return [UIImage imageNamed:@"Default-White"];
     }
 }
 

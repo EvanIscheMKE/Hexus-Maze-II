@@ -7,9 +7,11 @@
 //
 
 #import "HDTileManager.h"
+#import "NSMutableArray+UniqueAdditions.h"
 
 @interface HDTileManager ()
-@property (nonatomic, strong) NSMutableArray *bank;
+@property (nonatomic, strong) NSMutableArray *selectedTileBank;
+@property (nonatomic, strong) NSMutableArray *teleportTileBank;
 @end
 
 @implementation HDTileManager
@@ -27,25 +29,39 @@
 - (instancetype)init
 {
     if (self = [super init]) {
-        self.bank = [NSMutableArray array];
+        self.selectedTileBank = [NSMutableArray array];
+        self.teleportTileBank = [NSMutableArray array];
     }
     return self;
 }
 
+- (void)addTeleportTile:(HDHexagon *)hexagon {
+    [self.teleportTileBank addObject:hexagon];
+    [self.teleportTileBank shuffle];
+}
+
+- (HDHexagon *)teleportTile
+{
+    HDHexagon *tile = self.teleportTileBank.lastObject;
+    [self.teleportTileBank removeObjectAtIndex:self.teleportTileBank.count - 1];
+    [self.teleportTileBank insertObject:tile atIndex:0];
+    return tile;
+}
+
 - (void)clear {
-    [self.bank removeAllObjects];
+    [self.selectedTileBank removeAllObjects];
 }
 
 - (HDHexagon *)lastHexagonObject {
-    return self.bank.lastObject;
+    return self.selectedTileBank.lastObject;
 }
 
 - (void)addHexagon:(HDHexagon *)hexagon {
-    [self.bank addObject:hexagon];
+    [self.selectedTileBank addObject:hexagon];
 }
 
 - (BOOL)isEmpty {
-    return self.bank.count == 0;
+    return self.selectedTileBank.count == 0;
 }
 
 

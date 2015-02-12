@@ -24,10 +24,9 @@
 #import "HDGridManager.h"
 #import "HDAlertNode.h"
 
-#define HEXAGON_TITLE(x) [NSString stringWithFormat:@"HEXAGON%ld",x]
-
 #define kTileSize [[UIScreen mainScreen] bounds].size.width / (NumberOfColumns - 1)
 
+NSString * const HDLostGameKey    = @"lostGameAchievement";
 NSString * const HDSoundActionKey = @"SOUND_KEY";
 
 static const CGFloat kTileHeightInsetMultiplier = .845f;
@@ -41,6 +40,7 @@ static const CGFloat kTileHeightInsetMultiplier = .845f;
 @property (nonatomic, assign) BOOL countDownSoundIndex;
 @property (nonatomic, strong) SKAction *completionZing;
 @property (nonatomic, strong) SKNode *gameLayer;
+@property (nonatomic, strong) HDHexagon *animatingTeleportTile;
 @end
 
 @implementation HDScene {
@@ -87,8 +87,8 @@ static const CGFloat kTileHeightInsetMultiplier = .845f;
         hexagon.node = hexagonNode;
         hexagon.delegate = hexagon.isCountTile ? self : nil;
         [self.gameLayer addChild:hexagonNode];
-
         [self _updateVariablesForPositionFromPoint:center];
+        
         if (hexagon.type == HDHexagonTypeEnd) {
             self.includeEndTile = YES;
         }
@@ -96,6 +96,10 @@ static const CGFloat kTileHeightInsetMultiplier = .845f;
     }
     
     self.hexagons = [NSMutableArray arrayWithArray:grid];
+    
+    if ([self _prepareTeleportTiles]) {
+        [self _beginTeleAnimations];
+    }
     
     // Once all Tiles are layed out, center them
     [self _centerTilePositionWithCompletion:^{
@@ -110,6 +114,33 @@ static const CGFloat kTileHeightInsetMultiplier = .845f;
     }];
 }
 
+- (BOOL)_prepareTeleportTiles {
+    
+    BOOL hasTeleportTiles = NO;
+    for (HDHexagon *hexagon in self.hexagons) {
+        if (hexagon.type == HDHexagonTypeTeleport) {
+            [[HDTileManager sharedManager] addTeleportTile:hexagon];
+            hasTeleportTiles = YES;
+        }
+    }
+    return hasTeleportTiles;
+}
+
+- (void)_beginTeleAnimations {
+    
+    self.animatingTeleportTile = [[HDTileManager sharedManager] teleportTile];
+    
+    SKAction *textures = [SKAction animateWithTextures:@[[SKTexture textureWithImageNamed:@"Default-Teleport-1"],
+                                                         [SKTexture textureWithImageNamed:@"Default-Teleport-2"],
+                                                         [SKTexture textureWithImageNamed:@"Default-Teleport-3"],
+                                                         [SKTexture textureWithImageNamed:@"Default-Teleport"]]
+                                          timePerFrame:.250f];
+    
+    [self.animatingTeleportTile.node runAction:[SKAction repeatActionForever:textures]];
+    [self.animatingTeleportTile.node performSelector:@selector(removeAllActions) withObject:nil afterDelay:2.0f];
+    [self performSelector:@selector(_beginTeleAnimations) withObject:nil afterDelay:2.0f];
+}
+
 - (void)restart
 {
     if (self.animating) {
@@ -119,7 +150,7 @@ static const CGFloat kTileHeightInsetMultiplier = .845f;
     self.animating = YES;
     
     // Display Achievement for losing level
-    [[HDGameCenterManager sharedManager] submitAchievementWithIdenifier:@"lostGameAchievement"
+    [[HDGameCenterManager sharedManager] submitAchievementWithIdenifier:HDLostGameKey
                                                        completionBanner:YES
                                                         percentComplete:100];
     self.countDownSoundIndex = NO;
@@ -138,6 +169,7 @@ static const CGFloat kTileHeightInsetMultiplier = .845f;
         }
         [HDHelper entranceAnimationWithTiles:_hexagons completion:^{
             self.animating = NO;
+            self.userInteractionEnabled = YES;
         }];
     }];
 }
@@ -163,13 +195,27 @@ static const CGFloat kTileHeightInsetMultiplier = .845f;
     HDHexagon *currentTile  = [self _findHexagonContainingPoint:location];
     HDHexagon *previousTile = [[HDTileManager sharedManager] lastHexagonObject];
     
-    // If the newly selected node is connected to previously selected node.. prooccceeed
-    if ([self _validateNextMoveToHexagon:currentTile fromHexagon:previousTile]) {
-        [currentTile selectedAfterRecievingTouches];
-        [[HDTileManager sharedManager] addHexagon:currentTile];
-        [self _performEffectsForTile:currentTile];
-        [self _checkGameStateForTile:currentTile];
+    if (currentTile.type == HDHexagonTypeNone) {
+        [self _checkTileForRestart:currentTile];
+        return;
+    }
+    
+    if (currentTile.type == HDHexagonTypeTeleport) {
+        [[HDTileManager sharedManager] addHexagon:self.animatingTeleportTile];
+        [self _validateNextMoveToHexagon:nil fromHexagon:self.animatingTeleportTile];
         [self _playSoundForHexagon:currentTile withVibration:YES];
+        return;
+    }
+
+    // If the newly selected node is connected to previously selected node.. prooccceeed
+    if (!currentTile.isSelected && currentTile.state != HDHexagonStateDisabled && currentTile) {
+        if ([self _validateNextMoveToHexagon:currentTile fromHexagon:previousTile]) {
+            [currentTile selectedAfterRecievingTouches];
+            [[HDTileManager sharedManager] addHexagon:currentTile];
+            [self _performEffectsForTile:currentTile];
+            [self _checkGameStateForTile:currentTile];
+            [self _playSoundForHexagon:currentTile withVibration:YES];
+        }
     }
 }
 
@@ -231,7 +277,6 @@ static const CGFloat kTileHeightInsetMultiplier = .845f;
 - (HDHexagon *)_findHexagonContainingPoint:(CGPoint)point
 {
     const CGFloat smallHexagonInset = CGRectGetWidth([[[_hexagons firstObject] node] frame])/6;
-    const CGFloat largeHexagonInset = 15.0f;
     HDHexagon *selectedHexagon = nil;
     for (HDHexagon *hex in _hexagons) {
         if (CGRectContainsPoint(CGRectInset(hex.node.frame, smallHexagonInset, smallHexagonInset), point)) {
@@ -239,14 +284,7 @@ static const CGFloat kTileHeightInsetMultiplier = .845f;
         }
     }
     
-    if (selectedHexagon.type == HDHexagonTypeNone) {
-        if (CGRectContainsPoint(CGRectInset(selectedHexagon.node.frame, largeHexagonInset, largeHexagonInset), point)) {
-            [self _checkTileForRestart:selectedHexagon];
-            return nil;
-        }
-    }
-    
-    return (selectedHexagon.isSelected || selectedHexagon.state == HDHexagonStateDisabled) ? nil : selectedHexagon;
+    return selectedHexagon;
 }
 
 - (void)_checkTileForRestart:(HDHexagon *)hexagon
@@ -256,6 +294,7 @@ static const CGFloat kTileHeightInsetMultiplier = .845f;
     }
     
     self.animating = YES;
+    self.userInteractionEnabled = NO;
     
     SKAction *rotation = [SKAction rotateByAngle:M_PI*2 duration:0.3f];
     
@@ -294,15 +333,6 @@ static const CGFloat kTileHeightInsetMultiplier = .845f;
     if (hexagon.isCountTile || hexagon.type == HDHexagonTypeStarter||[self _inPlayTileCount] == 0) {
         AudioServicesPlaySystemSound(kSystemSoundID_Vibrate);
     }
-}
-
-+ (CGPoint)_pointForColumn:(NSInteger)column row:(NSInteger)row
-{
-    const CGFloat kOriginY = ((row * (kTileSize * kTileHeightInsetMultiplier)) );
-    const CGFloat kOriginX = ((column * kTileSize));
-    const CGFloat kAlternateOffset = (row % 2 == 0) ? kTileSize / 2 : 0.0f;
-    
-    return CGPointMake(kAlternateOffset + kOriginX, kOriginY);
 }
 
 - (void)_centerTilePositionWithCompletion:(dispatch_block_t)completion
@@ -432,9 +462,6 @@ static const CGFloat kTileHeightInsetMultiplier = .845f;
 
 - (BOOL)_validateNextMoveToHexagon:(HDHexagon *)toHexagon fromHexagon:(HDHexagon *)fromHexagon
 {
-    NSParameterAssert(toHexagon);
-    NSParameterAssert(fromHexagon);
-    
     if ([[HDTileManager sharedManager] isEmpty] && toHexagon.type != HDHexagonTypeStarter) {
         return NO;
     }
@@ -540,6 +567,17 @@ static const CGFloat kTileHeightInsetMultiplier = .845f;
             return;
         }
     }
+}
+
+#pragma mark - Class
+
++ (CGPoint)_pointForColumn:(NSInteger)column row:(NSInteger)row
+{
+    const CGFloat kOriginY = ((row * (kTileSize * kTileHeightInsetMultiplier)) );
+    const CGFloat kOriginX = ((column * kTileSize));
+    const CGFloat kAlternateOffset = (row % 2 == 0) ? kTileSize / 2 : 0.0f;
+    
+    return CGPointMake(kAlternateOffset + kOriginX, kOriginY);
 }
 
 @end

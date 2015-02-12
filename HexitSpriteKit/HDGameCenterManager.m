@@ -6,11 +6,12 @@
 //  Copyright (c) 2014 Evan William Ische. All rights reserved.
 //
 
-@import GameKit;
-
 #import "HDGameCenterManager.h"
 
 NSString * const HDLeaderBoardKey = @"LevelLeaderboard";
+
+const NSUInteger completion = 100;
+const CGFloat levelsPerSection = 14;
 @implementation HDGameCenterManager
 
 + (HDGameCenterManager *)sharedManager
@@ -42,11 +43,10 @@ NSString * const HDLeaderBoardKey = @"LevelLeaderboard";
 - (void)reportLevelCompletion:(int64_t)level
 {
     if (level == 1) {
-        [self submitAchievementWithIdenifier:@"Achievement" completionBanner:YES percentComplete:100];
+        [self submitAchievementWithIdenifier:@"Achievement" completionBanner:YES percentComplete:completion];
     }
     
     [self submitAchievementForLevel:level];
-    
     if ([GKLocalPlayer localPlayer].isAuthenticated) {
         GKScore *completedLevel = [[GKScore alloc] initWithLeaderboardIdentifier:HDLeaderBoardKey];
         completedLevel.value = level;
@@ -60,28 +60,34 @@ NSString * const HDLeaderBoardKey = @"LevelLeaderboard";
 
 - (void)submitAchievementForLevel:(int64_t)level
 {
-    NSInteger identifierIndex  = ceilf(level / 14.0f);
-    NSInteger percentCompleted = ceilf((level % 14) / 14.0f * 100);
-    
-    if (percentCompleted == 0) {
-        percentCompleted += 100;
-    }
-    
-    [self submitAchievementWithIdenifier:[NSString stringWithFormat:@"Achievement%zd",identifierIndex]
-                        completionBanner:(percentCompleted == 100)
-                         percentComplete:percentCompleted];
+    NSUInteger percentComplete = [self _completionPercentageFromLevel:level];
+    [self submitAchievementWithIdenifier:[NSString stringWithFormat:@"Achievement%zd",ceilf(level / levelsPerSection)]
+                        completionBanner:(percentComplete == completion)
+                         percentComplete:percentComplete];
 }
 
 - (void)submitAchievementWithIdenifier:(NSString *)identifier completionBanner:(BOOL)banner percentComplete:(NSUInteger)percentCompleted
 {
     GKAchievement *scoreAchievement = [[GKAchievement alloc] initWithIdentifier:identifier];
-    scoreAchievement.showsCompletionBanner = (percentCompleted == 100);
+    scoreAchievement.showsCompletionBanner = (percentCompleted == completion);
     scoreAchievement.percentComplete = percentCompleted;
     [GKAchievement reportAchievements:@[scoreAchievement] withCompletionHandler:^(NSError *error) {
         if (error) {
             NSLog(@"%@",[error localizedDescription]);
         }
     }];
+}
+
+#pragma mark - Private
+
+- (NSInteger)_completionPercentageFromLevel:(int64_t)level
+{
+    NSInteger percentCompleted = ceilf((level % (NSUInteger)levelsPerSection) / levelsPerSection * completion);
+    if (percentCompleted == 0) {
+        return completion;
+    }
+    
+    return percentCompleted;
 }
 
 @end
