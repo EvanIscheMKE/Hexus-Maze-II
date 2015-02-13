@@ -38,25 +38,28 @@ NSString *descriptionForLevelIdx(NSUInteger levelIdx){
 
 @implementation HDHelper
 
-+ (UIImage *)imageFromLevelIdx:(NSUInteger)levelIdx
++ (NSArray *)imageFromLevelIdx:(NSUInteger)levelIdx
 {
     switch (levelIdx) {
         case HDLevelTipOne:
-            return [UIImage imageNamed:@"Default-Mine"];
+            return @[[UIImage imageNamed:@"Default-Mine"]];
         case HDLevelTipTwo:
-            return [UIImage imageNamed:@"Default-Double"];
+            return @[[UIImage imageNamed:@"Default-Double"]];
         case HDLevelTipThree:
-            return [UIImage imageNamed:@"Default-Count"];
+            return @[[UIImage imageNamed:@"Default-Count"]];
         case HDLevelTipFour:
-            return [UIImage imageNamed:@"Default-Triple"];
+            return @[[UIImage imageNamed:@"Default-Triple"]];
         case HDLevelTipFive:
-            return [UIImage imageNamed:@"Default-End"];
+            return @[[UIImage imageNamed:@"Default-End"]];
         case HDLevelTipSix:
-            return [UIImage imageNamed:@"Default-End"];
+            return @[[UIImage imageNamed:@"Default-End"]];
         case HDLevelTipSeven:
-            return [UIImage imageNamed:@"Default-Mine"];
+            return @[[UIImage imageNamed:@"Default-Teleport-3"],
+                     [UIImage imageNamed:@"Default-Teleport-2"],
+                     [UIImage imageNamed:@"Default-Teleport-1"],
+                     [UIImage imageNamed:@"Default-Teleport"],];
         default:
-            return [UIImage imageNamed:@"Default-White"];
+            return @[[UIImage imageNamed:@"Default-White"]];
     }
 }
 
@@ -208,7 +211,7 @@ NSString *descriptionForLevelIdx(NSUInteger levelIdx){
     
     for (int i = 0; i < 6; i++) {
         for (HDHexagon *current in array) {
-            if (!current.isSelected && current.state == HDHexagonStateEnabled) {
+            if ((!current.isSelected && current.state == HDHexagonStateEnabled) || current.type == HDHexagonTypeTeleport) {
                 if (current.row == hexagonRow[i] && current.column == hexagonColumn[i]) {
                     [hexagons addObject:current];
                     break;

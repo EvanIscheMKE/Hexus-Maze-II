@@ -160,22 +160,22 @@ static const CGFloat defaultContainerHeight = 70.0f;
     if (_levelIdx % 14 == 1 || _levelIdx == 1) {
         if (![[NSUserDefaults standardUserDefaults] boolForKey:[NSString stringWithFormat:@"%zd",_levelIdx]]) {
             [self _showTipsWithDescription:descriptionForLevelIdx(_levelIdx)
-                                     image:[HDHelper imageFromLevelIdx:_levelIdx]];
+                                     images:[HDHelper imageFromLevelIdx:_levelIdx]];
             [[NSUserDefaults standardUserDefaults] setBool:YES forKey:[NSString stringWithFormat:@"%zd",_levelIdx]];
         }
     }
 }
 
-- (void)_showTipsWithDescription:(NSString *)description image:(UIImage *)image
+- (void)_showTipsWithDescription:(NSString *)description images:(NSArray *)images
 {
     if (!self.hintsView) {
         CGRect hintsFrame = CGRectMake(0.0f,
                                        CGRectGetHeight(self.view.bounds),
                                        CGRectGetWidth(self.view.bounds),
                                        CGRectGetHeight(self.view.bounds)/5);
-        self.hintsView = [[HDHintsView alloc] initWithDescription:description];
-        self.hintsView.imageView.image = image;
-        self.hintsView.frame = hintsFrame;
+        self.hintsView = [[HDHintsView alloc] initWithFrame:hintsFrame
+                                                description:description
+                                                     images:images];
         [self.view insertSubview:self.hintsView atIndex:0];
     }
     

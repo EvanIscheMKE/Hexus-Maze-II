@@ -14,6 +14,8 @@
 + (HDTileManager *)sharedManager;
 - (HDHexagon *)lastHexagonObject;
 - (HDHexagon *)teleportTile;
+- (NSArray *)teleportTiles;
+- (void)emptyTeleportBank;
 - (void)addTeleportTile:(HDHexagon *)hexagon;
 - (void)addHexagon:(HDHexagon *)hexagon;
 - (BOOL)isEmpty;

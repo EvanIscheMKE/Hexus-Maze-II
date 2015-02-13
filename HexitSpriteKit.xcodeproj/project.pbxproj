@@ -49,6 +49,7 @@
 		389E95401A4A106200F2DF05 /* HDLockedViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 389E953F1A4A106200F2DF05 /* HDLockedViewController.m */; };
 		389E95441A4A128100F2DF05 /* HDLevelsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 389E95431A4A128100F2DF05 /* HDLevelsViewController.m */; };
 		389E95D71A4C1A7F00F2DF05 /* HDMenuBar.m in Sources */ = {isa = PBXBuildFile; fileRef = 389E95D61A4C1A7F00F2DF05 /* HDMenuBar.m */; };
+		38A2CBC11A8D3EEA00C687E2 /* Default-Teleport-Selected@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 38A2CBC01A8D3EEA00C687E2 /* Default-Teleport-Selected@2x.png */; };
 		38A50F291A57C66100DE9692 /* HDTutorialParentViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 38A50F281A57C66100DE9692 /* HDTutorialParentViewController.m */; };
 		38A50F2C1A57C66E00DE9692 /* HDTutorialChildViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 38A50F2B1A57C66E00DE9692 /* HDTutorialChildViewController.m */; };
 		38ABD5F21A4153A800C4321D /* HDHexagonButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 38ABD5F11A4153A800C4321D /* HDHexagonButton.m */; };
@@ -300,6 +301,7 @@
 		389E95431A4A128100F2DF05 /* HDLevelsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HDLevelsViewController.m; sourceTree = "<group>"; };
 		389E95D51A4C1A7F00F2DF05 /* HDMenuBar.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HDMenuBar.h; sourceTree = "<group>"; };
 		389E95D61A4C1A7F00F2DF05 /* HDMenuBar.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HDMenuBar.m; sourceTree = "<group>"; };
+		38A2CBC01A8D3EEA00C687E2 /* Default-Teleport-Selected@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default-Teleport-Selected@2x.png"; sourceTree = "<group>"; };
 		38A50F271A57C66100DE9692 /* HDTutorialParentViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HDTutorialParentViewController.h; sourceTree = "<group>"; };
 		38A50F281A57C66100DE9692 /* HDTutorialParentViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HDTutorialParentViewController.m; sourceTree = "<group>"; };
 		38A50F2A1A57C66E00DE9692 /* HDTutorialChildViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HDTutorialChildViewController.h; sourceTree = "<group>"; };
@@ -850,6 +852,7 @@
 		38C0A8351A07251600C552F1 = {
 			isa = PBXGroup;
 			children = (
+				38A2CBC01A8D3EEA00C687E2 /* Default-Teleport-Selected@2x.png */,
 				38C0A8401A07251700C552F1 /* HexitSpriteKit */,
 				38C0A85A1A07251700C552F1 /* HexitSpriteKitTests */,
 				38C0A8671A07252E00C552F1 /* Frameworks */,
@@ -1405,6 +1408,7 @@
 				C1F035481A676D0C00EFD26B /* Localizable.strings in Resources */,
 				38C67CFD1A0ACE450038526C /* Grid-10.json in Resources */,
 				38BDDCFA1A20FBB2005035EE /* Grid-59.json in Resources */,
+				38A2CBC11A8D3EEA00C687E2 /* Default-Teleport-Selected@2x.png in Resources */,
 				38C67D0F1A0AE3A00038526C /* Grid-19.json in Resources */,
 				38C1223A1A2C1CCB00224B33 /* Grid-75.json in Resources */,
 				38D4248D1A4F6C1A00FD21A2 /* D5.m4a in Resources */,

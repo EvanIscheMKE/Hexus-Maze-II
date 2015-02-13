@@ -63,6 +63,7 @@ static const CGFloat kTileHeightInsetMultiplier = .845f;
         self.backgroundColor = [SKColor flatWetAsphaltColor];
 
         self.sounds = [self _preloadedGameSounds];
+        
         self.gameLayer = [SKNode node];
         [self addChild:self.gameLayer];
         
@@ -97,10 +98,6 @@ static const CGFloat kTileHeightInsetMultiplier = .845f;
     
     self.hexagons = [NSMutableArray arrayWithArray:grid];
     
-    if ([self _prepareTeleportTiles]) {
-        [self _beginTeleAnimations];
-    }
-    
     // Once all Tiles are layed out, center them
     [self _centerTilePositionWithCompletion:^{
         self.animating = YES;
@@ -108,6 +105,11 @@ static const CGFloat kTileHeightInsetMultiplier = .845f;
             if (self.myDelegate && [self.myDelegate respondsToSelector:@selector(gameWillResetInScene:)]) {
                 [self.myDelegate gameWillResetInScene:self];
             }
+            
+            if ([self _prepareTeleportTiles]) {
+                [self _beginTeleAnimations];
+            }
+            
             self.userInteractionEnabled = YES;
             self.animating = NO;
         }];
@@ -130,15 +132,32 @@ static const CGFloat kTileHeightInsetMultiplier = .845f;
     
     self.animatingTeleportTile = [[HDTileManager sharedManager] teleportTile];
     
-    SKAction *textures = [SKAction animateWithTextures:@[[SKTexture textureWithImageNamed:@"Default-Teleport-1"],
+    SKAction *textures = [SKAction animateWithTextures:@[[SKTexture textureWithImageNamed:@"Default-Teleport-3"],
                                                          [SKTexture textureWithImageNamed:@"Default-Teleport-2"],
-                                                         [SKTexture textureWithImageNamed:@"Default-Teleport-3"],
+                                                         [SKTexture textureWithImageNamed:@"Default-Teleport-1"],
                                                          [SKTexture textureWithImageNamed:@"Default-Teleport"]]
                                           timePerFrame:.250f];
-    
+    const NSTimeInterval delay = 3.0f;
     [self.animatingTeleportTile.node runAction:[SKAction repeatActionForever:textures]];
-    [self.animatingTeleportTile.node performSelector:@selector(removeAllActions) withObject:nil afterDelay:2.0f];
-    [self performSelector:@selector(_beginTeleAnimations) withObject:nil afterDelay:2.0f];
+    [self.animatingTeleportTile.node performSelector:@selector(removeAllActions) withObject:nil afterDelay:delay];
+    [self.animatingTeleportTile.node performSelector:@selector(setTexture:)
+                                          withObject:[SKTexture textureWithImageNamed:@"Default-Teleport"]
+                                          afterDelay:delay];
+    [self performSelector:@selector(_beginTeleAnimations) withObject:nil afterDelay:delay];
+}
+
+- (void)_dismissTeleportAnimations
+{
+    [NSObject cancelPreviousPerformRequestsWithTarget:self];
+    
+    if (self.animatingTeleportTile) {
+       [NSObject cancelPreviousPerformRequestsWithTarget:self.animatingTeleportTile.node];
+    }
+    
+    for (HDHexagon *hexagon in [[HDTileManager sharedManager] teleportTiles]) {
+        [hexagon.node removeAllActions];
+        hexagon.node.texture = [SKTexture textureWithImageNamed:@"Default-Teleport"];
+    }
 }
 
 - (void)restart
@@ -148,6 +167,8 @@ static const CGFloat kTileHeightInsetMultiplier = .845f;
     }
     
     self.animating = YES;
+    
+    [self _dismissTeleportAnimations];
     
     // Display Achievement for losing level
     [[HDGameCenterManager sharedManager] submitAchievementWithIdenifier:HDLostGameKey
@@ -170,12 +191,18 @@ static const CGFloat kTileHeightInsetMultiplier = .845f;
         [HDHelper entranceAnimationWithTiles:_hexagons completion:^{
             self.animating = NO;
             self.userInteractionEnabled = YES;
+            
+            [[HDTileManager sharedManager] emptyTeleportBank];
+            if ([self _prepareTeleportTiles]) {
+                [self _beginTeleAnimations];
+            }
         }];
     }];
 }
 
 - (void)performExitAnimationsWithCompletion:(dispatch_block_t)completion
 {
+    [[HDTileManager sharedManager] emptyTeleportBank];
     [HDHelper completionAnimationWithTiles:_hexagons completion:completion];
 }
 
@@ -200,16 +227,30 @@ static const CGFloat kTileHeightInsetMultiplier = .845f;
         return;
     }
     
-    if (currentTile.type == HDHexagonTypeTeleport) {
+    // Find possible moves from currently selected tile
+    NSArray *possibleMoves = [HDHelper possibleMovesForHexagon:previousTile inArray:self.hexagons];
+    if (currentTile.type == HDHexagonTypeTeleport && [possibleMoves containsObject:currentTile]) {
+        if (currentTile == self.animatingTeleportTile) {
+            return;
+        }
+        
         [[HDTileManager sharedManager] addHexagon:self.animatingTeleportTile];
-        [self _validateNextMoveToHexagon:nil fromHexagon:self.animatingTeleportTile];
-        [self _playSoundForHexagon:currentTile withVibration:YES];
+        [self _validateNextMoveToHexagon:self.animatingTeleportTile fromHexagon:nil];
+        [self _dismissTeleportAnimations];
+       // [self _playSoundForHexagon:currentTile withVibration:YES];
+        self.animatingTeleportTile.node.texture = [SKTexture textureWithImageNamed:@"Default-Teleport-Selected"];
         return;
     }
 
     // If the newly selected node is connected to previously selected node.. prooccceeed
     if (!currentTile.isSelected && currentTile.state != HDHexagonStateDisabled && currentTile) {
         if ([self _validateNextMoveToHexagon:currentTile fromHexagon:previousTile]) {
+            if (previousTile.type == HDHexagonTypeTeleport) {
+                for (HDHexagon *hexagon in [[HDTileManager sharedManager] teleportTiles]) {
+                    hexagon.node.texture = [SKTexture textureWithImageNamed:@"Default-Teleport"];
+                }
+                [self _beginTeleAnimations];
+            }
             [currentTile selectedAfterRecievingTouches];
             [[HDTileManager sharedManager] addHexagon:currentTile];
             [self _performEffectsForTile:currentTile];
@@ -375,6 +416,8 @@ static const CGFloat kTileHeightInsetMultiplier = .845f;
 {
     if ([self _inPlayTileCount] == 0) {
         
+        [self _dismissTeleportAnimations];
+        [[HDTileManager sharedManager] emptyTeleportBank];
         [tile.node runAction:[SKAction rotateByAngle:M_PI*2 duration:.300f] completion:^{
                 [self runAction:self.completionZing withKey:HDSoundActionKey];
         }];
@@ -469,7 +512,8 @@ static const CGFloat kTileHeightInsetMultiplier = .845f;
     // Find possible moves from currently selected tile
     NSArray *possibleMoves = [HDHelper possibleMovesForHexagon:fromHexagon inArray:_hexagons];
     
-    if ([possibleMoves containsObject:toHexagon] || toHexagon.type == HDHexagonTypeStarter) {
+    //bitmask her.
+    if ([possibleMoves containsObject:toHexagon] || toHexagon.type == HDHexagonTypeStarter || toHexagon.type == HDHexagonTypeTeleport) {
         
         //Clear lower indicator images to transparent
         for (HDHexagon *hexagon in _hexagons) {
@@ -492,6 +536,7 @@ static const CGFloat kTileHeightInsetMultiplier = .845f;
 {
     self.levelIndex += 1;
     
+    [self _dismissTeleportAnimations];
     if (self.levelIndex > [[HDMapManager sharedManager] numberOfLevels]) {
         return;
     }

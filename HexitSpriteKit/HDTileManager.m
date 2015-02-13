@@ -48,6 +48,17 @@
     return tile;
 }
 
+- (NSArray *)teleportTiles {
+    return self.teleportTileBank;
+}
+
+- (void)emptyTeleportBank {
+    
+    if (self.teleportTileBank) {
+        [self.teleportTileBank removeAllObjects];
+    }
+}
+
 - (void)clear {
     [self.selectedTileBank removeAllObjects];
 }

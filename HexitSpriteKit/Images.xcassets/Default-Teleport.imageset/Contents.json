@@ -2,13 +2,16 @@
   "images" : [
     {
       "idiom" : "universal",
+      "scale" : "1x"
+    },
+    {
+      "idiom" : "universal",
       "scale" : "2x",
       "filename" : "Default-Teleport@2x.png"
     },
     {
       "idiom" : "universal",
-      "scale" : "3x",
-      "filename" : "Default-Teleport@3x.png"
+      "scale" : "3x"
     }
   ],
   "info" : {

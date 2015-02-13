@@ -12,5 +12,7 @@
 @property (nonatomic, strong) UIImageView *imageView;
 @property (nonatomic, strong) UILabel *descriptionLabel;
 @property (nonatomic, readonly) UILabel *titleLabel;
-- (instancetype)initWithDescription:(NSString *)description;
+- (instancetype)initWithFrame:(CGRect)frame
+                  description:(NSString *)description
+                       images:(NSArray *)images;
 @end

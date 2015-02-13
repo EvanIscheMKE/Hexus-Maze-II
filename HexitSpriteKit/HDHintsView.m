@@ -18,6 +18,7 @@ NSString * const HDTitleLocalizationKey = @"Tips";
 
 @implementation HDHintsView{
     NSString *_hintDescription;
+    NSArray *_images;
 }
 
 + (Class)layerClass
@@ -30,10 +31,13 @@ NSString * const HDTitleLocalizationKey = @"Tips";
    return (CAShapeLayer *)self.layer;
 }
 
-- (instancetype)initWithDescription:(NSString *)description
+- (instancetype)initWithFrame:(CGRect)frame
+                  description:(NSString *)description
+                       images:(NSArray *)images
 {
-    if (self = [super init]) {
+    if (self = [super initWithFrame:frame]) {
         _hintDescription = description;
+        _images = images;
         [self _setup];
     }
     return self;
@@ -52,8 +56,15 @@ NSString * const HDTitleLocalizationKey = @"Tips";
     
     self.shapeLayer.lineWidth = 0;
     
-    self.imageView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"Default-Mine"]];
+    self.imageView = [[UIImageView alloc] initWithImage:[_images firstObject]];
     [self addSubview:self.imageView];
+    
+    if (_images.count > 1) {
+        self.imageView.animationImages = _images;
+        self.imageView.animationDuration = 1.0f;
+        self.imageView.animationRepeatCount = NSIntegerMax;
+        [self.imageView startAnimating];
+    }
     
     self.titleLabel = [[UILabel alloc] init];
     self.titleLabel.font = GILLSANS(22.0f);
