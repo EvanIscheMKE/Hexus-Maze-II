@@ -26,6 +26,7 @@ typedef NS_ENUM(NSUInteger, HDLevelTip){
 @interface HDHelper : NSObject
 + (UIBezierPath *)restartArrowAroundPoint:(CGPoint)center;
 + (BOOL)isWideScreen;
++ (BOOL)isIpad;
 + (NSArray *)imageFromLevelIdx:(NSUInteger)levelIdx;
 + (void)entranceAnimationWithTiles:(NSArray *)tiles completion:(dispatch_block_t)completion;
 + (void)completionAnimationWithTiles:(NSArray *)tiles completion:(dispatch_block_t)completion;

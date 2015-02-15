@@ -11,15 +11,14 @@
 @class HDGridManager;
 @protocol HDSceneDelegate;
 @interface HDScene : SKScene
-
 @property (nonatomic, assign) NSInteger levelIndex;
 @property (nonatomic, strong) HDGridManager *gridManager;
 @property (nonatomic, weak) id<HDSceneDelegate> myDelegate;
-
+@property (nonatomic, readonly) SKNode *gameLayer;
 - (void)performExitAnimationsWithCompletion:(dispatch_block_t)completion;
 - (void)layoutNodesWithGrid:(NSArray *)grid;
+- (void)nextLevel;
 - (void)restart;
-
 @end
 
 @protocol HDSceneDelegate <NSObject, SKSceneDelegate>

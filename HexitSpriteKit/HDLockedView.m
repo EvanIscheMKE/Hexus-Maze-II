@@ -88,8 +88,8 @@ static const CGFloat kPadding = 4.0f;
     nailLayer.cornerRadius = CGRectGetMidX(nailLayer.bounds);
     nailLayer.masksToBounds = YES;
     nailLayer.position = CGPointMake(CGRectGetMidX(self.bounds), CGRectGetHeight(self.bounds)/5);
-    nailLayer.transform = CATransform3DMakeScale(CGRectGetWidth([[UIScreen mainScreen]bounds])/375.0f,
-                                                 CGRectGetWidth([[UIScreen mainScreen]bounds])/375.0f, 1);
+   // nailLayer.transform = CATransform3DMakeScale(CGRectGetWidth([[UIScreen mainScreen]bounds])/375.0f,
+   //                                              CGRectGetWidth([[UIScreen mainScreen]bounds])/375.0f, 1);
     [self.layer addSublayer:nailLayer];
     
     self.animator = [[UIDynamicAnimator alloc] initWithReferenceView:self];

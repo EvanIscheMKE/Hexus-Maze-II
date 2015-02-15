@@ -1,24 +1,11 @@
 
-"congratulation1" = "Now you have it!";
-"congratulation2" = "You make it look easy.";
-"congratulation3" = "You're learning fast.";
-"congratulation4" = "That's the way!";
-"congratulation5" = "PERFECT!";
-"congratulation6" = "SENSATIONAL!";
-"congratulation7" = "You're doing beautifully.";
-"congratulation8" = "Good thinking!";
-"congratulation9" = "You've just about mastered that!";
-"congratulation10" = "GOOD WORK!";
-"congratulation11" = "Now that's what I call a fine job!";
 
 "continue" = "Continue";
 "begin"    = "Begin Game";
 
-"tutorial1" = "Begin by selecting a white tile.";
-"tutorial2" = "Move to an active tile that is touching the last tile.";
-"tutorial3" = "Continue until the path is completed!";
-
-"level" = "Level %tu";
+"tutorial1" = "Begin by the puzzle by selecting a white tile. You'll always begin on a white tile.";
+"tutorial2" = "Continue to an active tile that is touching the previous tile.";
+"tutorial3" = "Continue through the maze until it's completed!";
 
 "sign"  = "New Levels \n Coming Soon..";
 "tap"   = "TAP";

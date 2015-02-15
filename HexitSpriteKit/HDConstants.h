@@ -41,14 +41,11 @@ extern NSString * const HDRemainingTime;
 extern NSString * const HDBackgroundDate;
 
 //
+extern NSString * const HDCompletionZing;
 extern NSString * const HDHexGridKey;
 extern NSString * const HDSoundLoopKey;
 extern NSString * const HDButtonSound;
 extern NSString * const HDSwipeSound;
-
-static const CGFloat kSmallButtonSize  = 34.0f;
-static const CGFloat kLargeButtonSize  = 42.0f;
-static const CGFloat kButtonInset      = 20.0f;
 
 #define sound0 @"C4.m4a"
 #define sound1 @"D4.m4a"
@@ -61,4 +58,4 @@ static const CGFloat kButtonInset      = 20.0f;
 
 #define LEVEL_URL(x) [NSString stringWithFormat:@"Grid-%ld",x]
 
-#define SOUNDS_TO_PRELOAD @[HDButtonSound, HDSwipeSound, sound1, sound2, sound3, sound0]
+#define SOUNDS_TO_PRELOAD @[HDButtonSound, HDSwipeSound, sound1, sound2, sound3, sound0, HDCompletionZing]

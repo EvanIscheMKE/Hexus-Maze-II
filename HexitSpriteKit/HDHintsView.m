@@ -52,7 +52,7 @@ NSString * const HDTitleLocalizationKey = @"Tips";
 
 - (void)_setup
 {
-    self.backgroundColor = [UIColor colorWithWhite:.0f alpha:0.8f];
+    self.backgroundColor = [UIColor colorWithWhite:.0f alpha:0.5f];
     
     self.shapeLayer.lineWidth = 0;
     

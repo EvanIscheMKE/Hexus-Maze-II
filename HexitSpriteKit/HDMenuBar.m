@@ -11,6 +11,7 @@
 #import "HDSettingsManager.h"
 #import "HDHelper.h"
 
+static const CGFloat kButtonInset = 20.0f;
 @interface HDMenuBar ()
 @property (nonatomic, strong) UIButton *navigationButton;
 @property (nonatomic, strong) UIButton *activityButton;
@@ -44,7 +45,7 @@
     self.backgroundColor = [UIColor clearColor];
     
      self.navigationButton = [UIButton buttonWithType:UIButtonTypeCustom];
-    [self.navigationButton setBackgroundImage:[UIImage imageNamed:@"Grid"] forState:UIControlStateNormal];
+    [self.navigationButton setBackgroundImage:[self gridImage] forState:UIControlStateNormal];
 
      self.activityButton = [UIButton buttonWithType:UIButtonTypeCustom];
     [self.activityButton setBackgroundImage:self.activityImage forState:UIControlStateNormal];
@@ -63,8 +64,8 @@
     UIButton *share  = self.activityButton;
     
     _views = NSDictionaryOfVariableBindings(toggle, share);
-    _metrics = @{ @"buttonHeight" : @([UIImage imageNamed:@"Grid"].size.height),
-                  @"inset"        : @(kButtonInset) };
+    _metrics = @{ @"buttonHeight" : @([self gridImage].size.height),
+                  @"inset"        : @( [HDHelper isIpad] ? kButtonInset*1.5f : kButtonInset) };
     
 
     NSArray *toggleHorizontalConstraint = [NSLayoutConstraint constraintsWithVisualFormat:@"H:|-inset-[toggle(buttonHeight)]"
@@ -92,7 +93,7 @@
     [self addConstraints:shareVerticalConstraint];
     
     for (UIButton *subView in self.subviews) {
-        subView.transform = CGAffineTransformMakeScale(CGRectGetWidth(self.bounds)/375.0f, CGRectGetWidth(self.bounds)/375.0f);
+      //  subView.transform = CGAffineTransformMakeScale(CGRectGetWidth(self.bounds)/375.0f, CGRectGetWidth(self.bounds)/375.0f);
     }
 }
 
@@ -113,6 +114,13 @@
     if (self.activityButton) {
         [self.activityButton setImage:activityImage forState:UIControlStateNormal];
     }
+}
+
+#pragma mark - Getter
+
+- (UIImage *)gridImage
+{
+    return [HDHelper isIpad] ? [UIImage imageNamed:@"GridIcon-iPad"] : [UIImage imageNamed:@"Grid"];
 }
 
 @end

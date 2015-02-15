@@ -11,7 +11,7 @@
 
 @class HDHexagonNode;
 
-typedef enum {
+typedef NS_ENUM(NSUInteger, HDHexagonType) {
     HDHexagonTypeRegular = 1,
     HDHexagonTypeDouble  = 2,
     HDHexagonTypeTriple  = 3,
@@ -24,13 +24,13 @@ typedef enum {
     HDHexagonTypeNone    = 10,
     HDHexagonTypeEnd     = 11,
     HDHexagonTypeTeleport= 12
-} HDHexagonType;
+};
 
-typedef enum {
+typedef NS_ENUM(NSUInteger, HDHexagonState) {
     HDHexagonStateEnabled  = 1,
     HDHexagonStateDisabled = 2,
     HDHexagonStateNone     = 0
-} HDHexagonState;
+};
 
 extern NSString * const HDDoubleKey;
 extern NSString * const HDTripleKey;

@@ -60,26 +60,27 @@
     if (type == HDHexagonTypeNone) {
         [_indicator removeFromParent];
         _indicator = nil;
-    } else {
-        [self _setup];
-        
-        CGPoint position = CGPointZero;
-        switch (type) {
-            case HDHexagonTypeDouble:
-                if (count == 0) {
-                    position = CGPointMake(1.0f, 1.0f);
-                } break;
-            case HDHexagonTypeTriple:
-                if (count == 0) {
-                    position = CGPointMake(2.0f, 2.0f);
-                } else if (count == 1) {
-                    position = CGPointMake(1.0f, 1.0f);
-                } break;
-            default:
-                break;
-        }
-        _indicator.position = position;
+        return;
     }
+    
+    [self _setup];
+    
+    CGPoint position = CGPointZero;
+    switch (type) {
+        case HDHexagonTypeDouble:
+            if (count == 0) {
+                position = CGPointMake(1.0f, 1.0f);
+            } break;
+        case HDHexagonTypeTriple:
+            if (count == 0) {
+                position = CGPointMake(2.0f, 2.0f);
+            } else if (count == 1) {
+                position = CGPointMake(1.0f, 1.0f);
+            } break;
+        default:
+            break;
+    }
+    _indicator.position = position;
 }
 
 @end

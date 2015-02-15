@@ -19,6 +19,8 @@ typedef void(^CallbackBlock)(NSDictionary *dictionary, NSError *error);
     NSNumber *_grid[NumberOfRows][NumberOfColumns];
 }
 
+#pragma mark - Convenice Initalizer
+
 - (instancetype)initWithLevelIndex:(NSInteger)index
 {
     if (self = [super init]) {
@@ -76,9 +78,9 @@ typedef void(^CallbackBlock)(NSDictionary *dictionary, NSError *error);
 
 - (void)_layoutInitialGrid:(NSDictionary *)grid
 {
-    for (int row = 0; row < NumberOfRows; row++) {
+    for (NSUInteger row = 0; row < NumberOfRows; row++) {
         NSArray *rows = [grid[HDHexGridKey] objectAtIndex:row];
-        for (int column = 0; column < NumberOfColumns; column++) {
+        for (NSUInteger column = 0; column < NumberOfColumns; column++) {
             NSNumber *index = [rows objectAtIndex:column];
             NSInteger tileRow = NumberOfRows - row - 1;
             

@@ -17,7 +17,8 @@
 static const CGFloat kPadding = 2.0f;
 static const CGFloat kTileHeightInsetMultiplier = .855f;
 
-#define kHexaSize [[UIScreen mainScreen] bounds].size.width / 6.0f
+#define kHexaSize [[UIScreen mainScreen] bounds].size.width / 6
+#define kHexaSizeiPad [[UIScreen mainScreen] bounds].size.width / 8.25
 
 @implementation HDLevelsContainerView
 @end
@@ -39,12 +40,12 @@ static const CGFloat kTileHeightInsetMultiplier = .855f;
             if (row == hexagon.row) {
                 
                 [hexagon performSelector:@selector(setHidden:) withObject:0 afterDelay:row * .1f];
-                
                 CAKeyframeAnimation *scale = [CAKeyframeAnimation animationWithKeyPath:@"transform.scale"];
                 scale.values    = @[@0.0f, @1.1f, @1.0f];
                 scale.duration  = .3f;
                 scale.beginTime = CACurrentMediaTime() + row * .1f;
                 [hexagon.layer addAnimation:scale forKey:scale.keyPath];
+                
             }
         }
     }
@@ -57,10 +58,6 @@ static const CGFloat kTileHeightInsetMultiplier = .855f;
     [CATransaction setCompletionBlock:completion];
     
     for (HDHexagonButton *hexa in self.containerView.subviews) {
-        
-        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(.3 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-            hexa.hidden = YES;
-        });
         
         CABasicAnimation *scale = [CABasicAnimation animationWithKeyPath:@"transform.scale"];
         scale.fromValue = @1;
@@ -101,8 +98,8 @@ static const CGFloat kTileHeightInsetMultiplier = .855f;
     
     CGRect containerFrame =  CGRectMake(0.0f,
                                         0.0f,
-                                        kHexaSize * (self.columns + 1),
-                                        kHexaSize * kTileHeightInsetMultiplier * (self.rows));
+                                        self.tileSize * (self.columns + 1),
+                                        (self.tileSize + kPadding) * kTileHeightInsetMultiplier * self.rows);
     
     _containerView = [[HDLevelsContainerView alloc] initWithFrame:containerFrame];
     [_levelsView addSubview:_containerView];
@@ -118,7 +115,9 @@ static const CGFloat kTileHeightInsetMultiplier = .855f;
             
             HDLevel *level = [[HDMapManager sharedManager] levelAtIndex:tagIndex - 1];
             
-            CGRect bounds = CGRectMake(0.0f, 0.0f, kHexaSize + kPadding, kHexaSize + kPadding);
+            NSLog(@"%f",self.tileSize + kPadding);
+            
+            CGRect bounds = CGRectMake(0.0f, 0.0f, self.tileSize + kPadding, self.tileSize + kPadding);
             HDHexagonButton *hexagon = [[HDHexagonButton alloc] initWithFrame:bounds];
             [hexagon addTarget:self action:@selector(_beginGame:) forControlEvents:UIControlEventTouchDown];
             hexagon.levelState  = level.state;
@@ -126,7 +125,7 @@ static const CGFloat kTileHeightInsetMultiplier = .855f;
             hexagon.hidden = YES;
             hexagon.index  = tagIndex;
             hexagon.tag    = tagIndex;
-            hexagon.center = [HDLevelsViewController _pointForColumn:column row:row];
+            hexagon.center = [self _pointForColumn:column row:row];
             [_containerView addSubview:hexagon];
             
             tagIndex++;
@@ -157,15 +156,19 @@ static const CGFloat kTileHeightInsetMultiplier = .855f;
     }
 }
 
-#pragma mark - Class
-
-+ (CGPoint)_pointForColumn:(NSInteger)column row:(NSInteger)row
+- (CGPoint)_pointForColumn:(NSInteger)column row:(NSInteger)row
 {
-    const CGFloat kOriginY = kHexaSize/2 + ((row * (kHexaSize * kTileHeightInsetMultiplier)) );
-    const CGFloat kOriginX = kHexaSize/2 + kHexaSize/4 + ((column * kHexaSize));
-    const CGFloat kAlternateOffset = (row % 2 == 0) ? kHexaSize / 2 : 0.0f;
+    const CGFloat kOriginY = self.tileSize/2 + ((row * (self.tileSize * kTileHeightInsetMultiplier)) );
+    const CGFloat kOriginX = self.tileSize/2 + self.tileSize/4 + ((column * self.tileSize));
+    const CGFloat kAlternateOffset = (row % 2 == 0) ? self.tileSize/2 : 0.0f;
     
     return CGPointMake(kAlternateOffset + kOriginX, kOriginY);
+}
+
+#pragma mark - Getter
+
+- (CGFloat)tileSize {
+    return (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad) ? kHexaSizeiPad : kHexaSize;
 }
 
 @end

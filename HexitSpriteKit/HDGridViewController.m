@@ -40,9 +40,7 @@ static const CGFloat defaultPageControlHeight = 50.0f;
     NSDictionary   *_metrics;
     NSDictionary   *_views;
     NSMutableArray *_pageViews;
-    NSMutableArray *_imageViews;
     NSInteger       _previousPage;
-    CGFloat         _currentScaleFactor;
 }
 
 - (void)viewDidLoad
@@ -99,7 +97,7 @@ static const CGFloat defaultPageControlHeight = 50.0f;
     
     HDContainerViewController *container = self.containerViewController;
     
-    CGRect scrollViewRect = CGRectInset(self.view.bounds, 0.0f, CGRectGetHeight(self.view.bounds) / 7.4f);
+    CGRect scrollViewRect = CGRectInset(self.view.bounds, 0.0f, CGRectGetHeight(self.view.bounds)/7.4f);
     self.scrollView = [[HDGridScrollView alloc] initWithFrame:scrollViewRect];
     self.scrollView.delegate = self;
     self.scrollView.datasource = self;
@@ -116,7 +114,8 @@ static const CGFloat defaultPageControlHeight = 50.0f;
     self.control.frame = CGRectIntegral(self.control.frame);
     [self.view addSubview:self.control];
     
-    CGRect menuBarFrame = CGRectMake(0.0f, -defaultContainerHeight, CGRectGetWidth(self.view.bounds), defaultContainerHeight);
+    const CGFloat menuBarHeight = CGRectGetHeight(self.view.bounds)/9;
+    CGRect menuBarFrame = CGRectMake(0.0f, -menuBarHeight, CGRectGetWidth(self.view.bounds), menuBarHeight);
     self.menuBar = [HDMenuBar menuBarWithActivityImage:[UIImage imageNamed:@"Play"]];
     self.menuBar.frame = menuBarFrame;
     [self.menuBar.navigationButton addTarget:container action:@selector(toggleMenuViewController)forControlEvents:UIControlEventTouchUpInside];
@@ -140,7 +139,7 @@ static const CGFloat defaultPageControlHeight = 50.0f;
 {
     dispatch_block_t animate = ^{
         CGRect rect = self.menuBar.frame;
-        rect.origin.y = -defaultContainerHeight;
+        rect.origin.y = -CGRectGetHeight(self.menuBar.bounds);
         self.menuBar.frame = rect;
         
         CGPoint center = self.control.center;
@@ -219,50 +218,9 @@ static const CGFloat defaultPageControlHeight = 50.0f;
     return _pageViews;
 }
 
-- (NSArray *)_imageViewsFromScrollView:(UIScrollView *)scrollView
-{
-    if (_imageViews) {
-        return  _imageViews;
-    }
-    
-    _imageViews = [NSMutableArray array];
-    
-    NSMutableArray *hexagons = [NSMutableArray array];
-    NSArray *viewsCorrespondingToProtocol = [[scrollView subviews] filteredArrayUsingPredicate:[NSPredicate predicateWithBlock:^BOOL(id evaluatedObject, NSDictionary *bindings) {
-        return [evaluatedObject conformsToProtocol:@protocol(HDGridScrollViewChild)];
-    }]];
-    
-    for (UIView *view in viewsCorrespondingToProtocol) {
-        NSArray *firstSubviews = view.subviews;
-        [hexagons addObjectsFromArray:[[firstSubviews firstObject] subviews]];
-    }
-
-    for (HDHexagonButton *hexa in hexagons) {
-        if (hexa.imageView) {
-            [_imageViews addObject:hexa.imageView];
-            if (_currentScaleFactor < .05f) {
-                _currentScaleFactor = hexa.imageView.transform.a;
-            }
-        }
-    }
-    
-    return _imageViews;
-}
-
 #pragma mark - <UIScrollViewDelegate>
 
-- (void)scrollViewDidScroll:(HDGridScrollView *)scrollView
-{
-    CGFloat offset = fmod(ABS(scrollView.contentOffset.x), CGRectGetWidth(scrollView.bounds)) / CGRectGetWidth(scrollView.bounds);
-    if (offset > .500f) {
-        offset = 1 - offset;
-    }
-    
-    [CATransaction begin];
-    for (UIImageView *imageView in [self _imageViewsFromScrollView:scrollView]) {
-        imageView.transform = CGAffineTransformMakeScale(_currentScaleFactor - offset, _currentScaleFactor - offset);
-    }
-    [CATransaction commit];
+- (void)scrollViewDidScroll:(HDGridScrollView *)scrollView {
     
     NSInteger page = 0;
     if (scrollView.isDragging || scrollView.isDecelerating){

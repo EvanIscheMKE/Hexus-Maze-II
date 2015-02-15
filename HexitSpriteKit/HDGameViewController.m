@@ -15,6 +15,7 @@
 #import "UIColor+FlatColors.h"
 #import "HDGameViewController.h"
 #import "HDContainerViewController.h"
+#import "HDCompletionView.h"
 #import "HDSoundManager.h"
 #import "HDSettingsManager.h"
 #import "HDGridManager.h"
@@ -23,12 +24,12 @@
 
 #define NC [NSNotificationCenter defaultCenter]
 
-static const CGFloat defaultContainerHeight = 70.0f;
-@interface HDGameViewController () <ADBannerViewDelegate, HDSceneDelegate>
+@interface HDGameViewController () <ADBannerViewDelegate, HDSceneDelegate, HDCompletionViewDelegate>
 @property (nonatomic, strong) HDMenuBar     *menuBar;
 @property (nonatomic, strong) HDGridManager *gridManager;
 @property (nonatomic, strong) HDScene       *scene;
 @property (nonatomic, strong) HDHintsView   *hintsView;
+@property (nonatomic, strong) HDCompletionView *completionView;
 @property (nonatomic, strong) ADBannerView  *bannerView;
 @property (nonatomic, assign) BOOL pauseGame;
 @property (nonatomic, assign) BOOL navigationBarHidden;
@@ -56,6 +57,7 @@ static const CGFloat defaultContainerHeight = 70.0f;
 - (void)performExitAnimationWithCompletion:(dispatch_block_t)completion {
     
     self.navigationBarHidden = YES;
+    
     [UIView animateWithDuration:.300f animations:^{
         
         CGRect bannerFrame = self.bannerView.frame;
@@ -66,8 +68,16 @@ static const CGFloat defaultContainerHeight = 70.0f;
             CGRect frame = self.hintsView.frame;
             frame.origin.y = CGRectGetHeight(self.view.bounds);
             self.hintsView.frame = frame;
+        } else if (self.completionView) {
+            CGRect frame = self.completionView.frame;
+            frame.origin.y = CGRectGetHeight(self.view.bounds);
+            self.completionView.frame = frame;
         }
     }];
+    
+    if (self.completionView) {
+        [self.scene.gameLayer runAction:[SKAction moveToY:0.0f duration:.300f]];
+    }
     
     [self.scene performExitAnimationsWithCompletion:^{
         if (completion) {
@@ -141,11 +151,16 @@ static const CGFloat defaultContainerHeight = 70.0f;
     
     HDContainerViewController *container = self.containerViewController;
     
-    CGRect menuBarFrame = CGRectMake(0.0f, -defaultContainerHeight, CGRectGetWidth(self.view.bounds), defaultContainerHeight);
+    const CGFloat menuBarHeight = CGRectGetHeight(self.view.bounds)/8;
+    CGRect menuBarFrame = CGRectMake(0.0f, -menuBarHeight, CGRectGetWidth(self.view.bounds), menuBarHeight);
     self.menuBar = [HDMenuBar menuBarWithActivityImage:[UIImage imageNamed:@"RestartIcon-"]];
     self.menuBar.frame = menuBarFrame;
-    [self.menuBar.navigationButton addTarget:container action:@selector(toggleMenuViewController) forControlEvents:UIControlEventTouchUpInside];
-    [self.menuBar.activityButton addTarget:self action:@selector(restart:) forControlEvents:UIControlEventTouchUpInside];
+    [self.menuBar.navigationButton addTarget:container
+                                      action:@selector(toggleMenuViewController)
+                            forControlEvents:UIControlEventTouchUpInside];
+    [self.menuBar.activityButton addTarget:self
+                                    action:@selector(restart:)
+                          forControlEvents:UIControlEventTouchUpInside];
     [self.view addSubview:self.menuBar];
     
     [NC addObserver:self selector:@selector(_applicationWillResignActive:) name:UIApplicationWillResignActiveNotification object:nil];
@@ -179,7 +194,7 @@ static const CGFloat defaultContainerHeight = 70.0f;
         [self.view insertSubview:self.hintsView atIndex:0];
     }
     
-    [UIView animateWithDuration:.3f delay:.75f options:UIViewAnimationOptionCurveEaseOut animations:^{
+    [UIView animateWithDuration:.300f delay:.750f options:UIViewAnimationOptionCurveEaseOut animations:^{
         CGRect frame = self.hintsView.frame;
         frame.origin.y = CGRectGetHeight(self.view.bounds)/1.25f - ((_isBannerVisible) ? self.bannerView.bounds.size.height : 0);
         self.hintsView.frame = frame;
@@ -190,7 +205,7 @@ static const CGFloat defaultContainerHeight = 70.0f;
 
 - (void)_dismissHintsView {
     
-    [UIView animateWithDuration:.3f animations:^{
+    [UIView animateWithDuration:.300f animations:^{
         CGRect frame = self.hintsView.frame;
         frame.origin.y = CGRectGetHeight(self.view.bounds);
         self.hintsView.frame = frame;
@@ -204,7 +219,7 @@ static const CGFloat defaultContainerHeight = 70.0f;
     
     dispatch_block_t animate = ^{
         CGRect rect = self.menuBar.frame;
-        rect.origin.y = -defaultContainerHeight;
+        rect.origin.y = -CGRectGetHeight(self.menuBar.bounds);
         self.menuBar.frame = rect;
     };
     
@@ -265,9 +280,47 @@ static const CGFloat defaultContainerHeight = 70.0f;
 {
     if (completion) {
         self.navigationBarHidden = YES;
+        
+        [[HDSoundManager sharedManager] playSound:HDCompletionZing];
+        
+        if (!self.completionView) {
+            CGRect hintsFrame = CGRectMake(0.0f,
+                                           CGRectGetHeight(self.view.bounds),
+                                           CGRectGetWidth(self.view.bounds),
+                                           CGRectGetHeight(self.view.bounds)/5);
+            self.completionView = [[HDCompletionView alloc] initWithFrame:hintsFrame];
+            self.completionView.delegate = self;
+            [self.view insertSubview:self.completionView atIndex:0];
+        }
+        
+        [UIView animateWithDuration:.300f animations:^{
+            CGRect frame = self.completionView.frame;
+            frame.origin.y = CGRectGetHeight(self.view.bounds)/1.25f - ((_isBannerVisible) ? self.bannerView.bounds.size.height : 0);
+            self.completionView.frame = frame;
+        }];
+        [self.scene.gameLayer runAction:[SKAction moveToY:CGRectGetHeight(self.view.bounds)/7 duration:.300f]];
+        
     } else {
         [self performSelector:@selector(restart:) withObject:nil afterDelay:.300f];
     }
+}
+
+- (void)_dismissCompletionViewWithCompletion:(dispatch_block_t)completion {
+    
+    [self.scene.gameLayer runAction:[SKAction moveToY:0.0f duration:.300f]];
+    [UIView animateWithDuration:.3f animations:^{
+        CGRect frame = self.completionView.frame;
+        frame.origin.y = CGRectGetHeight(self.view.bounds);
+        self.completionView.frame = frame;
+    } completion:^(BOOL finished) {
+        
+        if (completion) {
+            completion();
+        }
+        
+        [self.completionView removeFromSuperview];
+        self.completionView = nil;
+    }];
 }
 
 - (void)gameWillResetInScene:(HDScene *)scene
@@ -290,8 +343,11 @@ static const CGFloat defaultContainerHeight = 70.0f;
                 CGRect frame = self.hintsView.frame;
                 frame.origin.y = CGRectGetHeight(self.view.bounds)/1.25f - CGRectGetHeight(self.bannerView.bounds);
                 self.hintsView.frame = frame;
+            } else if (self.completionView){
+                CGRect frame = self.completionView.frame;
+                frame.origin.y = CGRectGetHeight(self.view.bounds)/1.25f - CGRectGetHeight(self.bannerView.bounds);
+                self.completionView.frame = frame;
             }
-            
         }];
         _isBannerVisible = YES;
     }
@@ -310,10 +366,33 @@ static const CGFloat defaultContainerHeight = 70.0f;
                 CGRect frame = self.hintsView.frame;
                 frame.origin.y = CGRectGetHeight(self.view.bounds)/1.25f;
                 self.hintsView.frame = frame;
+            } else if (self.completionView){
+                CGRect frame = self.completionView.frame;
+                frame.origin.y = CGRectGetHeight(self.view.bounds)/1.25f;
+                self.completionView.frame = frame;
             }
-            
         }];
         _isBannerVisible = NO;
+    }
+}
+
+#pragma mark - <HDCompletionViewDelegate>
+
+- (void)completionView:(HDCompletionView *)completionView selectedButtonWithTitle:(NSString *)title
+{
+    if ([title isEqualToString:@"Next"]) {
+        [self _dismissCompletionViewWithCompletion:^{
+            [self.scene nextLevel];
+        }];
+    } else if ([title isEqualToString:@"Restart"]) {
+        [self _dismissCompletionViewWithCompletion:^{
+            [self restart:nil];
+            self.navigationBarHidden = NO;
+        }];
+    } else if ([title isEqualToString:@"Rate"]) {
+        [ADelegate rateHEXUS];
+    } else if ([title isEqualToString:@"Share"]) {
+        [ADelegate presentShareViewControllerWithLevelIndex:_levelIdx];
     }
 }
 

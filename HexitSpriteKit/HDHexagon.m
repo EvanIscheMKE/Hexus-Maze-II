@@ -24,7 +24,7 @@ NSString * const HDTripleKey = @"triple";
 
 - (instancetype)init
 {
-    return [self initWithRow:0 column:0 type:HDHexagonTypeNone];
+    return [self initWithRow:0 column:0 type:HDHexagonTypeRegular];
 }
 
 - (instancetype)initWithRow:(NSInteger)row column:(NSInteger)column type:(HDHexagonType)type
@@ -116,10 +116,6 @@ NSString * const HDTripleKey = @"triple";
 - (void)setSelected:(BOOL)selected
 {
     _selected = selected;
-    
-    if (self.type == HDHexagonTypeNone) {
-        return;
-    }
     
     if ([self selectedImagePath]) {
         self.node.texture = [SKTexture textureWithImage:[UIImage imageNamed:[self selectedImagePath]]];
@@ -225,8 +221,8 @@ NSString * const HDTripleKey = @"triple";
         case HDHexagonTypeFive:
             [self _disableTile];
             break;
-        case HDHexagonTypeTeleport:
         case HDHexagonTypeNone:
+        case HDHexagonTypeTeleport:
             self.selected = YES;
             self.state = HDHexagonStateDisabled;
             break;

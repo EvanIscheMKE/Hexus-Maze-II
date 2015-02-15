@@ -51,8 +51,8 @@ static const NSInteger numberOfPages = 3;
     self.descriptionLabel.numberOfLines = 0;
     self.descriptionLabel.text          = NSLocalizedString(@"tutorial1", nil);
     self.descriptionLabel.lineBreakMode = NSLineBreakByWordWrapping;
-    self.descriptionLabel.transform     = CGAffineTransformMakeScale(CGRectGetWidth(self.view.bounds)/375.0f,
-                                                                     CGRectGetWidth(self.view.bounds)/375.0f);
+  //  self.descriptionLabel.transform     = CGAffineTransformMakeScale(CGRectGetWidth(self.view.bounds)/375.0f,
+  //                                                                   CGRectGetWidth(self.view.bounds)/375.0f);
     [self.view addSubview:self.descriptionLabel];
     
     CGRect navigateFrame = CGRectMake(

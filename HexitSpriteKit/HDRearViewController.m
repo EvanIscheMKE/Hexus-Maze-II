@@ -45,25 +45,23 @@
 {
     self.view.backgroundColor = [UIColor flatMidnightBlueColor];
     
-    const CGFloat kSquareSize = CGRectGetMidY(self.view.bounds)/2;
-    const CGFloat kSpacing    = CGRectGetHeight(self.view.bounds)/5 + 10.0f;// padding
+    const CGFloat kSquareSize = CGRectGetMidY(self.view.bounds)/3;
+    const CGFloat kSpacing    = CGRectGetHeight(self.view.bounds)/6;// padding
     
     CGRect containerBounds = CGRectMake(0.0f, 0.0f, kSquareSize, CGRectGetHeight(self.view.bounds));
     UIView *container = [[UIView alloc] initWithFrame:containerBounds];
     container.backgroundColor = [UIColor flatMidnightBlueColor];
     [self.view addSubview:container];
     
-    for (NSUInteger row = 0; row < 4; row++) {
+    for (NSUInteger row = 0; row < 6; row++) {
         
-        CGRect squareFrame = CGRectMake(0.0f,
-                                        0.0f,
-                                        [UIImage imageNamed:@"MusicON"].size.width,
-                                        [UIImage imageNamed:@"MusicON"].size.height);
-        
+        CGRect squareFrame = CGRectMake(0.0f, 0.0f, kSquareSize, kSpacing);
         UIButton *square = [UIButton buttonWithType:UIButtonTypeCustom];
         square.frame = squareFrame;
-        square.center = CGPointMake(CGRectGetMidX(container.bounds), (CGRectGetMidY(container.bounds) - (1.5f * kSpacing)) + row * kSpacing);
-        square.transform = CGAffineTransformMakeScale(CGRectGetWidth(self.view.bounds)/375.0f, CGRectGetWidth(self.view.bounds)/375.0f);
+        square.titleLabel.textAlignment = NSTextAlignmentCenter;
+        square.titleLabel.font          = GILLSANS(24.0f);
+        [square setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
+        square.center = CGPointMake(CGRectGetMidX(container.bounds), (CGRectGetMidY(container.bounds) - (2.5f * kSpacing)) + row * kSpacing);
         square.adjustsImageWhenDisabled    = NO;
         square.adjustsImageWhenHighlighted = NO;
         [container addSubview:square];
@@ -71,25 +69,31 @@
         switch (row) {
             case 0:
                 self.top = square;
-                [self.top setBackgroundImage:[UIImage imageNamed:@"LeaderboardIcon"]  forState:UIControlStateNormal];
-                [self.top addTarget:ADelegate action:@selector(openAcheivementsController:)  forControlEvents:UIControlEventTouchUpInside];
+                [self.top setImage:[UIImage imageNamed:@"leaderboard"] forState:UIControlStateNormal];
+                [self.top addTarget:ADelegate action:@selector(openLeaderboardController:) forControlEvents:UIControlEventTouchUpInside];
                 break;
             case 1:
                 self.bottom = square;
-                [self.bottom setBackgroundImage:[UIImage imageNamed:@"AchievementsIcon"] forState:UIControlStateNormal];
-                [self.bottom addTarget:ADelegate action:@selector(openLeaderboardController:)   forControlEvents:UIControlEventTouchUpInside];
+                [square setImage:[UIImage imageNamed:@"SideMenu-Star-60"] forState:UIControlStateNormal];
+                [self.bottom addTarget:ADelegate action:@selector(openAcheivementsController:) forControlEvents:UIControlEventTouchUpInside];
                 break;
             case 2:
                 square.selected = [[HDSettingsManager sharedManager] music];
+                [square setImage:[UIImage imageNamed:@"MusicIcon-ON"] forState:UIControlStateNormal];
                 [square addTarget:self action:@selector(_toggleMusic:) forControlEvents:UIControlEventTouchUpInside];
-                [square setBackgroundImage:[UIImage imageNamed:@"MusicOFF"]  forState:UIControlStateNormal];
-                [square setBackgroundImage:[UIImage imageNamed:@"MusicON"] forState:UIControlStateSelected];
                 break;
-            default:
+            case 3:
                 square.selected = [[HDSettingsManager sharedManager] sound];
+                [square setImage:[UIImage imageNamed:@"SoundIcon-ON"] forState:UIControlStateNormal];
                 [square addTarget:self action:@selector(_toggleSound:) forControlEvents:UIControlEventTouchUpInside];
-                [square setBackgroundImage:[UIImage imageNamed:@"SM-Sound-Off"]  forState:UIControlStateNormal];
-                [square setBackgroundImage:[UIImage imageNamed:@"SM-Sound-On"] forState:UIControlStateSelected];
+                break;
+            case 4:
+                [square setTitle:@"Ads" forState:UIControlStateNormal];
+                [square addTarget:self action:@selector(_toggleSound:) forControlEvents:UIControlEventTouchUpInside];
+                break;
+            case 5:
+                [square setTitle:@"Restore" forState:UIControlStateNormal];
+                [square addTarget:self action:@selector(_toggleSound:) forControlEvents:UIControlEventTouchUpInside];
                 break;
         }
     }
@@ -111,20 +115,20 @@
 
 - (void)_hideGameInterface
 {
-    [self.top setBackgroundImage:[UIImage imageNamed:@"LeaderboardIcon"]                forState:UIControlStateNormal];
-    [self.bottom setBackgroundImage:[UIImage imageNamed:@"AchievementsIcon"]            forState:UIControlStateNormal];
+    [self.top    setTitle:@"Leaderboard"  forState:UIControlStateNormal];
+    [self.bottom setTitle:@"Achievements" forState:UIControlStateNormal];
     [self.top    removeTarget:ADelegate action:@selector(restartCurrentLevel:)          forControlEvents:UIControlEventTouchUpInside];
     [self.bottom removeTarget:ADelegate action:@selector(animateToLevelViewController:) forControlEvents:UIControlEventTouchUpInside];
-    [self.top    addTarget:ADelegate action:@selector(openAcheivementsController:)      forControlEvents:UIControlEventTouchUpInside];
-    [self.bottom addTarget:ADelegate action:@selector(openLeaderboardController:)       forControlEvents:UIControlEventTouchUpInside];
+    [self.top    addTarget:ADelegate action:@selector(openLeaderboardController:)       forControlEvents:UIControlEventTouchUpInside];
+    [self.bottom addTarget:ADelegate action:@selector(openAcheivementsController:)      forControlEvents:UIControlEventTouchUpInside];
 }
 
 - (void)_showGameInterface
 {
-    [self.top    setBackgroundImage:[UIImage imageNamed:@"SM-Restart"]                forState:UIControlStateNormal];
-    [self.bottom setBackgroundImage:[UIImage imageNamed:@"ReturnToMenu"]              forState:UIControlStateNormal];
-    [self.top    removeTarget:ADelegate action:@selector(openAcheivementsController:) forControlEvents:UIControlEventTouchUpInside];
-    [self.bottom removeTarget:ADelegate action:@selector(openLeaderboardController:)  forControlEvents:UIControlEventTouchUpInside];
+    [self.top    setTitle:@"Restart" forState:UIControlStateNormal];
+    [self.bottom setTitle:@"Map"     forState:UIControlStateNormal];
+    [self.top    removeTarget:ADelegate action:@selector(openLeaderboardController:)  forControlEvents:UIControlEventTouchUpInside];
+    [self.bottom removeTarget:ADelegate action:@selector(openAcheivementsController:) forControlEvents:UIControlEventTouchUpInside];
     [self.top    addTarget:ADelegate action:@selector(restartCurrentLevel:)           forControlEvents:UIControlEventTouchUpInside];
     [self.bottom addTarget:ADelegate action:@selector(animateToLevelViewController:)  forControlEvents:UIControlEventTouchUpInside];
 }

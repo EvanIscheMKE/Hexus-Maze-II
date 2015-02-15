@@ -222,5 +222,8 @@ NSString *descriptionForLevelIdx(NSUInteger levelIdx){
     return hexagons;
 }
 
++ (BOOL)isIpad {
+    return (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad);
+}
 
 @end

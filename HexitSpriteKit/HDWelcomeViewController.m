@@ -83,14 +83,13 @@
     
     for (NSUInteger i = 0; i < 2; i++) {
         UILabel *tap = [[UILabel alloc] init];
-        tap.font          = GILLSANS_LIGHT(32.0f);
+        tap.font          = GILLSANS_LIGHT(CGRectGetWidth(self.bounds)/11);
         tap.textAlignment = NSTextAlignmentCenter;
         tap.textColor     = [UIColor whiteColor];
         tap.text          = NSLocalizedString(@"tap", nil);
         [tap sizeToFit];
         tap.center        = CGPointMake(kPositionX[i], CGRectGetMidY(self.bounds));
         tap.frame         = CGRectIntegral(tap.frame);
-        tap.transform = CGAffineTransformMakeScale(CGRectGetWidth(self.bounds)/375.0f, CGRectGetWidth(self.bounds)/375.0f);
         [self addSubview:tap];
     }
 }
@@ -220,9 +219,10 @@
                 break;
             default:{
                 CGAffineTransform transform = CGAffineTransformConcat(
-                                                                      CGAffineTransformMakeScale(CGRectGetWidth(hexagon.bounds) / 64.5f, CGRectGetWidth(hexagon.bounds) / 64.5f),
+                                                                      CGAffineTransformMakeScale(CGRectGetWidth(self.view.bounds)/375.0f, CGRectGetWidth(self.view.bounds)/375.0f),
                                                                       CGAffineTransformMakeRotation(-M_PI/2));
                 hexagon.imageView.transform = transform;
+                [hexagon setImage:[UIImage imageNamed:@"Locked-45"] forState:UIControlStateNormal];
                 [hexagon setBackgroundImage:[UIImage imageNamed:@"WelcomeVC-emerald-122"]  forState:UIControlStateNormal];
                 [hexagon setBackgroundImage:[UIImage imageNamed:@"WelcomeVC-emerald-selected-122"] forState:UIControlStateSelected];
             } break;

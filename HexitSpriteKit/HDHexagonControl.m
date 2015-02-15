@@ -13,7 +13,7 @@
 #define _kCurrentPageSize 25.0f
 #define _kPageSize        16.0f
 #define _kPageSpacing     34.0f
-#define _kScaleFactor  [[UIScreen mainScreen] bounds].size.width / 375.0f
+#define _kScaleFactor      1.0f
 
 @interface HDHexagonControl ()
 @property (nonatomic, readonly) CGFloat pageSize;
@@ -28,7 +28,7 @@
     CGRect bounds = CGRectMake(0.0f, 0.0f, CGRectGetWidth(frame), CGRectGetHeight(frame));
     if (self = [super initWithFrame:bounds]) {
         self.backgroundColor      = [UIColor flatWetAsphaltColor];
-        self.currentPageTintColor = [UIColor flatPeterRiverColor];
+        self.currentPageTintColor = [UIColor whiteColor];
         self.tintColor            = [UIColor whiteColor];
     }
     return self;

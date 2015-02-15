@@ -60,8 +60,8 @@
     self.imageView.center = CGPointMake(CGRectGetMidX(self.view.bounds),
                                         CGRectGetMidY(self.view.bounds) + CGRectGetHeight(self.view.bounds)/8.5f);
     self.imageView.frame = CGRectIntegral(self.imageView.frame);
-    self.imageView.transform = CGAffineTransformMakeScale(CGRectGetWidth(self.view.bounds) / (imageForSize.size.width + 70.0f),
-                                                          CGRectGetWidth(self.view.bounds) / (imageForSize.size.width + 70.0f));
+   // self.imageView.transform = CGAffineTransformMakeScale(CGRectGetWidth(self.view.bounds) / (imageForSize.size.width + 70.0f),
+   //                                                       CGRectGetWidth(self.view.bounds) / (imageForSize.size.width + 70.0f));
 
     [self.view addSubview:self.imageView];
 }
