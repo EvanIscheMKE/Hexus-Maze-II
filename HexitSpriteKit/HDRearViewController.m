@@ -45,7 +45,7 @@
 {
     self.view.backgroundColor = [UIColor flatMidnightBlueColor];
     
-    const CGFloat kSquareSize = CGRectGetMidY(self.view.bounds)/3;
+    const CGFloat kSquareSize = CGRectGetMidX(self.view.bounds)/3;
     const CGFloat kSpacing    = CGRectGetHeight(self.view.bounds)/6;// padding
     
     CGRect containerBounds = CGRectMake(0.0f, 0.0f, kSquareSize, CGRectGetHeight(self.view.bounds));

@@ -59,6 +59,11 @@ static const CGFloat kTileHeightInsetMultiplier = .855f;
     
     for (HDHexagonButton *hexa in self.containerView.subviews) {
         
+        [CATransaction begin];
+        [CATransaction setCompletionBlock:^{
+            hexa.hidden = YES;
+        }];
+        
         CABasicAnimation *scale = [CABasicAnimation animationWithKeyPath:@"transform.scale"];
         scale.fromValue = @1;
         scale.toValue   = @0;
@@ -66,6 +71,8 @@ static const CGFloat kTileHeightInsetMultiplier = .855f;
         scale.removedOnCompletion = NO;
         scale.fillMode = kCAFillModeForwards;
         [hexa.layer addAnimation:scale forKey:scale.keyPath];
+        
+        [CATransaction commit];
     }
     [CATransaction commit];
 }

@@ -24,6 +24,7 @@
 		38319A641A79F98D004CF3E2 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 38319A621A79F98D004CF3E2 /* Localizable.strings */; };
 		38319A6B1A79FBE5004CF3E2 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 38319A661A79FBE5004CF3E2 /* Localizable.strings */; };
 		38319A6C1A79FBE5004CF3E2 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 38319A691A79FBE5004CF3E2 /* Localizable.strings */; };
+		384E00911A90935800729A47 /* Confetti.sks in Resources */ = {isa = PBXBuildFile; fileRef = 384E008F1A90935800729A47 /* Confetti.sks */; };
 		385EEEFA1A7CC01400479E0F /* CAEmitterCell+HD.m in Sources */ = {isa = PBXBuildFile; fileRef = 385EEEF91A7CC01400479E0F /* CAEmitterCell+HD.m */; };
 		386CF5D91A383A98006A8381 /* AudioToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 386CF5D81A383A98006A8381 /* AudioToolbox.framework */; };
 		386CF5DB1A383AFC006A8381 /* HDScene.m in Sources */ = {isa = PBXBuildFile; fileRef = 386CF5DA1A383AFC006A8381 /* HDScene.m */; };
@@ -48,7 +49,6 @@
 		389E95401A4A106200F2DF05 /* HDLockedViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 389E953F1A4A106200F2DF05 /* HDLockedViewController.m */; };
 		389E95441A4A128100F2DF05 /* HDLevelsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 389E95431A4A128100F2DF05 /* HDLevelsViewController.m */; };
 		389E95D71A4C1A7F00F2DF05 /* HDMenuBar.m in Sources */ = {isa = PBXBuildFile; fileRef = 389E95D61A4C1A7F00F2DF05 /* HDMenuBar.m */; };
-		38A2CBDF1A8F17D700C687E2 /* OneTap-Grid@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 38A2CBDE1A8F17D700C687E2 /* OneTap-Grid@2x.png */; };
 		38A2CBE91A907C0B00C687E2 /* HDCompletionView.m in Sources */ = {isa = PBXBuildFile; fileRef = 38A2CBE81A907C0B00C687E2 /* HDCompletionView.m */; };
 		38A50F291A57C66100DE9692 /* HDTutorialParentViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 38A50F281A57C66100DE9692 /* HDTutorialParentViewController.m */; };
 		38A50F2C1A57C66E00DE9692 /* HDTutorialChildViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 38A50F2B1A57C66E00DE9692 /* HDTutorialChildViewController.m */; };
@@ -265,6 +265,7 @@
 		38319A631A79F98D004CF3E2 /* fi */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = fi; path = Localizable.strings; sourceTree = "<group>"; };
 		38319A671A79FBE5004CF3E2 /* ar */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ar; path = Localizable.strings; sourceTree = "<group>"; };
 		38319A6A1A79FBE5004CF3E2 /* da */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = da; path = Localizable.strings; sourceTree = "<group>"; };
+		384E008F1A90935800729A47 /* Confetti.sks */ = {isa = PBXFileReference; lastKnownFileType = file.sks; path = Confetti.sks; sourceTree = "<group>"; };
 		385EEEF81A7CC01400479E0F /* CAEmitterCell+HD.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "CAEmitterCell+HD.h"; sourceTree = "<group>"; };
 		385EEEF91A7CC01400479E0F /* CAEmitterCell+HD.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "CAEmitterCell+HD.m"; sourceTree = "<group>"; };
 		386CF5D81A383A98006A8381 /* AudioToolbox.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AudioToolbox.framework; path = System/Library/Frameworks/AudioToolbox.framework; sourceTree = SDKROOT; };
@@ -299,7 +300,6 @@
 		389E95431A4A128100F2DF05 /* HDLevelsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HDLevelsViewController.m; sourceTree = "<group>"; };
 		389E95D51A4C1A7F00F2DF05 /* HDMenuBar.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HDMenuBar.h; sourceTree = "<group>"; };
 		389E95D61A4C1A7F00F2DF05 /* HDMenuBar.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HDMenuBar.m; sourceTree = "<group>"; };
-		38A2CBDE1A8F17D700C687E2 /* OneTap-Grid@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "OneTap-Grid@2x.png"; sourceTree = "<group>"; };
 		38A2CBE71A907C0B00C687E2 /* HDCompletionView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HDCompletionView.h; sourceTree = "<group>"; };
 		38A2CBE81A907C0B00C687E2 /* HDCompletionView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HDCompletionView.m; sourceTree = "<group>"; };
 		38A50F271A57C66100DE9692 /* HDTutorialParentViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HDTutorialParentViewController.h; sourceTree = "<group>"; };
@@ -888,6 +888,7 @@
 			isa = PBXGroup;
 			children = (
 				38EE043F1A80EDB100F040A6 /* Flurry.h */,
+				384E008F1A90935800729A47 /* Confetti.sks */,
 				C1F035261A676AD000EFD26B /* Localizations */,
 				38BDDCE71A20FACE005035EE /* Sounds */,
 				38C0A86F1A07343600C552F1 /* Categories */,
@@ -1006,7 +1007,6 @@
 				38C0A8771A075FBA00C552F1 /* HDHexagonNode.m */,
 				38ABD5F01A4153A800C4321D /* HDHexagonButton.h */,
 				38ABD5F11A4153A800C4321D /* HDHexagonButton.m */,
-				38A2CBDE1A8F17D700C687E2 /* OneTap-Grid@2x.png */,
 				38ABD5F51A420A3500C4321D /* HDHexagonControl.h */,
 				38ABD5F61A420A3500C4321D /* HDHexagonControl.m */,
 				389E94EE1A44A2F000F2DF05 /* HDGridScrollView.h */,
@@ -1469,6 +1469,7 @@
 				C1F035451A676D0C00EFD26B /* Localizable.strings in Resources */,
 				38D4249B1A4F6C1A00FD21A2 /* D3.m4a in Resources */,
 				38E738271A875008002EF301 /* Grid-112.json in Resources */,
+				384E00911A90935800729A47 /* Confetti.sks in Resources */,
 				38E737F31A874F03002EF301 /* Grid-86.json in Resources */,
 				38BDDCF81A20FBAA005035EE /* Grid-58.json in Resources */,
 				38C67D171A0AE3C10038526C /* Grid-23.json in Resources */,
@@ -1492,7 +1493,6 @@
 				389E94F81A488D5100F2DF05 /* Grid-76.json in Resources */,
 				38C67D051A0ACE620038526C /* Grid-14.json in Resources */,
 				38BDDCDF1A20FA29005035EE /* Grid-47.json in Resources */,
-				38A2CBDF1A8F17D700C687E2 /* OneTap-Grid@2x.png in Resources */,
 				38E7381B1A874FD1002EF301 /* Grid-106.json in Resources */,
 				38BDDCD31A20F9D2005035EE /* Grid-41.json in Resources */,
 				389E94FE1A488D6E00F2DF05 /* Grid-79.json in Resources */,

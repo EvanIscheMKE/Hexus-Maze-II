@@ -39,6 +39,7 @@ static const CGFloat kTileHeightInsetMultiplier = .845f;
 @property (nonatomic, assign) BOOL countDownSoundIndex;
 @property (nonatomic, strong) SKNode *gameLayer;
 @property (nonatomic, strong) HDHexagon *animatingTeleportTile;
+@property (nonatomic, strong) SKEmitterNode *confetti;
 @end
 
 @implementation HDScene {
@@ -84,6 +85,7 @@ static const CGFloat kTileHeightInsetMultiplier = .845f;
         hexagonNode.scale    = CGRectGetWidth(self.view.bounds)/375.0f;
         hexagonNode.position = center;
         hexagon.node         = hexagonNode;
+        //hexagon.node.zPosition = 50 + index;
         hexagon.delegate     = hexagon.isCountTile ? self : nil;
         [self.gameLayer addChild:hexagonNode];
         [self _updateVariablesForPositionFromPoint:center];
@@ -347,21 +349,51 @@ static const CGFloat kTileHeightInsetMultiplier = .845f;
     }
 }
 
+- (void)startConfettiEmitter {
+    
+    NSString *emitterPath = [[NSBundle mainBundle] pathForResource:@"Confetti" ofType:@"sks"];
+    self.confetti = [NSKeyedUnarchiver unarchiveObjectWithFile:emitterPath];
+    self.confetti.position = CGPointMake(CGRectGetWidth(self.frame)/2, CGRectGetHeight(self.frame));
+    self.confetti.particleColor = [SKColor flatPeterRiverColor];
+    self.confetti.particleColorSequence = nil;
+    self.confetti.particleColorBlendFactor = 1.0f;
+    [self.confetti advanceSimulationTime:.3f];
+    [self insertChild:self.confetti atIndex:[self.children indexOfObject:self.gameLayer] - 1];
+    
+    NSTimeInterval time = 0;
+    for (HDHexagon *subView in self.hexagons) {
+        
+    }
+}
+
+- (void)removeConfettiEmitter {
+    [self.confetti removeFromParent];
+    self.confetti = nil;
+}
+
+- (void)update:(NSTimeInterval)currentTime {
+    
+    if (self.confetti) {
+        self.confetti.particleColor = [@[[SKColor flatPeterRiverColor],
+                                         [SKColor whiteColor],
+                                         [SKColor flatEmeraldColor],
+                                         [SKColor flatAlizarinColor],
+                                         [SKColor flatSilverColor]] objectAtIndex:arc4random() % 5];
+    }
+}
+
 - (void)_checkGameStateForTile:(HDHexagon *)tile {
     
     if ([self _inPlayTileCount] == 0) {
         
-      //  self.animating = YES;
-        
+        [self startConfettiEmitter];
         [self _dismissTeleportAnimations];
         [[HDTileManager sharedManager] emptyTeleportBank];
         [[HDMapManager sharedManager] completedLevelAtIndex:self.levelIndex-1];
-        
         if (self.myDelegate && [self.myDelegate respondsToSelector:@selector(scene:gameEndedWithCompletion:)]) {
             [self.myDelegate scene:self gameEndedWithCompletion:YES];
-        }
+        } return;
         
-        return;
     } else if (self._unlockLastTile) {
         
         for (HDHexagon *hexagon in _hexagons) {

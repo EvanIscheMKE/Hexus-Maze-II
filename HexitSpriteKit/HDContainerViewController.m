@@ -172,7 +172,7 @@
 {
     dispatch_block_t expandAnimation = ^{
         CGRect rect = self.frontViewController.view.frame;
-        rect.origin.x = CGRectGetWidth(self.view.bounds) - 84;
+        rect.origin.x = CGRectGetMidX(self.view.bounds)/3;
         self.frontViewController.view.frame = rect;
     };
     

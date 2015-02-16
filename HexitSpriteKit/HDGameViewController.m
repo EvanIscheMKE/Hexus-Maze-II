@@ -381,10 +381,12 @@
 - (void)completionView:(HDCompletionView *)completionView selectedButtonWithTitle:(NSString *)title
 {
     if ([title isEqualToString:@"Next"]) {
+        [self.scene removeConfettiEmitter];
         [self _dismissCompletionViewWithCompletion:^{
             [self.scene nextLevel];
         }];
     } else if ([title isEqualToString:@"Restart"]) {
+        [self.scene removeConfettiEmitter];
         [self _dismissCompletionViewWithCompletion:^{
             [self restart:nil];
             self.navigationBarHidden = NO;

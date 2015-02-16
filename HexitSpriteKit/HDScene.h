@@ -17,6 +17,7 @@
 @property (nonatomic, readonly) SKNode *gameLayer;
 - (void)performExitAnimationsWithCompletion:(dispatch_block_t)completion;
 - (void)layoutNodesWithGrid:(NSArray *)grid;
+- (void)removeConfettiEmitter;
 - (void)nextLevel;
 - (void)restart;
 @end
