@@ -23,7 +23,6 @@ typedef NS_ENUM(NSUInteger, HDHexagonType) {
     HDHexagonTypeStarter = 9,
     HDHexagonTypeNone    = 10,
     HDHexagonTypeEnd     = 11,
-    HDHexagonTypeTeleport= 12
 };
 
 typedef NS_ENUM(NSUInteger, HDHexagonState) {
@@ -54,6 +53,7 @@ static const NSInteger NumberOfColumns = 9;
 - (instancetype)initWithRow:(NSInteger)row column:(NSInteger)column type:(HDHexagonType)type NS_DESIGNATED_INITIALIZER;
 - (UIColor *)emitterColor;
 - (NSString *)defaultImagePath;
+- (NSString *)selectedImagePath;
 - (BOOL)selectedAfterRecievingTouches;
 - (void)restoreToInitialState;
 @end

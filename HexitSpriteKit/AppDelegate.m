@@ -22,7 +22,7 @@
 #import "HDGridViewController.h"
 #import "HDWelcomeViewController.h"
 #import "HDContainerViewController.h"
-#import "HDTutorialParentViewController.h"
+#import "HDTutorialViewController.h"
 #import "HDRearViewController.h"
 
 NSString * const HDFLURRYAPIKEY = @"B3JYMFF9NC3R57HX825G";
@@ -36,14 +36,13 @@ NSString * const HDLeaderBoardIdentifierKey = @"LevelLeaderboard";
 
 @implementation AppDelegate
 
-- (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
-{
+- (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
+    
     application.statusBarHidden = YES;
     
      self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
     self.window.rootViewController = [HDWelcomeViewController new];
     [self.window makeKeyAndVisible];
-    
     [self _setup];
     
     return YES;
@@ -70,8 +69,8 @@ NSString * const HDLeaderBoardIdentifierKey = @"LevelLeaderboard";
     [self.controller presentViewController:controller animated:YES completion:nil];
 }
 
-- (void)rateHEXUS
-{
+- (void)rateHEXUS {
+    
     NSURL *rateMe = [NSURL URLWithString:iOS8AppStoreURLFormat];
     if ([[UIApplication sharedApplication] canOpenURL:rateMe]) {
         [[UIApplication sharedApplication] openURL:rateMe];
@@ -99,7 +98,7 @@ NSString * const HDLeaderBoardIdentifierKey = @"LevelLeaderboard";
 
 - (void)presentTutorialViewControllerForFirstRun
 {
-    [self.window.rootViewController presentViewController:[HDTutorialParentViewController new] animated:NO completion:nil];
+    [self.window.rootViewController presentViewController:[HDTutorialViewController new] animated:NO completion:nil];
 }
 
 - (void)beginGameWithLevel:(NSInteger)level
@@ -198,7 +197,7 @@ transitionedFromController:(UIViewController *)fromController
     [[HDSoundManager sharedManager] stopAudio];
 }
 
-#pragma mark - Selectors
+#pragma mark - SEL
 
 - (IBAction)restartCurrentLevel:(id)sender
 {

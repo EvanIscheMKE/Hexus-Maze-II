@@ -20,14 +20,14 @@
 #import "HDSettingsManager.h"
 #import "HDGridManager.h"
 #import "HDHintsView.h"
-#import "HDScene.h"
+#import "HDGameScene.h"
 
 #define NC [NSNotificationCenter defaultCenter]
 
 @interface HDGameViewController () <ADBannerViewDelegate, HDSceneDelegate, HDCompletionViewDelegate>
 @property (nonatomic, strong) HDMenuBar     *menuBar;
 @property (nonatomic, strong) HDGridManager *gridManager;
-@property (nonatomic, strong) HDScene       *scene;
+@property (nonatomic, strong) HDGameScene       *scene;
 @property (nonatomic, strong) HDHintsView   *hintsView;
 @property (nonatomic, strong) HDCompletionView *completionView;
 @property (nonatomic, strong) ADBannerView  *bannerView;
@@ -86,8 +86,8 @@
     }];
 }
 
-- (void)loadView
-{
+- (void)loadView {
+    
     CGRect viewRect = [[UIScreen mainScreen] bounds];
     SKView *skView = [[SKView alloc] initWithFrame:viewRect];
     [self setView:skView];
@@ -121,7 +121,7 @@
     SKView * skView = (SKView *)self.view;
     if (!skView.scene && self.gridManager) {
         
-        self.scene = [HDScene sceneWithSize:self.view.bounds.size];
+        self.scene = [HDGameScene sceneWithSize:self.view.bounds.size];
         self.scene.myDelegate = self;
         self.scene.levelIndex = _levelIdx;
         self.scene.gridManager = self.gridManager;
@@ -170,7 +170,7 @@
 - (void)_beginGame
 {    
     NSArray *hexagons = [self.gridManager hexagons];
-    [self.scene layoutNodesWithGrid:hexagons];
+    [self.scene layoutNodesWithGrid:hexagons completion:nil];
     
     if (_levelIdx % 14 == 1 || _levelIdx == 1) {
         if (![[NSUserDefaults standardUserDefaults] boolForKey:[NSString stringWithFormat:@"%zd",_levelIdx]]) {
@@ -299,7 +299,6 @@
             self.completionView.frame = frame;
         }];
         [self.scene.gameLayer runAction:[SKAction moveToY:CGRectGetHeight(self.view.bounds)/7 duration:.300f]];
-        
     } else {
         [self performSelector:@selector(restart:) withObject:nil afterDelay:.300f];
     }

@@ -11,7 +11,6 @@
 
 @interface HDTileManager ()
 @property (nonatomic, strong) NSMutableArray *selectedTileBank;
-@property (nonatomic, strong) NSMutableArray *teleportTileBank;
 @end
 
 @implementation HDTileManager
@@ -30,33 +29,8 @@
 {
     if (self = [super init]) {
         self.selectedTileBank = [NSMutableArray array];
-        self.teleportTileBank = [NSMutableArray array];
     }
     return self;
-}
-
-- (void)addTeleportTile:(HDHexagon *)hexagon {
-    [self.teleportTileBank addObject:hexagon];
-    [self.teleportTileBank shuffle];
-}
-
-- (HDHexagon *)teleportTile
-{
-    HDHexagon *tile = self.teleportTileBank.lastObject;
-    [self.teleportTileBank removeObjectAtIndex:self.teleportTileBank.count - 1];
-    [self.teleportTileBank insertObject:tile atIndex:0];
-    return tile;
-}
-
-- (NSArray *)teleportTiles {
-    return self.teleportTileBank;
-}
-
-- (void)emptyTeleportBank {
-    
-    if (self.teleportTileBank) {
-        [self.teleportTileBank removeAllObjects];
-    }
 }
 
 - (void)clear {

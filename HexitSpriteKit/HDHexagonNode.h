@@ -8,6 +8,8 @@
 
 @import SpriteKit;
 
+#import "HDHexagon.h"
+
 @interface HDHexagonNode : SKSpriteNode
 @property (nonatomic, assign) CGPoint defaultPosition;
 @property (nonatomic, getter=isLocked, assign) BOOL locked;

@@ -24,7 +24,7 @@
     if (self = [super init]) {
         NSBundle *mainBundle = [NSBundle bundleForClass:[self class]];
         NSArray *levelFiles = [mainBundle pathsForResourcesOfType:@"json" inDirectory:nil];
-        _numberOfLevels = levelFiles.count;
+        _numberOfLevels = levelFiles.count - 2;
         [self _verifyNumberOfLevels];
     }
     return self;
@@ -80,6 +80,8 @@
 - (void)completedLevelAtIndex:(NSInteger)index
 {
     [[HDGameCenterManager sharedManager] reportLevelCompletion:index + 1];
+    
+    [[NSUserDefaults standardUserDefaults] setInteger:index + 1 forKey:@"HDLastLevelCompletedKey"];
     
     HDLevel *currentLevel = [self levelAtIndex:MAX(index, 0)];
     HDLevel *nextLevel    = [self levelAtIndex:MIN(index + 1, _numberOfLevels - 1)];

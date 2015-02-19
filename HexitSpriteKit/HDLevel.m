@@ -11,7 +11,6 @@
 NSString * const HDCompletedKey  = @"completed";
 NSString * const HDUnlockedKey   = @"unlocked";
 NSString * const HDLevelIndexKey = @"levelIndex";
-
 @implementation HDLevel
 
 #pragma mark - Class Initalizer

@@ -47,12 +47,12 @@
 
 - (void)preloadLoopWithName:(NSString *)filename;
 {
-//    NSError *error = nil;
-//    NSString *soundPath = [[[NSBundle mainBundle] resourcePath] stringByAppendingPathComponent:filename];
-//    self.loopPlayer = [[AVAudioPlayer alloc] initWithContentsOfURL:[NSURL fileURLWithPath:soundPath] error:&error];
-//    self.loopPlayer.delegate = self;
-//    self.loopPlayer.numberOfLoops = -1; /* Will continue to play until we tell it to stop. */
-//    [self.loopPlayer prepareToPlay];
+    NSError *error = nil;
+    NSString *soundPath = [[[NSBundle mainBundle] resourcePath] stringByAppendingPathComponent:filename];
+    self.loopPlayer = [[AVAudioPlayer alloc] initWithContentsOfURL:[NSURL fileURLWithPath:soundPath] error:&error];
+    self.loopPlayer.delegate = self;
+    self.loopPlayer.numberOfLoops = -1; /* Will continue to play until we tell it to stop. */
+    [self.loopPlayer prepareToPlay];
 }
 
 - (void)preloadSounds:(NSArray *)soundNames

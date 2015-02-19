@@ -11,7 +11,6 @@
 #import "HDHexagonButton.h"
 #import "HDSoundManager.h"
 #import "HDWelcomeViewController.h"
-#import "HDTutorialParentViewController.h"
 #import "UIColor+FlatColors.h"
 #import "CAEmitterCell+HD.h"
 
@@ -152,9 +151,9 @@
 - (void)viewDidAppear:(BOOL)animated
 {
     [super viewDidAppear:animated];
-    if (![self _checkForFirstRun]) {
+   // [self _checkForFirstRun];
         [self _performIntroAnimationWithCompletion:nil];
-    }
+   // }
 }
 
 #pragma mark - UIResponder
@@ -370,11 +369,11 @@
 
 - (BOOL)_checkForFirstRun
 {
-    if (![[NSUserDefaults standardUserDefaults] boolForKey:HDFirstRunKey]) {
+   // if (![[NSUserDefaults standardUserDefaults] boolForKey:HDFirstRunKey]) {
         [ADelegate presentTutorialViewControllerForFirstRun];
         [[NSUserDefaults standardUserDefaults] setBool:YES forKey:HDFirstRunKey];
-        return YES;
-    }
+    //    return YES;
+   // }
     return NO;
 }
 

@@ -156,8 +156,6 @@ NSString * const HDTripleKey = @"triple";
             return @"Default-End";
         case HDHexagonTypeNone:
             return @"Default-Mine";
-        case HDHexagonTypeTeleport:
-            return @"Default-Teleport";
         default:
             return @"Default-Count";
     }
@@ -179,8 +177,6 @@ NSString * const HDTripleKey = @"triple";
             return @"Selected-End";
         case HDHexagonTypeNone:
             return @"Default-Mine";
-        case HDHexagonTypeTeleport:
-            return @"Default-Teleport";
         default:
             return @"Selected-Count";
     }
@@ -222,7 +218,6 @@ NSString * const HDTripleKey = @"triple";
             [self _disableTile];
             break;
         case HDHexagonTypeNone:
-        case HDHexagonTypeTeleport:
             self.selected = YES;
             self.state = HDHexagonStateDisabled;
             break;

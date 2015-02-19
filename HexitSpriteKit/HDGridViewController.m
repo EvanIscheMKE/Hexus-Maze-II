@@ -97,8 +97,11 @@ static const CGFloat defaultPageControlHeight = 50.0f;
     
     HDContainerViewController *container = self.containerViewController;
     
+    NSInteger completedLevelIndex = [[NSUserDefaults standardUserDefaults] integerForKey:@""];
+    
     CGRect scrollViewRect = CGRectInset(self.view.bounds, 0.0f, CGRectGetHeight(self.view.bounds)/7.4f);
     self.scrollView = [[HDGridScrollView alloc] initWithFrame:scrollViewRect];
+    self.scrollView.contentOffset = CGPointMake(, 0.0f);
     self.scrollView.delegate = self;
     self.scrollView.datasource = self;
     [self.view addSubview:self.scrollView];

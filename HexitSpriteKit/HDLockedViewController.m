@@ -10,7 +10,6 @@
 #import "HDLockedView.h"
 
 @interface HDLockedViewController ()
-
 @end
 
 @implementation HDLockedViewController

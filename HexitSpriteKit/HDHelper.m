@@ -28,7 +28,7 @@ NSString *descriptionForLevelIdx(NSUInteger levelIdx){
         case HDLevelTipSix:
             return @"You've got this!";
         case HDLevelTipSeven:
-            return @"Looking like you'll need to teleport";
+            return @"Now that you know the tile, lets do this.";
         default:
             return @"There's more then one for a reason";
         break;
@@ -54,39 +54,10 @@ NSString *descriptionForLevelIdx(NSUInteger levelIdx){
         case HDLevelTipSix:
             return @[[UIImage imageNamed:@"Default-End"]];
         case HDLevelTipSeven:
-            return @[[UIImage imageNamed:@"Default-Teleport-3"],
-                     [UIImage imageNamed:@"Default-Teleport-2"],
-                     [UIImage imageNamed:@"Default-Teleport-1"],
-                     [UIImage imageNamed:@"Default-Teleport"],];
+            return @[[UIImage imageNamed:@"Default-Start"]];
         default:
-            return @[[UIImage imageNamed:@"Default-White"]];
+            return @[[UIImage imageNamed:@"Default-Start"]];
     }
-}
-
-+ (BOOL)isWideScreen
-{
-    return (CGRectGetWidth([[UIScreen mainScreen] bounds]) > 320.0f);
-}
-
-+ (UIBezierPath *)restartArrowAroundPoint:(CGPoint)center
-{
-    const CGFloat offset = center.y * 2 / 5 /* Multiply the the center.y by 2 to get the height of container*/;
-    UIBezierPath *circle = [UIBezierPath bezierPathWithArcCenter:center
-                                                          radius:offset
-                                                      startAngle:DEGREES_RADIANS(330.0f)
-                                                        endAngle:DEGREES_RADIANS(290.0f)
-                                                       clockwise:YES];
-    CGPoint endPoint = circle.currentPoint;
-    
-    circle.lineCapStyle  = kCGLineCapRound;
-    circle.lineJoinStyle = kCGLineJoinRound;
-    circle.lineWidth     = 8.0f;
-    
-    [circle addLineToPoint:CGPointMake(endPoint.x - offset/2, endPoint.y + offset/2.0f)];
-    [circle moveToPoint:endPoint];
-    [circle addLineToPoint:CGPointMake(endPoint.x - offset/2, endPoint.y - offset/1.85f)];
-    
-    return circle;
 }
 
 + (void)entranceAnimationWithTiles:(NSArray *)tiles completion:(dispatch_block_t)completion
@@ -211,7 +182,7 @@ NSString *descriptionForLevelIdx(NSUInteger levelIdx){
     
     for (int i = 0; i < 6; i++) {
         for (HDHexagon *current in array) {
-            if ((!current.isSelected && current.state == HDHexagonStateEnabled) || current.type == HDHexagonTypeTeleport) {
+            if ((!current.isSelected && current.state == HDHexagonStateEnabled)) {
                 if (current.row == hexagonRow[i] && current.column == hexagonColumn[i]) {
                     [hexagons addObject:current];
                     break;
