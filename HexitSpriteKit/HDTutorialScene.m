@@ -42,6 +42,11 @@
     // If the newly selected node is connected to previously selected node.. prooccceeed
     if (!currentTile.isSelected && currentTile.state != HDHexagonStateDisabled && currentTile) {
         if ([self validateNextMoveToHexagon:currentTile fromHexagon:previousTile]) {
+            
+            if (currentTile.type == HDHexagonTypeStarter) {
+                [self.myDelegate startTileWasSelectedInScene:self];
+            }
+            
             [currentTile selectedAfterRecievingTouches];
             [[HDTileManager sharedManager] addHexagon:currentTile];
             [self performEffectsForTile:currentTile];

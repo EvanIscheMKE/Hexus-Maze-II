@@ -24,13 +24,11 @@ static const CGFloat kButtonInset = 20.0f;
 
 #pragma mark - Custom Initalizers
 
-+ (instancetype)menuBarWithActivityImage:(UIImage *)activityImage;
-{
++ (instancetype)menuBarWithActivityImage:(UIImage *)activityImage {
     return [[HDMenuBar alloc] initWithActivityImage:activityImage];
 }
 
-- (instancetype)initWithActivityImage:(UIImage *)activityImage
-{
+- (instancetype)initWithActivityImage:(UIImage *)activityImage {
     if (self = [super init]) {
         self.activityImage = activityImage;
         [self _setup];
@@ -40,8 +38,8 @@ static const CGFloat kButtonInset = 20.0f;
 
 #pragma mark - Private
 
-- (void)_setup
-{
+- (void)_setup {
+    
     self.backgroundColor = [UIColor clearColor];
     
      self.navigationButton = [UIButton buttonWithType:UIButtonTypeCustom];
@@ -58,8 +56,8 @@ static const CGFloat kButtonInset = 20.0f;
     }
 }
 
-- (void)_layoutSubviews
-{
+- (void)_layoutSubviews {
+    
     UIButton *toggle = self.navigationButton;
     UIButton *share  = self.activityButton;
     
@@ -97,8 +95,8 @@ static const CGFloat kButtonInset = 20.0f;
     }
 }
 
-- (void)willMoveToSuperview:(UIView *)newSuperview
-{
+- (void)willMoveToSuperview:(UIView *)newSuperview {
+    
     [super willMoveToSuperview:newSuperview];
     if (newSuperview) {
         [self _layoutSubviews];
@@ -107,10 +105,9 @@ static const CGFloat kButtonInset = 20.0f;
 
 #pragma mark - Setters
 
-- (void)setActivityImage:(UIImage *)activityImage
-{
-    _activityImage = activityImage;
+- (void)setActivityImage:(UIImage *)activityImage {
     
+    _activityImage = activityImage;
     if (self.activityButton) {
         [self.activityButton setImage:activityImage forState:UIControlStateNormal];
     }
@@ -118,8 +115,7 @@ static const CGFloat kButtonInset = 20.0f;
 
 #pragma mark - Getter
 
-- (UIImage *)gridImage
-{
+- (UIImage *)gridImage {
     return [HDHelper isIpad] ? [UIImage imageNamed:@"GridIcon-iPad"] : [UIImage imageNamed:@"Grid"];
 }
 

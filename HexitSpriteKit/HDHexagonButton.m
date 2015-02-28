@@ -14,8 +14,8 @@
 
 @implementation HDHexagonButton
 
-- (instancetype)initWithFrame:(CGRect)frame
-{
+- (instancetype)initWithFrame:(CGRect)frame {
+    
     if (self = [super initWithFrame:frame]) {
         [self _setup];
     }
@@ -41,8 +41,8 @@
 
 #pragma mark - Setters
 
-- (void)setIndex:(NSInteger)index
-{
+- (void)setIndex:(NSInteger)index {
+    
     _index = index;
     
     if (self.levelState == HDLevelStateLocked) {
@@ -54,8 +54,8 @@
     [self setImage:nil forState:UIControlStateNormal];
 }
 
-- (void)setLevelState:(HDLevelState)levelState
-{
+- (void)setLevelState:(HDLevelState)levelState {
+    
     _levelState = levelState;
     
     switch (levelState) {

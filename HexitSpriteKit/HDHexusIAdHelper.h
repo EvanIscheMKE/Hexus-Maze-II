@@ -8,6 +8,8 @@
 
 #import "HDIAdHelper.h"
 
+extern NSString *const IAPUnlockAllLevelsProductIdentifier;
+extern NSString *const IAPremoveAdsProductIdentifier;
 @interface HDHexusIAdHelper : HDIAdHelper
 + (HDHexusIAdHelper *)sharedHelper;
 @end

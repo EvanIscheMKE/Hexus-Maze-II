@@ -14,5 +14,5 @@
 @property (nonatomic, readonly) HDLevelState state;
 @property (nonatomic, getter=isUnlocked,  assign) BOOL unlocked;
 @property (nonatomic, getter=isCompleted, assign) BOOL completed;
-+ (instancetype)levelUnlocked:(BOOL)unlocked index:(NSInteger)index completed:(BOOL)completed;
++ (instancetype)levelUnlocked:(BOOL)unlocked index:(NSUInteger)index completed:(BOOL)completed;
 @end

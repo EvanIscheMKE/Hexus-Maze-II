@@ -29,16 +29,13 @@ extern NSString * const HDSoundNotification;
 extern NSString * const HDVibrationNotification;
 extern NSString * const HDRestartNotificaiton;
 
-//UserDefault Keys
+// NSUserDefault Keys
 extern NSString * const HDDefaultLevelKey;
 extern NSString * const HDGuideKey;
 extern NSString * const HDFirstRunKey;
 extern NSString * const HDEffectsKey;
 extern NSString * const HDSoundkey;
 extern NSString * const HDVibrationKey;
-extern NSString * const HDRemainingLivesKey;
-extern NSString * const HDRemainingTime;
-extern NSString * const HDBackgroundDate;
 
 //
 extern NSString * const HDCompletionZing;
@@ -52,7 +49,7 @@ extern NSString * const HDSwipeSound;
 #define sound2 @"E4.m4a"
 #define sound3 @"win.mp3"
 
-//MarkerFelt-Thin
+//GillSans
 #define GILLSANS(x)       [UIFont fontWithName:@"GillSans" size:x]
 #define GILLSANS_LIGHT(x) [UIFont fontWithName:@"GillSans-Light" size:x]
 

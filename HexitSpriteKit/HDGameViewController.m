@@ -10,6 +10,7 @@
 @import SpriteKit;
 
 #import "HDHelper.h"
+#import "HDHexusIAdHelper.h"
 #import "HDLevelGenerator.h"
 #import "HDMenuBar.h"
 #import "UIColor+FlatColors.h"
@@ -27,7 +28,7 @@
 @interface HDGameViewController () <ADBannerViewDelegate, HDSceneDelegate, HDCompletionViewDelegate>
 @property (nonatomic, strong) HDMenuBar     *menuBar;
 @property (nonatomic, strong) HDGridManager *gridManager;
-@property (nonatomic, strong) HDGameScene       *scene;
+@property (nonatomic, strong) HDGameScene   *scene;
 @property (nonatomic, strong) HDHintsView   *hintsView;
 @property (nonatomic, strong) HDCompletionView *completionView;
 @property (nonatomic, strong) ADBannerView  *bannerView;
@@ -42,6 +43,7 @@
 
 - (void)dealloc {
     
+    [NC removeObserver:self name:IAPHelperProductPurchasedNotification     object:nil];
     [NC removeObserver:self name:UIApplicationWillResignActiveNotification object:nil];
     [NC removeObserver:self name:UIApplicationDidBecomeActiveNotification  object:nil];
 }
@@ -163,16 +165,17 @@
                           forControlEvents:UIControlEventTouchUpInside];
     [self.view addSubview:self.menuBar];
     
+    [NC addObserver:self selector:@selector(_removeAdsWasPurchased:)       name:IAPHelperProductPurchasedNotification object:nil];
     [NC addObserver:self selector:@selector(_applicationWillResignActive:) name:UIApplicationWillResignActiveNotification object:nil];
     [NC addObserver:self selector:@selector(_applicationDidBecomeActive:)  name:UIApplicationDidBecomeActiveNotification  object:nil];
 }
 
-- (void)_beginGame
-{    
+- (void)_beginGame {
+    
     NSArray *hexagons = [self.gridManager hexagons];
     [self.scene layoutNodesWithGrid:hexagons completion:nil];
     
-    if (_levelIdx % 14 == 1 || _levelIdx == 1) {
+    if (_levelIdx % 28 == 1 || _levelIdx == 1) {
         if (![[NSUserDefaults standardUserDefaults] boolForKey:[NSString stringWithFormat:@"%zd",_levelIdx]]) {
             [self _showTipsWithDescription:descriptionForLevelIdx(_levelIdx)
                                      images:[HDHelper imageFromLevelIdx:_levelIdx]];
@@ -307,7 +310,7 @@
 - (void)_dismissCompletionViewWithCompletion:(dispatch_block_t)completion {
     
     [self.scene.gameLayer runAction:[SKAction moveToY:0.0f duration:.300f]];
-    [UIView animateWithDuration:.3f animations:^{
+    [UIView animateWithDuration:.300f animations:^{
         CGRect frame = self.completionView.frame;
         frame.origin.y = CGRectGetHeight(self.view.bounds);
         self.completionView.frame = frame;
@@ -328,6 +331,24 @@
 }
 
 #pragma mark - <ADBannerViewDelegate>
+
+- (void)_removeAdsWasPurchased:(NSNotification *)notification {
+    
+    NSString *productIdentifier = notification.object;
+    if (![productIdentifier isEqualToString:IAPremoveAdsProductIdentifier]) {
+        return;
+    }
+    
+    [UIView animateWithDuration:.300f animations:^{
+        CGRect bannerFrame = self.bannerView.frame;
+        bannerFrame.origin.y = CGRectGetHeight(self.view.bounds);
+        self.bannerView.frame = bannerFrame;
+    } completion:^(BOOL finished) {
+        [self.bannerView removeFromSuperview];
+        self.bannerView = nil;
+        _isBannerVisible = NO;
+    }];
+}
 
 - (void)bannerViewDidLoadAd:(ADBannerView *)banner
 {

@@ -25,13 +25,12 @@ static const CGFloat kPadding = 4.0f;
     BOOL _isStarted;
 }
 
-- (void)dealloc
-{
+- (void)dealloc {
     [self stopMonitoringMotionUpdates];
 }
 
-- (void)startMonitoringMotionUpdates
-{
+- (void)startMonitoringMotionUpdates {
+    
     if (_isStarted) {
         return;
     }
@@ -49,20 +48,21 @@ static const CGFloat kPadding = 4.0f;
     _isStarted = YES;
 }
 
-- (void)stopMonitoringMotionUpdates
-{
+- (void)stopMonitoringMotionUpdates {
+    
     if (!_isStarted) {
         return;
     }
+    
+    _isStarted = NO;
     [self.motionManager stopDeviceMotionUpdates];
     [self _teardown];
-    _isStarted = NO;
 }
 
 #pragma mark - Private
 
-- (void)_setup
-{
+- (void)_setup {
+    
     UIImageView *pictureFrame = [[UIImageView alloc] initWithImage:[self _levelsComingSoonSign]];
     [pictureFrame setCenter:CGPointMake(CGRectGetMidX(self.bounds), CGRectGetHeight(self.bounds)/3)];
     pictureFrame.layer.allowsEdgeAntialiasing = YES;

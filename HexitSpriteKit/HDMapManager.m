@@ -102,6 +102,19 @@
     [[NSUserDefaults standardUserDefaults] setObject:levels forKey:HDDefaultLevelKey];
 }
 
+- (void)unlockAllLevels {
+    
+    NSMutableArray *allLevels = [NSMutableArray array];
+    for (HDLevel *level in [self levels]) {
+        if (!level.completed && !level.unlocked) {
+            level.unlocked = YES;
+        }
+        NSData *levelData = [NSKeyedArchiver archivedDataWithRootObject:level];
+        [allLevels addObject:levelData];
+    }
+    [[NSUserDefaults standardUserDefaults] setObject:allLevels forKey:HDDefaultLevelKey];
+}
+
 - (void)_verifyNumberOfLevels
 {
     NSArray *levelsIKnowAbout = [self levels]?:@[];

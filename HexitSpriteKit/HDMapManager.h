@@ -15,4 +15,5 @@
 - (void)completedLevelAtIndex:(NSInteger)index;
 - (HDLevel *)levelAtIndex:(NSInteger)index;
 - (NSInteger)indexOfCurrentLevel;
+- (void)unlockAllLevels;
 @end

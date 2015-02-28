@@ -22,8 +22,8 @@
 
 #pragma mark - Private
 
-- (void)_setup
-{
+- (void)_setup {
+    
     SKTexture *indicatorTexture = [SKTexture textureWithImageNamed:@"indicator"];
     _indicator = [SKSpriteNode spriteNodeWithTexture:indicatorTexture];
     _indicator.scale    = CGRectGetWidth([[UIScreen mainScreen] bounds])/375.0f;
@@ -33,10 +33,9 @@
 
 #pragma mark - Public
 
-- (void)setLocked:(BOOL)locked
-{
-    _locked = locked;
+- (void)setLocked:(BOOL)locked {
     
+    _locked = locked;
     if (locked) {
         // Add lock
         if (![[self children] count]) {
@@ -50,13 +49,12 @@
     }
 }
 
-- (void)indicatorPositionFromHexagonType:(HDHexagonType)type
-{
+- (void)indicatorPositionFromHexagonType:(HDHexagonType)type {
     [self indicatorPositionFromHexagonType:type withTouchesCount:0];
 }
 
-- (void)indicatorPositionFromHexagonType:(HDHexagonType)type withTouchesCount:(NSInteger)count;
-{
+- (void)indicatorPositionFromHexagonType:(HDHexagonType)type withTouchesCount:(NSInteger)count {
+    
     if (type == HDHexagonTypeNone) {
         [_indicator removeFromParent];
         _indicator = nil;

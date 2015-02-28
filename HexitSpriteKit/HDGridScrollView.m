@@ -21,8 +21,8 @@
 
 @implementation HDGridScrollView
 
-- (instancetype)initWithFrame:(CGRect)frame
-{
+- (instancetype)initWithFrame:(CGRect)frame {
+    
     if (self = [super initWithFrame:frame]) {
         self.showsHorizontalScrollIndicator = NO;
         self.pagingEnabled = YES;
@@ -31,8 +31,8 @@
     return self;
 }
 
-- (void)performIntroAnimationWithCompletion:(dispatch_block_t)completion
-{
+- (void)performIntroAnimationWithCompletion:(dispatch_block_t)completion {
+    
     NSArray *viewsCorrespondingToProtocol = [[self subviews] filteredArrayUsingPredicate:[NSPredicate predicateWithBlock:^BOOL(id evaluatedObject, NSDictionary *bindings) {
         return [evaluatedObject conformsToProtocol:@protocol(HDGridScrollViewChild)];
     }]];
@@ -48,8 +48,8 @@
     [CATransaction commit];
 }
 
-- (void)performOutroAnimationWithCompletion:(dispatch_block_t)completion
-{
+- (void)performOutroAnimationWithCompletion:(dispatch_block_t)completion {
+    
     NSArray *viewsCorrespondingToProtocol = [[self subviews] filteredArrayUsingPredicate:[NSPredicate predicateWithBlock:^BOOL(id evaluatedObject, NSDictionary *bindings) {
         return [evaluatedObject conformsToProtocol:@protocol(HDGridScrollViewChild)];
     }]];
@@ -67,16 +67,16 @@
 
 #pragma mark - Private
 
-- (void)willMoveToSuperview:(UIView *)newSuperview
-{
+- (void)willMoveToSuperview:(UIView *)newSuperview {
+    
     [super willMoveToSuperview:newSuperview];
     if (newSuperview) {
         [self _setup];
     } 
 }
 
-- (void)_setup
-{
+- (void)_setup {
+    
     NSArray *pages = [self.datasource pageViewsForGridScrollView:self];
     if (pages.count < 1) {
         return;

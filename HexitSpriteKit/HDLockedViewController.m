@@ -14,24 +14,20 @@
 
 @implementation HDLockedViewController
 
-- (HDLockedView *)lockedView
-{
+- (HDLockedView *)lockedView {
     return (HDLockedView *)self.view;
 }
 
-- (void)loadView
-{
+- (void)loadView {
     self.view = [HDLockedView new];
 }
 
-- (void)viewWillAppear:(BOOL)animated
-{
+- (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
     [self.lockedView startMonitoringMotionUpdates];
 }
 
-- (void)viewDidDisappear:(BOOL)animated
-{
+- (void)viewDidDisappear:(BOOL)animated {
     [super viewDidDisappear:animated];
     [self.lockedView stopMonitoringMotionUpdates];
 }

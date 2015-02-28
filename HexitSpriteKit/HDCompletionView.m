@@ -17,20 +17,17 @@ static const CGFloat kPadding = 5.0f;
 
 #pragma mark - Layer Class
 
-+ (Class)layerClass
-{
++ (Class)layerClass {
     return [CAShapeLayer class];
 }
 
-- (CAShapeLayer *)shapeLayer
-{
+- (CAShapeLayer *)shapeLayer {
     return (CAShapeLayer *)self.layer;
 }
 
 #pragma mark - Initalizer
 
-- (instancetype)initWithFrame:(CGRect)frame
-{
+- (instancetype)initWithFrame:(CGRect)frame {
     if (self = [super initWithFrame:frame]) {
         [self _setup];
     }
@@ -39,8 +36,7 @@ static const CGFloat kPadding = 5.0f;
 
 #pragma mark - Setters
 
-- (void)setBackgroundColor:(UIColor *)backgroundColor
-{
+- (void)setBackgroundColor:(UIColor *)backgroundColor {
     self.shapeLayer.fillColor = backgroundColor.CGColor;
 }
 
@@ -117,7 +113,6 @@ static const CGFloat kPadding = 5.0f;
 }
 
 - (void)_performActivity:(UIButton *)sender {
-    
     if (self.delegate && [self.delegate respondsToSelector:@selector(completionView:selectedButtonWithTitle:)]) {
         [self.delegate completionView:self selectedButtonWithTitle:sender.titleLabel.text];
     }

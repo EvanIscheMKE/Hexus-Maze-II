@@ -23,8 +23,8 @@
 
 @implementation HDHexagonControl
 
-- (instancetype)initWithFrame:(CGRect)frame
-{
+- (instancetype)initWithFrame:(CGRect)frame {
+    
     CGRect bounds = CGRectMake(0.0f, 0.0f, CGRectGetWidth(frame), CGRectGetHeight(frame));
     if (self = [super initWithFrame:bounds]) {
         self.backgroundColor      = [UIColor flatWetAsphaltColor];
@@ -40,41 +40,35 @@
     [self setNeedsDisplay];
 }
 
-- (void)setNumberOfPages:(NSUInteger)numberOfPages
-{
+- (void)setNumberOfPages:(NSUInteger)numberOfPages {
     _numberOfPages = numberOfPages;
     [self setCurrentPage:MIN(self.currentPage, numberOfPages - 1)];
     [self setNeedsDisplay];
 }
 
-- (void)drawRect:(CGRect)rect
-{
+- (void)drawRect:(CGRect)rect {
+    
     const CGFloat kStartOriginX = ceilf(CGRectGetMidX(self.bounds) - (((CGFloat)self.numberOfPages - 1)/2) * self.pageSpacing);
     for (NSInteger page = 0; page < self.numberOfPages; page++) {
         
+        UIBezierPath *hexagon = nil;
         CGPoint point = CGPointMake(kStartOriginX + (page * self.pageSpacing), CGRectGetMidY(self.bounds));
-        
-        UIBezierPath *hexagon;
         if (self.currentPage == page) {
             
             [self.currentPageTintColor setStroke];
-            
             CGRect rect = CGRectMake(ceilf(point.x - self.currentPageSize/2),
                                      ceilf(point.y - self.currentPageSize/2),
                                      self.currentPageSize,
                                      self.currentPageSize);
-            
             hexagon = [self _bezierHexagonInFrame:rect];
             
         } else {
             
             [self.tintColor setStroke];
-            
             CGRect rect = CGRectMake(ceilf(point.x - self.pageSize/2),
                                      ceilf(point.y - self.pageSize/2),
                                      self.pageSize,
                                      self.pageSize);
-            
             hexagon = [self _bezierHexagonInFrame:rect];
             
         }
@@ -85,8 +79,8 @@
 
 #pragma mark - Private
 
-- (UIBezierPath *)_bezierHexagonInFrame:(CGRect)frame
-{
+- (UIBezierPath *)_bezierHexagonInFrame:(CGRect)frame {
+    
     const CGFloat kWidth   = CGRectGetWidth(frame);
     const CGFloat kHeight  = CGRectGetHeight(frame);
     const CGFloat kPadding = kWidth / 8 / 2;
@@ -105,33 +99,28 @@
 
 #pragma mark - Getters
 
-- (CGFloat)multiplier
-{
-    const NSUInteger multiplyByThis = 10;
-    const NSUInteger theWholePie = 1;
+- (CGFloat)multiplier {
     
+    const NSUInteger multiplyByThis    = 10;
+    const NSUInteger theWholePie       = 1;
     const NSUInteger scaleDownPastThis = 4;
     const NSUInteger remainingCount = self.numberOfPages - scaleDownPastThis;
     
     if (remainingCount <=0) {
         return theWholePie;
     }
-    
     return theWholePie - (remainingCount * multiplyByThis)/100;
 }
 
-- (CGFloat)pageSize
-{
+- (CGFloat)pageSize {
     return (_kPageSize * _kScaleFactor) * self.multiplier;
 }
 
-- (CGFloat)currentPageSize
-{
+- (CGFloat)currentPageSize {
     return (_kCurrentPageSize * _kScaleFactor) * self.multiplier;
 }
 
-- (CGFloat)pageSpacing
-{
+- (CGFloat)pageSpacing {
     return (_kPageSpacing * _kScaleFactor) * self.multiplier;
 }
 

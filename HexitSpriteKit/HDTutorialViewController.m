@@ -103,7 +103,7 @@
         [UIView animateWithDuration:.3f animations:^{
             self.descriptionLabel.alpha = 1;
         } completion:^(BOOL finished) {
-            [self performSelector:@selector(_performSceneIntroAnimations) withObject:nil afterDelay:2.0f];
+            [self performSelector:@selector(_performSceneIntroAnimations) withObject:nil afterDelay:2.5f];
         }];
     }];
 }
@@ -117,10 +117,10 @@
         __weak __typeof__(self) weakSelf = self;
         [self.scene layoutNodesWithGrid:[self.gridManager hexagons] completion:^{
             
-            CGRect frame = CGRectMake(0.0f, 0.0f, CGRectGetWidth(self.view.bounds) - CGRectGetWidth(self.view.bounds)/8*2, 0.0f);
+            CGRect frame = CGRectMake(0.0f, 0.0f, CGRectGetWidth(self.view.bounds) - CGRectGetWidth(self.view.bounds)/12*2, 0.0f);
             weakSelf.descriptionLabel.frame = frame;
-            weakSelf.descriptionLabel.text = @"You must always begin on a white tile.";
-            weakSelf.descriptionLabel.font = GILLSANS_LIGHT(30.0f);
+            weakSelf.descriptionLabel.text = @"...always begin on a white tile.";
+            weakSelf.descriptionLabel.font = GILLSANS_LIGHT(28.0f);
             [weakSelf.descriptionLabel sizeToFit];
             weakSelf.descriptionLabel.center = CGPointMake(CGRectGetMidX(self.view.bounds), CGRectGetHeight(self.view.bounds)/5);
             
@@ -141,13 +141,58 @@
         [scene performExitAnimationsWithCompletion:^{
             [scene nextLevel];
             
+            [UIView animateWithDuration:.2f
+                             animations:^{
+                                 self.descriptionLabel.alpha = 0;
+                             }];
+            
+            self.scene.partyAtTheEnd = YES;
             dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1.5f * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
                 self.gridManager = [[HDGridManager alloc] initWithLevelIndex:1001];
-                self.scene.partyAtTheEnd = YES;
-                [self.scene layoutNodesWithGrid:[self.gridManager hexagons] completion:nil];
+                
+                __weak __typeof__(self) weakSelf = self;
+                [self.scene layoutNodesWithGrid:[self.gridManager hexagons] completion:^{
+                
+                    CGRect frame = CGRectMake(0.0f, 0.0f, CGRectGetWidth(self.view.bounds) - CGRectGetWidth(self.view.bounds)/12*2, 0.0f);
+                    weakSelf.descriptionLabel.frame = frame;
+                    weakSelf.descriptionLabel.text = @"Let's try one more";
+                    weakSelf.descriptionLabel.font = GILLSANS_LIGHT(28.0f);
+                    [weakSelf.descriptionLabel sizeToFit];
+                    weakSelf.descriptionLabel.center = CGPointMake(CGRectGetMidX(self.view.bounds), CGRectGetHeight(self.view.bounds)/5);
+                    
+                    [UIView animateWithDuration:.2f animations:^{
+                        weakSelf.descriptionLabel.alpha = 1;
+                    }];
+                
+                }];
             });
         }];
     }
+}
+
+- (void)startTileWasSelectedInScene:(HDScene *)scene {
+    
+    static NSUInteger count = 0;
+    if (count == 0) {
+        
+        [UIView animateWithDuration:.2f animations:^{
+            self.descriptionLabel.alpha = 0;
+        } completion:^(BOOL finished) {
+            
+            CGRect frame = CGRectMake(0.0f, 0.0f, CGRectGetWidth(self.view.bounds) - CGRectGetWidth(self.view.bounds)/8*2, 0.0f);
+            self.descriptionLabel.frame = frame;
+            self.descriptionLabel.text = @"Now complete the puzzle by moving to a tile touching the previously selected Tile.";
+            self.descriptionLabel.font = GILLSANS_LIGHT(24.0f);
+            [self.descriptionLabel sizeToFit];
+            self.descriptionLabel.center = CGPointMake(CGRectGetMidX(self.view.bounds),
+                                                       CGRectGetHeight(self.view.bounds) - CGRectGetHeight(self.view.bounds)/5);
+            
+            [UIView animateWithDuration:.2f animations:^{
+                self.descriptionLabel.alpha = 1;
+            }];
+        }];
+    }
+    count++;
 }
 
 @end

@@ -370,7 +370,7 @@
 - (BOOL)_checkForFirstRun
 {
    // if (![[NSUserDefaults standardUserDefaults] boolForKey:HDFirstRunKey]) {
-        [ADelegate presentTutorialViewControllerForFirstRun];
+   //     [ADelegate presentTutorialViewControllerForFirstRun];
         [[NSUserDefaults standardUserDefaults] setBool:YES forKey:HDFirstRunKey];
     //    return YES;
    // }

@@ -13,19 +13,17 @@ NSString *descriptionForLevelIdx(NSUInteger levelIdx);
 
 typedef NS_ENUM(NSUInteger, HDLevelTip){
     HDLevelTipOne   = 1,
-    HDLevelTipWhite = 6,
-    HDLevelTipTwo   = 15,
-    HDLevelTipThree = 29,
-    HDLevelTipFour  = 43,
-    HDLevelTipFive  = 57,
-    HDLevelTipSix   = 71,
+    HDLevelTipTwo   = 29,
+    HDLevelTipThree = 57,
+    HDLevelTipFour  = 85,
+    HDLevelTipFive  = 113,
+    HDLevelTipSix   = 141,
     HDLevelTipSeven = 85,
 };
 
 @class HDHexagon;
 @interface HDHelper : NSObject
 + (UIBezierPath *)restartArrowAroundPoint:(CGPoint)center;
-+ (BOOL)isWideScreen;
 + (BOOL)isIpad;
 + (NSArray *)imageFromLevelIdx:(NSUInteger)levelIdx;
 + (void)entranceAnimationWithTiles:(NSArray *)tiles completion:(dispatch_block_t)completion;

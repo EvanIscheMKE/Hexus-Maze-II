@@ -10,6 +10,7 @@
 #import "UIColor+FlatColors.h"
 
 static const CGFloat kPadding = 3.0f;
+static const CGFloat kCornerRadius = 15.0f;
 
 NSString * const HDTitleLocalizationKey = @"Tips";
 @interface HDHintsView ()
@@ -21,20 +22,17 @@ NSString * const HDTitleLocalizationKey = @"Tips";
     NSArray *_images;
 }
 
-+ (Class)layerClass
-{
++ (Class)layerClass {
     return [CAShapeLayer class];
 }
 
-- (CAShapeLayer *)shapeLayer
-{
+- (CAShapeLayer *)shapeLayer {
    return (CAShapeLayer *)self.layer;
 }
 
 - (instancetype)initWithFrame:(CGRect)frame
                   description:(NSString *)description
-                       images:(NSArray *)images
-{
+                       images:(NSArray *)images {
     if (self = [super initWithFrame:frame]) {
         _hintDescription = description;
         _images = images;
@@ -43,8 +41,7 @@ NSString * const HDTitleLocalizationKey = @"Tips";
     return self;
 }
 
-- (void)setBackgroundColor:(UIColor *)backgroundColor
-{
+- (void)setBackgroundColor:(UIColor *)backgroundColor {
     self.shapeLayer.fillColor = backgroundColor.CGColor;
 }
 
@@ -81,13 +78,12 @@ NSString * const HDTitleLocalizationKey = @"Tips";
     }
 }
 
-- (void)layoutSubviews
-{
-    [super layoutSubviews];
+- (void)layoutSubviews {
     
+    [super layoutSubviews];
     self.shapeLayer.path = [[UIBezierPath bezierPathWithRoundedRect:self.bounds
                                                  byRoundingCorners:UIRectCornerTopLeft|UIRectCornerTopRight
-                                                       cornerRadii:CGSizeMake(15.0f, 15.0f)] CGPath];
+                                                       cornerRadii:CGSizeMake(kCornerRadius, kCornerRadius)] CGPath];
     
     [self.titleLabel sizeToFit];
     self.titleLabel.center = CGPointMake(CGRectGetMidX(self.bounds), CGRectGetMidY(self.titleLabel.bounds) + kPadding);

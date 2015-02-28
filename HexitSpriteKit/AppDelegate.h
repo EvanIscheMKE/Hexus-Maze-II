@@ -21,6 +21,7 @@
 - (IBAction)openLeaderboardController:(id)sender;
 - (IBAction)animateToLevelViewController:(id)sender;
 - (IBAction)restartCurrentLevel:(id)sender;
-
+- (IBAction)removeBanners:(id)sender;
+- (IBAction)restoreIAP:(id)sender;
 @end
 

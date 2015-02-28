@@ -25,8 +25,7 @@
     return tileManager;
 }
 
-- (instancetype)init
-{
+- (instancetype)init {
     if (self = [super init]) {
         self.selectedTileBank = [NSMutableArray array];
     }

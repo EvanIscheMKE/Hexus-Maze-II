@@ -27,8 +27,6 @@ NSString *descriptionForLevelIdx(NSUInteger levelIdx){
             return @"Always end on the red hex!";
         case HDLevelTipSix:
             return @"You've got this!";
-        case HDLevelTipSeven:
-            return @"Now that you know the tile, lets do this.";
         default:
             return @"There's more then one for a reason";
         break;
@@ -38,8 +36,8 @@ NSString *descriptionForLevelIdx(NSUInteger levelIdx){
 
 @implementation HDHelper
 
-+ (NSArray *)imageFromLevelIdx:(NSUInteger)levelIdx
-{
++ (NSArray *)imageFromLevelIdx:(NSUInteger)levelIdx {
+    
     switch (levelIdx) {
         case HDLevelTipOne:
             return @[[UIImage imageNamed:@"Default-Mine"]];
@@ -53,15 +51,13 @@ NSString *descriptionForLevelIdx(NSUInteger levelIdx){
             return @[[UIImage imageNamed:@"Default-End"]];
         case HDLevelTipSix:
             return @[[UIImage imageNamed:@"Default-End"]];
-        case HDLevelTipSeven:
-            return @[[UIImage imageNamed:@"Default-Start"]];
         default:
             return @[[UIImage imageNamed:@"Default-Start"]];
     }
 }
 
-+ (void)entranceAnimationWithTiles:(NSArray *)tiles completion:(dispatch_block_t)completion
-{
++ (void)entranceAnimationWithTiles:(NSArray *)tiles completion:(dispatch_block_t)completion {
+    
     // If the arrays empty return, dont need to do animations on nada
     if (tiles.count == 0) {
         if (completion) {
@@ -106,10 +102,8 @@ NSString *descriptionForLevelIdx(NSUInteger levelIdx){
                 SKAction *dropPositionY = [SKAction moveTo:hexagon.node.defaultPosition duration:.25f];
                 SKAction *sequence      = [SKAction sequence:@[wait, dropPositionY]];
                 
-                CGPoint position = CGPointMake(
-                                               hexagon.node.position.x,
-                                               CGRectGetHeight([[UIScreen mainScreen] bounds]) + CGRectGetHeight(hexagon.node.frame)/2 + 5.0f
-                                               );
+                CGPoint position = CGPointMake(hexagon.node.position.x,
+                                               CGRectGetHeight([[UIScreen mainScreen] bounds]) + CGRectGetHeight(hexagon.node.frame)/2 + 5.0f);
                 
                 hexagon.node.hidden = NO;
                 hexagon.node.position = position;

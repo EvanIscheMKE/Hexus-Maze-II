@@ -104,7 +104,12 @@ NSString * const HDLostGameKey = @"lostGameAchievement";
             [self.myDelegate scene:self gameEndedWithCompletion:NO];
         }
     }
-    [tile.node runAction:[SKAction rotateByAngle:M_PI*2 duration:.300f] completion:nil];
+    
+    SKAction *rotation = [SKAction rotateByAngle:M_PI*2 duration:.300f];
+    SKAction *scaleD   = [SKAction scaleTo:.97f duration:.150f];
+    SKAction *scaleU   = [SKAction scaleTo:1.0f duration:.150f];
+    
+    [tile.node runAction:[SKAction group:@[rotation, [SKAction sequence:@[scaleD, scaleU]]]]];
 }
 
 - (void)touchesMoved:(NSSet *)touches withEvent:(UIEvent *)event

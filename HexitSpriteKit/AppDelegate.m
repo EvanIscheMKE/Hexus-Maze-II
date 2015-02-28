@@ -18,6 +18,7 @@
 #import "HDSoundManager.h"
 #import "HDSettingsManager.h"
 #import "HDGameCenterManager.h"
+#import "HDHexusIAdHelper.h"
 #import "HDGameViewController.h"
 #import "HDGridViewController.h"
 #import "HDWelcomeViewController.h"
@@ -50,18 +51,17 @@ NSString * const HDLeaderBoardIdentifierKey = @"LevelLeaderboard";
 
 #pragma mark - Public
 
-- (void)presentLevelViewController
-{
-    self.gridController = [HDGridViewController new];
+- (void)presentLevelViewController {
     
+    self.gridController = [HDGridViewController new];
     self.controller = [[HDContainerViewController alloc] initWithFrontViewController:[HDGridViewController new]
                                                                   rearViewController:[HDRearViewController new]];
     self.controller.delegate = self;
     [self.window.rootViewController presentViewController:self.controller animated:NO completion:nil];
 }
 
-- (void)presentGameCenterControllerForState:(GKGameCenterViewControllerState)state
-{
+- (void)presentGameCenterControllerForState:(GKGameCenterViewControllerState)state {
+    
     GKGameCenterViewController *controller = [[GKGameCenterViewController alloc] init];
     controller.gameCenterDelegate    = self;
     controller.leaderboardIdentifier = HDLeaderBoardIdentifierKey;
@@ -77,8 +77,8 @@ NSString * const HDLeaderBoardIdentifierKey = @"LevelLeaderboard";
     }
 }
 
-- (void)presentShareViewControllerWithLevelIndex:(NSInteger)index
-{
+- (void)presentShareViewControllerWithLevelIndex:(NSInteger)index {
+    
     [[HDSoundManager sharedManager] playSound:HDButtonSound];
     
     NSArray *activityItems = @[[self _screenshotOfFrontViewController]];
@@ -96,22 +96,19 @@ NSString * const HDLeaderBoardIdentifierKey = @"LevelLeaderboard";
     [self.controller presentViewController:controller animated:YES completion:nil];
 }
 
-- (void)presentTutorialViewControllerForFirstRun
-{
+- (void)presentTutorialViewControllerForFirstRun {
     [self.window.rootViewController presentViewController:[HDTutorialViewController new] animated:NO completion:nil];
 }
 
-- (void)beginGameWithLevel:(NSInteger)level
-{
+- (void)beginGameWithLevel:(NSInteger)level {
     [self.controller setFrontMostViewController:[[HDGameViewController alloc] initWithLevel:level]];
 }
 
 #pragma mark - Private
 
-- (void)_setup
-{
-    [Flurry startSession:HDFLURRYAPIKEY];
+- (void)_setup {
     
+    [Flurry startSession:HDFLURRYAPIKEY];
     if (![[NSUserDefaults standardUserDefaults] boolForKey:HDFirstRunKey]) {
         [[HDSettingsManager sharedManager] configureSettingsForFirstRun];
     }
@@ -199,8 +196,37 @@ transitionedFromController:(UIViewController *)fromController
 
 #pragma mark - SEL
 
-- (IBAction)restartCurrentLevel:(id)sender
-{
+- (IBAction)restoreIAP:(id)sender {
+    [[HDHexusIAdHelper sharedHelper] restoreCompletedTransactions];
+}
+
+- (IBAction)removeBanners:(id)sender {
+    
+    if (self.controller.isExpanded) {
+        [self.controller toggleMenuViewControllerWithCompletion:^{
+            [[HDHexusIAdHelper sharedHelper] requestProductsWithCompletionHandler:^(BOOL success, NSArray *products) {
+                if (success && products.count) {
+                    
+                    SKProduct *removeAdsProduct = nil;
+                    for (SKProduct *product in products) {
+                        if (product.productIdentifier == IAPremoveAdsProductIdentifier) {
+                            removeAdsProduct = product;
+                            break;
+                        }
+                    }
+                    
+                   BOOL purchased = [[HDHexusIAdHelper sharedHelper] productPurchased:removeAdsProduct.productIdentifier];
+                    if (!purchased) {
+                        [[HDHexusIAdHelper sharedHelper] buyProduct:removeAdsProduct];
+                    }
+                }
+            }];
+        }];
+    }
+}
+
+- (IBAction)restartCurrentLevel:(id)sender {
+    
     [[HDSoundManager sharedManager] playSound:HDButtonSound];
     if (self.controller.isExpanded) {
         [self.controller toggleMenuViewControllerWithCompletion:^{

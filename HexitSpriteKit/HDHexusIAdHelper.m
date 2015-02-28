@@ -8,15 +8,16 @@
 
 #import "HDHexusIAdHelper.h"
 
+NSString *const IAPremoveAdsProductIdentifier = @"com.EvanIsche.Hexus.RemoveAds";
+NSString *const IAPUnlockAllLevelsProductIdentifier = @"";
 @implementation HDHexusIAdHelper
 
-+ (HDHexusIAdHelper *)sharedHelper
-{
++ (HDHexusIAdHelper *)sharedHelper {
     static HDHexusIAdHelper *helper;
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
         NSSet * productIdentifiers = [NSSet setWithObjects:
-                                      @"com.EvanIsche.hexus.removeAds", nil];
+                                      IAPremoveAdsProductIdentifier, nil];
         helper = [[self alloc] initWithProductIdentifiers:productIdentifiers];
     });
     return helper;

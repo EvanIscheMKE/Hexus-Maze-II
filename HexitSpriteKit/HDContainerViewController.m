@@ -56,6 +56,8 @@
 {
     [super viewDidLoad];
     
+    self.view.backgroundColor = [UIColor flatWetAsphaltColor];
+    
     self.leftScreenEdgeGestureRecognizer = [[UIScreenEdgePanGestureRecognizer alloc] initWithTarget:self action:@selector(handleScreenEdgePan:)];
     self.leftScreenEdgeGestureRecognizer.edges = UIRectEdgeLeft;
     self.leftScreenEdgeGestureRecognizer.delegate = self;
@@ -89,8 +91,7 @@
     return NO;
 }
 
--(void)handleScreenEdgePan:(UIScreenEdgePanGestureRecognizer *)gestureRecognizer
-{
+-(void)handleScreenEdgePan:(UIScreenEdgePanGestureRecognizer *)gestureRecognizer {
     if (gestureRecognizer.state == UIGestureRecognizerStateBegan) {
         [self toggleMenuViewController];
     }
@@ -98,8 +99,8 @@
 
 #pragma mark - Public
 
-- (void)setFrontMostViewController:(UIViewController *)controller
-{
+- (void)setFrontMostViewController:(UIViewController *)controller {
+    
     UIViewController *oldController = self.frontViewController;
     self.frontViewController = controller;
     
@@ -164,7 +165,7 @@
     if (!animated) {
         closeAnimation();
     } else {
-        [UIView animateWithDuration:.3f animations:closeAnimation];
+        [UIView animateWithDuration:.200f animations:closeAnimation];
     }
 }
 
@@ -172,14 +173,16 @@
 {
     dispatch_block_t expandAnimation = ^{
         CGRect rect = self.frontViewController.view.frame;
-        rect.origin.x = CGRectGetMidX(self.view.bounds)/3;
+        rect.origin.x = CGRectGetWidth(self.view.bounds)/1.25f;
         self.frontViewController.view.frame = rect;
     };
     
     if (!animated) {
         expandAnimation();
     } else {
-        [UIView animateWithDuration:.3f animations:expandAnimation];
+        [UIView animateWithDuration:.200f animations:expandAnimation completion:^(BOOL finished) {
+            
+        }];
     }
 }
 

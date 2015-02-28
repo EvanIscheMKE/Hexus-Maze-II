@@ -13,28 +13,29 @@ NSString * const HDUnlockedKey   = @"unlocked";
 NSString * const HDLevelIndexKey = @"levelIndex";
 @implementation HDLevel
 
-#pragma mark - Class Initalizer
-
-+ (instancetype)levelUnlocked:(BOOL)unlocked index:(NSInteger)index completed:(BOOL)completed
-{
-    HDLevel *level = [[self alloc] init];
-    level.unlocked   = unlocked;
-    level.levelIndex = index;
-    level.completed  = completed;
++ (instancetype)levelUnlocked:(BOOL)unlocked index:(NSUInteger)index completed:(BOOL)completed {
+    HDLevel *level = [[self alloc] initUnlocked:unlocked index:index completed:completed];
     return level;
+}
+
+- (instancetype)initUnlocked:(BOOL)unlocked index:(NSUInteger)index completed:(BOOL)completed {
+    if (self = [super init]) {
+        self.unlocked   = unlocked;
+        self.levelIndex = index;
+        self.completed  = completed;
+    }
+    return self;
 }
 
 #pragma mark - NSCoding Protocol
 
-- (void)encodeWithCoder:(NSCoder *)encoder
-{
+- (void)encodeWithCoder:(NSCoder *)encoder {
     [encoder encodeBool:self.unlocked      forKey:HDUnlockedKey];
     [encoder encodeBool:self.completed     forKey:HDCompletedKey];
     [encoder encodeInteger:self.levelIndex forKey:HDLevelIndexKey];
 }
 
-- (id)initWithCoder:(NSCoder *)decoder
-{
+- (id)initWithCoder:(NSCoder *)decoder {
     if (self = [super init]) {
         self.unlocked   =  [decoder decodeBoolForKey:HDUnlockedKey];
         self.completed  = [decoder decodeBoolForKey:HDCompletedKey];
@@ -45,8 +46,8 @@ NSString * const HDLevelIndexKey = @"levelIndex";
 
 #pragma mark - Getter
 
-- (HDLevelState)state
-{
+- (HDLevelState)state {
+    
     if (self.completed) {
         return HDLevelStateCompleted;
     } else if (!self.completed && self.isUnlocked) {

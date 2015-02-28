@@ -3,7 +3,7 @@
 "continue" = "Continue";
 "begin"    = "Begin Game";
 
-"tutorial1" = "Begin by the puzzle by selecting a white tile. You'll always begin on a white tile.";
+"tutorial1" = "Begin the puzzle by selecting a white tile. You'll always begin on a white tile.";
 "tutorial2" = "Continue to an active tile that is touching the previous tile.";
 "tutorial3" = "Continue through the maze until it's completed!";
 

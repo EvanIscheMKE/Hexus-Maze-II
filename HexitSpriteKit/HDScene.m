@@ -65,9 +65,7 @@ static const CGFloat kTileHeightInsetMultiplier = .845f;
 
 - (void)layoutNodesWithGrid:(NSArray *)grid completion:(dispatch_block_t)completion
 {
-    if (completion) {
-        self.layoutCompletion = [completion copy];
-    }
+    self.layoutCompletion = [completion copy];
     
     self.hexagons = [NSMutableArray arrayWithArray:grid];
     [self _setup];

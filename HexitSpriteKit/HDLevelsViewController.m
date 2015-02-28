@@ -140,9 +140,12 @@ static const CGFloat kTileHeightInsetMultiplier = .855f;
 
 - (void)viewWillAppear:(BOOL)animated
 {
+    [self updateState];
     [super viewWillAppear:animated];
     _containerView.center = CGPointMake(CGRectGetMidX(_levelsView.bounds), CGRectGetMidY(_levelsView.bounds));
-    
+}
+
+- (void)updateState {
     NSUInteger tagIndex = self.levelRange.location + 1;
     for (HDHexagonButton *subView in _containerView.subviews) {
         HDLevel *level = [[HDMapManager sharedManager] levelAtIndex:tagIndex - 1];
