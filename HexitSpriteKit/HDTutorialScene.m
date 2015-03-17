@@ -20,9 +20,6 @@
 - (void)checkGameStateForTile:(HDHexagon *)tile {
     
     if ([self inPlayTileCount] == 0) {
-        //[self startConfettiEmitter];
-        [[HDMapManager sharedManager] completedLevelAtIndex:self.levelIndex-1];
-        
         if (self.myDelegate && [self.myDelegate respondsToSelector:@selector(scene:gameEndedWithCompletion:)]) {
             [self.myDelegate scene:self gameEndedWithCompletion:self.partyAtTheEnd];
         }
@@ -70,15 +67,10 @@
     }];
 }
 
-- (void)nextLevel
-{
-    // Clear out Arrays
-    [[HDTileManager sharedManager] clear];
-    
-    // We want to start at 0 and count up when the new levels layed out
+- (void)nextLevel {
     self.countDownSoundIndex = NO;
-    
     [self.gameLayer removeAllChildren];
+    [[HDTileManager sharedManager] clear];
 }
 
 

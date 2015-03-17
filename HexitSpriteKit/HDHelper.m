@@ -120,8 +120,8 @@ NSString *descriptionForLevelIdx(NSUInteger levelIdx){
     }
 }
 
-+ (void)completionAnimationWithTiles:(NSArray *)tiles completion:(dispatch_block_t)completion
-{
++ (void)completionAnimationWithTiles:(NSArray *)tiles completion:(dispatch_block_t)completion {
+    
     if (tiles.count == 0) {
         if (completion) {
             completion();

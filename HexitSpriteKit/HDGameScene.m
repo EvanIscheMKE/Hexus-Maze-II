@@ -21,7 +21,7 @@ NSString * const HDLostGameKey = @"lostGameAchievement";
 
 @implementation HDGameScene
 
-- (void)restart {
+- (void)restartWithAlert:(BOOL)alert {
     
     if (self.animating) {
         return;
@@ -29,6 +29,11 @@ NSString * const HDLostGameKey = @"lostGameAchievement";
     
     self.animating = YES;
     
+    // Display End of game Alert Notification
+    if (self.myDelegate && [self.myDelegate  respondsToSelector:@selector(gameRestartedInScene:alert:)]) {
+        [self.myDelegate gameRestartedInScene:self alert:alert];
+    }
+
     // Display Achievement for losing level
     [[HDGameCenterManager sharedManager] submitAchievementWithIdenifier:HDLostGameKey
                                                        completionBanner:YES
@@ -45,13 +50,18 @@ NSString * const HDLostGameKey = @"lostGameAchievement";
     [HDHelper completionAnimationWithTiles:self.hexagons completion:^{
         // Animate restart once restored
         for (HDHexagon *hexa in self.hexagons) {
-            hexa.node.scale = CGRectGetWidth(self.view.bounds)/375.0f;
+            hexa.node.scale = TRANSFORM_SCALE;
         }
         [HDHelper entranceAnimationWithTiles:self.hexagons completion:^{
             self.animating = NO;
             self.userInteractionEnabled = YES;
         }];
     }];
+}
+
+- (void)performExitAnimationsWithCompletion:(dispatch_block_t)completion {
+    self.space.particleBirthRate = 0;
+    [super performExitAnimationsWithCompletion:completion];
 }
 
 - (void)nextLevel
@@ -112,14 +122,20 @@ NSString * const HDLostGameKey = @"lostGameAchievement";
     [tile.node runAction:[SKAction group:@[rotation, [SKAction sequence:@[scaleD, scaleU]]]]];
 }
 
-- (void)touchesMoved:(NSSet *)touches withEvent:(UIEvent *)event
-{
+- (void)touchesMoved:(NSSet *)touches withEvent:(UIEvent *)event {
+    
     UITouch *touch   = [touches anyObject];
     CGPoint location = [touch locationInNode:self];
     
     // Find the node located under the touch
     HDHexagon *currentTile  = [self findHexagonContainingPoint:location];
     HDHexagon *previousTile = [[HDTileManager sharedManager] lastHexagonObject];
+    
+    if (currentTile.type == HDHexagonTypeStarter && previousTile == nil) {
+        if (self.myDelegate && [self.myDelegate respondsToSelector:@selector(startTileWasSelectedInScene:)]) {
+            [self.myDelegate startTileWasSelectedInScene:self];
+        }
+    }
     
     // If the newly selected node is connected to previously selected node.. prooccceeed
     if (!currentTile.isSelected && currentTile.state != HDHexagonStateDisabled && currentTile) {
@@ -147,10 +163,6 @@ NSString * const HDLostGameKey = @"lostGameAchievement";
             self.animating = NO;
         }];
     }];
-}
-
-- (void)performExitAnimationsWithCompletion:(dispatch_block_t)completion {
-    [HDHelper completionAnimationWithTiles:self.hexagons completion:completion];
 }
 
 #pragma mark - <HDHexagonDelegate>

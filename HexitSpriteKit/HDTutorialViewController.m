@@ -12,9 +12,13 @@
 #import "HDGridManager.h"
 #import "UIColor+FlatColors.h"
 #import "HDTutorialViewController.h"
+#import "HDSoundManager.h"
+#import "HDHintsView.h"
 
 @interface HDTutorialViewController ()<HDSceneDelegate>
-@property (nonatomic, strong) UILabel *descriptionLabel;
+@property (nonatomic, assign) BOOL isAlertHidden;
+@property (nonatomic, strong) UILabel *descriptorLabel;
+@property (nonatomic, strong) HDHintsView *infoView;
 @property (nonatomic, strong) HDGridManager *gridManager;
 @property (nonatomic, strong) HDTutorialScene *scene;
 @end
@@ -24,9 +28,8 @@
 }
 
 - (instancetype)init {
-    
     if (self = [super init]) {
-        
+        self.isAlertHidden = YES;
     }
     return self;
 }
@@ -36,136 +39,177 @@
     _container = (SKView *)self.view;
 }
 
-- (void)viewWillLayoutSubviews
-{
-    [super viewWillLayoutSubviews];
+- (void)viewDidLoad {
     
+    [super viewDidLoad];
+    self.gridManager = [[HDGridManager alloc] initWithLevelIndex:1000];
+    _container.backgroundColor = [SKColor flatWetAsphaltColor];
+}
+
+- (void)viewWillLayoutSubviews {
+    
+    [super viewWillLayoutSubviews];
     if (!_container.scene) {
+        
         self.scene = [HDTutorialScene sceneWithSize:self.view.bounds.size];
         self.scene.myDelegate = self;
         self.scene.gridManager = self.gridManager;
         self.scene.partyAtTheEnd = NO;
-        [(SKView *)_container presentScene:self.scene];
+        [_container presentScene:self.scene];
+        
+        [self.scene layoutNodesWithGrid:[self.gridManager hexagons] completion:^{
+            [self _presentTitle:@"First things first"
+                    description:@"Start by selecting a white tile"
+                         images:@[[UIImage imageNamed:@"Default-Start"]]];
+        }];
     }
 }
 
-- (void)viewDidLoad {
+- (void)_presentTitle:(NSString *)title description:(NSString *)description images:(NSArray *)images {
     
-    [super viewDidLoad];
-    
-    self.gridManager = [[HDGridManager alloc] initWithLevelIndex:1000];
-    
-    _container.backgroundColor = [SKColor flatWetAsphaltColor];
-    
-    self.descriptionLabel = [[UILabel alloc] init];
-    self.descriptionLabel.numberOfLines = 0;
-    self.descriptionLabel.lineBreakMode = NSLineBreakByWordWrapping;
-    self.descriptionLabel.text = @"Welcome.";
-    self.descriptionLabel.textAlignment = NSTextAlignmentCenter;
-    self.descriptionLabel.textColor = [UIColor whiteColor];
-    self.descriptionLabel.font = GILLSANS_LIGHT(42.0f);
-    [self.descriptionLabel sizeToFit];
-    self.descriptionLabel.center = _container.center;
-    [self.view addSubview:self.descriptionLabel];
-}
-
-- (void)didReceiveMemoryWarning {
-    [super didReceiveMemoryWarning];
-    // Dispose of any resources that can be recreated.
-}
-
-- (void)viewWillAppear:(BOOL)animated {
-    self.descriptionLabel.alpha = 0;
-    [super viewWillAppear:animated];
-}
-
-- (void)viewDidAppear:(BOOL)animated {
-    [UIView animateWithDuration:.3f animations:^{ self.descriptionLabel.alpha = 1; }];
-    [self performSelector:@selector(_dismissInitialText) withObject:nil afterDelay:2.0f];
-    [super viewDidAppear:animated];
-}
-
-#pragma mark - Private
-
-- (void)_dismissInitialText {
-    
-    [UIView animateWithDuration:.3f animations:^{
-        self.descriptionLabel.alpha = 0;
-    } completion:^(BOOL finished) {
-        
-        CGRect frame = CGRectMake(0.0f, 0.0f, CGRectGetWidth(self.view.bounds) - CGRectGetWidth(self.view.bounds)/10*2, 0.0f);
-        self.descriptionLabel.frame = frame;
-        self.descriptionLabel.text = @"\"The best way to find out whether you're on the right path? Stop looking at the path.\"\n-Marcus Buckingham";
-        self.descriptionLabel.font = GILLSANS_LIGHT(28.0f);
-        [self.descriptionLabel sizeToFit];
-        self.descriptionLabel.center = _container.center;
-        
-        [UIView animateWithDuration:.3f animations:^{
-            self.descriptionLabel.alpha = 1;
-        } completion:^(BOOL finished) {
-            [self performSelector:@selector(_performSceneIntroAnimations) withObject:nil afterDelay:2.5f];
-        }];
-    }];
-}
-
-- (void)_performSceneIntroAnimations {
-    
-    [UIView animateWithDuration:.3f animations:^{
-        self.descriptionLabel.alpha = 0;
-    } completion:^(BOOL finished) {
+    if (!_infoView) {
         
         __weak __typeof__(self) weakSelf = self;
-        [self.scene layoutNodesWithGrid:[self.gridManager hexagons] completion:^{
+        CGRect infoFrame = CGRectMake(0.0f,
+                                      CGRectGetHeight(self.view.bounds),
+                                      CGRectGetWidth(self.view.bounds),
+                                      CGRectGetHeight(self.view.bounds)/5);
+        _infoView = [[HDHintsView alloc] initWithFrame:infoFrame
+                                                 title:title
+                                           description:description
+                                                images:images];
+        [weakSelf.view insertSubview:_infoView
+                             atIndex:0];
+        [weakSelf toggleAlert];
+        [weakSelf performSelector:@selector(toggleAlert) withObject:nil afterDelay:2.5f];
+    }
+}
+
+- (void)toggleAlert {
+    self.isAlertHidden = !self.isAlertHidden;
+}
+
+- (void)setIsAlertHidden:(BOOL)isAlertHidden {
+    
+    if (_isAlertHidden == isAlertHidden) {
+        return;
+    }
+  
+    _isAlertHidden = isAlertHidden;
+    if (_isAlertHidden) {
+        [self hideAlertAnimated:YES completion:nil];
+    } else {
+        [self showAlertAnimated:YES];
+    }
+}
+
+- (void)showAlertAnimated:(BOOL)animated {
+    
+    dispatch_block_t animate = ^{
+        CGRect infoFrame = self.infoView.frame;
+        infoFrame.origin.y = CGRectGetHeight(self.view.bounds) - CGRectGetHeight(self.infoView.bounds);
+        self.infoView.frame = infoFrame;
+    };
+    
+    if (animated) {
+        [UIView animateWithDuration:.300f animations:animate];
+    } else {
+        animate();
+    }
+}
+
+- (void)hideAlertAnimated:(BOOL)animated completion:(dispatch_block_t)completion {
+    
+    dispatch_block_t animate = ^{
+        CGRect infoFrame = self.infoView.frame;
+        infoFrame.origin.y = CGRectGetHeight(self.view.bounds);
+        self.infoView.frame = infoFrame;
+    };
+    
+    if (animated) {
+        [UIView animateWithDuration:.300f animations:animate completion:^(BOOL finished) {
+            [self.infoView removeFromSuperview];
+             self.infoView = nil;
             
-            CGRect frame = CGRectMake(0.0f, 0.0f, CGRectGetWidth(self.view.bounds) - CGRectGetWidth(self.view.bounds)/12*2, 0.0f);
-            weakSelf.descriptionLabel.frame = frame;
-            weakSelf.descriptionLabel.text = @"...always begin on a white tile.";
-            weakSelf.descriptionLabel.font = GILLSANS_LIGHT(28.0f);
-            [weakSelf.descriptionLabel sizeToFit];
-            weakSelf.descriptionLabel.center = CGPointMake(CGRectGetMidX(self.view.bounds), CGRectGetHeight(self.view.bounds)/5);
-            
-            [UIView animateWithDuration:.2f animations:^{
-                weakSelf.descriptionLabel.alpha = 1;
-            }];
+            if (completion) {
+                completion();
+            }
         }];
-    }];
+    } else {
+        animate();
+        [self.infoView removeFromSuperview];
+        self.infoView = nil;
+        
+        if (completion) {
+            completion();
+        }
+    }
 }
 
 #pragma mark - <HDSceneDelegate>
 
-- (void)scene:(HDScene *)scene gameEndedWithCompletion:(BOOL)completion {
+- (void)scene:(HDTutorialScene *)scene gameEndedWithCompletion:(BOOL)completion {
     
+    [[HDSoundManager sharedManager] playSound:HDCompletionZing];
     if (completion) {
-        [scene startConfettiEmitter];
+        
+        [scene performExitAnimationsWithCompletion:^{
+            
+            self.descriptorLabel = [self _descriptorLabelWithText:@"Beautiful!"];
+            [self.view addSubview:self.descriptorLabel];
+            [UIView animateWithDuration:.3f animations:^{
+                self.descriptorLabel.alpha = 1;
+            } completion:^(BOOL finished) {
+                self.scene.space.particleBirthRate = 0;
+                [UIView animateWithDuration:.3f
+                                      delay:3.0f
+                                    options:0
+                                 animations:^{
+                                     self.descriptorLabel.alpha = 0;
+                                 } completion:^(BOOL finished) {
+                                     self.descriptorLabel = [self _descriptorLabelWithText:@"Welcome."];
+                                     [self.view addSubview:self.descriptorLabel];
+                                     [UIView animateWithDuration:.3f animations:^{
+                                         self.descriptorLabel.alpha = 1;
+                                     } completion:^(BOOL finished) {
+                                         [UIView animateWithDuration:.3f
+                                                               delay:3.0f
+                                                             options:0
+                                                          animations:^{
+                                                              self.descriptorLabel.alpha = 0;
+                                                          } completion:^(BOOL finished) {
+                                                              [self.presentingViewController dismissViewControllerAnimated:YES completion:nil];
+                                                          }];
+                                     }];
+                                 }];
+            }];
+        }];
+        
     } else {
         [scene performExitAnimationsWithCompletion:^{
+            
             [scene nextLevel];
+            scene.partyAtTheEnd = YES;
             
-            [UIView animateWithDuration:.2f
-                             animations:^{
-                                 self.descriptionLabel.alpha = 0;
-                             }];
-            
-            self.scene.partyAtTheEnd = YES;
-            dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1.5f * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-                self.gridManager = [[HDGridManager alloc] initWithLevelIndex:1001];
-                
-                __weak __typeof__(self) weakSelf = self;
-                [self.scene layoutNodesWithGrid:[self.gridManager hexagons] completion:^{
-                
-                    CGRect frame = CGRectMake(0.0f, 0.0f, CGRectGetWidth(self.view.bounds) - CGRectGetWidth(self.view.bounds)/12*2, 0.0f);
-                    weakSelf.descriptionLabel.frame = frame;
-                    weakSelf.descriptionLabel.text = @"Let's try one more";
-                    weakSelf.descriptionLabel.font = GILLSANS_LIGHT(28.0f);
-                    [weakSelf.descriptionLabel sizeToFit];
-                    weakSelf.descriptionLabel.center = CGPointMake(CGRectGetMidX(self.view.bounds), CGRectGetHeight(self.view.bounds)/5);
-                    
-                    [UIView animateWithDuration:.2f animations:^{
-                        weakSelf.descriptionLabel.alpha = 1;
-                    }];
-                
-                }];
-            });
+            self.descriptorLabel = [self _descriptorLabelWithText:@"Amazing!"];
+            [self.view addSubview:self.descriptorLabel];
+            [UIView animateWithDuration:.3f animations:^{
+                self.descriptorLabel.alpha = 1;
+            } completion:^(BOOL finished) {
+                [UIView animateWithDuration:.3f
+                                      delay:2.0f
+                                    options:0
+                                 animations:^{
+                                     self.descriptorLabel.alpha = 0;
+                                 } completion:^(BOOL finished) {
+                                     self.gridManager = [[HDGridManager alloc] initWithLevelIndex:1001];
+                                     [self.scene layoutNodesWithGrid:[self.gridManager hexagons] completion:^{
+                                         [self _presentTitle:@"One More Time"
+                                                 description:@"Let's make sure you've got a hang of this"
+                                                      images:@[[UIImage imageNamed:@"Default-OneTap"]]];
+                                     }];
+                                 }];
+            }];
         }];
     }
 }
@@ -174,25 +218,33 @@
     
     static NSUInteger count = 0;
     if (count == 0) {
-        
-        [UIView animateWithDuration:.2f animations:^{
-            self.descriptionLabel.alpha = 0;
-        } completion:^(BOOL finished) {
-            
-            CGRect frame = CGRectMake(0.0f, 0.0f, CGRectGetWidth(self.view.bounds) - CGRectGetWidth(self.view.bounds)/8*2, 0.0f);
-            self.descriptionLabel.frame = frame;
-            self.descriptionLabel.text = @"Now complete the puzzle by moving to a tile touching the previously selected Tile.";
-            self.descriptionLabel.font = GILLSANS_LIGHT(24.0f);
-            [self.descriptionLabel sizeToFit];
-            self.descriptionLabel.center = CGPointMake(CGRectGetMidX(self.view.bounds),
-                                                       CGRectGetHeight(self.view.bounds) - CGRectGetHeight(self.view.bounds)/5);
-            
-            [UIView animateWithDuration:.2f animations:^{
-                self.descriptionLabel.alpha = 1;
-            }];
+        [NSObject cancelPreviousPerformRequestsWithTarget:self];
+        [self hideAlertAnimated:YES completion:^{
+            [self _presentTitle:@"Next"
+                    description:@"Move to a tile that is touching the previous tile"
+                         images:@[[UIImage imageNamed:@"Default-OneTap"]]];
         }];
+    } else if (count == 1) {
+        
     }
+    
     count++;
+}
+
+- (UILabel *)_descriptorLabelWithText:(NSString *)text {
+    
+    UILabel *label = [[UILabel alloc] init];
+    label.font = GILLSANS_LIGHT(42.0f);
+    label.textAlignment = NSTextAlignmentCenter;
+    label.textColor = [UIColor whiteColor];
+    label.numberOfLines = 1;
+    label.text = text;
+    label.alpha = 0;
+    [label sizeToFit];
+    label.center = self.view.center;
+    label.frame = CGRectIntegral(label.frame);
+    
+    return label;
 }
 
 @end

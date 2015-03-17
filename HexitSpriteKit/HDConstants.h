@@ -44,6 +44,9 @@ extern NSString * const HDSoundLoopKey;
 extern NSString * const HDButtonSound;
 extern NSString * const HDSwipeSound;
 
+#define IPHONE6WIDTH 375.0f
+#define TRANSFORM_SCALE [UIScreen mainScreen].bounds.size.width / IPHONE6WIDTH
+
 #define sound0 @"C4.m4a"
 #define sound1 @"D4.m4a"
 #define sound2 @"E4.m4a"

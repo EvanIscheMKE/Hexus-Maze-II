@@ -26,7 +26,7 @@
     
     SKTexture *indicatorTexture = [SKTexture textureWithImageNamed:@"indicator"];
     _indicator = [SKSpriteNode spriteNodeWithTexture:indicatorTexture];
-    _indicator.scale    = CGRectGetWidth([[UIScreen mainScreen] bounds])/375.0f;
+    _indicator.scale    = TRANSFORM_SCALE;
     _indicator.position = CGPointZero;
     [self addChild:_indicator];
 }
@@ -40,7 +40,7 @@
         // Add lock
         if (![[self children] count]) {
             SKSpriteNode *lock = [SKSpriteNode spriteNodeWithImageNamed:@"Locked-22"];
-            lock.scale = CGRectGetWidth([[UIScreen mainScreen] bounds])/375.0f;
+            lock.scale = TRANSFORM_SCALE;
             [self addChild:lock];
         }
     } else {

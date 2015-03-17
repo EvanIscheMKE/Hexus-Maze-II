@@ -8,6 +8,11 @@
 
 #import <UIKit/UIKit.h>
 
+extern NSString * const HDNextKey;
+extern NSString * const HDShareKey;
+extern NSString * const HDRestartKey;
+extern NSString * const HDRateKey;
+
 @protocol HDCompletionViewDelegate;
 @interface HDCompletionView : UIView
 @property (nonatomic, weak) id<HDCompletionViewDelegate> delegate;

@@ -12,27 +12,55 @@
 
 @implementation SKEmitterNode (EmitterAdditions)
 
-+ (SKEmitterNode *)hexaEmitterWithColor:(UIColor *)skColor scale:(CGFloat)scale
-{
-    // shoots little hexagons when node is selected
-    SKEmitterNode *emitter = [SKEmitterNode node];
-    [emitter setNumParticlesToEmit:20];
-    [emitter setParticleBirthRate:20];
-    [emitter setParticleTexture:[SKTexture textureWithImageNamed:@"hexagon"]];
-    [emitter setParticleColor:skColor];
-    [emitter setParticleLifetime:1.0f];
-    [emitter setParticleAlphaRange:.5f];
-    [emitter setParticlePosition:CGPointMake(0.0, 0.0)];
-    [emitter setParticleSpeed:500.0f];
-    [emitter setEmissionAngle:89.0f];
-    [emitter setParticleScale:scale];
-    [emitter setEmissionAngleRange:350.0f];
-    [emitter setParticleBlendMode:SKBlendModeAlpha];
-    [emitter setParticleColorBlendFactor:1.0];
-    [emitter advanceSimulationTime:.65f];
-    [emitter setYAcceleration:0];
++ (NSArray *)horizontalEmitterColor:(SKColor *)color {
+
+    NSMutableArray *emitters = [NSMutableArray array];
+    for (NSUInteger i = 0; i < 2; i++) {
+        SKEmitterNode *emitter = [SKEmitterNode node];
+        emitter.emissionAngle = i == 0 ? 0 : M_PI;
+        emitter.numParticlesToEmit = 20;
+        emitter.particleBirthRate = emitter.numParticlesToEmit*1.75;
+        emitter.particleTexture = [SKTexture textureWithImageNamed:@"hexagon"];
+        emitter.particleColor = color;
+        emitter.particleLifetime = 2.0f;
+        emitter.particleAlpha = .5f;
+        emitter.particlePosition = CGPointMake(0.0, 0.0);
+        emitter.particleSpeed = 700.0f;
+        emitter.particleScale = 3.5f;
+        emitter.particleBlendMode = SKBlendModeAlpha;
+        [emitter setParticleColorBlendFactor:1.2];
+        [emitter advanceSimulationTime:.72f];
+        emitter.yAcceleration = 0;
+        emitter.zPosition = 0;
+        [emitters addObject:emitter];
+    }
+    return emitters;
+}
+
++ (NSArray *)verticalEmitterColor:(SKColor *)color {
     
-    return emitter;
+    NSMutableArray *emitters = [NSMutableArray array];
+    for (NSUInteger i = 0; i < 2; i++) {
+        SKEmitterNode *emitter = [SKEmitterNode node];
+        emitter.emissionAngle = i == 0 ? M_PI_2 : -M_PI_2;
+        emitter.numParticlesToEmit = 20;
+        emitter.particleBirthRate = emitter.numParticlesToEmit*1.75;
+        emitter.particleTexture   = [SKTexture textureWithImageNamed:@"hexagon"];
+        emitter.particleColor     = color;
+        emitter.particleLifetime  = 2.0f;
+        emitter.particlePosition  = CGPointMake(0.0, 0.0);
+        emitter.particleSpeed     = 700.0f;
+        emitter.particleAlpha     = .5f;
+        emitter.particleAlphaRange = .2f;
+        emitter.particleScale     = 2.0f;
+        emitter.particleBlendMode = SKBlendModeAlpha;
+        emitter.particleColorBlendFactor = 1.0f;
+        [emitter advanceSimulationTime:.75f];
+        emitter.yAcceleration = 0;
+        emitter.zPosition     = 0;
+        [emitters addObject:emitter];
+    }
+    return emitters;
 }
 
 @end

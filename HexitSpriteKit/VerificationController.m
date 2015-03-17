@@ -392,21 +392,19 @@ void * base64_decode(const char* s, size_t * data_len)
     
     // Check the status of the verifyReceipt call
     id status = [verifiedReceiptDictionary objectForKey:@"status"];
-    if (!status)
-    {
+    if (!status) {
         return NO;
     }
-    int verifyReceiptStatus = [status integerValue];
+    NSInteger verifyReceiptStatus = [status integerValue];
     // 21006 = This receipt is valid but the subscription has expired.
-    if (0 != verifyReceiptStatus && 21006 != verifyReceiptStatus)
-    {
+    if (0 != verifyReceiptStatus && 21006 != verifyReceiptStatus) {
         return NO;
     }
     
     // The receipt is valid, so checked the receipt specifics now.
     
     NSDictionary *verifiedReceiptReceiptDictionary  = [verifiedReceiptDictionary objectForKey:@"receipt"];
-    NSString *verifiedReceiptUniqueIdentifier       = [verifiedReceiptReceiptDictionary objectForKey:@"unique_identifier"];
+   // NSString *verifiedReceiptUniqueIdentifier       = [verifiedReceiptReceiptDictionary objectForKey:@"unique_identifier"];
     NSString *transactionIdFromVerifiedReceipt      = [verifiedReceiptReceiptDictionary objectForKey:@"transaction_id"];
     
     // Get the transaction's receipt data from the transactionsReceiptStorageDictionary

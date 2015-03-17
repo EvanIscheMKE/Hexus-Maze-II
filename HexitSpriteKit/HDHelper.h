@@ -23,7 +23,6 @@ typedef NS_ENUM(NSUInteger, HDLevelTip){
 
 @class HDHexagon;
 @interface HDHelper : NSObject
-+ (UIBezierPath *)restartArrowAroundPoint:(CGPoint)center;
 + (BOOL)isIpad;
 + (NSArray *)imageFromLevelIdx:(NSUInteger)levelIdx;
 + (void)entranceAnimationWithTiles:(NSArray *)tiles completion:(dispatch_block_t)completion;

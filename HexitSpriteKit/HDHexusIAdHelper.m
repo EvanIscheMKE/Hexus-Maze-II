@@ -9,15 +9,15 @@
 #import "HDHexusIAdHelper.h"
 
 NSString *const IAPremoveAdsProductIdentifier = @"com.EvanIsche.Hexus.RemoveAds";
-NSString *const IAPUnlockAllLevelsProductIdentifier = @"";
+NSString *const IAPUnlockAllLevelsProductIdentifier = @"com.EvanIsche.Hexus.UnlockLevels";
 @implementation HDHexusIAdHelper
 
 + (HDHexusIAdHelper *)sharedHelper {
-    static HDHexusIAdHelper *helper;
+    static HDHexusIAdHelper *helper = nil;
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
-        NSSet * productIdentifiers = [NSSet setWithObjects:
-                                      IAPremoveAdsProductIdentifier, nil];
+        NSSet * productIdentifiers = [NSSet setWithObjects:IAPremoveAdsProductIdentifier,
+                                                           IAPUnlockAllLevelsProductIdentifier, nil];
         helper = [[self alloc] initWithProductIdentifiers:productIdentifiers];
     });
     return helper;

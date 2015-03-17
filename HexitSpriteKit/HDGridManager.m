@@ -66,7 +66,7 @@ typedef void(^CallbackBlock)(NSDictionary *dictionary, NSError *error);
 
 - (NSInteger)hexagonTypeAtRow:(NSInteger)row column:(NSInteger)column
 {
-    return [_grid[row][column]integerValue];
+    return [_grid[row][column] integerValue];
 }
 
 - (HDHexagon *)hexagonAtRow:(NSInteger)row column:(NSInteger)column

@@ -28,10 +28,9 @@
 
 #pragma mark - Public
 
-- (void)setGameInterfaceHidden:(BOOL)gameInterfaceHidden
-{
-    _gameInterfaceHidden = gameInterfaceHidden;
+- (void)setGameInterfaceHidden:(BOOL)gameInterfaceHidden {
     
+    _gameInterfaceHidden = gameInterfaceHidden;
     if (gameInterfaceHidden) {
         [self _hideGameInterface];
     } else {
@@ -56,13 +55,13 @@
     CGRect defaultFrame;
     defaultFrame.size = CGSizeMake(buttonWidth, buttonHeight);
     defaultFrame.origin.x = CGRectGetMidX(containerBounds) - buttonWidth/2;
-    defaultFrame.origin.y = CGRectGetHeight(self.view.bounds)/7;
+    defaultFrame.origin.y = CGRectGetHeight(self.view.bounds)/6;
     
     CGRect previousFrame = CGRectZero;
     const CGFloat kPadding = 15.0f;
     for (NSUInteger row = 0; row < 4; row++) {
-        CGRect currentFrame = previousFrame;
         
+        CGRect currentFrame = previousFrame;
         if (row == 0) {
             currentFrame = defaultFrame;
         } else {
@@ -101,7 +100,7 @@
                 break;
             case 3:
                 [menuButton setTitle:@"Restore" forState:UIControlStateNormal];
-                [menuButton addTarget:self action:@selector(restoreIAP:) forControlEvents:UIControlEventTouchUpInside];
+                [menuButton addTarget:ADelegate action:@selector(restoreIAP:) forControlEvents:UIControlEventTouchUpInside];
                 break;
             default:
                 break;
@@ -152,30 +151,21 @@
                 break;
         }
     }
-    
-    UILabel *gameTitleLabel = [[UILabel alloc] init];
-    gameTitleLabel.text      = @"Hexus Maze V2.0";
-    gameTitleLabel.textColor = [UIColor whiteColor];
-    gameTitleLabel.font      = GILLSANS(24.0f);
-    gameTitleLabel.textAlignment = NSTextAlignmentCenter;
-    [gameTitleLabel sizeToFit];
-    gameTitleLabel.center = CGPointMake(CGRectGetMidX(container.bounds), CGRectGetHeight(container.bounds) -CGRectGetMidY(gameTitleLabel.bounds));
-    gameTitleLabel.frame = CGRectIntegral(gameTitleLabel.frame);
-    [container addSubview:gameTitleLabel];
 }
 
 - (IBAction)_toggleSound:(HDSwitch *)sender {
-    
+
     [sender setSelected:sender.isOn];
     [[HDSettingsManager sharedManager] setSound:![[HDSettingsManager sharedManager] sound]];
     [[HDSoundManager sharedManager] playSound:HDButtonSound];
 }
 
 - (IBAction)_toggleMusic:(HDSwitch *)sender {
-    
+
+    BOOL music = [[HDSettingsManager sharedManager] music];
+    [[HDSettingsManager sharedManager] setMusic:!music];
+    [[HDSoundManager sharedManager] setPlayLoop:!music];
     [sender setSelected:sender.isOn];
-    [[HDSettingsManager sharedManager] setMusic:![[HDSettingsManager sharedManager] music]];
-    [[HDSoundManager sharedManager] setPlayLoop:[[HDSettingsManager sharedManager] music]];
 }
 
 - (void)_hideGameInterface {

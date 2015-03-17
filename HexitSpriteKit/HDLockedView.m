@@ -43,7 +43,6 @@ static const CGFloat kPadding = 4.0f;
              [self.floatingAnchorBehavior setAnchorPoint:[[self class] _pointFromAngle:angle
                                                                                 center:self.attachmentBehavior.anchorPoint
                                                                                 radius:CGRectGetMidY(self.bounds)]];
-         
      }];
     _isStarted = YES;
 }
@@ -64,16 +63,14 @@ static const CGFloat kPadding = 4.0f;
 - (void)_setup {
     
     UIImageView *pictureFrame = [[UIImageView alloc] initWithImage:[self _levelsComingSoonSign]];
-    [pictureFrame setCenter:CGPointMake(CGRectGetMidX(self.bounds), CGRectGetHeight(self.bounds)/3)];
+    pictureFrame.center = CGPointMake(CGRectGetMidX(self.bounds), CGRectGetHeight(self.bounds)/3);
     pictureFrame.layer.allowsEdgeAntialiasing = YES;
     [self addSubview:pictureFrame];
     
-    CGRect signFrame = CGRectMake(
-                                  5.0f,
+    CGRect signFrame = CGRectMake(5.0f,
                                   CGRectGetHeight(pictureFrame.bounds)/3.25f,
                                   CGRectGetWidth(CGRectInset(pictureFrame.bounds, 5.0f, 0.0f)),
-                                  CGRectGetHeight(pictureFrame.bounds)/1.5f
-                                  );
+                                  CGRectGetHeight(pictureFrame.bounds)/1.5f);
     UILabel *pictureFramesMessage = [[UILabel alloc] initWithFrame:signFrame];
     pictureFramesMessage.text = NSLocalizedString(@"sign", nil);
     pictureFramesMessage.numberOfLines = 0;
@@ -82,14 +79,14 @@ static const CGFloat kPadding = 4.0f;
     pictureFramesMessage.textAlignment = NSTextAlignmentCenter;
     [pictureFrame addSubview:pictureFramesMessage];
     
+    CGRect nailBounds = CGRectMake(0.0f, 0.0f, 32.0f, 32.0f);
     CALayer *nailLayer = [CALayer layer];
-    nailLayer.backgroundColor = [UIColor whiteColor].CGColor;
-    nailLayer.bounds = CGRectMake(0.0f, 0.0f, 32.0f, 32.0f);
+    nailLayer.backgroundColor = [UIColor flatEmeraldColor].CGColor;
+    nailLayer.bounds = nailBounds;
     nailLayer.cornerRadius = CGRectGetMidX(nailLayer.bounds);
     nailLayer.masksToBounds = YES;
     nailLayer.position = CGPointMake(CGRectGetMidX(self.bounds), CGRectGetHeight(self.bounds)/5);
-   // nailLayer.transform = CATransform3DMakeScale(CGRectGetWidth([[UIScreen mainScreen]bounds])/375.0f,
-   //                                              CGRectGetWidth([[UIScreen mainScreen]bounds])/375.0f, 1);
+    nailLayer.transform = CATransform3DMakeScale(TRANSFORM_SCALE, TRANSFORM_SCALE, 1);
     [self.layer addSublayer:nailLayer];
     
     self.animator = [[UIDynamicAnimator alloc] initWithReferenceView:self];
@@ -131,8 +128,8 @@ static const CGFloat kPadding = 4.0f;
 
 #pragma - Drawing
 
-- (UIImage *)_levelsComingSoonSign
-{
+- (UIImage *)_levelsComingSoonSign {
+    
     static UIImage *comingSoonSign;
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
@@ -144,7 +141,7 @@ static const CGFloat kPadding = 4.0f;
         CGContextSetAllowsAntialiasing(UIGraphicsGetCurrentContext(), YES);
         
         [[UIColor whiteColor] setFill];
-        [[UIColor flatPeterRiverColor] setStroke];
+        [[UIColor whiteColor] setStroke];
         
         CGRect nailFrame = CGRectMake(imageSize.width/2 - kPadding*8/2, imageSize.height/20, kPadding*8, kPadding*8);
         CGRect signFrame = CGRectMake(3.0f, imageSize.height/3.25, imageSize.width - 6.0f, imageSize.height/1.5f);
@@ -163,10 +160,12 @@ static const CGFloat kPadding = 4.0f;
         }
         
         [[UIColor flatEmeraldColor] setStroke];
+        [[[UIColor flatEmeraldColor] colorWithAlphaComponent:.3f] setFill];
         
         UIBezierPath *signPath = [UIBezierPath bezierPathWithRoundedRect:signFrame cornerRadius:10.0f];
         signPath.lineWidth = 8.0f;
         [signPath stroke];
+        [signPath fill];
         
         comingSoonSign = UIGraphicsGetImageFromCurrentImageContext();
         UIGraphicsEndImageContext();
@@ -176,8 +175,7 @@ static const CGFloat kPadding = 4.0f;
 
 #pragma mark - Class
 
-+ (CGPoint)_pointFromAngle:(double)angleInRadians center:(CGPoint)centerPoint radius:(double)radius
-{
++ (CGPoint)_pointFromAngle:(double)angleInRadians center:(CGPoint)centerPoint radius:(double)radius {
     return CGPointMake(radius * cos(angleInRadians) + centerPoint.x, radius * sin(angleInRadians) + centerPoint.y);
 }
 

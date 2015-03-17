@@ -8,7 +8,13 @@
 
 #import "HDCompletionView.h"
 
+NSString * const HDNextKey    = @"Next";
+NSString * const HDShareKey   = @"Share";
+NSString * const HDRestartKey = @"Restart";
+NSString * const HDRateKey    = @"Rate";
+
 static const CGFloat kPadding = 5.0f;
+static const CGFloat kCornerRadius = 15.0f;
 @interface HDCompletionView ()
 @property (nonatomic, strong) UILabel *titleLabel;
 @end
@@ -42,16 +48,18 @@ static const CGFloat kPadding = 5.0f;
 
 #pragma mark - Private
 
-- (void)_setup
-{
+- (void)_setup {
+    
     self.backgroundColor = [UIColor colorWithWhite:0.0f alpha:.5f];
+    CGAffineTransform scale = CGAffineTransformMakeScale(TRANSFORM_SCALE, TRANSFORM_SCALE);
     
     self.shapeLayer.lineWidth = 0;
     self.shapeLayer.path = [[UIBezierPath bezierPathWithRoundedRect:self.bounds
                                                   byRoundingCorners:UIRectCornerTopLeft|UIRectCornerTopRight
-                                                        cornerRadii:CGSizeMake(15.0f, 15.0f)] CGPath];
+                                                        cornerRadii:CGSizeMake(kCornerRadius, kCornerRadius)] CGPath];
     
     self.titleLabel = [[UILabel alloc] init];
+    self.titleLabel.transform = scale;
     self.titleLabel.textColor = [UIColor whiteColor];
     self.titleLabel.textAlignment = NSTextAlignmentCenter;
     self.titleLabel.font = GILLSANS(22.0f);
@@ -70,19 +78,19 @@ static const CGFloat kPadding = 5.0f;
         
         switch (i) {
             case 0:
-                text = @"Next";
+                text = HDNextKey;
                 image = [UIImage imageNamed:@"Selected-Count"];
                 break;
             case 1:
-                text = @"Restart";
+                text = HDRestartKey;
                 image = [UIImage imageNamed:@"Selected-OneTap"];
                 break;
             case 2:
-                text = @"Rate";
+                text = HDRateKey;
                 image = [UIImage imageNamed:@"Selected-End"];
                 break;
             case 3:
-                text = @"Share";
+                text = HDShareKey;
                 image = [UIImage imageNamed:@"Selected-Triple"];
                 break;
         }
@@ -91,6 +99,7 @@ static const CGFloat kPadding = 5.0f;
         UIButton *imageView = [[UIButton alloc] initWithFrame:imageRect];
         imageView.adjustsImageWhenDisabled    = NO;
         imageView.adjustsImageWhenHighlighted = NO;
+        imageView.transform = scale;
         [imageView setTitle:text forState:UIControlStateNormal];
         [imageView setTitleColor:[UIColor clearColor] forState:UIControlStateNormal];
         [imageView addTarget:self action:@selector(_performActivity:) forControlEvents:UIControlEventTouchDown];
@@ -100,6 +109,7 @@ static const CGFloat kPadding = 5.0f;
         [self addSubview:imageView];
     
         UILabel *description = [[UILabel alloc] init];
+        description.transform = scale;
         description.textColor = [UIColor whiteColor];
         description.textAlignment = NSTextAlignmentCenter;
         description.font = GILLSANS_LIGHT(18.0f);

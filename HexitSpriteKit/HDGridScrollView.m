@@ -87,14 +87,11 @@
         
     NSUInteger pageIndex = 0;
     for (UIView *page in pages) {
-        CGRect containerFrame = CGRectMake(
-                                           pageIndex * self.bounds.size.width,
+        CGRect containerFrame = CGRectMake(pageIndex * self.bounds.size.width,
                                            0.0f,
                                            self.bounds.size.width,
-                                           self.bounds.size.height
-                                           );
+                                           self.bounds.size.height);
         page.frame = containerFrame;
-        
         [self addSubview:page];
 
         pageIndex++;

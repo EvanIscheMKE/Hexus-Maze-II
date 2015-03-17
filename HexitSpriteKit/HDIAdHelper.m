@@ -39,10 +39,9 @@ NSString * const IAPHelperProductPurchasedNotification = @"purchaseNotification"
     return self;
 }
 
-- (void)requestProductsWithCompletionHandler:(RequestProductsCompletionHandler)completionHandler
-{
-    _completionHandler = [completionHandler copy];
+- (void)requestProductsWithCompletionHandler:(RequestProductsCompletionHandler)completionHandler {
     
+    _completionHandler = [completionHandler copy];
     _productsRequest = [[SKProductsRequest alloc] initWithProductIdentifiers:_productIdentifiers];
     _productsRequest.delegate = self;
     [_productsRequest start];
@@ -51,11 +50,10 @@ NSString * const IAPHelperProductPurchasedNotification = @"purchaseNotification"
 
 #pragma mark - SKProductsRequestDelegate
 
-- (void)productsRequest:(SKProductsRequest *)request didReceiveResponse:(SKProductsResponse *)response
-{
+- (void)productsRequest:(SKProductsRequest *)request didReceiveResponse:(SKProductsResponse *)response {
+    
     NSLog(@"Loaded list of products...");
     _productsRequest = nil;
-
 //#if 0
     NSArray * skProducts = response.products;
     for (SKProduct * skProduct in skProducts) {
@@ -65,16 +63,13 @@ NSString * const IAPHelperProductPurchasedNotification = @"purchaseNotification"
               skProduct.price.floatValue);
     }
 //#endif
-    
     _completionHandler(YES, response.products);
     _completionHandler = nil;
 }
 
-- (void)request:(SKRequest *)request didFailWithError:(NSError *)error
-{
+- (void)request:(SKRequest *)request didFailWithError:(NSError *)error {
     NSLog(@"Failed to load list of products.");
     _productsRequest = nil;
-    
     _completionHandler(NO, nil);
     _completionHandler = nil;
     
@@ -85,7 +80,6 @@ NSString * const IAPHelperProductPurchasedNotification = @"purchaseNotification"
 }
 
 - (void)buyProduct:(SKProduct *)product {
-    
     SKPayment * payment = [SKPayment paymentWithProduct:product];
     [[SKPaymentQueue defaultQueue] addPayment:payment];
 }

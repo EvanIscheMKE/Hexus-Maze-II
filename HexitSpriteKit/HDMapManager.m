@@ -40,8 +40,8 @@
     return _manager;
 }
 
-- (NSArray *)levels
-{
+- (NSArray *)levels {
+    
     if (_levels) {
         return _levels;
     }
@@ -54,21 +54,18 @@
     return _levels;
 }
 
-- (HDLevel *)levelAtIndex:(NSInteger)index
-{
+- (HDLevel *)levelAtIndex:(NSInteger)index {
     if (index >= _numberOfLevels) {
         return nil;
     }
     return [self.levels objectAtIndex:index];
 }
 
-- (NSUInteger)numberOfLevels
-{
+- (NSUInteger)numberOfLevels {
     return _numberOfLevels;
 }
 
-- (NSInteger)indexOfCurrentLevel
-{
+- (NSInteger)indexOfCurrentLevel {
     for (HDLevel *level in self.levels) {
         if (!level.completed && level.unlocked) {
             return level.levelIndex + 1;
@@ -77,10 +74,9 @@
     return 1;
 }
 
-- (void)completedLevelAtIndex:(NSInteger)index
-{
-    [[HDGameCenterManager sharedManager] reportLevelCompletion:index + 1];
+- (void)completedLevelAtIndex:(NSInteger)index {
     
+    [[HDGameCenterManager sharedManager] reportLevelCompletion:index + 1];
     [[NSUserDefaults standardUserDefaults] setInteger:index + 1 forKey:@"HDLastLevelCompletedKey"];
     
     HDLevel *currentLevel = [self levelAtIndex:MAX(index, 0)];

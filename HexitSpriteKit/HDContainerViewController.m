@@ -16,14 +16,13 @@
 
 @implementation UIViewController (HDMenuViewController)
 
-- (HDContainerViewController *)containerViewController
-{
+- (HDContainerViewController *)containerViewController {
+    
     UIViewController *parent = self;
     Class containerClass = [HDContainerViewController class];
     while ( nil != (parent = [parent parentViewController]) && ![parent isKindOfClass:containerClass] ) { }
     return (id)parent;
 }
-
 @end
 
 @interface HDContainerViewController ()<UIGestureRecognizerDelegate>
@@ -39,8 +38,8 @@
 }
 
 @synthesize isExpanded = _isExpanded;
-- (instancetype)initWithFrontViewController:(UIViewController *)frontController rearViewController:(UIViewController *)rearController
-{
+- (instancetype)initWithFrontViewController:(UIViewController *)frontController rearViewController:(UIViewController *)rearController {
+    
     NSParameterAssert(frontController);
     NSParameterAssert(rearController);
     if (self = [super init]) {
@@ -52,8 +51,8 @@
 
 #pragma mark - Life cycle
 
-- (void)viewDidLoad
-{
+- (void)viewDidLoad {
+    
     [super viewDidLoad];
     
     self.view.backgroundColor = [UIColor flatWetAsphaltColor];
@@ -80,8 +79,7 @@
 
 #pragma mark - UIGestureRecognizerDelegate Methods
 
--(BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldReceiveTouch:(UITouch *)touch
-{
+- (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldReceiveTouch:(UITouch *)touch {
     if (gestureRecognizer == self.leftScreenEdgeGestureRecognizer && self.isExpanded == NO) {
         return YES;
     } else if (gestureRecognizer == self.rightScreenEdgeGestureRecognizer && self.isExpanded == YES) {
@@ -91,7 +89,7 @@
     return NO;
 }
 
--(void)handleScreenEdgePan:(UIScreenEdgePanGestureRecognizer *)gestureRecognizer {
+- (void)handleScreenEdgePan:(UIScreenEdgePanGestureRecognizer *)gestureRecognizer {
     if (gestureRecognizer.state == UIGestureRecognizerStateBegan) {
         [self toggleMenuViewController];
     }
@@ -117,14 +115,13 @@
     }
 }
 
-- (void)setExpanded:(BOOL)isExpanded
-{
+- (void)setExpanded:(BOOL)isExpanded {
+    
     if (_isExpanded == isExpanded) {
         return;
     }
     
     _isExpanded = isExpanded;
-    
     if (self.delegate && [self.delegate respondsToSelector:@selector(container:willChangeExpandedState:)]) {
         [self.delegate container:self willChangeExpandedState:isExpanded];
     }
@@ -136,10 +133,9 @@
     }
 }
 
-- (void)toggleMenuViewControllerWithCompletion:(dispatch_block_t)completion
-{
-    [self toggleMenuViewController];
+- (void)toggleMenuViewControllerWithCompletion:(dispatch_block_t)completion {
     
+    [self toggleMenuViewController];
     dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(.3f * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
         if (completion) {
             completion();
@@ -147,15 +143,13 @@
     });
 }
 
-- (void)toggleMenuViewController
-{
+- (void)toggleMenuViewController {
     [self setExpanded:!self.isExpanded];
 }
 
 #pragma mark - Private
 
-- (void)_closeAnimated:(BOOL)animated
-{
+- (void)_closeAnimated:(BOOL)animated {
     dispatch_block_t closeAnimation = ^{
         CGRect rect = self.frontViewController.view.frame;
         rect.origin.x = 0;
@@ -169,8 +163,8 @@
     }
 }
 
-- (void)_expandAnimated:(BOOL)animated
-{
+- (void)_expandAnimated:(BOOL)animated {
+    
     dispatch_block_t expandAnimation = ^{
         CGRect rect = self.frontViewController.view.frame;
         rect.origin.x = CGRectGetWidth(self.view.bounds)/1.25f;

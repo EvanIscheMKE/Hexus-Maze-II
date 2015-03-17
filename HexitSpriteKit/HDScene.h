@@ -22,6 +22,7 @@
 @property (nonatomic, strong) HDGridManager *gridManager;
 @property (nonatomic, copy) dispatch_block_t layoutCompletion;
 @property (nonatomic, weak) id<HDSceneDelegate> myDelegate;
+@property (nonatomic, strong) SKEmitterNode *space;
 @property (nonatomic, readonly) SKNode *gameLayer;
 - (BOOL)unlockLastTile;
 - (BOOL)isGameOverAfterPlacingTile:(HDHexagon *)hexagon;
@@ -38,6 +39,7 @@
 - (void)removeConfettiEmitter;
 - (NSUInteger)inPlayTileCount;
 - (void)nextLevel;
+- (void)restartWithAlert:(BOOL)alert;
 @end
 
 @protocol HDSceneDelegate <NSObject, SKSceneDelegate>
@@ -45,5 +47,6 @@
 - (void)startTileWasSelectedInScene:(HDScene *)scene;
 - (void)scene:(HDScene *)scene proceededToLevel:(NSUInteger)level;
 - (void)scene:(HDScene *)scene gameEndedWithCompletion:(BOOL)completion;
-- (void)gameWillResetInScene:(HDScene *)scene;
+- (void)gameRestartedInScene:(HDScene *)scene alert:(BOOL)alert;
+- (void)gameWillResetInScene:(HDScene *)scene ;
 @end

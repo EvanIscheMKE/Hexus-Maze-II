@@ -57,5 +57,24 @@ NSString * const HDLevelIndexKey = @"levelIndex";
     }
 }
 
+#pragma mark - Description
+
+- (NSString *)titleFromState:(HDLevelState)state {
+    switch (state) {
+        case HDLevelStateCompleted:
+            return @"Completed";
+        case HDLevelStateUnlocked:
+            return @"Unlocked";
+        case HDLevelStateLocked:
+            return @"Locked";
+    }
+    return nil;
+}
+
+- (NSString *)description {
+    NSString *completed = self.completed ? @"YES" : @"NO";
+    NSString *unlocked = self.unlocked ? @"YES" : @"NO";
+    return [NSString stringWithFormat:@" Completed:%@ Unlocked:%@ State:%@",completed,unlocked,[self titleFromState:self.state]];
+}
 
 @end

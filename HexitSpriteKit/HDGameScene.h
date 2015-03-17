@@ -10,5 +10,4 @@
 
 @interface HDGameScene : HDScene
 - (void)nextLevel;
-- (void)restart;
 @end

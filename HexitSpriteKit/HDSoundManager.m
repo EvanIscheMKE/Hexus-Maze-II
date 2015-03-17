@@ -19,8 +19,7 @@
 
 @implementation HDSoundManager
 
-+ (HDSoundManager *)sharedManager
-{
++ (HDSoundManager *)sharedManager {
     static HDSoundManager *_soundController = nil;
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
@@ -31,36 +30,40 @@
 
 #pragma mark - Sounds Manager For UIKit
 
-- (void)setPlayLoop:(BOOL)playLoop
-{
+- (void)setPlayLoop:(BOOL)playLoop {
+    
     if (!self.loopPlayer) {
         return;
     }
     
     _playLoop = playLoop;
-    if (playLoop && ![[self class] isOtherAudioPlaying] && [[HDSettingsManager sharedManager] music]) {
+    if (playLoop && [[HDSettingsManager sharedManager] music]) {
         [self.loopPlayer play];
     } else {
         [self.loopPlayer stop];
     }
 }
 
-- (void)preloadLoopWithName:(NSString *)filename;
-{
-//    NSError *error = nil;
-//    NSString *soundPath = [[[NSBundle mainBundle] resourcePath] stringByAppendingPathComponent:filename];
-//    self.loopPlayer = [[AVAudioPlayer alloc] initWithContentsOfURL:[NSURL fileURLWithPath:soundPath] error:&error];
-//    self.loopPlayer.delegate = self;
-//    self.loopPlayer.numberOfLoops = -1; /* Will continue to play until we tell it to stop. */
-//    [self.loopPlayer prepareToPlay];
+- (void)preloadLoopWithName:(NSString *)filename {
+   
+    NSError *error = nil;
+    NSString *soundPath = [[[NSBundle mainBundle] resourcePath] stringByAppendingPathComponent:filename];
+    self.loopPlayer = [[AVAudioPlayer alloc] initWithContentsOfURL:[NSURL fileURLWithPath:soundPath] error:&error];
+    self.loopPlayer.delegate = self;
+    self.loopPlayer.numberOfLoops = -1; /* Will continue to play until we tell it to stop. */
+    [self.loopPlayer prepareToPlay];
+    
+    if (error) {
+        [self preloadLoopWithName:filename];
+        NSLog(@"Error: %@ In: %@",error,NSStringFromSelector(_cmd));
+    }
 }
 
-- (void)preloadSounds:(NSArray *)soundNames
-{
+- (void)preloadSounds:(NSArray *)soundNames {
+    
     if (!_sounds) {
         
         _sounds = [NSMutableDictionary dictionary];
-        
         for (NSString *effect in soundNames) {
             NSError *error = nil;
             NSString *soundPath = [[[NSBundle mainBundle] resourcePath] stringByAppendingPathComponent: effect];
@@ -71,8 +74,7 @@
     }
 }
 
-- (void)playSound:(NSString *)soundName
-{
+- (void)playSound:(NSString *)soundName {
     AVAudioPlayer *player = (AVAudioPlayer *)_sounds[soundName];
     if ([[HDSettingsManager sharedManager] sound] && ![HDSoundManager isOtherAudioPlaying]) {
         [player play];
@@ -83,14 +85,12 @@
 
 /* AVAudioSession cannot be active while the application is in the background, so we have to stop it when going in to background, and reactivate it when entering foreground. */
 
-+ (BOOL)isOtherAudioPlaying
-{
-    AVAudioSession *audioSession = [AVAudioSession sharedInstance];
-    return audioSession.otherAudioPlaying;
++ (BOOL)isOtherAudioPlaying {
+    return [AVAudioSession sharedInstance].otherAudioPlaying;
 }
 
-- (void)startAudio
-{
+- (void)startAudio {
+    
     AVAudioSession *audioSession = [AVAudioSession sharedInstance];
     
     NSError *error = nil;
@@ -100,20 +100,19 @@
         [audioSession setCategory: AVAudioSessionCategorySoloAmbient error:&error];
     }
     
-    if (error) {
-        [self startAudio];
-    } else {
-        [audioSession setActive:YES error:&error];
-        self.soundSessionActive = YES;
-        self.playLoop = YES;
-    }
+    [audioSession setActive:YES error:&error];
+    
+    self.soundSessionActive = YES;
+    self.playLoop = YES;
 }
 
-- (void)stopAudio
-{
+- (void)stopAudio {
+    
     if (!self.isSoundSessionActive){
         return;
     }
+    
+    self.playLoop = NO;
     
     NSError *error = nil;
     AVAudioSession *audioSession = [AVAudioSession sharedInstance];
@@ -126,12 +125,9 @@
     }
 }
 
-#pragma mark - <AVAudioDelegate>
-
--(void)audioPlayerDidFinishPlaying:(AVAudioPlayer *)player successfully:(BOOL)flag
-{
-    [self.loopPlayer stop];
-    [self.loopPlayer prepareToPlay];
+- (void)audioPlayerDidFinishPlaying:(AVAudioPlayer *)player successfully:(BOOL)flag{
+    [player stop];
+    [player prepareToPlay];
 }
 
 @end

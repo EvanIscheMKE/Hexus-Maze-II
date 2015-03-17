@@ -3,17 +3,17 @@
     {
       "idiom" : "universal",
       "scale" : "1x",
-      "filename" : "WelcomeVC-blue-122.png"
+      "filename" : "Default-OneTap-VC.png"
     },
     {
       "idiom" : "universal",
       "scale" : "2x",
-      "filename" : "WelcomeVC-blue-122@2x.png"
+      "filename" : "Default-OneTap-VC@2x.png"
     },
     {
       "idiom" : "universal",
       "scale" : "3x",
-      "filename" : "WelcomeVC-blue-122@3x.png"
+      "filename" : "Default-OneTap-VC@3x.png"
     }
   ],
   "info" : {

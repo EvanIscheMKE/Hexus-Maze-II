@@ -3,17 +3,17 @@
     {
       "idiom" : "universal",
       "scale" : "1x",
-      "filename" : "WelcomeVC-White-122.png"
+      "filename" : "Default-Start-VC.png"
     },
     {
       "idiom" : "universal",
       "scale" : "2x",
-      "filename" : "WelcomeVC-White-122@2x.png"
+      "filename" : "Default-Start-VC@2x.png"
     },
     {
       "idiom" : "universal",
       "scale" : "3x",
-      "filename" : "WelcomeVC-White-122@3x.png"
+      "filename" : "Default-Start-VC@3x.png"
     }
   ],
   "info" : {

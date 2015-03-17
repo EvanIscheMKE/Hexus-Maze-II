@@ -21,7 +21,7 @@
 #import "HDHexusIAdHelper.h"
 #import "HDGameViewController.h"
 #import "HDGridViewController.h"
-#import "HDWelcomeViewController.h"
+#import "HDIntroViewController.h"
 #import "HDContainerViewController.h"
 #import "HDTutorialViewController.h"
 #import "HDRearViewController.h"
@@ -42,7 +42,7 @@ NSString * const HDLeaderBoardIdentifierKey = @"LevelLeaderboard";
     application.statusBarHidden = YES;
     
      self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
-    self.window.rootViewController = [HDWelcomeViewController new];
+    self.window.rootViewController = [HDIntroViewController new];
     [self.window makeKeyAndVisible];
     [self _setup];
     
@@ -121,10 +121,9 @@ NSString * const HDLeaderBoardIdentifierKey = @"LevelLeaderboard";
     [[HDGameCenterManager sharedManager] authenticateGameCenter];
 }
 
-- (UIImage *)_screenshotOfFrontViewController
-{
-    UIGraphicsBeginImageContextWithOptions(self.window.bounds.size, YES, [[UIScreen mainScreen] scale]);
+- (UIImage *)_screenshotOfFrontViewController {
     
+    UIGraphicsBeginImageContextWithOptions(self.window.bounds.size, YES, [[UIScreen mainScreen] scale]);
     [self.controller.view drawViewHierarchyInRect:self.window.bounds afterScreenUpdates:YES];
     
     UIImage *screenShot = UIGraphicsGetImageFromCurrentImageContext();
@@ -133,8 +132,7 @@ NSString * const HDLeaderBoardIdentifierKey = @"LevelLeaderboard";
     return screenShot;
 }
 
-- (void)_activityControllerForType:(GKGameCenterViewControllerState)state
-{
+- (void)_activityControllerForType:(GKGameCenterViewControllerState)state {
     if (self.controller.isExpanded) {
         [self.controller toggleMenuViewControllerWithCompletion:^{
             [self presentGameCenterControllerForState:state];
@@ -144,8 +142,8 @@ NSString * const HDLeaderBoardIdentifierKey = @"LevelLeaderboard";
 
 #pragma mark - <HDContainerViewControllerDelegate>
 
-- (void)container:(HDContainerViewController *)container willChangeExpandedState:(BOOL)expanded
-{
+- (void)container:(HDContainerViewController *)container willChangeExpandedState:(BOOL)expanded {
+    
     if ([container.frontViewController isKindOfClass:[HDGameViewController class]]) {
         [[(SKView *)container.frontViewController.view scene] setPaused:expanded ? YES : NO];
     } else {
@@ -160,8 +158,8 @@ NSString * const HDLeaderBoardIdentifierKey = @"LevelLeaderboard";
 
 - (void)container:(HDContainerViewController *)container
 transitionedFromController:(UIViewController *)fromController
-     toController:(UIViewController *)toController
-{
+     toController:(UIViewController *)toController {
+    
     if ([fromController isKindOfClass:[HDGridViewController class]] && [toController isKindOfClass:[HDGameViewController class]]) {
         [(HDRearViewController *)self.controller.rearViewController setGameInterfaceHidden:NO];
     } else if ([toController isKindOfClass:[HDGridViewController class]] && [fromController isKindOfClass:[HDGameViewController class]]) {
@@ -171,8 +169,7 @@ transitionedFromController:(UIViewController *)fromController
 
 #pragma mark - <GKGameCenterControllerDelegate>
 
-- (void)gameCenterViewControllerDidFinish:(GKGameCenterViewController *)gameCenterViewController
-{
+- (void)gameCenterViewControllerDidFinish:(GKGameCenterViewController *)gameCenterViewController {
     [self.controller dismissViewControllerAnimated:YES completion:nil];
 }
 
@@ -205,14 +202,18 @@ transitionedFromController:(UIViewController *)fromController
     if (self.controller.isExpanded) {
         [self.controller toggleMenuViewControllerWithCompletion:^{
             [[HDHexusIAdHelper sharedHelper] requestProductsWithCompletionHandler:^(BOOL success, NSArray *products) {
+               
                 if (success && products.count) {
-                    
                     SKProduct *removeAdsProduct = nil;
                     for (SKProduct *product in products) {
-                        if (product.productIdentifier == IAPremoveAdsProductIdentifier) {
+                        if ([product.productIdentifier isEqualToString:IAPremoveAdsProductIdentifier]) {
                             removeAdsProduct = product;
                             break;
                         }
+                    }
+                    
+                    if (!removeAdsProduct) {
+                        return;
                     }
                     
                    BOOL purchased = [[HDHexusIAdHelper sharedHelper] productPurchased:removeAdsProduct.productIdentifier];
@@ -226,7 +227,6 @@ transitionedFromController:(UIViewController *)fromController
 }
 
 - (IBAction)restartCurrentLevel:(id)sender {
-    
     [[HDSoundManager sharedManager] playSound:HDButtonSound];
     if (self.controller.isExpanded) {
         [self.controller toggleMenuViewControllerWithCompletion:^{
@@ -235,8 +235,7 @@ transitionedFromController:(UIViewController *)fromController
     }
 }
 
-- (IBAction)animateToLevelViewController:(id)sender
-{
+- (IBAction)animateToLevelViewController:(id)sender {
     [[HDSoundManager sharedManager] playSound:HDButtonSound];
     if (self.controller.isExpanded) {
         [self.controller toggleMenuViewControllerWithCompletion:^{
@@ -250,14 +249,12 @@ transitionedFromController:(UIViewController *)fromController
     }
 }
 
-- (IBAction)openAcheivementsController:(id)sender
-{
+- (IBAction)openAcheivementsController:(id)sender {
     [[HDSoundManager sharedManager] playSound:HDButtonSound];
     [self _activityControllerForType:GKGameCenterViewControllerStateAchievements];
 }
 
-- (IBAction)openLeaderboardController:(id)sender
-{
+- (IBAction)openLeaderboardController:(id)sender {
     [[HDSoundManager sharedManager] playSound:HDButtonSound];
     [self _activityControllerForType:GKGameCenterViewControllerStateLeaderboards];
 }

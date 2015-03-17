@@ -91,7 +91,7 @@ static const CGFloat kButtonInset = 20.0f;
     [self addConstraints:shareVerticalConstraint];
     
     for (UIButton *subView in self.subviews) {
-      //  subView.transform = CGAffineTransformMakeScale(CGRectGetWidth(self.bounds)/375.0f, CGRectGetWidth(self.bounds)/375.0f);
+        subView.transform = CGAffineTransformMakeScale(TRANSFORM_SCALE, TRANSFORM_SCALE);
     }
 }
 

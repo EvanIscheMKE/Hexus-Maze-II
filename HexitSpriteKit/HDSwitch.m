@@ -49,14 +49,12 @@ static const CGFloat kPadding = 5.0f;
     return self;
 }
 
-- (void)_setup;
-{
-    CGRect slidingViewFrame = CGRectMake(
-                                         CGRectGetWidth(self.bounds) - (CGRectGetWidth(self.slidingView.bounds) + kPadding),
+- (void)_setup; {
+    
+    CGRect slidingViewFrame = CGRectMake(CGRectGetWidth(self.bounds) - (CGRectGetWidth(self.slidingView.bounds) + kPadding),
                                          kPadding,
                                          CGRectGetWidth(self.bounds)/3,
-                                         CGRectGetHeight(self.bounds) - (kPadding*2)
-                                         );
+                                         CGRectGetHeight(self.bounds) - (kPadding*2));
     
     self.slidingView = [[UIView alloc] initWithFrame:slidingViewFrame];
     self.slidingView.layer.cornerRadius = 3.0f;
@@ -81,10 +79,9 @@ static const CGFloat kPadding = 5.0f;
     }
 }
 
-- (void)layoutSubviews
-{
-    [super layoutSubviews];
+- (void)layoutSubviews {
     
+    [super layoutSubviews];
     if (!_animating) {
         self.offLabel.frame = CGRectMake(CGRectGetWidth(self.bounds)/3,
                                          0.0f,
@@ -109,10 +106,9 @@ static const CGFloat kPadding = 5.0f;
     }
 }
 
-- (BOOL)beginTrackingWithTouch:(UITouch *)touch withEvent:(UIEvent *)event
-{
-    BOOL wasPreviouslyOn = self.isON;
+- (BOOL)beginTrackingWithTouch:(UITouch *)touch withEvent:(UIEvent *)event {
     
+    BOOL wasPreviouslyOn = self.isON;
     if (self.isON) {
         [self setOn:NO animated:YES];
     } else if (!self.isON) {
@@ -134,10 +130,9 @@ static const CGFloat kPadding = 5.0f;
     return _toggleValue;
 }
 
-- (void)setOn:(BOOL)flag animated:(BOOL)animated
-{
-    _toggleValue = flag;
+- (void)setOn:(BOOL)flag animated:(BOOL)animated {
     
+    _toggleValue = flag;
     if (flag) {
         [self showOnAnimated:animated];
     } else {
@@ -145,8 +140,8 @@ static const CGFloat kPadding = 5.0f;
     }
 }
 
-- (void)showOnAnimated:(BOOL)animated
-{
+- (void)showOnAnimated:(BOOL)animated {
+    
     dispatch_block_t animationBlock = ^{
         const CGFloat kOriginX = CGRectGetWidth(self.bounds) - (CGRectGetWidth(self.slidingView.bounds) + kPadding);
         CGRect slidingViewFrame = CGRectMake(kOriginX, kPadding, CGRectGetWidth(self.bounds)/3, CGRectGetHeight(self.bounds) - (kPadding*2));
@@ -166,8 +161,8 @@ static const CGFloat kPadding = 5.0f;
     }
 }
 
-- (void)showOffAnimated:(BOOL)animated
-{
+- (void)showOffAnimated:(BOOL)animated {
+    
     dispatch_block_t animationBlock = ^{
         CGRect slidingViewFrame = CGRectMake(kPadding, kPadding, CGRectGetWidth(self.bounds)/3, CGRectGetHeight(self.bounds) - (kPadding*2));
         self.slidingView.frame = slidingViewFrame;

@@ -19,6 +19,7 @@ NSString * const HDTitleLocalizationKey = @"Tips";
 
 @implementation HDHintsView{
     NSString *_hintDescription;
+    NSString *_title;
     NSArray *_images;
 }
 
@@ -31,14 +32,26 @@ NSString * const HDTitleLocalizationKey = @"Tips";
 }
 
 - (instancetype)initWithFrame:(CGRect)frame
+                        title:(NSString *)title
                   description:(NSString *)description
                        images:(NSArray *)images {
     if (self = [super initWithFrame:frame]) {
         _hintDescription = description;
+        _title = title;
         _images = images;
         [self _setup];
     }
     return self;
+}
+
+- (instancetype)initWithFrame:(CGRect)frame
+                  description:(NSString *)description
+                       images:(NSArray *)images {
+    
+    return [self initWithFrame:frame
+                         title:HDTitleLocalizationKey
+                   description:description
+                        images:images];
 }
 
 - (void)setBackgroundColor:(UIColor *)backgroundColor {
@@ -47,11 +60,10 @@ NSString * const HDTitleLocalizationKey = @"Tips";
 
 #pragma mark - Private
 
-- (void)_setup
-{
-    self.backgroundColor = [UIColor colorWithWhite:.0f alpha:0.5f];
+- (void)_setup {
     
     self.shapeLayer.lineWidth = 0;
+    self.backgroundColor = [UIColor colorWithWhite:.0f alpha:0.5f];
     
     self.imageView = [[UIImageView alloc] initWithImage:[_images firstObject]];
     [self addSubview:self.imageView];
@@ -65,7 +77,7 @@ NSString * const HDTitleLocalizationKey = @"Tips";
     
     self.titleLabel = [[UILabel alloc] init];
     self.titleLabel.font = GILLSANS(22.0f);
-    self.titleLabel.text = NSLocalizedString(HDTitleLocalizationKey, nil);
+    self.titleLabel.text = NSLocalizedString(_title, nil);
     
     self.descriptionLabel = [[UILabel alloc] init];
     self.descriptionLabel.font = GILLSANS_LIGHT(18.0f);
@@ -96,7 +108,7 @@ NSString * const HDTitleLocalizationKey = @"Tips";
     
     self.imageView.center = CGPointMake(CGRectGetMidX(self.bounds), CGRectGetMidY(self.bounds));
     
-    CGAffineTransform scale = CGAffineTransformMakeScale(CGRectGetWidth(self.bounds)/375.0f, CGRectGetWidth(self.bounds)/375.0f);
+    CGAffineTransform scale = CGAffineTransformMakeScale(TRANSFORM_SCALE, TRANSFORM_SCALE);
     for (UIView *subViews in self.subviews) {
         subViews.transform = scale;
     }

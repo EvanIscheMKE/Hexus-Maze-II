@@ -10,7 +10,6 @@
 #import "HDHelper.h"
 #import "HDHexagonButton.h"
 #import "UIColor+FlatColors.h"
-#import "CAEmitterCell+HD.h"
 
 @implementation HDHexagonButton
 
@@ -49,7 +48,6 @@
         [self setTitle:nil forState:UIControlStateNormal];
         return;
     }
-    
     [self setTitle:[NSString stringWithFormat:@"%zd", index] forState:UIControlStateNormal];
     [self setImage:nil forState:UIControlStateNormal];
 }

@@ -32,6 +32,8 @@
 @property (nonatomic, strong) HDHintsView   *hintsView;
 @property (nonatomic, strong) HDCompletionView *completionView;
 @property (nonatomic, strong) ADBannerView  *bannerView;
+@property (nonatomic, strong) UILabel *timeLabel;
+@property (nonatomic, strong) NSTimer *timer;
 @property (nonatomic, assign) BOOL pauseGame;
 @property (nonatomic, assign) BOOL navigationBarHidden;
 @end
@@ -39,17 +41,16 @@
 @implementation HDGameViewController {
     BOOL _isBannerVisible;
     NSUInteger _levelIdx;
+    NSTimeInterval _startingInterval;
 }
 
 - (void)dealloc {
-    
     [NC removeObserver:self name:IAPHelperProductPurchasedNotification     object:nil];
     [NC removeObserver:self name:UIApplicationWillResignActiveNotification object:nil];
     [NC removeObserver:self name:UIApplicationDidBecomeActiveNotification  object:nil];
 }
 
 - (instancetype)initWithLevel:(NSInteger)level {
-    
     if (self = [super init]) {
         _levelIdx = level;
     }
@@ -89,24 +90,23 @@
 }
 
 - (void)loadView {
-    
     CGRect viewRect = [[UIScreen mainScreen] bounds];
     SKView *skView = [[SKView alloc] initWithFrame:viewRect];
-    [self setView:skView];
+    self.view = skView;
 }
 
-- (void)viewDidLoad
-{
+- (void)viewDidLoad {
     [super viewDidLoad];
+    [UIViewController prepareInterstitialAds];
     [self _setup];
+    self.interstitialPresentationPolicy = ADInterstitialPresentationPolicyManual;
 }
 
 #pragma mark - Public
 
-- (void)setNavigationBarHidden:(BOOL)navigationBarHidden
-{
-    _navigationBarHidden = navigationBarHidden;
+- (void)setNavigationBarHidden:(BOOL)navigationBarHidden {
     
+    _navigationBarHidden = navigationBarHidden;
     if (_navigationBarHidden) {
         [self _hideAnimated:YES];
     } else {
@@ -116,8 +116,8 @@
 
 #pragma mark - Life cycle
 
-- (void)viewWillLayoutSubviews
-{
+- (void)viewWillLayoutSubviews {
+    
     [super viewWillLayoutSubviews];
     
     SKView * skView = (SKView *)self.view;
@@ -145,18 +145,20 @@
 
 #pragma mark - Private
 
-- (void)_setup
-{
+- (void)_setup {
+    
     self.view.backgroundColor = [UIColor flatWetAsphaltColor];
     
     self.gridManager = [[HDGridManager alloc] initWithLevelIndex:_levelIdx];
     
     HDContainerViewController *container = self.containerViewController;
     
+    //
     const CGFloat menuBarHeight = CGRectGetHeight(self.view.bounds)/8;
     CGRect menuBarFrame = CGRectMake(0.0f, -menuBarHeight, CGRectGetWidth(self.view.bounds), menuBarHeight);
-    self.menuBar = [HDMenuBar menuBarWithActivityImage:[UIImage imageNamed:@"RestartIcon-"]];
+    self.menuBar = [HDMenuBar menuBarWithActivityImage:nil];
     self.menuBar.frame = menuBarFrame;
+    [self.menuBar.navigationButton setBackgroundImage:[UIImage imageNamed:@"GridIcon-Blue"] forState:UIControlStateNormal];
     [self.menuBar.navigationButton addTarget:container
                                       action:@selector(toggleMenuViewController)
                             forControlEvents:UIControlEventTouchUpInside];
@@ -165,16 +167,30 @@
                           forControlEvents:UIControlEventTouchUpInside];
     [self.view addSubview:self.menuBar];
     
+//    // Move to Menu Bar
+//    self.timeLabel = [[UILabel alloc] init];
+//    self.timeLabel.textAlignment = NSTextAlignmentCenter;
+//    self.timeLabel.font = GILLSANS(28.0f);
+//    self.timeLabel.textColor = [[UIColor flatPeterRiverColor] colorWithAlphaComponent:.7];
+//    self.timeLabel.center = self.menuBar.activityButton.center;
+//    [self.menuBar addSubview:self.timeLabel];
+    
     [NC addObserver:self selector:@selector(_removeAdsWasPurchased:)       name:IAPHelperProductPurchasedNotification object:nil];
     [NC addObserver:self selector:@selector(_applicationWillResignActive:) name:UIApplicationWillResignActiveNotification object:nil];
     [NC addObserver:self selector:@selector(_applicationDidBecomeActive:)  name:UIApplicationDidBecomeActiveNotification  object:nil];
+}
+
+- (void)_displayInterstitialAd {
+    
+    if ([self rollTheDice]) {
+        [self requestInterstitialAdPresentation];
+    }
 }
 
 - (void)_beginGame {
     
     NSArray *hexagons = [self.gridManager hexagons];
     [self.scene layoutNodesWithGrid:hexagons completion:nil];
-    
     if (_levelIdx % 28 == 1 || _levelIdx == 1) {
         if (![[NSUserDefaults standardUserDefaults] boolForKey:[NSString stringWithFormat:@"%zd",_levelIdx]]) {
             [self _showTipsWithDescription:descriptionForLevelIdx(_levelIdx)
@@ -184,16 +200,24 @@
     }
 }
 
-- (void)_showTipsWithDescription:(NSString *)description images:(NSArray *)images
-{
+- (void)_showTipsWithDescription:(NSString *)description images:(NSArray *)images {
+    [self _showTipsWithDescription:description title:HDTitleLocalizationKey images:images];
+}
+
+- (void)_showTipsWithDescription:(NSString *)description title:(NSString *)title images:(NSArray *)images {
+    
     if (!self.hintsView) {
+        
         CGRect hintsFrame = CGRectMake(0.0f,
                                        CGRectGetHeight(self.view.bounds),
                                        CGRectGetWidth(self.view.bounds),
                                        CGRectGetHeight(self.view.bounds)/5);
+        
         self.hintsView = [[HDHintsView alloc] initWithFrame:hintsFrame
+                                                      title:title
                                                 description:description
                                                      images:images];
+        
         [self.view insertSubview:self.hintsView atIndex:0];
     }
     
@@ -233,8 +257,8 @@
     }
 }
 
-- (void)_showAnimated:(BOOL)animated
-{
+- (void)_showAnimated:(BOOL)animated {
+    
     dispatch_block_t animate = ^{
         CGRect rect = self.menuBar.frame;
         rect.origin.y = 0.0f;
@@ -250,47 +274,123 @@
 
 #pragma mark - Selectors
 
-- (IBAction)restart:(id)sender
-{
-    [self.scene restart];
+- (BOOL)rollTheDice {
+    return (arc4random() % 2 == 1);
+}
+
+- (IBAction)restart:(id)sender {
+    UIButton *restartButton = (UIButton *)sender;
+    
+    [CATransaction begin];
+    [CATransaction setCompletionBlock:^{
+        [restartButton.layer removeAllAnimations];
+    }];
+    
+    CABasicAnimation *rotation = [CABasicAnimation animationWithKeyPath:@"transform.rotation.z"];
+    rotation.byValue = @(M_PI*2);
+    rotation.duration = .3f;
+    [restartButton.layer addAnimation:rotation forKey:rotation.keyPath];
+    
+    [CATransaction commit];
+    [self _restartWithAlert:YES];
+}
+
+- (void)_restartWithAlert:(BOOL)alert {
+    [self _displayInterstitialAd];
+    [self.scene restartWithAlert:alert];
+}
+
+- (void)_startTheTimer {
+    
+//    if (self.timer) {
+//        return;
+//    }
+//    
+//    self.timer = [NSTimer scheduledTimerWithTimeInterval:.01 target:self selector:@selector(_tickTock) userInfo:nil repeats:YES];
+//    _startingInterval = [NSDate timeIntervalSinceReferenceDate];
+//    [self.timer fire];
+}
+
+- (void)_tickTock {
+    
+//    NSTimeInterval _timeInterval = [NSDate timeIntervalSinceReferenceDate] - _startingInterval;
+//    
+//    NSInteger minutes = _timeInterval/60;
+//    _timeInterval -= ((NSTimeInterval)minutes * 60);
+//    
+//    NSInteger seconds = (NSInteger)_timeInterval;
+//    _timeInterval -= (NSTimeInterval)seconds;
+//    
+//    NSInteger millisec = (NSTimeInterval)_timeInterval * 100;
+//    
+//    NSString *minute = minutes  > 9 ? [NSString stringWithFormat:@"%zd",minutes]  : [NSString stringWithFormat:@"0%zd",minutes];
+//    NSString *second = seconds  > 9 ? [NSString stringWithFormat:@"%zd",seconds]  : [NSString stringWithFormat:@"0%zd",seconds];
+//    NSString *millis = millisec > 9 ? [NSString stringWithFormat:@"%zd",millisec] : [NSString stringWithFormat:@"0%zd",millisec];
+//    
+//    self.timeLabel.text = [NSString stringWithFormat:@"%@:%@:%@",minute,second,millis];
+//    [self.timeLabel sizeToFit];
+//    self.timeLabel.center = CGPointMake(CGRectGetMidX(self.menuBar.bounds), CGRectGetMidY(self.menuBar.bounds));
+//    self.timeLabel.frame = CGRectIntegral(self.timeLabel.frame);
+//    
+//    NSLog(@"%@:%@:%@",minute,second,millis);
+}
+
+- (void)_stopTheClock {
+//    [self.timer invalidate];
+//    self.timer = nil;
 }
 
 #pragma mark - Notifications
 
-- (void)_applicationDidBecomeActive:(NSNotification *)notification
-{
+- (void)_applicationDidBecomeActive:(NSNotification *)notification {
     self.pauseGame = NO;
     self.scene.view.paused = self.pauseGame;
 }
 
-- (void)_applicationWillResignActive:(NSNotification *)notification
-{
+- (void)_applicationWillResignActive:(NSNotification *)notification {
     self.pauseGame = YES;
     self.scene.view.paused = self.pauseGame;
 }
 
 #pragma mark - <HDSceneDelegate>
 
--(void)scene:(HDScene *)scene proceededToLevel:(NSUInteger)level
-{
+- (void)startTileWasSelectedInScene:(HDScene *)scene {
+    [self _startTheTimer];
+}
+
+- (void)gameRestartedInScene:(HDScene *)scene alert:(BOOL)alert {
+    
+    [self _stopTheClock];
+    [self _displayInterstitialAd];
+    if (alert) {
+       [self _showTipsWithDescription:@"Better luck next time!" title:@"Oh No!" images:@[]];
+    }
+}
+
+- (void)scene:(HDScene *)scene proceededToLevel:(NSUInteger)level {
+    
     _levelIdx += 1;
+    [self _stopTheClock];
     self.gridManager = [[HDGridManager alloc] initWithLevelIndex:level];
     self.scene.gridManager = self.gridManager;
     [self _beginGame];
 }
 
-- (void)scene:(HDScene *)scene gameEndedWithCompletion:(BOOL)completion
-{
+- (void)scene:(HDScene *)scene gameEndedWithCompletion:(BOOL)completion {
+    
     if (completion) {
-        self.navigationBarHidden = YES;
         
+        [self _stopTheClock];
         [[HDSoundManager sharedManager] playSound:HDCompletionZing];
         
+        self.navigationBarHidden = YES;
         if (!self.completionView) {
+            
             CGRect hintsFrame = CGRectMake(0.0f,
                                            CGRectGetHeight(self.view.bounds),
                                            CGRectGetWidth(self.view.bounds),
                                            CGRectGetHeight(self.view.bounds)/5);
+            
             self.completionView = [[HDCompletionView alloc] initWithFrame:hintsFrame];
             self.completionView.delegate = self;
             [self.view insertSubview:self.completionView atIndex:0];
@@ -301,7 +401,9 @@
             frame.origin.y = CGRectGetHeight(self.view.bounds)/1.25f - ((_isBannerVisible) ? self.bannerView.bounds.size.height : 0);
             self.completionView.frame = frame;
         }];
+        
         [self.scene.gameLayer runAction:[SKAction moveToY:CGRectGetHeight(self.view.bounds)/7 duration:.300f]];
+        
     } else {
         [self performSelector:@selector(restart:) withObject:nil afterDelay:.300f];
     }
@@ -325,8 +427,7 @@
     }];
 }
 
-- (void)gameWillResetInScene:(HDScene *)scene
-{
+- (void)gameWillResetInScene:(HDScene *)scene {
     self.navigationBarHidden = NO;
 }
 
@@ -350,9 +451,9 @@
     }];
 }
 
-- (void)bannerViewDidLoadAd:(ADBannerView *)banner
-{
-    if (!_isBannerVisible) {
+- (void)bannerViewDidLoadAd:(ADBannerView *)banner {
+    
+    if (_isBannerVisible) {
         [UIView animateWithDuration:.300f animations:^{
             
             CGRect bannerFrame = self.bannerView.frame;
@@ -373,8 +474,8 @@
     }
 }
 
-- (void)bannerView:(ADBannerView *)banner didFailToReceiveAdWithError:(NSError *)error
-{
+- (void)bannerView:(ADBannerView *)banner didFailToReceiveAdWithError:(NSError *)error {
+    
     if (_isBannerVisible) {
         [UIView animateWithDuration:.300f animations:^{
             
@@ -398,22 +499,22 @@
 
 #pragma mark - <HDCompletionViewDelegate>
 
-- (void)completionView:(HDCompletionView *)completionView selectedButtonWithTitle:(NSString *)title
-{
-    if ([title isEqualToString:@"Next"]) {
+- (void)completionView:(HDCompletionView *)completionView selectedButtonWithTitle:(NSString *)title {
+    
+    if ([title isEqualToString:HDNextKey]) {
         [self.scene removeConfettiEmitter];
         [self _dismissCompletionViewWithCompletion:^{
             [self.scene nextLevel];
         }];
-    } else if ([title isEqualToString:@"Restart"]) {
+    } else if ([title isEqualToString:HDRestartKey]) {
         [self.scene removeConfettiEmitter];
         [self _dismissCompletionViewWithCompletion:^{
-            [self restart:nil];
+            [self _restartWithAlert:NO];
             self.navigationBarHidden = NO;
         }];
-    } else if ([title isEqualToString:@"Rate"]) {
+    } else if ([title isEqualToString:HDRateKey]) {
         [ADelegate rateHEXUS];
-    } else if ([title isEqualToString:@"Share"]) {
+    } else if ([title isEqualToString:HDShareKey]) {
         [ADelegate presentShareViewControllerWithLevelIndex:_levelIdx];
     }
 }
