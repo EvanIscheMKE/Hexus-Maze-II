@@ -10,7 +10,7 @@
 #import "HDMapManager.h"
 #import "HDHexagonButton.h"
 #import "HDHelper.h"
-#import "UIColor+FlatColors.h"
+#import "UIColor+ColorAdditions.h"
 #import "HDLevel.h"
 #import "NSMutableArray+UniqueAdditions.h"
 
@@ -117,7 +117,7 @@ static const CGFloat kTileHeightInsetMultiplier = .855f;
             HDLevel *level = [[HDMapManager sharedManager] levelAtIndex:tagIndex - 1];
             CGRect bounds = CGRectMake(0.0f, 0.0f, self.tileSize + kPadding, self.tileSize + kPadding);
             HDHexagonButton *hexagon = [[HDHexagonButton alloc] initWithFrame:bounds];
-            [hexagon addTarget:self action:@selector(_beginGame:) forControlEvents:UIControlEventTouchDown];
+            [hexagon addTarget:self action:@selector(_beginGame:) forControlEvents:UIControlEventTouchUpInside];
             hexagon.levelState  = level.state;
             hexagon.row    = row;
             hexagon.hidden = YES;
@@ -132,12 +132,12 @@ static const CGFloat kTileHeightInsetMultiplier = .855f;
 }
 
 - (void)viewWillAppear:(BOOL)animated {
-    [self updateState];
+    [self updateLevelsForiAPPurchase];
     [super viewWillAppear:animated];
     _containerView.center = CGPointMake(CGRectGetMidX(_levelsView.bounds), CGRectGetMidY(_levelsView.bounds));
 }
 
-- (void)updateState {
+- (void)updateLevelsForiAPPurchase {
     NSUInteger tagIndex = self.levelRange.location + 1;
     for (HDHexagonButton *subView in _containerView.subviews) {
         HDLevel *level = [[HDMapManager sharedManager] levelAtIndex:tagIndex - 1];

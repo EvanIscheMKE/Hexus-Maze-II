@@ -8,7 +8,7 @@
 
 #import "HDHelper.h"
 #import "HDHexagon.h"
-#import "SKColor+HDColor.h"
+#import "SKColor+ColorAdditions.h"
 #import "HDHexagonNode.h"
 
 NSString * const HDDoubleKey = @"double";
@@ -22,13 +22,11 @@ NSString * const HDTripleKey = @"triple";
 
 @implementation HDHexagon
 
-- (instancetype)init
-{
+- (instancetype)init {
     return [self initWithRow:0 column:0 type:HDHexagonTypeRegular];
 }
 
-- (instancetype)initWithRow:(NSInteger)row column:(NSInteger)column type:(HDHexagonType)type
-{
+- (instancetype)initWithRow:(NSInteger)row column:(NSInteger)column type:(HDHexagonType)type {
     NSParameterAssert(row);
     NSParameterAssert(type);
     if (self = [super init]) {
@@ -43,16 +41,15 @@ NSString * const HDTripleKey = @"triple";
 
 #pragma mark - Setter
 
-- (void)setNode:(HDHexagonNode *)node
-{
+- (void)setNode:(HDHexagonNode *)node {
     _node = node;
     [self _setup];
 }
 
 #pragma mark - Public
 
-- (BOOL)selectedAfterRecievingTouches
-{
+- (BOOL)selectedAfterRecievingTouches {
+    
     if (self.isSelected) {
         return YES;
     };
@@ -62,22 +59,22 @@ NSString * const HDTripleKey = @"triple";
     switch (self.type) {
         case HDHexagonTypeDouble:
             switch (self.touchesCount) {
-                case 1:
+                case 1: {
                     self.node.texture = [SKTexture textureWithImageNamed:@"Double-OneLeft"];
                     break;
-                case 2:
+                } case 2:
                     self.selected = YES;
                     break;
             } break;
         case HDHexagonTypeTriple:
             switch (self.touchesCount) {
-                case 1:
+                case 1: {
                     self.node.texture = [SKTexture textureWithImageNamed:@"Triple-TwoLeft"];
                     break;
-                case 2:
-                    self.node.texture = [SKTexture textureWithImageNamed:@"Triple-OneLeft"];
+                } case 2: {
+                    self.node.texture = [SKTexture textureWithImageNamed: @"Triple-OneLeft"];
                     break;
-                case 3:
+                } case 3:
                     self.selected = YES;
                     break;
             } break;
@@ -88,8 +85,8 @@ NSString * const HDTripleKey = @"triple";
     return self.selected;
 }
 
-- (UIColor *)emitterColor
-{
+- (UIColor *)emitterColor {
+    
     switch (self.type) {
         case HDHexagonTypeRegular:
             return [UIColor flatPeterRiverColor];
@@ -113,10 +110,9 @@ NSString * const HDTripleKey = @"triple";
     return nil;
 }
 
-- (void)setSelected:(BOOL)selected
-{
-    _selected = selected;
+- (void)setSelected:(BOOL)selected {
     
+    _selected = selected;
     if ([self selectedImagePath]) {
         self.node.texture = [SKTexture textureWithImage:[UIImage imageNamed:[self selectedImagePath]]];
     }
@@ -130,10 +126,9 @@ NSString * const HDTripleKey = @"triple";
     }
 }
 
-- (void)setLocked:(BOOL)locked
-{
-    _locked = locked;
+- (void)setLocked:(BOOL)locked {
     
+    _locked = locked;
     if (!locked) {
         self.state = HDHexagonStateEnabled;
         self.node.locked = NO;
@@ -141,8 +136,7 @@ NSString * const HDTripleKey = @"triple";
     }
 }
 
-- (NSString *)defaultImagePath
-{
+- (NSString *)defaultImagePath {
     switch (self.type) {
         case HDHexagonTypeRegular:
             return @"Default-OneTap";
@@ -162,11 +156,10 @@ NSString * const HDTripleKey = @"triple";
     return nil;
 }
 
-- (NSString *)selectedImagePath
-{
+- (NSString *)selectedImagePath {
     switch (self.type) {
         case HDHexagonTypeRegular:
-            return @"Selected-OneTap";
+            return  @"Selected-OneTap";
         case HDHexagonTypeStarter:
             return @"Selected-Start";
         case HDHexagonTypeDouble:
@@ -183,8 +176,7 @@ NSString * const HDTripleKey = @"triple";
     return nil;
 }
 
-- (void)restoreToInitialState
-{
+- (void)restoreToInitialState {
     self.node.locked  = NO;
     self.touchesCount = 0;
     self.selected     = NO;
@@ -195,15 +187,13 @@ NSString * const HDTripleKey = @"triple";
 
 #pragma mark - Private
 
-- (void)_disableTile
-{
+- (void)_disableTile {
     self.state       = HDHexagonStateDisabled;
     self.countTile   = YES;
     self.node.locked = YES;
 }
 
-- (void)_setup
-{
+- (void)_setup {
     switch (self.type) {
         case HDHexagonTypeEnd:
             self.state = HDHexagonStateDisabled;

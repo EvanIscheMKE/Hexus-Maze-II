@@ -15,14 +15,13 @@
 
 @implementation HDTileManager
 
-+ (HDTileManager *)sharedManager
-{
-    static HDTileManager *tileManager;
++ (HDTileManager *)sharedManager {
+    static HDTileManager *manager;
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
-        tileManager = [HDTileManager new];
+        manager = [HDTileManager new];
     });
-    return tileManager;
+    return manager;
 }
 
 - (instancetype)init {

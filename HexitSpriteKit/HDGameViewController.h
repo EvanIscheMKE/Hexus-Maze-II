@@ -7,8 +7,10 @@
 //
 
 #import <UIKit/UIKit.h>
+@import SpriteKit;
 
 @interface HDGameViewController : UIViewController
+@property (nonatomic, assign) BOOL pauseGame;
 - (void)performExitAnimationWithCompletion:(dispatch_block_t)completion;
 - (instancetype)initWithLevel:(NSInteger)level;
 - (IBAction)restart:(id)sender;

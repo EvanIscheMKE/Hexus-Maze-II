@@ -9,13 +9,11 @@
 #import "HDLevel.h"
 #import "HDHexagonButton.h"
 #import "HDGridScrollView.h"
-#import "HDLockedView.h"
 #import "NSMutableArray+UniqueAdditions.h"
-#import "UIColor+FlatColors.h"
+#import "UIColor+ColorAdditions.h"
 
 @interface HDGridScrollView ()
 @property (nonatomic, assign) NSUInteger numberOfPages;
-@property (nonatomic, strong) HDLockedView *container;
 @property (nonatomic, strong) HDMapManager *manager;
 @end
 

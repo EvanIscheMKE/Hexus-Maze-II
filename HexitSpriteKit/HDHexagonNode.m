@@ -9,7 +9,7 @@
 #import "HDHexagon.h"
 #import "HDHelper.h"
 #import "HDHexagonNode.h"
-#import "SKColor+HDColor.h"
+#import "SKColor+ColorAdditions.h"
 
 @interface HDHexagonNode ()
 @property (nonatomic, strong) SKLabelNode *countLabel;
@@ -24,9 +24,9 @@
 
 - (void)_setup {
     
-    SKTexture *indicatorTexture = [SKTexture textureWithImageNamed:@"indicator"];
+    SKTexture *indicatorTexture = [SKTexture textureWithImageNamed:@"Indicator"];
     _indicator = [SKSpriteNode spriteNodeWithTexture:indicatorTexture];
-    _indicator.scale    = TRANSFORM_SCALE;
+    _indicator.scale    = IS_IPAD ? 1.0f : TRANSFORM_SCALE;;
     _indicator.position = CGPointZero;
     [self addChild:_indicator];
 }
@@ -39,8 +39,8 @@
     if (locked) {
         // Add lock
         if (![[self children] count]) {
-            SKSpriteNode *lock = [SKSpriteNode spriteNodeWithImageNamed:@"Locked-22"];
-            lock.scale = TRANSFORM_SCALE;
+            SKSpriteNode *lock = [SKSpriteNode spriteNodeWithImageNamed:@"Locked-Node"];
+            lock.scale = IS_IPAD ? 1.0f : TRANSFORM_SCALE;
             [self addChild:lock];
         }
     } else {

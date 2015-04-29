@@ -13,16 +13,14 @@
 
 #pragma mark - Configure
 
-- (void)configureSettingsForFirstRun
-{
+- (void)configureSettingsForFirstRun {
     [[NSUserDefaults standardUserDefaults] setBool:YES forKey:HDSoundkey];
     self.sound =  [[NSUserDefaults standardUserDefaults] boolForKey:HDSoundkey];
 }
 
 #pragma mark - Initalizer
 
-- (instancetype)init
-{
+- (instancetype)init {
     if (self = [super init]) {
         self.sound =  [[NSUserDefaults standardUserDefaults] boolForKey:HDSoundkey];
         self.music = YES;
@@ -30,8 +28,7 @@
     return self;
 }
 
-+ (HDSettingsManager *)sharedManager
-{
++ (HDSettingsManager *)sharedManager {
     static HDSettingsManager *manager;
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
@@ -42,8 +39,7 @@
 
 #pragma mark - Override Setters
 
-- (void)setSound:(BOOL)sound
-{
+- (void)setSound:(BOOL)sound {
     _sound = sound;
     [[NSUserDefaults standardUserDefaults] setBool:_sound forKey:HDSoundkey];
 }

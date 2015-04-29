@@ -24,11 +24,39 @@
             [self.myDelegate scene:self gameEndedWithCompletion:self.partyAtTheEnd];
         }
     }
-    [tile.node runAction:[SKAction rotateByAngle:M_PI*2 duration:.300f] completion:nil];
+    
+    [tile.node removeAllActions];
+    
+    self.animating = YES;
+    
+    const CGFloat currentScale = tile.node.xScale;
+    
+    SKAction *rotation  = [SKAction rotateByAngle:M_PI*2
+                                        duration:.300f];
+    
+    SKAction *scaleDown = [SKAction scaleTo:currentScale - .1f
+                                   duration:rotation.duration/2];
+    
+    SKAction *scaleUp   = [SKAction scaleTo:currentScale
+                                   duration:rotation.duration/2];
+    
+    SKAction *sequence  = [SKAction sequence:@[scaleDown, scaleUp]];
+    
+    [tile.node runAction:[SKAction group:@[rotation, sequence]]
+              completion:^{
+        self.animating = NO;
+    }];
 }
 
-- (void)touchesMoved:(NSSet *)touches withEvent:(UIEvent *)event
-{
+- (void)performExitAnimationsWithCompletion:(dispatch_block_t)completion {
+    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(.2f * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+        [HDHelper completionAnimationWithTiles:self.hexagons
+                                    completion:completion];
+    });
+}
+
+- (void)touchesMoved:(NSSet *)touches withEvent:(UIEvent *)event {
+    
     UITouch *touch   = [touches anyObject];
     CGPoint location = [touch locationInNode:self];
     
@@ -41,12 +69,13 @@
         if ([self validateNextMoveToHexagon:currentTile fromHexagon:previousTile]) {
             
             if (currentTile.type == HDHexagonTypeStarter) {
-                [self.myDelegate startTileWasSelectedInScene:self];
+                if (self.myDelegate && [self.myDelegate respondsToSelector:@selector(startTileWasSelectedInScene:)]) {
+                   [self.myDelegate startTileWasSelectedInScene:self];
+                }
             }
             
             [currentTile selectedAfterRecievingTouches];
             [[HDTileManager sharedManager] addHexagon:currentTile];
-            [self performEffectsForTile:currentTile];
             [self checkGameStateForTile:currentTile];
             [self playSoundForHexagon:currentTile vibration:YES];
         }
@@ -59,7 +88,6 @@
         self.userInteractionEnabled = NO;
         [HDHelper entranceAnimationWithTiles:self.hexagons completion:^{
             self.userInteractionEnabled = YES;
-            
             if (self.layoutCompletion) {
                 self.layoutCompletion();
             }

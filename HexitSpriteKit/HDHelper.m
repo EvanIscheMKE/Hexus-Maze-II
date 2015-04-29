@@ -11,24 +11,24 @@
 #import "HDHelper.h"
 #import "HDHexagon.h"
 #import "HDHexagonNode.h"
-#import "UIColor+FlatColors.h"
+#import "UIColor+ColorAdditions.h"
 
 NSString *descriptionForLevelIdx(NSUInteger levelIdx){
     switch (levelIdx) {
         case HDLevelTipOne:
-            return @"Watch out for the mines!";
+            return NSLocalizedString(@"tip1", nil);
         case HDLevelTipTwo:
-            return @"Just tap it twice!";
+            return NSLocalizedString(@"tip2", nil);
         case HDLevelTipThree:
-            return @"Search for the unlocked one first!";
+            return NSLocalizedString(@"tip3", nil);
         case HDLevelTipFour:
-            return @"Just tap it three times!";
+            return NSLocalizedString(@"tip4", nil);
         case HDLevelTipFive:
-            return @"Always end on the red hex!";
+            return NSLocalizedString(@"tip5", nil);
         case HDLevelTipSix:
-            return @"You've got this!";
+            return NSLocalizedString(@"tip6", nil);
         default:
-            return @"There's more then one for a reason";
+            return NSLocalizedString(@"tip7", nil);
         break;
     }
     return nil;
@@ -80,7 +80,7 @@ NSString *descriptionForLevelIdx(NSUInteger levelIdx){
         }
     }
     
-    // Sorting array before looping through it, to hopefully achieve a solid fall for each row
+    // Sorting array before looping through it, hopefully achieve a solid fall for each row
     NSMutableArray *dealTheseTiles = [NSMutableArray arrayWithCapacity:tiles.count];
     for (NSUInteger row = minRow; row < maxRow + 1; row++) {
         for (HDHexagon *hexagon in tiles) {
@@ -137,8 +137,6 @@ NSString *descriptionForLevelIdx(NSUInteger levelIdx){
     // Loop through tiles and scale to zilch
     __block NSInteger index = 0;
     for (HDHexagon *tile in tiles) {
-        
-        
         [[tile.node children] makeObjectsPerformSelector:@selector(removeFromParent)];
         [tile.node runAction:[SKAction sequence:@[scaleDown,[SKAction hide]]]
                   completion:^{
@@ -153,8 +151,8 @@ NSString *descriptionForLevelIdx(NSUInteger levelIdx){
     }
 }
 
-+ (NSArray *)possibleMovesForHexagon:(HDHexagon *)hexagon inArray:(NSArray *)array
-{
++ (NSArray *)possibleMovesForHexagon:(HDHexagon *)hexagon inArray:(NSArray *)array {
+    
     NSMutableArray *hexagons = [NSMutableArray array];
     
     // Find all possible tiles that are connected to 'hexagon', return any that are in play
@@ -187,8 +185,69 @@ NSString *descriptionForLevelIdx(NSUInteger levelIdx){
     return hexagons;
 }
 
-+ (BOOL)isIpad {
-    return (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad);
++ (NSArray *)tileDirectionsToObject:(NSArray *)objects fromTile:(HDHexagon *)fromHexagon {
+    
+    NSLog(@"%tu",objects.count);
+    
+    NSMutableArray *directions = [NSMutableArray array];
+    for (HDHexagon *toHexagon in objects) {
+        
+        if (toHexagon.row == fromHexagon.row && toHexagon.column == fromHexagon.column + 1) {
+            [directions addObject:@(HDTileDirectionRight)];
+            NSLog(@"RIGHT");
+            continue;
+        }
+        
+        if (toHexagon.row == fromHexagon.row && toHexagon.column == fromHexagon.column - 1) {
+            [directions addObject:@(HDTileDirectionLeft)];
+            NSLog(@"LEFT");
+            continue;
+        }
+        
+        if (toHexagon.row == fromHexagon.row + 1 && toHexagon.column == fromHexagon.column) {
+            if (fromHexagon.row % 2 != 0) {
+                NSLog(@"UP RIGHT");
+                [directions addObject:@(HDTileDirectionTopRight)];
+            } else {
+                NSLog(@"UP LEFT");
+                [directions addObject:@(HDTileDirectionTopLeft)];
+            }
+            continue;
+        }
+        
+        if (toHexagon.row == fromHexagon.row + 1 && toHexagon.column == (fromHexagon.column + ((fromHexagon.row % 2 == 0) ? 1 : -1))) {
+            if (fromHexagon.row % 2 == 0) {
+                NSLog(@"UP RIGHT");
+                [directions addObject:@(HDTileDirectionTopRight)];
+            } else {
+                NSLog(@"UP LEFT");
+                [directions addObject:@(HDTileDirectionTopLeft)];
+            }
+            continue;
+        }
+        
+        if (toHexagon.row == fromHexagon.row - 1 && toHexagon.column == fromHexagon.column) {
+            if (fromHexagon.row % 2 != 0) {
+                NSLog(@"BOTTOM RIGHT");
+                [directions addObject:@(HDTileDirectionTopRight)];
+            } else {
+                NSLog(@"BOTTOM LEFT");
+                [directions addObject:@(HDTileDirectionTopLeft)];
+            }
+            continue;
+        }
+        
+        if (toHexagon.row == fromHexagon.row - 1 && toHexagon.column == (fromHexagon.column + ((fromHexagon.row % 2 == 0) ? 1 : -1))) {
+            if (fromHexagon.row % 2 == 0) {
+                NSLog(@"BOTTOM RIGHT");
+                [directions addObject:@(HDTileDirectionTopRight)];
+            } else {
+                NSLog(@"BOTTOM LEFT");
+                [directions addObject:@(HDTileDirectionTopLeft)];
+            }
+        }
+    }
+    return directions;
 }
 
 @end

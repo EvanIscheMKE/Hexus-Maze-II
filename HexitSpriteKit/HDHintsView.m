@@ -6,13 +6,15 @@
 //  Copyright (c) 2015 Evan William Ische. All rights reserved.
 //
 
+#import "HDHelper.h"
 #import "HDHintsView.h"
-#import "UIColor+FlatColors.h"
+#import "UIColor+ColorAdditions.h"
 
-static const CGFloat kPadding = 3.0f;
+NSString * const HDTitleLocalizationKey = @"tips";
+
+static const CGFloat kiPhonePadding = 5.0f;
+static const CGFloat kiPadPadding = 10.0f;
 static const CGFloat kCornerRadius = 15.0f;
-
-NSString * const HDTitleLocalizationKey = @"Tips";
 @interface HDHintsView ()
 @property (nonatomic, strong) UILabel *titleLabel;
 @end
@@ -49,7 +51,7 @@ NSString * const HDTitleLocalizationKey = @"Tips";
                        images:(NSArray *)images {
     
     return [self initWithFrame:frame
-                         title:HDTitleLocalizationKey
+                         title:NSLocalizedString(HDTitleLocalizationKey, nil)
                    description:description
                         images:images];
 }
@@ -63,7 +65,7 @@ NSString * const HDTitleLocalizationKey = @"Tips";
 - (void)_setup {
     
     self.shapeLayer.lineWidth = 0;
-    self.backgroundColor = [UIColor colorWithWhite:.0f alpha:0.5f];
+    self.backgroundColor = [UIColor flatSTDarkNavyColor];
     
     self.imageView = [[UIImageView alloc] initWithImage:[_images firstObject]];
     [self addSubview:self.imageView];
@@ -77,7 +79,7 @@ NSString * const HDTitleLocalizationKey = @"Tips";
     
     self.titleLabel = [[UILabel alloc] init];
     self.titleLabel.font = GILLSANS(22.0f);
-    self.titleLabel.text = NSLocalizedString(_title, nil);
+    self.titleLabel.text = _title;
     
     self.descriptionLabel = [[UILabel alloc] init];
     self.descriptionLabel.font = GILLSANS_LIGHT(18.0f);
@@ -93,9 +95,12 @@ NSString * const HDTitleLocalizationKey = @"Tips";
 - (void)layoutSubviews {
     
     [super layoutSubviews];
+    
     self.shapeLayer.path = [[UIBezierPath bezierPathWithRoundedRect:self.bounds
                                                  byRoundingCorners:UIRectCornerTopLeft|UIRectCornerTopRight
                                                        cornerRadii:CGSizeMake(kCornerRadius, kCornerRadius)] CGPath];
+    
+    const CGFloat kPadding = IS_IPAD ? kiPadPadding : kiPhonePadding;
     
     [self.titleLabel sizeToFit];
     self.titleLabel.center = CGPointMake(CGRectGetMidX(self.bounds), CGRectGetMidY(self.titleLabel.bounds) + kPadding);
@@ -108,9 +113,14 @@ NSString * const HDTitleLocalizationKey = @"Tips";
     
     self.imageView.center = CGPointMake(CGRectGetMidX(self.bounds), CGRectGetMidY(self.bounds));
     
-    CGAffineTransform scale = CGAffineTransformMakeScale(TRANSFORM_SCALE, TRANSFORM_SCALE);
+    const CGFloat scale = IS_IPAD ? 1.5f : TRANSFORM_SCALE;
+    CGAffineTransform scaleTransform = CGAffineTransformMakeScale(scale, scale);
     for (UIView *subViews in self.subviews) {
-        subViews.transform = scale;
+        if ([subViews isKindOfClass:[UIImageView class]]) {
+            subViews.transform = CGAffineTransformIdentity;
+        } else {
+            subViews.transform = scaleTransform;
+        }
     }
 }
 

@@ -6,15 +6,16 @@
 //  Copyright (c) 2014 Evan William Ische. All rights reserved.
 //
 
+#import "HDGameButton.h"
 #import "HDMenuBar.h"
-#import "UIColor+FlatColors.h"
+#import "UIColor+ColorAdditions.h"
 #import "HDSettingsManager.h"
 #import "HDHelper.h"
 
-static const CGFloat kButtonInset = 20.0f;
+static const CGFloat inset = 20.0f;
 @interface HDMenuBar ()
-@property (nonatomic, strong) UIButton *navigationButton;
-@property (nonatomic, strong) UIButton *activityButton;
+@property (nonatomic, strong) HDGameButton *navigationButton;
+@property (nonatomic, strong) HDGameButton *activityButton;
 @end
 
 @implementation HDMenuBar{
@@ -42,13 +43,14 @@ static const CGFloat kButtonInset = 20.0f;
     
     self.backgroundColor = [UIColor clearColor];
     
-     self.navigationButton = [UIButton buttonWithType:UIButtonTypeCustom];
-    [self.navigationButton setBackgroundImage:[self gridImage] forState:UIControlStateNormal];
-
-     self.activityButton = [UIButton buttonWithType:UIButtonTypeCustom];
-    [self.activityButton setBackgroundImage:self.activityImage forState:UIControlStateNormal];
+     self.navigationButton = [[HDGameButton alloc] init];
+    [self.navigationButton setImage:[UIImage imageNamed:@"menuToggle"] forState:UIControlStateNormal];
     
-    for (UIButton *subView in @[self.navigationButton, self.activityButton]) {
+     self.activityButton = [[HDGameButton alloc] init];
+    [self.activityButton setImage:self.activityImage forState:UIControlStateNormal];
+    
+    for (HDGameButton *subView in @[self.navigationButton, self.activityButton]) {
+        subView.buttonColor = [UIColor flatSTLightBlueColor];
         subView.adjustsImageWhenDisabled = NO;
         subView.adjustsImageWhenHighlighted = NO;
         subView.translatesAutoresizingMaskIntoConstraints = NO;
@@ -62,8 +64,8 @@ static const CGFloat kButtonInset = 20.0f;
     UIButton *share  = self.activityButton;
     
     _views = NSDictionaryOfVariableBindings(toggle, share);
-    _metrics = @{ @"buttonHeight" : @([self gridImage].size.height),
-                  @"inset"        : @( [HDHelper isIpad] ? kButtonInset*1.5f : kButtonInset) };
+    _metrics = @{ @"buttonHeight": @44.0f,
+                  @"inset":        @( IS_IPAD ? inset*1.5f : inset) };
     
 
     NSArray *toggleHorizontalConstraint = [NSLayoutConstraint constraintsWithVisualFormat:@"H:|-inset-[toggle(buttonHeight)]"
@@ -90,13 +92,14 @@ static const CGFloat kButtonInset = 20.0f;
                                                                                    views:_views];
     [self addConstraints:shareVerticalConstraint];
     
-    for (UIButton *subView in self.subviews) {
-        subView.transform = CGAffineTransformMakeScale(TRANSFORM_SCALE, TRANSFORM_SCALE);
+    if (IS_IPAD) {
+        for (UIButton *subView in self.subviews) {
+            subView.transform = CGAffineTransformMakeScale(TRANSFORM_SCALE, TRANSFORM_SCALE);
+        }
     }
 }
 
 - (void)willMoveToSuperview:(UIView *)newSuperview {
-    
     [super willMoveToSuperview:newSuperview];
     if (newSuperview) {
         [self _layoutSubviews];
@@ -106,17 +109,10 @@ static const CGFloat kButtonInset = 20.0f;
 #pragma mark - Setters
 
 - (void)setActivityImage:(UIImage *)activityImage {
-    
     _activityImage = activityImage;
     if (self.activityButton) {
         [self.activityButton setImage:activityImage forState:UIControlStateNormal];
     }
-}
-
-#pragma mark - Getter
-
-- (UIImage *)gridImage {
-    return [HDHelper isIpad] ? [UIImage imageNamed:@"GridIcon-iPad"] : [UIImage imageNamed:@"Grid"];
 }
 
 @end

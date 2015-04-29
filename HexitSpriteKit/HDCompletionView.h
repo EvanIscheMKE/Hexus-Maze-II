@@ -16,6 +16,7 @@ extern NSString * const HDRateKey;
 @protocol HDCompletionViewDelegate;
 @interface HDCompletionView : UIView
 @property (nonatomic, weak) id<HDCompletionViewDelegate> delegate;
+- (instancetype)initWithFrame:(CGRect)frame time:(NSString *)timeString;
 @end
 
 @protocol HDCompletionViewDelegate <NSObject>

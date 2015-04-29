@@ -9,47 +9,43 @@
 #import "HDLevel.h"
 #import "HDHelper.h"
 #import "HDHexagonButton.h"
-#import "UIColor+FlatColors.h"
+#import "UIColor+ColorAdditions.h"
 
 @implementation HDHexagonButton
 
 - (instancetype)initWithFrame:(CGRect)frame {
     
     if (self = [super initWithFrame:frame]) {
-        [self _setup];
+        
+        self.titleLabel.textAlignment    = NSTextAlignmentCenter;
+        self.titleLabel.shadowOffset     = CGSizeMake(0.0f, 1.0f);
+        self.titleLabel.font             = GILLSANS(CGRectGetWidth(self.bounds)/3.0f);
+        self.adjustsImageWhenDisabled    = NO;
+        self.adjustsImageWhenHighlighted = NO;
+        
+        [self setTitleColor:[UIColor whiteColor]
+                   forState:UIControlStateNormal];
+        
+        [self setTitleShadowColor:[[UIColor whiteColor] colorWithAlphaComponent:.7f]
+                         forState:UIControlStateNormal];
+        
+        [self setBackgroundImage:[UIImage imageNamed:@"Default-Count-Grid"]
+                        forState:UIControlStateNormal];
+        [self setBackgroundImage:[UIImage imageNamed:@"Unlocked-OneTap-Grid"]
+                        forState:UIControlStateSelected];
+        
+        [self setImage:[UIImage imageNamed:@"Locked-Grid"]
+              forState:UIControlStateNormal];
+        
     }
     return self;
 }
 
-#pragma mark - Private
-
-- (void)_setup {
-    
-    self.titleLabel.textAlignment    = NSTextAlignmentCenter;
-    self.titleLabel.font             = GILLSANS(CGRectGetWidth(self.bounds)/3);
-    self.imageView.clipsToBounds     = NO;
-    self.imageView.contentMode       = UIViewContentModeCenter;
-    self.adjustsImageWhenDisabled    = NO;
-    self.adjustsImageWhenHighlighted = NO;
-    self.titleEdgeInsets = UIEdgeInsetsMake(12.0f, 0.0f, -12.0f, 0.0f);
-    
-    [self setTitleColor:[UIColor flatWetAsphaltColor] forState:UIControlStateNormal];
-    [self setBackgroundImage:[UIImage imageNamed:@"Default-Count-Grid"] forState:UIControlStateNormal];
-    [self setImage:[UIImage imageNamed:@"Locked-25"] forState:UIControlStateNormal];
-}
 
 #pragma mark - Setters
 
 - (void)setIndex:(NSInteger)index {
-    
     _index = index;
-    
-    if (self.levelState == HDLevelStateLocked) {
-        [self setTitle:nil forState:UIControlStateNormal];
-        return;
-    }
-    [self setTitle:[NSString stringWithFormat:@"%zd", index] forState:UIControlStateNormal];
-    [self setImage:nil forState:UIControlStateNormal];
 }
 
 - (void)setLevelState:(HDLevelState)levelState {
@@ -58,21 +54,26 @@
     
     switch (levelState) {
         case HDLevelStateCompleted:
-             [self setBackgroundImage:[UIImage imageNamed:@"Selected-OneTap-Grid"] forState:UIControlStateNormal];
+            self.selected = NO;
+            [self setImage:[UIImage imageNamed:@"Star-Grid"]
+                  forState:UIControlStateNormal];
+            [self setTitle:nil
+                  forState:UIControlStateNormal];
             break;
         case HDLevelStateUnlocked:
-            [self setBackgroundImage:[UIImage imageNamed:@"OneTap-Grid"] forState:UIControlStateNormal];
-            break;
-        case HDLevelStateLocked:
-            [self setBackgroundImage:[UIImage imageNamed:@"Default-Count-Grid"] forState:UIControlStateNormal];
-            break;
-        case HDLevelStateNone:
+            self.selected = YES;
+            [self setTitle:nil
+                  forState:UIControlStateNormal];
+            [self setImage:nil
+                  forState:UIControlStateNormal];
             
             break;
+        case HDLevelStateLocked: {
+            
+        }  break;
         default:
             break;
     }
-    self.index = self.index;
 }
 
 @end

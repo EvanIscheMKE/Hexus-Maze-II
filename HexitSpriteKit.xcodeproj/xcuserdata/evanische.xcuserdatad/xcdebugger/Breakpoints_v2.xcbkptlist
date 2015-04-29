@@ -114,6 +114,7 @@
                   continueAfterRunningActions = "No"
                   symbolName = "-[NSException raise]"
                   moduleName = "CoreFoundation"
+                  usesParentBreakpointCondition = "Yes"
                   offsetFromSymbolStart = "0">
                </Location>
             </Locations>
@@ -142,7 +143,7 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "HexitSpriteKit/HDHexagonNode.m"
-            timestampString = "446507433.030238"
+            timestampString = "451853983.750053"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "66"

@@ -12,7 +12,7 @@
 #import "HDSettingsManager.h"
 #import "HDSoundManager.h"
 
-@interface HDSoundManager ()<AVAudioPlayerDelegate>
+@interface HDSoundManager ()
 @property (nonatomic, getter=isSoundSessionActive, assign) BOOL soundSessionActive;
 @property (nonatomic, strong) AVAudioPlayer *loopPlayer;
 @end
@@ -49,7 +49,6 @@
     NSError *error = nil;
     NSString *soundPath = [[[NSBundle mainBundle] resourcePath] stringByAppendingPathComponent:filename];
     self.loopPlayer = [[AVAudioPlayer alloc] initWithContentsOfURL:[NSURL fileURLWithPath:soundPath] error:&error];
-    self.loopPlayer.delegate = self;
     self.loopPlayer.numberOfLoops = -1; /* Will continue to play until we tell it to stop. */
     [self.loopPlayer prepareToPlay];
     
@@ -94,12 +93,8 @@
     AVAudioSession *audioSession = [AVAudioSession sharedInstance];
     
     NSError *error = nil;
-    if (audioSession.otherAudioPlaying) {
-        [audioSession setCategory: AVAudioSessionCategoryAmbient error:&error];
-    } else {
-        [audioSession setCategory: AVAudioSessionCategorySoloAmbient error:&error];
-    }
-    
+    NSString *category = (audioSession.otherAudioPlaying) ? AVAudioSessionCategoryAmbient : AVAudioSessionCategorySoloAmbient;
+    [audioSession setCategory:category error:&error];
     [audioSession setActive:YES error:&error];
     
     self.soundSessionActive = YES;
@@ -108,15 +103,13 @@
 
 - (void)stopAudio {
     
+    self.playLoop = NO;
     if (!self.isSoundSessionActive){
         return;
     }
     
-    self.playLoop = NO;
-    
     NSError *error = nil;
-    AVAudioSession *audioSession = [AVAudioSession sharedInstance];
-    [audioSession setActive:NO error:&error];
+    [[AVAudioSession sharedInstance] setActive:NO error:&error];
     
     if (error) {
         [self stopAudio];
@@ -125,9 +118,5 @@
     }
 }
 
-- (void)audioPlayerDidFinishPlaying:(AVAudioPlayer *)player successfully:(BOOL)flag{
-    [player stop];
-    [player prepareToPlay];
-}
 
 @end

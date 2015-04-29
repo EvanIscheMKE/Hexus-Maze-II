@@ -9,7 +9,7 @@
 @import QuartzCore;
 
 #import "HDSwitch.h"
-#import "UIColor+FlatColors.h"
+#import "UIColor+ColorAdditions.h"
 
 static const CGFloat kPadding = 5.0f;
 @interface HDSwitch ()
@@ -19,10 +19,13 @@ static const CGFloat kPadding = 5.0f;
 @end
 
 @implementation HDSwitch {
+    
     UIColor *_onColor;
     UIColor *_offColor;
+    
     BOOL _animating;
     BOOL _toggleValue;
+    
 }
 
 - (instancetype)initWithFrame:(CGRect)frame {
@@ -34,76 +37,34 @@ static const CGFloat kPadding = 5.0f;
 }
 
 - (instancetype)initWithFrame:(CGRect)frame onColor:(UIColor *)onColor offColor:(UIColor *)offColor {
-    
+
     if (self = [super initWithFrame:frame]) {
-        
         _onColor  = onColor;
         _offColor = offColor;
-        
-        self.on = YES;
-        self.backgroundColor = _onColor;
-        self.layer.cornerRadius = 5.0f;
-        
         [self _setup];
     }
     return self;
 }
 
-- (void)_setup; {
+- (void)_setup {
     
-    CGRect slidingViewFrame = CGRectMake(CGRectGetWidth(self.bounds) - (CGRectGetWidth(self.slidingView.bounds) + kPadding),
-                                         kPadding,
-                                         CGRectGetWidth(self.bounds)/3,
-                                         CGRectGetHeight(self.bounds) - (kPadding*2));
+    self.on = YES;
     
+    self.layer.cornerRadius = CGRectGetMidY(self.bounds);
+    self.layer.borderColor  = _onColor.CGColor;
+    self.layer.borderWidth  = 3.0f;
+    
+    const CGSize slidingViewSize = CGSizeMake(CGRectGetHeight(self.bounds) - (kPadding*2),
+                                              CGRectGetHeight(self.bounds) - (kPadding*2));
+    
+    CGRect slidingViewFrame = CGRectMake(0.0f, 0.0f, slidingViewSize.width, slidingViewSize.height);
     self.slidingView = [[UIView alloc] initWithFrame:slidingViewFrame];
-    self.slidingView.layer.cornerRadius = 3.0f;
+    self.slidingView.layer.cornerRadius = CGRectGetMidY(self.slidingView.bounds);
+    self.slidingView.backgroundColor = [UIColor flatSTEmeraldColor];
     self.slidingView.userInteractionEnabled = NO;
-    self.slidingView.backgroundColor = [UIColor whiteColor];
+    self.slidingView.center = CGPointMake(CGRectGetWidth(self.bounds) - CGRectGetMidX(self.slidingView.bounds) - kPadding,
+                                          CGRectGetMidY(self.bounds));
     [self addSubview:self.slidingView];
-    
-    CGRect onLabelFrame = CGRectMake(0.0f, 0.0f, CGRectGetWidth(self.bounds)/1.5f - kPadding, CGRectGetHeight(self.bounds));
-     self.onLabel = [[UILabel alloc] initWithFrame:onLabelFrame];
-    self.onLabel.text  = NSLocalizedString(@"ON", nil);
-    self.onLabel.alpha = 1.0f;
-    
-    CGRect offLabelFrame = CGRectMake(CGRectGetWidth(self.bounds)/3.0f + kPadding, 0.0f, CGRectGetWidth(self.bounds)/1.5f - kPadding, CGRectGetHeight(self.bounds));
-     self.offLabel = [[UILabel alloc] initWithFrame:offLabelFrame];
-    self.offLabel.text = NSLocalizedString(@"OFF", nil);
-    self.offLabel.alpha = 0.0f;
-    
-    for (UILabel *label in @[self.onLabel, self.offLabel]) {
-        label.textAlignment = NSTextAlignmentCenter;
-        label.textColor = [UIColor whiteColor];
-        [self addSubview:label];
-    }
-}
-
-- (void)layoutSubviews {
-    
-    [super layoutSubviews];
-    if (!_animating) {
-        self.offLabel.frame = CGRectMake(CGRectGetWidth(self.bounds)/3,
-                                         0.0f,
-                                         CGRectGetWidth(self.bounds)/1.5f,
-                                         CGRectGetHeight(self.bounds));
-        
-        self.onLabel.frame = CGRectMake(0.0f, 0.0f, CGRectGetWidth(self.bounds)/1.5f, CGRectGetHeight(self.bounds));
-        if (self.isON) {
-            CGRect slidingViewFrame = CGRectMake(CGRectGetWidth(self.bounds) - (CGRectGetWidth(self.slidingView.bounds) + kPadding),
-                                                 kPadding,
-                                                 CGRectGetWidth(self.bounds)/3,
-                                                 CGRectGetHeight(self.bounds)-(kPadding*2));
-            
-            self.slidingView.frame = slidingViewFrame;
-        } else {
-            self.slidingView.frame = CGRectMake(kPadding, kPadding, CGRectGetWidth(self.bounds)/3, CGRectGetHeight(self.bounds)-(kPadding*2));
-        }
-        
-        for (UILabel *label in @[self.onLabel, self.offLabel]) {
-            label.font = GILLSANS(CGRectGetHeight(self.bounds) * .5f);
-        }
-    }
 }
 
 - (BOOL)beginTrackingWithTouch:(UITouch *)touch withEvent:(UIEvent *)event {
@@ -143,12 +104,11 @@ static const CGFloat kPadding = 5.0f;
 - (void)showOnAnimated:(BOOL)animated {
     
     dispatch_block_t animationBlock = ^{
-        const CGFloat kOriginX = CGRectGetWidth(self.bounds) - (CGRectGetWidth(self.slidingView.bounds) + kPadding);
-        CGRect slidingViewFrame = CGRectMake(kOriginX, kPadding, CGRectGetWidth(self.bounds)/3, CGRectGetHeight(self.bounds) - (kPadding*2));
-        self.slidingView.frame = slidingViewFrame;
-        self.backgroundColor   = _onColor;
-        self.onLabel.alpha     = 1.0f;
-        self.offLabel.alpha    = 0.0f;
+        self.slidingView.center = CGPointMake(CGRectGetWidth(self.bounds) - CGRectGetMidX(self.slidingView.bounds) - kPadding,
+                                              CGRectGetMidY(self.bounds));
+        self.slidingView.transform = CGAffineTransformIdentity;
+        self.slidingView.backgroundColor = [UIColor flatSTEmeraldColor];
+        self.layer.borderColor = self.slidingView.backgroundColor.CGColor;
     };
     
     if (!animated) {
@@ -164,11 +124,11 @@ static const CGFloat kPadding = 5.0f;
 - (void)showOffAnimated:(BOOL)animated {
     
     dispatch_block_t animationBlock = ^{
-        CGRect slidingViewFrame = CGRectMake(kPadding, kPadding, CGRectGetWidth(self.bounds)/3, CGRectGetHeight(self.bounds) - (kPadding*2));
-        self.slidingView.frame = slidingViewFrame;
-        self.backgroundColor   = _offColor;
-        self.onLabel.alpha     = 0.0f;
-        self.offLabel.alpha    = 1.0f;
+        self.slidingView.center = CGPointMake(CGRectGetMidX(self.slidingView.bounds) + kPadding,
+                                              CGRectGetMidY(self.bounds));
+        self.slidingView.transform = CGAffineTransformMakeScale(.5f,.5f);
+        self.slidingView.backgroundColor = [UIColor flatSTLightBlueColor];
+        self.layer.borderColor = self.slidingView.backgroundColor.CGColor;
     };
     
     if (!animated) {

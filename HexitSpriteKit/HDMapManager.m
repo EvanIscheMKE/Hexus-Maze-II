@@ -30,8 +30,8 @@
     return self;
 }
 
-+ (HDMapManager *)sharedManager
-{
++ (HDMapManager *)sharedManager {
+    
     static HDMapManager *_manager;
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
@@ -46,9 +46,21 @@
         return _levels;
     }
     
+    BOOL nextLevelShouldBeUnlocked = YES;
+    
     _levels = [NSMutableArray array];
     for (NSData *data in [[NSUserDefaults standardUserDefaults] objectForKey:HDDefaultLevelKey]) {
         HDLevel *level = (HDLevel *)[NSKeyedUnarchiver unarchiveObjectWithData:data];
+        
+        if (!level.isUnlocked && nextLevelShouldBeUnlocked) {
+            level.unlocked = YES;
+        }
+        
+        if (level.isCompleted) {
+            nextLevelShouldBeUnlocked = YES;
+        } else {
+            nextLevelShouldBeUnlocked = NO;
+        }
         [_levels addObject:level];
     }
     return _levels;
@@ -77,7 +89,7 @@
 - (void)completedLevelAtIndex:(NSInteger)index {
     
     [[HDGameCenterManager sharedManager] reportLevelCompletion:index + 1];
-    [[NSUserDefaults standardUserDefaults] setInteger:index + 1 forKey:@"HDLastLevelCompletedKey"];
+    [[NSUserDefaults standardUserDefaults] setInteger:index + 1 forKey:HDLastCompletedLevelKey];
     
     HDLevel *currentLevel = [self levelAtIndex:MAX(index, 0)];
     HDLevel *nextLevel    = [self levelAtIndex:MIN(index + 1, _numberOfLevels - 1)];
@@ -86,15 +98,18 @@
         return;
     }
     
-    [currentLevel setCompleted:YES];
-    [nextLevel setUnlocked:YES];
+    currentLevel.completed = YES;
+    nextLevel.unlocked = YES;
+    [self _saveState];
+}
+
+- (void)_saveState {
     
     NSMutableArray *levels = [NSMutableArray array];
     for (HDLevel *level in self.levels) {
         NSData *levelData = [NSKeyedArchiver archivedDataWithRootObject:level];
         [levels addObject:levelData];
     }
-    
     [[NSUserDefaults standardUserDefaults] setObject:levels forKey:HDDefaultLevelKey];
 }
 
@@ -111,8 +126,8 @@
     [[NSUserDefaults standardUserDefaults] setObject:allLevels forKey:HDDefaultLevelKey];
 }
 
-- (void)_verifyNumberOfLevels
-{
+- (void)_verifyNumberOfLevels {
+    
     NSArray *levelsIKnowAbout = [self levels]?:@[];
     if (levelsIKnowAbout.count >= _numberOfLevels) {
         return; //Nothing to do.
@@ -125,13 +140,7 @@
         [levels addObject:level];
     }
     
-    NSMutableArray *allLevels = [NSMutableArray array];
-    for (HDLevel *level in levels) {
-        NSData *levelData = [NSKeyedArchiver archivedDataWithRootObject:level];
-        [allLevels addObject:levelData];
-    }
-    
-    [[NSUserDefaults standardUserDefaults] setObject:allLevels forKey:HDDefaultLevelKey];
+    [self _saveState];
     
     _levels = levels;
 }

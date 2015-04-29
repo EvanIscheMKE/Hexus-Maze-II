@@ -8,9 +8,10 @@
 
 #import "HDContainerViewController.h"
 #import "HDRearViewController.h"
-#import "UIColor+FlatColors.h"
+#import "UIColor+ColorAdditions.h"
 #import "HDSoundManager.h"
 #import "HDSettingsManager.h"
+#import "HDGameButton.h"
 #import "HDSwitch.h"
 #import "HDHelper.h"
 
@@ -42,14 +43,13 @@
 
 - (void)_setup {
     
-    self.view.backgroundColor = [UIColor flatMidnightBlueColor];
+    self.view.backgroundColor = [UIColor flatSTDarkNavyColor];
     
     CGRect containerBounds = CGRectMake(0.0f, 0.0f, CGRectGetWidth(self.view.bounds)/1.25f, CGRectGetHeight(self.view.bounds));
     UIView *container = [[UIView alloc] initWithFrame:containerBounds];
-    container.backgroundColor = [UIColor colorWithWhite:0.0f alpha:.5f];
     [self.view addSubview:container];
     
-    const CGFloat buttonHeight = CGRectGetHeight(self.view.bounds)/15;
+    const CGFloat buttonHeight = CGRectGetHeight(self.view.bounds)/14;
     const CGFloat buttonWidth  = CGRectGetWidth(containerBounds)/1.5f;
     
     CGRect defaultFrame;
@@ -57,8 +57,8 @@
     defaultFrame.origin.x = CGRectGetMidX(containerBounds) - buttonWidth/2;
     defaultFrame.origin.y = CGRectGetHeight(self.view.bounds)/6;
     
+    const CGFloat kPadding = 15.0f * TRANSFORM_SCALE;
     CGRect previousFrame = CGRectZero;
-    const CGFloat kPadding = 15.0f;
     for (NSUInteger row = 0; row < 4; row++) {
         
         CGRect currentFrame = previousFrame;
@@ -66,19 +66,17 @@
             currentFrame = defaultFrame;
         } else {
             CGRect frame = currentFrame;
-            frame.origin.y += buttonHeight + kPadding; // Padding
+            frame.origin.y += buttonHeight + kPadding;
             currentFrame = frame;
         }
         
-        UIButton *menuButton = [UIButton buttonWithType:UIButtonTypeCustom];
-        menuButton.frame = CGRectIntegral(currentFrame);
-        menuButton.backgroundColor          = [UIColor flatPeterRiverColor];
+        HDGameButton *menuButton = [[HDGameButton alloc] initWithFrame:CGRectIntegral(currentFrame)];
+        menuButton.buttonColor = [UIColor flatSTLightBlueColor];
         menuButton.titleLabel.textAlignment = NSTextAlignmentCenter;
-        menuButton.titleLabel.font          = GILLSANS(CGRectGetHeight(menuButton.bounds)/2.9f);
-        [menuButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
-        menuButton.adjustsImageWhenDisabled    = NO;
+        menuButton.titleLabel.font = GILLSANS(CGRectGetHeight(menuButton.bounds)/3.0f);
+        menuButton.adjustsImageWhenDisabled = NO;
         menuButton.adjustsImageWhenHighlighted = NO;
-        menuButton.layer.cornerRadius = CGRectGetMidY(menuButton.bounds);
+        [menuButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
         [container addSubview:menuButton];
         
         previousFrame = menuButton.frame;
@@ -86,35 +84,43 @@
         switch (row) {
             case 0:
                 self.top = menuButton;
-                [menuButton setTitle:@"Leaderboards" forState:UIControlStateNormal];
-                [self.top addTarget:ADelegate action:@selector(openLeaderboardController:) forControlEvents:UIControlEventTouchUpInside];
+                [menuButton setTitle:NSLocalizedString(@"leaderboard", nil) forState:UIControlStateNormal];
+                [self.top addTarget:[HDAppDelegate sharedDelegate]
+                             action:@selector(openLeaderboardController:)
+                   forControlEvents:UIControlEventTouchUpInside];
                 break;
             case 1:
                 self.bottom = menuButton;
-                [menuButton setTitle:@"Achievements" forState:UIControlStateNormal];
-                [self.bottom addTarget:ADelegate action:@selector(openAcheivementsController:) forControlEvents:UIControlEventTouchUpInside];
+                [menuButton setTitle:NSLocalizedString(@"achievements", nil) forState:UIControlStateNormal];
+                [self.bottom addTarget:[HDAppDelegate sharedDelegate]
+                                action:@selector(openAcheivementsController:)
+                      forControlEvents:UIControlEventTouchUpInside];
                 break;
             case 2:
-                [menuButton setTitle:@"Remove Ads" forState:UIControlStateNormal];
-                [menuButton addTarget:ADelegate action:@selector(removeBanners:) forControlEvents:UIControlEventTouchUpInside];
+                [menuButton setTitle:NSLocalizedString(@"removeAds", nil) forState:UIControlStateNormal];
+                [menuButton addTarget:[HDAppDelegate sharedDelegate]
+                               action:@selector(removeBanners:)
+                     forControlEvents:UIControlEventTouchUpInside];
                 break;
             case 3:
-                [menuButton setTitle:@"Restore" forState:UIControlStateNormal];
-                [menuButton addTarget:ADelegate action:@selector(restoreIAP:) forControlEvents:UIControlEventTouchUpInside];
+                [menuButton setTitle:NSLocalizedString(@"Restore", nil) forState:UIControlStateNormal];
+                [menuButton addTarget:[HDAppDelegate sharedDelegate]
+                               action:@selector(restoreIAP:)
+                     forControlEvents:UIControlEventTouchUpInside];
                 break;
             default:
                 break;
         }
     }
     
-    const CGFloat toggleHeight = 32.0f;
-    const CGFloat toggleWidth  = 70.0f;
+    const CGFloat toggleHeight = 38.0f * TRANSFORM_SCALE;
+    const CGFloat toggleWidth  = 70.0f * TRANSFORM_SCALE;
     CGFloat originY = CGRectGetMidY(containerBounds) + CGRectGetHeight(containerBounds)/12.f;
     for (NSUInteger i = 0; i < 2; i++) {
         
         originY +=  (i* (toggleHeight + kPadding));
         
-        CGRect imageViewFrame = CGRectMake(CGRectGetMidX(containerBounds) - buttonWidth/2, originY, toggleHeight, toggleHeight);
+        CGRect imageViewFrame = CGRectMake(CGRectGetMidX(containerBounds) - buttonWidth/1.65f, originY, toggleHeight, toggleHeight);
         UIImageView *imageView = [[UIImageView alloc] initWithFrame:imageViewFrame];
         [container addSubview:imageView];
         
@@ -130,19 +136,19 @@
                                         toggleWidth,
                                         toggleHeight);
         HDSwitch *toggle = [[HDSwitch alloc] initWithFrame:toggleFrame
-                                                   onColor:[UIColor flatPeterRiverColor]
+                                                   onColor:[UIColor flatSTEmeraldColor]
                                                   offColor:[UIColor flatEmeraldColor]];
         [container addSubview:toggle];
         
         switch (i) {
             case 0:
-                titleLabel.text = @"Music";
+                titleLabel.text = NSLocalizedString(@"music", ni);
                 imageView.image = [UIImage imageNamed:@"MusicIcon"];
                 toggle.on = [[HDSettingsManager sharedManager] music];
                 [toggle addTarget:self action:@selector(_toggleMusic:) forControlEvents:UIControlEventValueChanged];
                 break;
             case 1:
-                titleLabel.text = @"Sound";
+                titleLabel.text = NSLocalizedString(@"sound", ni);
                 imageView.image = [UIImage imageNamed:@"SoundIcon"];
                 toggle.on = [[HDSettingsManager sharedManager] sound];
                 [toggle addTarget:self action:@selector(_toggleSound:) forControlEvents:UIControlEventValueChanged];
@@ -154,36 +160,63 @@
 }
 
 - (IBAction)_toggleSound:(HDSwitch *)sender {
-
-    [sender setSelected:sender.isOn];
     [[HDSettingsManager sharedManager] setSound:![[HDSettingsManager sharedManager] sound]];
-    [[HDSoundManager sharedManager] playSound:HDButtonSound];
 }
 
 - (IBAction)_toggleMusic:(HDSwitch *)sender {
-
     BOOL music = [[HDSettingsManager sharedManager] music];
     [[HDSettingsManager sharedManager] setMusic:!music];
     [[HDSoundManager sharedManager] setPlayLoop:!music];
-    [sender setSelected:sender.isOn];
 }
 
 - (void)_hideGameInterface {
-    [self.top    setTitle:@"Leaderboard"  forState:UIControlStateNormal];
-    [self.bottom setTitle:@"Achievements" forState:UIControlStateNormal];
-    [self.top    removeTarget:ADelegate action:@selector(restartCurrentLevel:)          forControlEvents:UIControlEventTouchUpInside];
-    [self.bottom removeTarget:ADelegate action:@selector(animateToLevelViewController:) forControlEvents:UIControlEventTouchUpInside];
-    [self.top    addTarget:ADelegate action:@selector(openLeaderboardController:)       forControlEvents:UIControlEventTouchUpInside];
-    [self.bottom addTarget:ADelegate action:@selector(openAcheivementsController:)      forControlEvents:UIControlEventTouchUpInside];
+    
+    [self.top setTitle:NSLocalizedString(@"leaderboard", nil)
+              forState:UIControlStateNormal];
+    
+    [self.bottom setTitle:NSLocalizedString(@"achievements", nil)
+                 forState:UIControlStateNormal];
+    
+    [self.top removeTarget:[HDAppDelegate sharedDelegate]
+                    action:@selector(restartCurrentLevel:)
+          forControlEvents:UIControlEventTouchUpInside];
+    
+    [self.bottom removeTarget:[HDAppDelegate sharedDelegate]
+                       action:@selector(animateToLevelViewController:)
+             forControlEvents:UIControlEventTouchUpInside];
+    
+    [self.top addTarget:[HDAppDelegate sharedDelegate]
+                 action:@selector(openLeaderboardController:)
+       forControlEvents:UIControlEventTouchUpInside];
+    
+    [self.bottom addTarget:[HDAppDelegate sharedDelegate]
+                    action:@selector(openAcheivementsController:)
+          forControlEvents:UIControlEventTouchUpInside];
 }
 
 - (void)_showGameInterface {
-    [self.top    setTitle:@"Restart" forState:UIControlStateNormal];
-    [self.bottom setTitle:@"Back To Map"     forState:UIControlStateNormal];
-    [self.top    removeTarget:ADelegate action:@selector(openLeaderboardController:)  forControlEvents:UIControlEventTouchUpInside];
-    [self.bottom removeTarget:ADelegate action:@selector(openAcheivementsController:) forControlEvents:UIControlEventTouchUpInside];
-    [self.top    addTarget:ADelegate action:@selector(restartCurrentLevel:)           forControlEvents:UIControlEventTouchUpInside];
-    [self.bottom addTarget:ADelegate action:@selector(animateToLevelViewController:)  forControlEvents:UIControlEventTouchUpInside];
+    
+    [self.top setTitle:NSLocalizedString(@"restart", nil)
+              forState:UIControlStateNormal];
+    
+    [self.bottom setTitle:NSLocalizedString(@"back", nil)
+                 forState:UIControlStateNormal];
+    
+    [self.top removeTarget:[HDAppDelegate sharedDelegate]
+                    action:@selector(openLeaderboardController:)
+          forControlEvents:UIControlEventTouchUpInside];
+    
+    [self.bottom removeTarget:[HDAppDelegate sharedDelegate]
+                       action:@selector(openAcheivementsController:)
+             forControlEvents:UIControlEventTouchUpInside];
+    
+    [self.top addTarget:[HDAppDelegate sharedDelegate]
+                 action:@selector(restartCurrentLevel:)
+       forControlEvents:UIControlEventTouchUpInside];
+    
+    [self.bottom addTarget:[HDAppDelegate sharedDelegate]
+                    action:@selector(animateToLevelViewController:)
+          forControlEvents:UIControlEventTouchUpInside];
 }
 
 @end

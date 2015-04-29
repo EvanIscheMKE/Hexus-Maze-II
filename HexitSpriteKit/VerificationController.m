@@ -101,8 +101,7 @@ BOOL checkReceiptSecurity(NSString *purchase_info_string, NSString *signature_st
     NSMutableDictionary *_transactionsReceiptStorageDictionary;
 }
 
-+ (VerificationController *)sharedInstance
-{
++ (VerificationController *)sharedInstance {
     static VerificationController *singleton = nil;
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
@@ -111,29 +110,24 @@ BOOL checkReceiptSecurity(NSString *purchase_info_string, NSString *signature_st
 	return singleton;
 }
 
-- (id)init
-{
+- (id)init {
 	self = [super init];
-	if (self != nil)
-    {
-        _transactionsReceiptStorageDictionary = [[NSMutableDictionary alloc] init];
-        _completionHandlers = [[NSMutableDictionary alloc] init];
+	if (self != nil) {
+        _transactionsReceiptStorageDictionary = [NSMutableDictionary dictionary];
+        _completionHandlers = [NSMutableDictionary dictionary];
 	}
 	return self;
 }
 
-#pragma mark
-#pragma mark Base 64 encoding
+#pragma mark - Base 64 encoding
 
-- (NSString *)encodeBase64:(const uint8_t *)input length:(NSInteger)length
-{
+- (NSString *)encodeBase64:(const uint8_t *)input length:(NSInteger)length {
     NSData * data = [NSData dataWithBytes:input length:length];
     return [data base64EncodedString];
 }
 
 
-- (NSString *)decodeBase64:(NSString *)input length:(NSInteger *)length
-{
+- (NSString *)decodeBase64:(NSString *)input length:(NSInteger *)length {
     NSData * data = [NSData dataFromBase64String:input];
     return [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
 }
@@ -143,13 +137,12 @@ char* base64_encode(const void* buf, size_t size) {
     return NewBase64Encode(buf, size, NO, &outputLength);
 }
 
-void * base64_decode(const char* s, size_t * data_len)
-{
+void * base64_decode(const char* s, size_t * data_len) {
     return NewBase64Decode(s, strlen(s), data_len);
 }
 
-- (NSDictionary *)dictionaryFromPlistData:(NSData *)data
-{
+- (NSDictionary *)dictionaryFromPlistData:(NSData *)data {
+    
     NSError *error = nil;
     NSDictionary *dictionaryParsed = [NSPropertyListSerialization propertyListWithData:data
                                                                                options:NSPropertyListImmutable
@@ -170,8 +163,8 @@ void * base64_decode(const char* s, size_t * data_len)
 }
 
 
-- (NSDictionary *)dictionaryFromJSONData:(NSData *)data
-{
+- (NSDictionary *)dictionaryFromJSONData:(NSData *)data {
+    
     NSError *error = nil;
     NSDictionary *dictionaryParsed = [NSJSONSerialization JSONObjectWithData:data
                                                                      options:0
@@ -191,16 +184,14 @@ void * base64_decode(const char* s, size_t * data_len)
     return dictionaryParsed;
 }
 
-
 #pragma mark Receipt Verification
 
 // This method should be called once a transaction gets to the SKPaymentTransactionStatePurchased or SKPaymentTransactionStateRestored state
 // Call it with the SKPaymentTransaction.transactionReceipt
-- (void)verifyPurchase:(SKPaymentTransaction *)transaction completionHandler:(VerifyCompletionHandler)completionHandler
-{    
+- (void)verifyPurchase:(SKPaymentTransaction *)transaction completionHandler:(VerifyCompletionHandler)completionHandler {
+    
     BOOL isOk = [self isTransactionAndItsReceiptValid:transaction];
-    if (!isOk)
-    {
+    if (!isOk) {
         // There was something wrong with the transaction we got back, so no need to call verifyReceipt.
         NSLog(@"Invalid transacion");
         completionHandler(FALSE);
@@ -238,14 +229,13 @@ void * base64_decode(const char* s, size_t * data_len)
     _completionHandlers[[NSValue valueWithNonretainedObject:conn]] = completionHandler;
     
     [conn start];
-    
     // The transation receipt has not been validated yet.  That is done from the NSURLConnection callback.
 }
     
 // Check the validity of the receipt.  If it checks out then also ensure the transaction is something
 // we haven't seen before and then decode and save the purchaseInfo from the receipt for later receipt validation.
-- (BOOL)isTransactionAndItsReceiptValid:(SKPaymentTransaction *)transaction
-{
+- (BOOL)isTransactionAndItsReceiptValid:(SKPaymentTransaction *)transaction {
+    
     if (!(transaction && transaction.transactionReceipt && [transaction.transactionReceipt length] > 0)){
         // Transaction is not valid.
         return NO;
@@ -269,8 +259,7 @@ void * base64_decode(const char* s, size_t * data_len)
     NSDate *purchaseDate = [dateFormat dateFromString:[purchaseDateString stringByReplacingOccurrencesOfString:@"Etc/" withString:@""]];
     
     
-    if (![self isTransactionIdUnique:transactionId])
-    {
+    if (![self isTransactionIdUnique:transactionId]) {
         // We've seen this transaction before.
         // Had [transactionsReceiptStorageDictionary objectForKey:transactionId]
         // Got purchaseInfoDict
@@ -280,14 +269,12 @@ void * base64_decode(const char* s, size_t * data_len)
     // Check the authenticity of the receipt response/signature etc.
     BOOL result = checkReceiptSecurity(transactionPurchaseInfo, signature, ((__bridge CFDateRef)(purchaseDate)));
     
-    if (!result)
-    {
+    if (!result) {
         return NO;
     }
     
     // Ensure the transaction itself is legit
-    if (![self doTransactionDetailsMatchPurchaseInfo:transaction withPurchaseInfo:purchaseInfoDict])
-    {
+    if (![self doTransactionDetailsMatchPurchaseInfo:transaction withPurchaseInfo:purchaseInfoDict]) {
         return NO;
     }
     
@@ -301,29 +288,22 @@ void * base64_decode(const char* s, size_t * data_len)
 }
  
 // Make sure the transaction details actually match the purchase info
-- (BOOL)doTransactionDetailsMatchPurchaseInfo:(SKPaymentTransaction *)transaction withPurchaseInfo:(NSDictionary *)purchaseInfoDict
-
-{
-    if (!transaction || !purchaseInfoDict)
-    {
+- (BOOL)doTransactionDetailsMatchPurchaseInfo:(SKPaymentTransaction *)transaction withPurchaseInfo:(NSDictionary *)purchaseInfoDict {
+    
+    if (!transaction || !purchaseInfoDict) {
         return NO;
     }
     
     int failCount = 0;
-    
-    if (![transaction.payment.productIdentifier isEqualToString:[purchaseInfoDict objectForKey:@"product-id"]])
-    {
-        
+    if (![transaction.payment.productIdentifier isEqualToString:[purchaseInfoDict objectForKey:@"product-id"]]) {
         failCount++;
     }
     
-    if (transaction.payment.quantity != [[purchaseInfoDict objectForKey:@"quantity"] intValue])
-    {
+    if (transaction.payment.quantity != [[purchaseInfoDict objectForKey:@"quantity"] intValue]) {
         failCount++;
     }
     
-    if (![transaction.transactionIdentifier isEqualToString:[purchaseInfoDict objectForKey:@"transaction-id"]])
-    {
+    if (![transaction.transactionIdentifier isEqualToString:[purchaseInfoDict objectForKey:@"transaction-id"]]) {
         failCount++;
     }
     
@@ -331,8 +311,7 @@ void * base64_decode(const char* s, size_t * data_len)
     // Optionally check the requestData.
     // Optionally check the dates.
     
-    if (failCount != 0)
-    {
+    if (failCount != 0) {
         return NO;
     }
     
@@ -340,32 +319,27 @@ void * base64_decode(const char* s, size_t * data_len)
     return YES;
 }
 
-
-
-- (BOOL)isTransactionIdUnique:(NSString *)transactionId
-{
+- (BOOL)isTransactionIdUnique:(NSString *)transactionId {
+    
     NSString *transactionDictionary = KNOWN_TRANSACTIONS_KEY;
     // Save the transactionId to the standardUserDefaults so we can check against that later
     NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
     [defaults synchronize];
     
-    if (![defaults objectForKey:transactionDictionary])
-    {
+    if (![defaults objectForKey:transactionDictionary]) {
         [defaults setObject:[[NSMutableDictionary alloc] init] forKey:transactionDictionary];
         [defaults synchronize];
     }
     
-    if (![[defaults objectForKey:transactionDictionary] objectForKey:transactionId])
-    {
+    if (![[defaults objectForKey:transactionDictionary] objectForKey:transactionId]) {
         return YES;
     }
     // The transaction already exists in the defaults.
     return NO;
 }
 
-
-- (void)saveTransactionId:(NSString *)transactionId
-{
+- (void)saveTransactionId:(NSString *)transactionId {
+    
     // Save the transactionId to the standardUserDefaults so we can check against that later
     // If dictionary exists already then retrieve it and add new transactionID
     // Regardless save transactionID to dictionary which gets saved to NSUserDefaults
@@ -373,20 +347,17 @@ void * base64_decode(const char* s, size_t * data_len)
     NSString *transactionDictionary = KNOWN_TRANSACTIONS_KEY;
     NSMutableDictionary *dictionary = [NSMutableDictionary dictionaryWithDictionary:
                                        [defaults objectForKey:transactionDictionary]];
-    if (!dictionary)
-    {
+    if (!dictionary) {
         dictionary = [[NSMutableDictionary alloc] initWithObjectsAndKeys:[NSNumber numberWithInt:1], transactionId, nil];
     } else {
         [dictionary setObject:[NSNumber numberWithInt:1] forKey:transactionId];
     }
     [defaults setObject:dictionary forKey:transactionDictionary];
     [defaults synchronize];
-    
 }
 
-
-- (BOOL)doesTransactionInfoMatchReceipt:(NSString*) receiptString
-{
+- (BOOL)doesTransactionInfoMatchReceipt:(NSString *)receiptString {
+    
     // Convert the responseString into a dictionary and pull out the receipt data.
     NSDictionary *verifiedReceiptDictionary = [self dictionaryFromJSONData:[receiptString dataUsingEncoding:NSUTF8StringEncoding]];
     
@@ -410,47 +381,39 @@ void * base64_decode(const char* s, size_t * data_len)
     // Get the transaction's receipt data from the transactionsReceiptStorageDictionary
     NSDictionary *purchaseInfoFromTransaction = [_transactionsReceiptStorageDictionary objectForKey:transactionIdFromVerifiedReceipt];
     
-    if (!purchaseInfoFromTransaction)
-    {
+    if (!purchaseInfoFromTransaction) {
         // We didn't find a receipt for this transaction.
         return NO;
     }
-    
     
     // NOTE: Instead of counting errors you could just return early.
     int failCount = 0;
     
     // Verify all the receipt specifics to ensure everything matches up as expected
     if (![[verifiedReceiptReceiptDictionary objectForKey:@"bid"]
-          isEqualToString:[purchaseInfoFromTransaction objectForKey:@"bid"]])
-    {
+          isEqualToString:[purchaseInfoFromTransaction objectForKey:@"bid"]]) {
         failCount++;
     }
     
     if (![[verifiedReceiptReceiptDictionary objectForKey:@"product_id"]
-          isEqualToString:[purchaseInfoFromTransaction objectForKey:@"product-id"]])
-    {
+          isEqualToString:[purchaseInfoFromTransaction objectForKey:@"product-id"]]) {
         failCount++;
     }
     
     if (![[verifiedReceiptReceiptDictionary objectForKey:@"quantity"]
-          isEqualToString:[purchaseInfoFromTransaction objectForKey:@"quantity"]])
-    {
+          isEqualToString:[purchaseInfoFromTransaction objectForKey:@"quantity"]]) {
         failCount++;
     }
     
     if (![[verifiedReceiptReceiptDictionary objectForKey:@"item_id"]
-          isEqualToString:[purchaseInfoFromTransaction objectForKey:@"item-id"]])
-    {
+          isEqualToString:[purchaseInfoFromTransaction objectForKey:@"item-id"]]) {
         failCount++;
     }
-    
     
     // iOS 6 (or later)
     NSString *localIdentifier                   = [[[UIDevice currentDevice] identifierForVendor] UUIDString];
     NSString *purchaseInfoUniqueVendorId        = [purchaseInfoFromTransaction objectForKey:@"unique-vendor-identifier"];
     NSString *verifiedReceiptVendorIdentifier   = [verifiedReceiptReceiptDictionary objectForKey:@"unique_vendor_identifier"];
-    
     
     if(verifiedReceiptVendorIdentifier) {
         if (![purchaseInfoUniqueVendorId isEqualToString:verifiedReceiptVendorIdentifier]
@@ -460,7 +423,6 @@ void * base64_decode(const char* s, size_t * data_len)
             failCount++;
         }
     }
-    
     
     // Do addition time checks for the transaction and receipt.
     if(failCount != 0) {
@@ -483,8 +445,8 @@ void * base64_decode(const char* s, size_t * data_len)
     
 }
 
-- (void)connection:(NSURLConnection *)connection didReceiveData:(NSData *)data
-{
+- (void)connection:(NSURLConnection *)connection didReceiveData:(NSData *)data {
+    
     NSString *responseString = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
     
     // So we got some receipt data. Now does it all check out?
@@ -492,12 +454,10 @@ void * base64_decode(const char* s, size_t * data_len)
 
     VerifyCompletionHandler completionHandler = _completionHandlers[[NSValue valueWithNonretainedObject:connection]];
     [_completionHandlers removeObjectForKey:[NSValue valueWithNonretainedObject:connection]];
-    if (isOk)
-    {
+    if (isOk) {
         //Validation suceeded. Unlock content here.
         NSLog(@"Validation successful");
         completionHandler(TRUE);
-
     } else {
         NSLog(@"Validation failed");
         completionHandler(FALSE);
@@ -505,25 +465,21 @@ void * base64_decode(const char* s, size_t * data_len)
 }
 
 
-- (void)connection:(NSURLConnection *)connection willSendRequestForAuthenticationChallenge:(NSURLAuthenticationChallenge *)challenge
-{
-    if ([[[challenge protectionSpace] authenticationMethod] isEqualToString:NSURLAuthenticationMethodServerTrust])
-    {
+- (void)connection:(NSURLConnection *)connection willSendRequestForAuthenticationChallenge:(NSURLAuthenticationChallenge *)challenge {
+    
+    if ([[[challenge protectionSpace] authenticationMethod] isEqualToString:NSURLAuthenticationMethodServerTrust]) {
         SecTrustRef trust = [[challenge protectionSpace] serverTrust];
         NSError *error = nil;
         BOOL didUseCredential = NO;
         BOOL isTrusted = [self validateTrust:trust error:&error];
-        if (isTrusted)
-        {
+        if (isTrusted) {
             NSURLCredential *trust_credential = [NSURLCredential credentialForTrust:trust];
-            if (trust_credential)
-            {
+            if (trust_credential) {
                 [[challenge sender] useCredential:trust_credential forAuthenticationChallenge:challenge];
                 didUseCredential = YES;
             }
         }
-        if (!didUseCredential)
-        {
+        if (!didUseCredential) {
             [[challenge sender] cancelAuthenticationChallenge:challenge];
         }
     } else {
@@ -532,25 +488,21 @@ void * base64_decode(const char* s, size_t * data_len)
 }
 
 // NOTE: These are needed for 4.x (as willSendRequestForAuthenticationChallenge: is not supported)
-- (BOOL)connection:(NSURLConnection *)connection canAuthenticateAgainstProtectionSpace:(NSURLProtectionSpace *)protectionSpace
-{
+- (BOOL)connection:(NSURLConnection *)connection canAuthenticateAgainstProtectionSpace:(NSURLProtectionSpace *)protectionSpace {
     return [[protectionSpace authenticationMethod] isEqualToString:NSURLAuthenticationMethodServerTrust];
 }
 
 
-- (void)connection:(NSURLConnection *)connection didReceiveAuthenticationChallenge:(NSURLAuthenticationChallenge *)challenge
-{
-    if ([[[challenge protectionSpace] authenticationMethod] isEqualToString:NSURLAuthenticationMethodServerTrust])
-    {
+- (void)connection:(NSURLConnection *)connection didReceiveAuthenticationChallenge:(NSURLAuthenticationChallenge *)challenge {
+    
+    if ([[[challenge protectionSpace] authenticationMethod] isEqualToString:NSURLAuthenticationMethodServerTrust]) {
         SecTrustRef trust = [[challenge protectionSpace] serverTrust];
         NSError *error = nil;
         BOOL didUseCredential = NO;
         BOOL isTrusted = [self validateTrust:trust error:&error];
-        if (isTrusted)
-        {
+        if (isTrusted) {
             NSURLCredential *credential = [NSURLCredential credentialForTrust:trust];
-            if (credential)
-            {
+            if (credential) {
                 [[challenge sender] useCredential:credential forAuthenticationChallenge:challenge];
                 didUseCredential = YES;
             }
@@ -567,8 +519,7 @@ void * base64_decode(const char* s, size_t * data_len)
 #pragma mark
 #pragma mark NSURLConnection - Trust validation
 
-- (BOOL)validateTrust:(SecTrustRef)trust error:(NSError **)error
-{
+- (BOOL)validateTrust:(SecTrustRef)trust error:(NSError **)error {
     
     // Include some Security framework SPIs
     extern CFStringRef kSecTrustInfoExtendedValidationKey;
@@ -576,17 +527,14 @@ void * base64_decode(const char* s, size_t * data_len)
     
     BOOL trusted = NO;
     SecTrustResultType trust_result;
-    if ((noErr == SecTrustEvaluate(trust, &trust_result)) && (trust_result == kSecTrustResultUnspecified))
-    {
+    if ((noErr == SecTrustEvaluate(trust, &trust_result)) && (trust_result == kSecTrustResultUnspecified)) {
         NSDictionary *trust_info = (__bridge_transfer NSDictionary *)SecTrustCopyInfo(trust);
         id hasEV = [trust_info objectForKey:(__bridge NSString *)kSecTrustInfoExtendedValidationKey];
         trusted =  [hasEV isKindOfClass:[NSValue class]] && [hasEV boolValue];
     }
     
-    if (trust)
-    {
-        if (!trusted && error)
-        {
+    if (trust) {
+        if (!trusted && error) {
             *error = [NSError errorWithDomain:@"kSecTrustError" code:(NSInteger)trust_result userInfo:nil];
         }
         return trusted;
@@ -677,8 +625,7 @@ BOOL checkReceiptSecurity(NSString *purchase_info_string, NSString *signature_st
     require_noerr(SecTrustCreateWithCertificates(leaf, policy, &trust), outLabel);
     require_noerr(SecTrustSetAnchorCertificates(trust, (__bridge CFArrayRef) anchors), outLabel);
     
-    if (purchaseDate)
-    {
+    if (purchaseDate) {
         require_noerr(SecTrustSetVerifyDate(trust, purchaseDate), outLabel);
     }
     
@@ -721,7 +668,6 @@ outLabel:
     if (intermediate) CFRelease(intermediate);
     if (trust) CFRelease(trust);
     if (policy) CFRelease(policy);
-    
     return valid;
 }
 

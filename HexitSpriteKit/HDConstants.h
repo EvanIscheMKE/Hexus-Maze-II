@@ -30,6 +30,7 @@ extern NSString * const HDVibrationNotification;
 extern NSString * const HDRestartNotificaiton;
 
 // NSUserDefault Keys
+extern NSString * const HDLastCompletedLevelKey;
 extern NSString * const HDDefaultLevelKey;
 extern NSString * const HDGuideKey;
 extern NSString * const HDFirstRunKey;
@@ -38,11 +39,14 @@ extern NSString * const HDSoundkey;
 extern NSString * const HDVibrationKey;
 
 //
+extern NSString * const HDGameOverKey;
 extern NSString * const HDCompletionZing;
 extern NSString * const HDHexGridKey;
 extern NSString * const HDSoundLoopKey;
 extern NSString * const HDButtonSound;
 extern NSString * const HDSwipeSound;
+
+#define IS_IPAD UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad
 
 #define IPHONE6WIDTH 375.0f
 #define TRANSFORM_SCALE [UIScreen mainScreen].bounds.size.width / IPHONE6WIDTH
@@ -53,9 +57,9 @@ extern NSString * const HDSwipeSound;
 #define sound3 @"win.mp3"
 
 //GillSans
-#define GILLSANS(x)       [UIFont fontWithName:@"GillSans" size:x]
-#define GILLSANS_LIGHT(x) [UIFont fontWithName:@"GillSans-Light" size:x]
+#define GILLSANS(x)       [UIFont fontWithName:@"TrebuchetMS" size:x]
+#define GILLSANS_LIGHT(x) [UIFont fontWithName:@"TrebuchetMS" size:x]
 
 #define LEVEL_URL(x) [NSString stringWithFormat:@"Grid-%ld",x]
 
-#define SOUNDS_TO_PRELOAD @[HDButtonSound, HDSwipeSound, sound1, sound2, sound3, sound0, HDCompletionZing]
+#define SOUNDS_TO_PRELOAD @[HDSwipeSound, sound1, sound2, sound3, sound0, HDCompletionZing, HDGameOverKey]

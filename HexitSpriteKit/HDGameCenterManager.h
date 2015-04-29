@@ -14,6 +14,8 @@
 + (HDGameCenterManager *)sharedManager;
 - (void)authenticateGameCenter;
 - (void)reportLevelCompletion:(int64_t)level;
+- (void)reportTime:(NSTimeInterval)timeInterval
+       leaderboard:(NSString *)identifier;
 - (void)submitAchievementWithIdenifier:(NSString *)identifier
                       completionBanner:(BOOL)banner
                        percentComplete:(NSUInteger)percentCompleted;

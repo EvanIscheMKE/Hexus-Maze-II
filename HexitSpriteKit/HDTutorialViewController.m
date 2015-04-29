@@ -8,15 +8,15 @@
 
 @import SpriteKit;
 
+#import "HDHelper.h"
 #import "HDTutorialScene.h"
 #import "HDGridManager.h"
-#import "UIColor+FlatColors.h"
+#import "UIColor+ColorAdditions.h"
 #import "HDTutorialViewController.h"
 #import "HDSoundManager.h"
 #import "HDHintsView.h"
 
 @interface HDTutorialViewController ()<HDSceneDelegate>
-@property (nonatomic, assign) BOOL isAlertHidden;
 @property (nonatomic, strong) UILabel *descriptorLabel;
 @property (nonatomic, strong) HDHintsView *infoView;
 @property (nonatomic, strong) HDGridManager *gridManager;
@@ -25,13 +25,6 @@
 
 @implementation HDTutorialViewController {
     __weak SKView *_container;
-}
-
-- (instancetype)init {
-    if (self = [super init]) {
-        self.isAlertHidden = YES;
-    }
-    return self;
 }
 
 - (void)loadView {
@@ -43,7 +36,7 @@
     
     [super viewDidLoad];
     self.gridManager = [[HDGridManager alloc] initWithLevelIndex:1000];
-    _container.backgroundColor = [SKColor flatWetAsphaltColor];
+    _container.backgroundColor = [SKColor flatMidnightBlueColor];
 }
 
 - (void)viewWillLayoutSubviews {
@@ -57,92 +50,7 @@
         self.scene.partyAtTheEnd = NO;
         [_container presentScene:self.scene];
         
-        [self.scene layoutNodesWithGrid:[self.gridManager hexagons] completion:^{
-            [self _presentTitle:@"First things first"
-                    description:@"Start by selecting a white tile"
-                         images:@[[UIImage imageNamed:@"Default-Start"]]];
-        }];
-    }
-}
-
-- (void)_presentTitle:(NSString *)title description:(NSString *)description images:(NSArray *)images {
-    
-    if (!_infoView) {
-        
-        __weak __typeof__(self) weakSelf = self;
-        CGRect infoFrame = CGRectMake(0.0f,
-                                      CGRectGetHeight(self.view.bounds),
-                                      CGRectGetWidth(self.view.bounds),
-                                      CGRectGetHeight(self.view.bounds)/5);
-        _infoView = [[HDHintsView alloc] initWithFrame:infoFrame
-                                                 title:title
-                                           description:description
-                                                images:images];
-        [weakSelf.view insertSubview:_infoView
-                             atIndex:0];
-        [weakSelf toggleAlert];
-        [weakSelf performSelector:@selector(toggleAlert) withObject:nil afterDelay:2.5f];
-    }
-}
-
-- (void)toggleAlert {
-    self.isAlertHidden = !self.isAlertHidden;
-}
-
-- (void)setIsAlertHidden:(BOOL)isAlertHidden {
-    
-    if (_isAlertHidden == isAlertHidden) {
-        return;
-    }
-  
-    _isAlertHidden = isAlertHidden;
-    if (_isAlertHidden) {
-        [self hideAlertAnimated:YES completion:nil];
-    } else {
-        [self showAlertAnimated:YES];
-    }
-}
-
-- (void)showAlertAnimated:(BOOL)animated {
-    
-    dispatch_block_t animate = ^{
-        CGRect infoFrame = self.infoView.frame;
-        infoFrame.origin.y = CGRectGetHeight(self.view.bounds) - CGRectGetHeight(self.infoView.bounds);
-        self.infoView.frame = infoFrame;
-    };
-    
-    if (animated) {
-        [UIView animateWithDuration:.300f animations:animate];
-    } else {
-        animate();
-    }
-}
-
-- (void)hideAlertAnimated:(BOOL)animated completion:(dispatch_block_t)completion {
-    
-    dispatch_block_t animate = ^{
-        CGRect infoFrame = self.infoView.frame;
-        infoFrame.origin.y = CGRectGetHeight(self.view.bounds);
-        self.infoView.frame = infoFrame;
-    };
-    
-    if (animated) {
-        [UIView animateWithDuration:.300f animations:animate completion:^(BOOL finished) {
-            [self.infoView removeFromSuperview];
-             self.infoView = nil;
-            
-            if (completion) {
-                completion();
-            }
-        }];
-    } else {
-        animate();
-        [self.infoView removeFromSuperview];
-        self.infoView = nil;
-        
-        if (completion) {
-            completion();
-        }
+        [self.scene layoutNodesWithGrid:[self.gridManager hexagons] completion:nil];
     }
 }
 
@@ -155,30 +63,30 @@
         
         [scene performExitAnimationsWithCompletion:^{
             
-            self.descriptorLabel = [self _descriptorLabelWithText:@"Beautiful!"];
+            self.descriptorLabel = [self _descriptionLabelWithText:NSLocalizedString(@"beautiful", nil)];
             [self.view addSubview:self.descriptorLabel];
             [UIView animateWithDuration:.3f animations:^{
                 self.descriptorLabel.alpha = 1;
             } completion:^(BOOL finished) {
-                self.scene.space.particleBirthRate = 0;
                 [UIView animateWithDuration:.3f
-                                      delay:3.0f
+                                      delay:1.5f
                                     options:0
                                  animations:^{
                                      self.descriptorLabel.alpha = 0;
                                  } completion:^(BOOL finished) {
-                                     self.descriptorLabel = [self _descriptorLabelWithText:@"Welcome."];
+                                     self.descriptorLabel = [self _descriptionLabelWithText:NSLocalizedString(@"welcome", nil)];
                                      [self.view addSubview:self.descriptorLabel];
                                      [UIView animateWithDuration:.3f animations:^{
                                          self.descriptorLabel.alpha = 1;
                                      } completion:^(BOOL finished) {
                                          [UIView animateWithDuration:.3f
-                                                               delay:3.0f
+                                                               delay:1.5f
                                                              options:0
                                                           animations:^{
                                                               self.descriptorLabel.alpha = 0;
                                                           } completion:^(BOOL finished) {
-                                                              [self.presentingViewController dismissViewControllerAnimated:YES completion:nil];
+                                                              [self.presentingViewController dismissViewControllerAnimated:NO
+                                                                                                                completion:nil];
                                                           }];
                                      }];
                                  }];
@@ -186,13 +94,14 @@
         }];
         
     } else {
+        
         [scene performExitAnimationsWithCompletion:^{
             
             [scene nextLevel];
             scene.partyAtTheEnd = YES;
-            
-            self.descriptorLabel = [self _descriptorLabelWithText:@"Amazing!"];
+            self.descriptorLabel = [self _descriptionLabelWithText:NSLocalizedString(@"amazing!", nil)];
             [self.view addSubview:self.descriptorLabel];
+            
             [UIView animateWithDuration:.3f animations:^{
                 self.descriptorLabel.alpha = 1;
             } completion:^(BOOL finished) {
@@ -203,38 +112,19 @@
                                      self.descriptorLabel.alpha = 0;
                                  } completion:^(BOOL finished) {
                                      self.gridManager = [[HDGridManager alloc] initWithLevelIndex:1001];
-                                     [self.scene layoutNodesWithGrid:[self.gridManager hexagons] completion:^{
-                                         [self _presentTitle:@"One More Time"
-                                                 description:@"Let's make sure you've got a hang of this"
-                                                      images:@[[UIImage imageNamed:@"Default-OneTap"]]];
-                                     }];
+                                     [self.scene layoutNodesWithGrid:[self.gridManager hexagons] completion:nil];
                                  }];
             }];
         }];
     }
 }
 
-- (void)startTileWasSelectedInScene:(HDScene *)scene {
+- (UILabel *)_descriptionLabelWithText:(NSString *)text {
     
-    static NSUInteger count = 0;
-    if (count == 0) {
-        [NSObject cancelPreviousPerformRequestsWithTarget:self];
-        [self hideAlertAnimated:YES completion:^{
-            [self _presentTitle:@"Next"
-                    description:@"Move to a tile that is touching the previous tile"
-                         images:@[[UIImage imageNamed:@"Default-OneTap"]]];
-        }];
-    } else if (count == 1) {
-        
-    }
-    
-    count++;
-}
-
-- (UILabel *)_descriptorLabelWithText:(NSString *)text {
+    const CGFloat scale = IS_IPAD ? 12.0f : 10.0f;
     
     UILabel *label = [[UILabel alloc] init];
-    label.font = GILLSANS_LIGHT(42.0f);
+    label.font = GILLSANS_LIGHT(CGRectGetWidth(self.view.bounds)/ scale);
     label.textAlignment = NSTextAlignmentCenter;
     label.textColor = [UIColor whiteColor];
     label.numberOfLines = 1;

@@ -1,12 +1,27 @@
+"tap"      = "TAP";
+"share"    = "SHARE";
+"leaderboard"   = "LEADERBOARD";
+"achievements" = "ACHIEVEMENTS";
+"removeAds" = "REMOVE ADS";
+"Restore"   = "RESTORE";
+"music"     = "MUSIC";
+"sound"     = "SOUND";
+"next"      = "NEXT";
+"restart"   = "RESTART";
+"rate"      = "RATE";
+"amazing!"  = "AMAZING!";
+"amazing"   = "AMAZING";
+"back"      = "BACK TO MAP";
+"welcome"   = "WELCOME.";
+"beautiful" = "BEAUTIFUL!";
+"ohNo"      = "OH NO!";
+"nextTime"  = "BETTER LUCK NEXT TIME!";
+"tips"      = "TIPS";
+"tip1"      = "WATCH OUT FOR MINES!";
+"tip2"      = "JUST TAP IT TWICE!";
+"tip3"      = "SEARCH FOR THE UNLOCKED HEX FIRST!";
+"tip4"      = "JUST TAP IT THREE TIMES!";
+"tip5"      = "ALWAYS END ON THE RED HEX!";
+"tip6"      = "YOU'VE GOT THIS!";
+"tip7"      = "THERE'S ONE MORE FOR A REASON";
 
-
-"continue" = "Continue";
-"begin"    = "Begin Game";
-
-"tutorial1" = "Begin the puzzle by selecting a white tile. You'll always begin on a white tile.";
-"tutorial2" = "Continue to an active tile that is touching the previous tile.";
-"tutorial3" = "Continue through the maze until it's completed!";
-
-"sign"  = "New Levels \n Coming Soon..";
-"tap"   = "TAP";
-"share" = "share";

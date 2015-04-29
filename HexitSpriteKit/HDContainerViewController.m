@@ -9,7 +9,7 @@
 #import "HDContainerViewController.h"
 #import "HDSoundManager.h"
 #import "HDGameViewController.h"
-#import "UIColor+FlatColors.h"
+#import "UIColor+ColorAdditions.h"
 #import "HDHexagon.h"
 #import "HDHelper.h"
 #import "HDConstants.h"
@@ -31,6 +31,7 @@
 @property (nonatomic, strong) UIViewController *frontViewController;
 @property (nonatomic, strong) UIViewController *rearViewController;
 @property (nonatomic, setter=setExpanded:, assign) BOOL isExpanded;
+@property (nonatomic, copy) dispatch_block_t completion;
 @end
 
 @implementation HDContainerViewController {
@@ -55,7 +56,7 @@
     
     [super viewDidLoad];
     
-    self.view.backgroundColor = [UIColor flatWetAsphaltColor];
+    //self.view.backgroundColor = [UIColor flatSTDarkBlueColor];
     
     self.leftScreenEdgeGestureRecognizer = [[UIScreenEdgePanGestureRecognizer alloc] initWithTarget:self action:@selector(handleScreenEdgePan:)];
     self.leftScreenEdgeGestureRecognizer.edges = UIRectEdgeLeft;
@@ -136,11 +137,10 @@
 - (void)toggleMenuViewControllerWithCompletion:(dispatch_block_t)completion {
     
     [self toggleMenuViewController];
-    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(.3f * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-        if (completion) {
-            completion();
-        }
-    });
+    
+    if (completion) {
+        self.completion = completion;
+    }
 }
 
 - (void)toggleMenuViewController {
@@ -159,7 +159,14 @@
     if (!animated) {
         closeAnimation();
     } else {
-        [UIView animateWithDuration:.200f animations:closeAnimation];
+        [UIView animateWithDuration:.200f
+                         animations:closeAnimation
+                         completion:^(BOOL finished) {
+                             if (self.completion) {
+                                 self.completion();
+                                 self.completion = nil;
+                             }
+                         }];
     }
 }
 
@@ -174,9 +181,14 @@
     if (!animated) {
         expandAnimation();
     } else {
-        [UIView animateWithDuration:.200f animations:expandAnimation completion:^(BOOL finished) {
-            
-        }];
+        [UIView animateWithDuration:.200f
+                         animations:expandAnimation
+                         completion:^(BOOL finished) {
+                             if (self.completion) {
+                                 self.completion();
+                                 self.completion = nil;
+                             }
+                         }];
     }
 }
 

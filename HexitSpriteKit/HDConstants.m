@@ -17,6 +17,7 @@ NSString * const HDHexGridKey = @"grid";
 NSString * const HDHexZoomKey = @"zoom";
 
 // UserDefault Keys
+NSString * const HDLastCompletedLevelKey = @"HDLastLevelCompletedKey";
 NSString * const HDDefaultLevelKey   = @"defaultLevels";
 NSString * const HDFirstRunKey       = @"firstRunKey";
 NSString * const HDRemainingLivesKey = @"livesKey";
@@ -26,7 +27,8 @@ NSString * const HDSoundkey          = @"soundKey";
 NSString * const HDVibrationKey      = @"vibrationKey";
 
 // Sound Keys
+NSString * const HDGameOverKey    = @"GameOver.wav";
 NSString * const HDCompletionZing = @"win.mp3";
-NSString * const HDSoundLoopKey = @"Mellowtron.mp3";
-NSString * const HDButtonSound = @"menuClicked.wav";
-NSString * const HDSwipeSound  = @"Swooshed.mp3";
+NSString * const HDSoundLoopKey   = @"Mellowtron.mp3";
+NSString * const HDButtonSound    = @"menuClicked.wav";
+NSString * const HDSwipeSound     = @"Swooshed.mp3";

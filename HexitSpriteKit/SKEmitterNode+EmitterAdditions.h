@@ -9,6 +9,5 @@
 #import <SpriteKit/SpriteKit.h>
 
 @interface SKEmitterNode (EmitterAdditions)
-+ (NSArray *)horizontalEmitterColor:(SKColor *)color;
-+ (NSArray *)verticalEmitterColor:(SKColor *)color;
+
 @end

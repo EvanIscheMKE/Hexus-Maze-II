@@ -79,7 +79,6 @@
 
 - (void)insertNode:(_HDHexaNode *)node atIndex:(NSUInteger)index
 {
-
     [_nodes insertObject:node atIndex:index];
 }
 
@@ -143,10 +142,10 @@
                 NSInteger positionModifier = [self rollDice] ? 1 : -1;
                 NSUInteger rollOfDice = [self rollDice];
                 if (rollOfDice == 0) {
-                    //Add to row
+                    //Add to row.
                     newNode.indexPath = [NSIndexPath indexPathForRow:newNode.indexPath.row + positionModifier inSection:newNode.indexPath.section];
                 } else {
-                    //Add to column
+                    //Add to column.
                     newNode.indexPath = [NSIndexPath indexPathForRow:newNode.indexPath.row inSection:newNode.indexPath.section + positionModifier];
                 }
                 if ([_HDHexaNode _isNodeValid:newNode withinMap:nodeMap]) {
