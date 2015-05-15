@@ -6,7 +6,8 @@
 //  Copyright (c) 2014 Evan William Ische. All rights reserved.
 //
 
-#import <UIKit/UIKit.h>
+@import SpriteKit;
+@import UIKit;
 
 @interface HDGridViewController : UIViewController
 - (void)performExitAnimationWithCompletion:(dispatch_block_t)completion;

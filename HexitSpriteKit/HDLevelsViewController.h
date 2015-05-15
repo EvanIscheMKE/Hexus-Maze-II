@@ -23,7 +23,7 @@
 @property (nonatomic, assign) NSRange levelRange;
 @property (nonatomic, assign) NSUInteger columns;
 @property (nonatomic, assign) NSUInteger rows;
-- (void)updateLevelsForiAPPurchase;
+- (void)updateLevelsForIAP;
 @end
 
 @protocol HDLevelsViewControllerDelegate <NSObject>

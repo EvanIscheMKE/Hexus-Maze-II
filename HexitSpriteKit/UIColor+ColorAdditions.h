@@ -16,11 +16,13 @@
 + (UIColor *)flatSTBackgroundColor;
 + (UIColor *)flatSTAccentColor;
 + (UIColor *)flatSTEmeraldColor;
++ (UIColor *)flatLCOrangeColor;
 + (UIColor *)flatSTDarkBlueColor;
 + (UIColor *)flatSTDarkNavyColor;
 + (UIColor *)flatSTRedColor;
 + (UIColor *)flatSTWhiteColor;
 + (UIColor *)flatSTTanColor;
++ (UIColor *)flatLCTanColor;
 + (UIColor *)flatSTYellowColor;
 + (UIColor *)flatSTLightBlueColor;
 

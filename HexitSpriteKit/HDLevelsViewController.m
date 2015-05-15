@@ -8,7 +8,7 @@
 
 #import "HDLevelsViewController.h"
 #import "HDMapManager.h"
-#import "HDHexagonButton.h"
+#import "HDHexaButton.h"
 #import "HDHelper.h"
 #import "UIColor+ColorAdditions.h"
 #import "HDLevel.h"
@@ -34,19 +34,24 @@ static const CGFloat kTileHeightInsetMultiplier = .855f;
     [CATransaction begin];
     [CATransaction setCompletionBlock:completion];
     
+    NSTimeInterval delay = 0.0f;
     for (int row = 0; row < 7; row++) {
-        for (HDHexagonButton *hexagon in self.containerView.subviews) {
+        for (HDHexaButton *hexagon in self.containerView.subviews) {
             if (row == hexagon.row) {
                 
-                [hexagon performSelector:@selector(setHidden:) withObject:0 afterDelay:row * .1f];
+                [hexagon performSelector:@selector(setHidden:) withObject:0 afterDelay:delay];
+                
+                CGFloat hexaScale = hexagon.transform.a;
                 CAKeyframeAnimation *scale = [CAKeyframeAnimation animationWithKeyPath:@"transform.scale"];
-                scale.values    = @[@0.0f, @1.1f, @1.0f];
-                scale.duration  = .3f;
-                scale.beginTime = CACurrentMediaTime() + row * .1f;
+                scale.duration = .3f;
+                scale.values = @[@0.0f, @(hexaScale + .1f), @(hexaScale)];
+                scale.keyTimes = @[@0.0f, @.55f, @1.0f];
+                scale.beginTime = CACurrentMediaTime() + delay;
                 [hexagon.layer addAnimation:scale forKey:scale.keyPath];
                 
             }
         }
+        delay += .08f;
     }
     [CATransaction commit];
 }
@@ -56,19 +61,20 @@ static const CGFloat kTileHeightInsetMultiplier = .855f;
     [CATransaction begin];
     [CATransaction setCompletionBlock:completion];
     
-    for (HDHexagonButton *hexa in self.containerView.subviews) {
+    for (HDHexaButton *hexagon in self.containerView.subviews) {
         
         dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(.3 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-            hexa.hidden = YES;
+            hexagon.hidden = YES;
         });
         
+        CGFloat hexaScale = hexagon.transform.a;
         CABasicAnimation *scale = [CABasicAnimation animationWithKeyPath:@"transform.scale"];
-        scale.fromValue = @1;
+        scale.fromValue = @(hexaScale);
         scale.toValue   = @0;
         scale.duration  = .3f;
         scale.removedOnCompletion = NO;
         scale.fillMode = kCAFillModeForwards;
-        [hexa.layer addAnimation:scale forKey:scale.keyPath];
+        [hexagon.layer addAnimation:scale forKey:scale.keyPath];
         
     }
     [CATransaction commit];
@@ -97,12 +103,13 @@ static const CGFloat kTileHeightInsetMultiplier = .855f;
     self.view = [HDLevelsView new];
     _levelsView = (HDLevelsView *)self.view;
     
-    CGRect containerFrame =  CGRectMake(0.0f,
-                                        0.0f,
-                                        self.tileSize * (self.columns + 1),
-                                        (self.tileSize + kPadding) * kTileHeightInsetMultiplier * self.rows);
+    CGRect containerFrame = CGRectMake(0.0f,
+                                       0.0f,
+                                       self.tileSize * (self.columns + 1),
+                                      (self.tileSize + kPadding) * kTileHeightInsetMultiplier * self.rows);
     
     _containerView = [[HDLevelsContainerView alloc] initWithFrame:containerFrame];
+
     [_levelsView addSubview:_containerView];
 }
 
@@ -115,15 +122,16 @@ static const CGFloat kTileHeightInsetMultiplier = .855f;
         for (int column = 0; column < self.columns; column++) {
             
             HDLevel *level = [[HDMapManager sharedManager] levelAtIndex:tagIndex - 1];
+            
             CGRect bounds = CGRectMake(0.0f, 0.0f, self.tileSize + kPadding, self.tileSize + kPadding);
-            HDHexagonButton *hexagon = [[HDHexagonButton alloc] initWithFrame:bounds];
-            [hexagon addTarget:self action:@selector(_beginGame:) forControlEvents:UIControlEventTouchUpInside];
-            hexagon.levelState  = level.state;
+            HDHexaButton *hexagon = [[HDHexaButton alloc] initWithLevelState:level.state];
+            hexagon.transform = IS_IPAD ? CGAffineTransformIdentity : CGAffineTransformMakeScale(TRANSFORM_SCALE_X, TRANSFORM_SCALE_X);
+            hexagon.frame  = bounds;
             hexagon.row    = row;
             hexagon.hidden = YES;
-            hexagon.index  = tagIndex;
             hexagon.tag    = tagIndex;
             hexagon.center = [self _pointForColumn:column row:row];
+            [hexagon addTarget:self action:@selector(_beginGame:) forControlEvents:UIControlEventTouchUpInside];
             [_containerView addSubview:hexagon];
             
             tagIndex++;
@@ -132,31 +140,29 @@ static const CGFloat kTileHeightInsetMultiplier = .855f;
 }
 
 - (void)viewWillAppear:(BOOL)animated {
-    [self updateLevelsForiAPPurchase];
+    [self updateLevelsForIAP];
     [super viewWillAppear:animated];
     _containerView.center = CGPointMake(CGRectGetMidX(_levelsView.bounds), CGRectGetMidY(_levelsView.bounds));
 }
 
-- (void)updateLevelsForiAPPurchase {
+- (void)updateLevelsForIAP {
     NSUInteger tagIndex = self.levelRange.location + 1;
-    for (HDHexagonButton *subView in _containerView.subviews) {
+    for (HDHexaButton *subView in _containerView.subviews) {
         HDLevel *level = [[HDMapManager sharedManager] levelAtIndex:tagIndex - 1];
         subView.levelState  = level.state;
-        subView.index  = tagIndex;
         tagIndex++;
     }
 }
 
 #pragma mark - Private
 
-- (void)_beginGame:(HDHexagonButton *)sender {
+- (void)_beginGame:(HDHexaButton *)sender {
     if (self.delegate && [self.delegate respondsToSelector:@selector(levelsViewController:didSelectLevel:)]) {
          [self.delegate levelsViewController:self didSelectLevel:sender.tag];
     }
 }
 
 - (CGPoint)_pointForColumn:(NSInteger)column row:(NSInteger)row {
-    
     const CGFloat kOriginY = self.tileSize/2 + ((row * (self.tileSize * kTileHeightInsetMultiplier)) );
     const CGFloat kOriginX = self.tileSize/2 + self.tileSize/4 + ((column * self.tileSize));
     const CGFloat kAlternateOffset = (row % 2 == 0) ? self.tileSize/2 : 0.0f;

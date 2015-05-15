@@ -7,10 +7,11 @@
 //
 
 #import "HDContainerViewController.h"
+#import "HDRearViewController.h"
 #import "HDSoundManager.h"
 #import "HDGameViewController.h"
 #import "UIColor+ColorAdditions.h"
-#import "HDHexagon.h"
+#import "HDHexaObject.h"
 #import "HDHelper.h"
 #import "HDConstants.h"
 
@@ -55,8 +56,6 @@
 - (void)viewDidLoad {
     
     [super viewDidLoad];
-    
-    //self.view.backgroundColor = [UIColor flatSTDarkBlueColor];
     
     self.leftScreenEdgeGestureRecognizer = [[UIScreenEdgePanGestureRecognizer alloc] initWithTarget:self action:@selector(handleScreenEdgePan:)];
     self.leftScreenEdgeGestureRecognizer.edges = UIRectEdgeLeft;
@@ -156,6 +155,11 @@
         self.frontViewController.view.frame = rect;
     };
     
+    if ([self.rearViewController isKindOfClass:[HDRearViewController class]]) {
+        HDRearViewController *viewController = (HDRearViewController *)self.rearViewController;
+        viewController.buttonsSelected = YES;
+    }
+    
     if (!animated) {
         closeAnimation();
     } else {
@@ -174,7 +178,7 @@
     
     dispatch_block_t expandAnimation = ^{
         CGRect rect = self.frontViewController.view.frame;
-        rect.origin.x = CGRectGetWidth(self.view.bounds)/1.25f;
+        rect.origin.x = IS_IPAD ? CGRectGetMidX(self.view.bounds) :  CGRectGetWidth(self.view.bounds)/1.25f;
         self.frontViewController.view.frame = rect;
     };
     
@@ -184,6 +188,12 @@
         [UIView animateWithDuration:.200f
                          animations:expandAnimation
                          completion:^(BOOL finished) {
+                             
+                             if ([self.rearViewController isKindOfClass:[HDRearViewController class]]) {
+                                 HDRearViewController *viewController = (HDRearViewController *)self.rearViewController;
+                                 viewController.buttonsSelected = NO;
+                             }
+                             
                              if (self.completion) {
                                  self.completion();
                                  self.completion = nil;

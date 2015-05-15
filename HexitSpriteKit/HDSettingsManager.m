@@ -14,16 +14,26 @@
 #pragma mark - Configure
 
 - (void)configureSettingsForFirstRun {
-    [[NSUserDefaults standardUserDefaults] setBool:YES forKey:HDSoundkey];
-    self.sound =  [[NSUserDefaults standardUserDefaults] boolForKey:HDSoundkey];
+    
+    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+    
+    [defaults setBool:YES forKey:HDSoundkey];
+    [defaults setBool:YES forKey:HDMusickey];
+    [defaults setBool:YES forKey:HDParallaxBackgroundKey];
+    
+    self.music = [defaults boolForKey:HDMusickey];
+    self.sound = [defaults boolForKey:HDSoundkey];
+    self.parallaxBackground = [defaults boolForKey:HDParallaxBackgroundKey];
 }
 
 #pragma mark - Initalizer
 
 - (instancetype)init {
     if (self = [super init]) {
-        self.sound =  [[NSUserDefaults standardUserDefaults] boolForKey:HDSoundkey];
-        self.music = YES;
+        NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+        self.parallaxBackground = [defaults boolForKey:HDParallaxBackgroundKey];
+        self.sound = [defaults boolForKey:HDSoundkey];
+        self.music = [defaults boolForKey:HDMusickey];
     }
     return self;
 }
@@ -42,6 +52,16 @@
 - (void)setSound:(BOOL)sound {
     _sound = sound;
     [[NSUserDefaults standardUserDefaults] setBool:_sound forKey:HDSoundkey];
+}
+
+- (void)setMusic:(BOOL)music {
+    _music = music;
+    [[NSUserDefaults standardUserDefaults] setBool:_music forKey:HDMusickey];
+}
+
+- (void)setParallaxBackground:(BOOL)parallaxBackground {
+    _parallaxBackground = parallaxBackground;
+    [[NSUserDefaults standardUserDefaults] setBool:_parallaxBackground forKey:HDParallaxBackgroundKey];
 }
 
 @end

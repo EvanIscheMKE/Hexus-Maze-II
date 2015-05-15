@@ -7,7 +7,9 @@
 	<key>CFBundleExecutable</key>
 	<string>$(EXECUTABLE_NAME)</string>
 	<key>CFBundleIdentifier</key>
-	<string>com.EvanIsche.Hexus</string>
+	<string>com.EvanIsche.HexusII</string>
+	<key>CFBundleDisplayName</key>
+	<string>Hexus Maze II</string>
 	<key>CFBundleInfoDictionaryVersion</key>
 	<string>6.0</string>
 	<key>CFBundleName</key>

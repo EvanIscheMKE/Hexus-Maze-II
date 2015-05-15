@@ -6,60 +6,38 @@
 //  Copyright (c) 2014 Evan William Ische. All rights reserved.
 //
 
-static inline CGFloat DEGREES_RADIANS(CGFloat degrees){
-    return ((degrees * M_PI) / 180.0f);
-}
+#define IS_IPAD (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad)
 
-typedef enum {
+#define GAME_FONT_WITH_SIZE(x) [UIFont fontWithName:@"TrebuchetMS" size:x]
+
+#define LEVEL_URL(x) [NSString stringWithFormat:@"Grid-%ld",x]
+
+#define PRELOAD_THESE_SOUNDS @[HDSwipeSound, HDCompletionZing, HDGameOverKey]
+
+#define TRANSFORM_SCALE_X [UIScreen mainScreen].bounds.size.width  / 375.0f
+#define TRANSFORM_SCALE_Y [UIScreen mainScreen].bounds.size.height / 375.0f
+
+typedef NS_OPTIONS(NSUInteger, HDLevelState) {
     HDLevelStateLocked    = 0,
     HDLevelStateUnlocked  = 1,
     HDLevelStateCompleted = 2,
     HDLevelStateNone      = 3
-} HDLevelState;
+};
 
-//keys
-extern NSString * const HDIntroAnimationNotification;
-extern NSString * const HDAnimateLabelNotification;
-extern NSString * const HDCompletedTileCountNotification;
-extern NSString * const HDClearTileCountNotification;
+/** Dictionary Keys **/
+extern NSString * const HDHexGridKey;
 
-extern NSString * const HDNextLevelNotification;
-extern NSString * const HDToggleControlsNotification;
-extern NSString * const HDSoundNotification;
-extern NSString * const HDVibrationNotification;
-extern NSString * const HDRestartNotificaiton;
-
-// NSUserDefault Keys
+/** NSUserDefault Keys **/
+extern NSString * const HDParallaxBackgroundKey;
 extern NSString * const HDLastCompletedLevelKey;
 extern NSString * const HDDefaultLevelKey;
-extern NSString * const HDGuideKey;
 extern NSString * const HDFirstRunKey;
-extern NSString * const HDEffectsKey;
 extern NSString * const HDSoundkey;
-extern NSString * const HDVibrationKey;
+extern NSString * const HDMusickey;
 
-//
+/** Sound Keys **/
 extern NSString * const HDGameOverKey;
 extern NSString * const HDCompletionZing;
-extern NSString * const HDHexGridKey;
 extern NSString * const HDSoundLoopKey;
 extern NSString * const HDButtonSound;
 extern NSString * const HDSwipeSound;
-
-#define IS_IPAD UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad
-
-#define IPHONE6WIDTH 375.0f
-#define TRANSFORM_SCALE [UIScreen mainScreen].bounds.size.width / IPHONE6WIDTH
-
-#define sound0 @"C4.m4a"
-#define sound1 @"D4.m4a"
-#define sound2 @"E4.m4a"
-#define sound3 @"win.mp3"
-
-//GillSans
-#define GILLSANS(x)       [UIFont fontWithName:@"TrebuchetMS" size:x]
-#define GILLSANS_LIGHT(x) [UIFont fontWithName:@"TrebuchetMS" size:x]
-
-#define LEVEL_URL(x) [NSString stringWithFormat:@"Grid-%ld",x]
-
-#define SOUNDS_TO_PRELOAD @[HDSwipeSound, sound1, sound2, sound3, sound0, HDCompletionZing, HDGameOverKey]

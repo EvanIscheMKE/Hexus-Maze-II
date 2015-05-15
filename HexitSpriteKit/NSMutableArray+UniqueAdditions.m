@@ -6,10 +6,10 @@
 //  Copyright (c) 2014 Evan William Ische. All rights reserved.
 //
 
-#import "HDHexagon.h"
+#import "HDHexaObject.h"
 #import "NSMutableArray+UniqueAdditions.h"
 
-@implementation NSMutableArray (UniqueAdditions)
+@implementation NSMutableArray (ArrayAdditions)
 
 - (NSMutableArray *)shuffle {
     for (int i = 0; i < [self count]; ++i) {

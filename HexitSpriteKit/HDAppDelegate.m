@@ -13,6 +13,8 @@
 #define HEXUS_ID 945933714
 
 #import "Flurry.h"
+#import "HDTextureManager.h"
+#import "HDHexaButton.h"
 #import "HDAppDelegate.h"
 #import "HDMapManager.h"
 #import "HDSoundManager.h"
@@ -44,19 +46,36 @@ NSString * const HDLeaderBoardIdentifierKey = @"LevelLeaderboard";
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
     
+    // Status bar hidden
     application.statusBarHidden = YES;
     
     self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
     self.window.rootViewController = [HDIntroViewController new];
     [self.window makeKeyAndVisible];
-    [self _setup];
+    
+    // Register for analytics
+    [Flurry startSession:HDFLURRYAPIKEY];
+    
+    // first time app runs, set up settings configuration
+    if (![[NSUserDefaults standardUserDefaults] boolForKey:HDFirstRunKey]) {
+        [[HDSettingsManager sharedManager] configureSettingsForFirstRun];
+    }
+    
+    // Preload Game Textures
+    [[HDTextureManager sharedManager] preloadTexturesWithCompletion:nil];
+    
+    // Setup AVAudioPlayer,
+    [[HDSoundManager sharedManager] startAudio];
+    [[HDSoundManager sharedManager] preloadLoopWithName:HDSoundLoopKey];
+    [[HDSoundManager sharedManager] preloadSounds:PRELOAD_THESE_SOUNDS];
+    [[HDSoundManager sharedManager] setPlayLoop:YES];
     
     return YES;
 }
 
 #pragma mark - Public
 
-- (void)presentLevelViewController {
+- (IBAction)presentLevelViewController:(id)sender {
     
     self.gridController = [HDGridViewController new];
     self.controller = [[HDContainerViewController alloc] initWithFrontViewController:[HDGridViewController new]
@@ -111,19 +130,6 @@ NSString * const HDLeaderBoardIdentifierKey = @"LevelLeaderboard";
 
 #pragma mark - Private
 
-- (void)_setup {
-    
-    [Flurry startSession:HDFLURRYAPIKEY];
-    if (![[NSUserDefaults standardUserDefaults] boolForKey:HDFirstRunKey]) {
-        [[HDSettingsManager sharedManager] configureSettingsForFirstRun];
-    }
-    
-    [[HDSoundManager sharedManager] startAudio];
-    [[HDSoundManager sharedManager] preloadLoopWithName:HDSoundLoopKey];
-    [[HDSoundManager sharedManager] preloadSounds:SOUNDS_TO_PRELOAD];
-    [[HDSoundManager sharedManager] setPlayLoop:YES];
-}
-
 - (UIImage *)_screenshotOfFrontViewController {
     
     UIGraphicsBeginImageContextWithOptions(self.window.bounds.size, YES, [[UIScreen mainScreen] scale]);
@@ -158,6 +164,16 @@ NSString * const HDLeaderBoardIdentifierKey = @"LevelLeaderboard";
     } else {
         for (id subView in container.frontViewController.view.subviews) {
             if ([subView isKindOfClass:[UIScrollView class]]) {
+                UIScrollView *scrollView = (UIScrollView *)subView;
+                
+                for (UIView *view in scrollView.subviews) {
+                    for (UIView *page in view.subviews) {
+                        for (HDHexaButton *hexaBtn in page.subviews) {
+                            hexaBtn.selected = expanded;
+                        }
+                    }
+                }
+                
                 [subView setUserInteractionEnabled:expanded ? NO : YES];
                 break;
             }

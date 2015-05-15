@@ -8,10 +8,11 @@
 
 #import "HDGameCenterManager.h"
 
-NSString * const HDLeaderBoardKey = @"LevelLeaderboard";
+NSString * const HDLeaderBoardKey = @"LeaderboardID";
+NSString * const HDFailureKey = @"failureKey";
 
 const NSUInteger completion = 100;
-const CGFloat levelsPerSection = 14;
+const CGFloat levelsPerSection = 28;
 @implementation HDGameCenterManager
 
 + (HDGameCenterManager *)sharedManager {
@@ -28,13 +29,6 @@ const CGFloat levelsPerSection = 14;
     if ([GKLocalPlayer localPlayer].isAuthenticated) {
         return;
     };
-  
-    [[NSNotificationCenter defaultCenter] addObserverForName:GKPlayerAuthenticationDidChangeNotificationName
-                                                      object:[GKLocalPlayer localPlayer]
-                                                       queue:nil
-                                                  usingBlock:^(NSNotification *note) {
-                                                      NSLog(@"%@",note);
-                                                  }];
     
     [GKLocalPlayer localPlayer].authenticateHandler = ^(UIViewController* viewController, NSError *error) {
         NSLog(@"%@",error);
@@ -50,33 +44,21 @@ const CGFloat levelsPerSection = 14;
     }
     
     [self submitAchievementForLevel:level];
+    
     if ([GKLocalPlayer localPlayer].isAuthenticated) {
         GKScore *completedLevel = [[GKScore alloc] initWithLeaderboardIdentifier:HDLeaderBoardKey];
         completedLevel.value = level;
         [GKScore reportScores:@[completedLevel] withCompletionHandler:^(NSError *error) {
             if (error) {
-                NSLog(@"%@ : %@",error,NSStringFromSelector(_cmd));
+               // NSLog(@"%@ : %@",error,NSStringFromSelector(_cmd));
             }
         }];
     }
-}
-
-- (void)reportTime:(NSTimeInterval)timeInterval leaderboard:(NSString *)identifier {
-    if ([GKLocalPlayer localPlayer].isAuthenticated) {
-        GKScore *completedLevel = [[GKScore alloc] initWithLeaderboardIdentifier:identifier];
-        completedLevel.value = timeInterval;
-        [GKScore reportScores:@[completedLevel] withCompletionHandler:^(NSError *error) {
-            if (error) {
-                NSLog(@"%@ : %@",error,NSStringFromSelector(_cmd));
-            }
-        }];
-    }
-
 }
 
 - (void)submitAchievementForLevel:(int64_t)level {
     NSUInteger percentComplete = [self _completionPercentageFromLevel:level];
-    [self submitAchievementWithIdenifier:[NSString stringWithFormat:@"Achievement%zd",ceilf(level / levelsPerSection)]
+    [self submitAchievementWithIdenifier:[NSString stringWithFormat:@"Round%zd",ceilf(level/levelsPerSection)]
                         completionBanner:(percentComplete == completion)
                          percentComplete:percentComplete];
 }
@@ -99,7 +81,6 @@ const CGFloat levelsPerSection = 14;
     if (percentCompleted == 0) {
         return completion;
     }
-    
     return percentCompleted;
 }
 

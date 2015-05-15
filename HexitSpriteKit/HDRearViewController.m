@@ -20,7 +20,9 @@
 @property (nonatomic, strong) UIButton *bottom;
 @end
 
-@implementation HDRearViewController
+@implementation HDRearViewController {
+    UIView *_container;
+}
 
 - (void)viewDidLoad {
     [super viewDidLoad];
@@ -39,6 +41,27 @@
     }
 }
 
+- (void)setButtonsSelected:(BOOL)buttonsSelected {
+    
+    _buttonsSelected = buttonsSelected;
+    if (_buttonsSelected) {
+        
+        for (UIView *subView in [_container subviews]) {
+            if ([subView isKindOfClass:[HDGameButton class]]) {
+                [(HDGameButton *)subView setSelected:YES];
+            }
+        }
+        
+    } else {
+        
+        for (UIView *subView in [_container subviews]) {
+            if ([subView isKindOfClass:[HDGameButton class]]) {
+                [(HDGameButton *)subView setSelected:NO];
+            }
+        }
+    }
+}
+
 #pragma mark - Private
 
 - (void)_setup {
@@ -46,18 +69,22 @@
     self.view.backgroundColor = [UIColor flatSTDarkNavyColor];
     
     CGRect containerBounds = CGRectMake(0.0f, 0.0f, CGRectGetWidth(self.view.bounds)/1.25f, CGRectGetHeight(self.view.bounds));
-    UIView *container = [[UIView alloc] initWithFrame:containerBounds];
-    [self.view addSubview:container];
+    if (IS_IPAD) {
+        containerBounds.size.width = CGRectGetMidX(self.view.bounds);
+    }
     
-    const CGFloat buttonHeight = CGRectGetHeight(self.view.bounds)/14;
-    const CGFloat buttonWidth  = CGRectGetWidth(containerBounds)/1.5f;
+    _container = [[UIView alloc] initWithFrame:containerBounds];
+    [self.view addSubview:_container];
+    
+    const CGFloat buttonHeight = IS_IPAD ? CGRectGetHeight(self.view.bounds)/15   : CGRectGetHeight(self.view.bounds)/14;
+    const CGFloat buttonWidth  = IS_IPAD ? CGRectGetWidth(_container.bounds)/1.2f : CGRectGetWidth(_container.bounds)/1.5f;
     
     CGRect defaultFrame;
     defaultFrame.size = CGSizeMake(buttonWidth, buttonHeight);
     defaultFrame.origin.x = CGRectGetMidX(containerBounds) - buttonWidth/2;
     defaultFrame.origin.y = CGRectGetHeight(self.view.bounds)/6;
     
-    const CGFloat kPadding = 15.0f * TRANSFORM_SCALE;
+    const CGFloat kPadding = 15.0f * (IS_IPAD ? 1.0f : TRANSFORM_SCALE_X);
     CGRect previousFrame = CGRectZero;
     for (NSUInteger row = 0; row < 4; row++) {
         
@@ -73,37 +100,42 @@
         HDGameButton *menuButton = [[HDGameButton alloc] initWithFrame:CGRectIntegral(currentFrame)];
         menuButton.buttonColor = [UIColor flatSTLightBlueColor];
         menuButton.titleLabel.textAlignment = NSTextAlignmentCenter;
-        menuButton.titleLabel.font = GILLSANS(CGRectGetHeight(menuButton.bounds)/3.0f);
+        menuButton.titleLabel.font = GAME_FONT_WITH_SIZE(CGRectGetHeight(menuButton.bounds)/3.1f);
         menuButton.adjustsImageWhenDisabled = NO;
         menuButton.adjustsImageWhenHighlighted = NO;
+        menuButton.selected = YES;
         [menuButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
-        [container addSubview:menuButton];
+        [_container addSubview:menuButton];
         
         previousFrame = menuButton.frame;
 
         switch (row) {
             case 0:
                 self.top = menuButton;
-                [menuButton setTitle:NSLocalizedString(@"leaderboard", nil) forState:UIControlStateNormal];
+                [menuButton setTitle:NSLocalizedString(@"leaderboard", nil)
+                            forState:UIControlStateNormal];
                 [self.top addTarget:[HDAppDelegate sharedDelegate]
                              action:@selector(openLeaderboardController:)
                    forControlEvents:UIControlEventTouchUpInside];
                 break;
             case 1:
                 self.bottom = menuButton;
-                [menuButton setTitle:NSLocalizedString(@"achievements", nil) forState:UIControlStateNormal];
+                [menuButton setTitle:NSLocalizedString(@"achievements", nil)
+                            forState:UIControlStateNormal];
                 [self.bottom addTarget:[HDAppDelegate sharedDelegate]
                                 action:@selector(openAcheivementsController:)
                       forControlEvents:UIControlEventTouchUpInside];
                 break;
             case 2:
-                [menuButton setTitle:NSLocalizedString(@"removeAds", nil) forState:UIControlStateNormal];
+                [menuButton setTitle:NSLocalizedString(@"removeAds", nil)
+                            forState:UIControlStateNormal];
                 [menuButton addTarget:[HDAppDelegate sharedDelegate]
                                action:@selector(removeBanners:)
                      forControlEvents:UIControlEventTouchUpInside];
                 break;
             case 3:
-                [menuButton setTitle:NSLocalizedString(@"Restore", nil) forState:UIControlStateNormal];
+                [menuButton setTitle:NSLocalizedString(@"Restore", nil)
+                            forState:UIControlStateNormal];
                 [menuButton addTarget:[HDAppDelegate sharedDelegate]
                                action:@selector(restoreIAP:)
                      forControlEvents:UIControlEventTouchUpInside];
@@ -113,23 +145,27 @@
         }
     }
     
-    const CGFloat toggleHeight = 38.0f * TRANSFORM_SCALE;
-    const CGFloat toggleWidth  = 70.0f * TRANSFORM_SCALE;
-    CGFloat originY = CGRectGetMidY(containerBounds) + CGRectGetHeight(containerBounds)/12.f;
+    const CGFloat toggleHeight = 38.0f * (IS_IPAD ? 1.5f : TRANSFORM_SCALE_X);
+    const CGFloat toggleWidth  = 70.0f * (IS_IPAD ? 1.5f : TRANSFORM_SCALE_X);
+    CGFloat originY = CGRectGetMidY(containerBounds) + CGRectGetHeight(containerBounds)/(IS_IPAD ? 18.0f : 12.0f);
     for (NSUInteger i = 0; i < 2; i++) {
         
         originY +=  (i* (toggleHeight + kPadding));
         
-        CGRect imageViewFrame = CGRectMake(CGRectGetMidX(containerBounds) - buttonWidth/1.65f, originY, toggleHeight, toggleHeight);
+        CGRect imageViewFrame = CGRectMake(CGRectGetMidX(_container.bounds) - buttonWidth/1.65f, originY, toggleHeight, toggleHeight);
+        if (IS_IPAD) {
+            imageViewFrame.origin.x = CGRectGetMidX(_container.bounds) - buttonWidth/2.0f;
+        }
+        
         UIImageView *imageView = [[UIImageView alloc] initWithFrame:imageViewFrame];
-        [container addSubview:imageView];
+        [_container addSubview:imageView];
         
         CGRect titleLabelFrame = CGRectMake(CGRectGetMaxX(imageViewFrame) + kPadding, originY, buttonWidth/1.5f, toggleHeight);
         UILabel *titleLabel = [[UILabel alloc] initWithFrame:titleLabelFrame];
         titleLabel.textAlignment = NSTextAlignmentLeft;
-        titleLabel.font = GILLSANS(toggleHeight/1.5f);//Padding
+        titleLabel.font = GAME_FONT_WITH_SIZE(toggleHeight/1.5f);
         titleLabel.textColor = [UIColor whiteColor];
-        [container addSubview:titleLabel];
+        [_container addSubview:titleLabel];
         
         CGRect toggleFrame = CGRectMake(CGRectGetMidX(containerBounds) + buttonWidth/2 - toggleWidth,
                                         titleLabel.frame.origin.y,
@@ -138,7 +174,7 @@
         HDSwitch *toggle = [[HDSwitch alloc] initWithFrame:toggleFrame
                                                    onColor:[UIColor flatSTEmeraldColor]
                                                   offColor:[UIColor flatEmeraldColor]];
-        [container addSubview:toggle];
+        [_container addSubview:toggle];
         
         switch (i) {
             case 0:

@@ -32,13 +32,13 @@ NS_INLINE BOOL isFlagSet(UIControlEvents events, UIControlEvents event) {
     
     NSParameterAssert(filename);
     
-    [self addTarget:self action:@selector(_sendActionsForControlEvents:) forControlEvents:controlEvent];
-    
     NSNumber *eventKey = @(controlEvent);
     AVAudioPlayer *oldSound = [_soundDictionary objectForKey:eventKey];
     if (oldSound) {
         [self removeTarget:oldSound action:@selector(play) forControlEvents:controlEvent];
     }
+    
+    [self addTarget:self action:@selector(_sendActionsForControlEvents:) forControlEvents:controlEvent];
     
     NSString *soundPathURL = [[[NSBundle mainBundle] resourcePath] stringByAppendingPathComponent:filename];
     

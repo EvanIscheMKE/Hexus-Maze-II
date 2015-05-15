@@ -11,13 +11,15 @@
 
 @interface HDAppDelegate : UIResponder <UIApplicationDelegate>
 @property (nonatomic, strong) UIWindow *window;
+
 + (HDAppDelegate *)sharedDelegate;
 - (void)presentGameCenterControllerForState:(GKGameCenterViewControllerState)state;
 - (void)presentTutorialViewControllerForFirstRun;
 - (void)presentActivityViewController;
-- (void)presentLevelViewController;
 - (void)beginGameWithLevel:(NSInteger)level;
 - (void)rateHEXUS;
+
+- (IBAction)presentLevelViewController:(id)sender;
 - (IBAction)openAcheivementsController:(id)sender;
 - (IBAction)openLeaderboardController:(id)sender;
 - (IBAction)animateToLevelViewController:(id)sender;

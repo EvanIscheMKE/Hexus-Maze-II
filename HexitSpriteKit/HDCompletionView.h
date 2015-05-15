@@ -6,17 +6,19 @@
 //  Copyright (c) 2015 Evan William Ische. All rights reserved.
 //
 
-#import <UIKit/UIKit.h>
+@import UIKit;
 
 extern NSString * const HDNextKey;
 extern NSString * const HDShareKey;
 extern NSString * const HDRestartKey;
 extern NSString * const HDRateKey;
 
+#import "HDLayoverView.h"
+
 @protocol HDCompletionViewDelegate;
-@interface HDCompletionView : UIView
-@property (nonatomic, weak) id<HDCompletionViewDelegate> delegate;
-- (instancetype)initWithFrame:(CGRect)frame time:(NSString *)timeString;
+@interface HDCompletionView : HDLayoverView
+@property (nonatomic, weak) id <HDCompletionViewDelegate> delegate;
+- (instancetype)initWithTitle:(NSString *)title;
 @end
 
 @protocol HDCompletionViewDelegate <NSObject>

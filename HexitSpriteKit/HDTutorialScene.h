@@ -9,5 +9,5 @@
 #import "HDScene.h"
 
 @interface HDTutorialScene : HDScene
-@property (nonatomic, assign) BOOL partyAtTheEnd;
+@property (nonatomic, assign) BOOL dismissAfterCompletion;
 @end

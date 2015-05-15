@@ -13,23 +13,14 @@
 
 static const CGFloat kPadding = 5.0f;
 @interface HDSwitch ()
-@property (nonatomic, strong) UILabel *onLabel;
-@property (nonatomic, strong) UILabel *offLabel;
 @property (nonatomic, strong) UIView *slidingView;
 @end
 
 @implementation HDSwitch {
-    
     UIColor *_onColor;
     UIColor *_offColor;
-    
     BOOL _animating;
     BOOL _toggleValue;
-    
-}
-
-- (instancetype)initWithFrame:(CGRect)frame {
-    return [self initWithFrame:frame onColor:[UIColor whiteColor] offColor:[UIColor redColor]];
 }
 
 - (instancetype)initWithOnColor:(UIColor *)onColor offColor:(UIColor *)offColor {
@@ -124,9 +115,8 @@ static const CGFloat kPadding = 5.0f;
 - (void)showOffAnimated:(BOOL)animated {
     
     dispatch_block_t animationBlock = ^{
-        self.slidingView.center = CGPointMake(CGRectGetMidX(self.slidingView.bounds) + kPadding,
-                                              CGRectGetMidY(self.bounds));
-        self.slidingView.transform = CGAffineTransformMakeScale(.5f,.5f);
+        self.slidingView.center = CGPointMake(CGRectGetMidX(self.slidingView.bounds) + kPadding, CGRectGetMidY(self.bounds));
+        self.slidingView.transform = CGAffineTransformMakeScale(.4f,.4f);
         self.slidingView.backgroundColor = [UIColor flatSTLightBlueColor];
         self.layer.borderColor = self.slidingView.backgroundColor.CGColor;
     };

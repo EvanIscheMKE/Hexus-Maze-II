@@ -6,8 +6,9 @@
 //  Copyright (c) 2014 Evan William Ische. All rights reserved.
 //
 
-#import <UIKit/UIKit.h>
+@import UIKit;
 
 @interface HDRearViewController : UIViewController
+@property (nonatomic, assign) BOOL buttonsSelected;
 @property (nonatomic, getter=isGameInterfaceHidden, assign) BOOL gameInterfaceHidden;
 @end

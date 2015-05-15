@@ -127,28 +127,12 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "HexitSpriteKit/HDHelper.m"
-            timestampString = "446638034.680994"
+            timestampString = "453327252.777"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "111"
-            endingLineNumber = "111"
+            startingLineNumber = "182"
+            endingLineNumber = "182"
             landmarkName = "+entranceAnimationWithTiles:completion:"
-            landmarkType = "5">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            shouldBeEnabled = "No"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "HexitSpriteKit/HDHexagonNode.m"
-            timestampString = "451853983.750053"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "66"
-            endingLineNumber = "66"
-            landmarkName = "-indicatorPositionFromHexagonType:withTouchesCount:"
             landmarkType = "5">
          </BreakpointContent>
       </BreakpointProxy>

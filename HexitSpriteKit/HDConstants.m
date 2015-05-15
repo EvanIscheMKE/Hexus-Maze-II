@@ -7,26 +7,18 @@
 //
 
 
-// Notification Keys
-NSString * const HDSoundNotification      = @"TileWasSoundNotification";
-NSString * const HDVibrationNotification  = @"TileWasVibrationNotification";
-NSString * const HDRestartNotificaiton    = @"restartNotification";
-
-//Dictionary Keys
+/** Dictionary Keys **/
 NSString * const HDHexGridKey = @"grid";
-NSString * const HDHexZoomKey = @"zoom";
 
-// UserDefault Keys
+/** NSUserDefault Keys **/
+NSString * const HDParallaxBackgroundKey = @"parallaxbackground";
 NSString * const HDLastCompletedLevelKey = @"HDLastLevelCompletedKey";
 NSString * const HDDefaultLevelKey   = @"defaultLevels";
-NSString * const HDFirstRunKey       = @"firstRunKey";
-NSString * const HDRemainingLivesKey = @"livesKey";
-NSString * const HDGuideKey          = @"guide";
-NSString * const HDEffectsKey        = @"effectsKey";
+NSString * const HDFirstRunKey       = @"FRKey";
 NSString * const HDSoundkey          = @"soundKey";
-NSString * const HDVibrationKey      = @"vibrationKey";
+NSString * const HDMusickey          = @"musicKey";
 
-// Sound Keys
+/** Sound Keys **/
 NSString * const HDGameOverKey    = @"GameOver.wav";
 NSString * const HDCompletionZing = @"win.mp3";
 NSString * const HDSoundLoopKey   = @"Mellowtron.mp3";

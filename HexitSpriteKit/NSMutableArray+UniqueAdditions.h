@@ -8,6 +8,6 @@
 
 #import <Foundation/Foundation.h>
 
-@interface NSMutableArray (UniqueAdditions)
+@interface NSMutableArray (ArrayAdditions)
 - (NSMutableArray *)shuffle;
 @end

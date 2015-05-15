@@ -9,11 +9,11 @@
 
 #import <Foundation/Foundation.h>
 
-@class HDHexagon;
+@class HDHexaObject;
 @interface HDTileManager : NSObject
 + (HDTileManager *)sharedManager;
-- (HDHexagon *)lastHexagonObject;
-- (void)addHexagon:(HDHexagon *)hexagon;
+- (HDHexaObject *)lastHexagonObject;
+- (void)addHexagon:(HDHexaObject *)hexagon;
 - (BOOL)isEmpty;
 - (void)clear;
 @end

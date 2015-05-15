@@ -9,5 +9,4 @@
 #import "HDScene.h"
 
 @interface HDGameScene : HDScene
-- (void)nextLevel;
 @end

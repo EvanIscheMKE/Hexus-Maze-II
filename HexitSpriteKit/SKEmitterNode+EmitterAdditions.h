@@ -6,8 +6,7 @@
 //  Copyright (c) 2014 Evan William Ische. All rights reserved.
 //
 
-#import <SpriteKit/SpriteKit.h>
-
+@import SpriteKit;
 @interface SKEmitterNode (EmitterAdditions)
-
++ (SKEmitterNode *)explosionNode;
 @end

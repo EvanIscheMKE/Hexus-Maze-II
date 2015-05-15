@@ -8,8 +8,8 @@
 
 #import "HDHexusIAdHelper.h"
 
-NSString *const IAPremoveAdsProductIdentifier = @"com.EvanIsche.Hexus.RemoveAds";
-NSString *const IAPUnlockAllLevelsProductIdentifier = @"com.EvanIsche.Hexus.UnlockLevels";
+NSString *const IAPremoveAdsProductIdentifier = @"com.EvanIsche.HexusII.RemoveAds";
+NSString *const IAPUnlockAllLevelsProductIdentifier = @"com.EvanIsche.HexusII.UnlockLevels";
 @implementation HDHexusIAdHelper
 
 + (HDHexusIAdHelper *)sharedHelper {

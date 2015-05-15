@@ -35,11 +35,11 @@
     [self.selectedTileBank removeAllObjects];
 }
 
-- (HDHexagon *)lastHexagonObject {
+- (HDHexaObject *)lastHexagonObject {
     return self.selectedTileBank.lastObject;
 }
 
-- (void)addHexagon:(HDHexagon *)hexagon {
+- (void)addHexagon:(HDHexaObject *)hexagon {
     [self.selectedTileBank addObject:hexagon];
 }
 

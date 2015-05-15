@@ -8,14 +8,15 @@
 
 #import "HDGridManager.h"
 #import "HDLevel.h"
-#import "HDHexagon.h"
-#import "HDHexagonNode.h"
+#import "HDHexaObject.h"
+#import "HDHexaNode.h"
 
 typedef void(^CallbackBlock)(NSDictionary *dictionary, NSError *error);
+
 @implementation HDGridManager {
     NSMutableDictionary *_levelCache;
     NSMutableArray *_hexagons;
-    HDHexagon *_hexagon[NumberOfRows][NumberOfColumns];
+    HDHexaObject *_hexagon[NumberOfRows][NumberOfColumns];
     NSNumber *_grid[NumberOfRows][NumberOfColumns];
 }
 
@@ -49,7 +50,7 @@ typedef void(^CallbackBlock)(NSDictionary *dictionary, NSError *error);
     for (NSInteger row = 0; row < NumberOfRows; row++) {
         for (NSInteger column = 0; column < NumberOfColumns; column++) {
             if (_grid[row][column] != nil) {
-                HDHexagon *hexagon = [self _createHexagonAtRow:row column:column type:[_grid[row][column] intValue]];
+                HDHexaObject *hexagon = [self _createHexagonAtRow:row column:column type:[_grid[row][column] intValue]];
                 _hexagon[row][column] = hexagon;
                 [_hexagons addObject:hexagon];
             }
@@ -64,7 +65,7 @@ typedef void(^CallbackBlock)(NSDictionary *dictionary, NSError *error);
     return [_grid[row][column] integerValue];
 }
 
-- (HDHexagon *)hexagonAtRow:(NSInteger)row column:(NSInteger)column {
+- (HDHexaObject *)hexagonAtRow:(NSInteger)row column:(NSInteger)column {
     return _hexagon[row][column];
 }
 
@@ -124,8 +125,8 @@ typedef void(^CallbackBlock)(NSDictionary *dictionary, NSError *error);
     }
 }
 
-- (HDHexagon *)_createHexagonAtRow:(NSInteger)row column:(NSInteger)column type:(HDHexagonType)type {
-    HDHexagon *hexagon = [[HDHexagon alloc] initWithRow:row column:column type:type];
+- (HDHexaObject *)_createHexagonAtRow:(NSInteger)row column:(NSInteger)column type:(HDHexagonType)type {
+    HDHexaObject *hexagon = [[HDHexaObject alloc] initWithRow:row column:column type:type];
     return hexagon;
 }
 

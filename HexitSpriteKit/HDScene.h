@@ -8,7 +8,7 @@
 
 @import SpriteKit;
 
-@class HDHexagon;
+@class HDHexaObject;
 @class HDGridManager;
 
 @protocol HDSceneDelegate;
@@ -17,26 +17,25 @@
 @property (nonatomic, assign) BOOL countDownSoundIndex;
 @property (nonatomic, assign) NSInteger soundIndex;
 @property (nonatomic, assign) NSInteger levelIndex;
-@property (nonatomic, strong) NSArray *hexagons;
+@property (nonatomic, strong) NSArray *hexaObjects;
+@property (nonatomic, strong) NSMutableArray *mines;
 @property (nonatomic, strong) HDGridManager *gridManager;
 @property (nonatomic, copy) dispatch_block_t layoutCompletion;
 @property (nonatomic, weak) id<HDSceneDelegate> myDelegate;
 @property (nonatomic, readonly) SKNode *gameLayer;
 - (BOOL)unlockLastTile;
-- (BOOL)isGameOverAfterPlacingTile:(HDHexagon *)hexagon;
-- (HDHexagon *)findHexagonContainingPoint:(CGPoint)point;
-- (void)checkGameStateForTile:(HDHexagon *)tile;
-- (BOOL)validateNextMoveToHexagon:(HDHexagon *)toHexagon fromHexagon:(HDHexagon *)fromHexagon;
-- (void)playSoundForHexagon:(HDHexagon *)hexagon vibration:(BOOL)vibration;
-- (void)centerTilePositionWithCompletion:(dispatch_block_t)completion;
+- (BOOL)isGameOverAfterPlacingTile:(HDHexaObject *)hexagon;
+- (HDHexaObject *)findHexagonContainingPoint:(CGPoint)point;
+- (void)checkGameStateForTile:(HDHexaObject *)tile;
+- (BOOL)validateNextMoveToHexagon:(HDHexaObject *)toHexagon fromHexagon:(HDHexaObject *)fromHexagon;
+- (void)playSoundForHexagon:(HDHexaObject *)hexagon vibration:(BOOL)vibration;
+- (void)centerTileGrid;
 - (void)performExitAnimationsWithCompletion:(dispatch_block_t)completion;
 - (void)layoutNodesWithGrid:(NSArray *)grid completion:(dispatch_block_t)completion;
-- (void)initialSetupCompletion;
-- (void)startTileAnimationForCompletion;
-- (void)stopTileAnimationForCompletion;
+- (void)initialLayoutCompletion;
 - (NSUInteger)inPlayTileCount;
-- (void)nextLevel;
-- (void)restartWithAlert:(BOOL)alert;
+- (void)updateDataForNextLevel;
+- (void)restartWithAlert:(NSNumber *)alert;
 @end
 
 @protocol HDSceneDelegate <NSObject, SKSceneDelegate>

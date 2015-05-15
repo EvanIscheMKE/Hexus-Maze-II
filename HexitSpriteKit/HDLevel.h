@@ -6,7 +6,7 @@
 //  Copyright (c) 2014 Evan William Ische. All rights reserved.
 //
 
-#import "HDHexagonButton.h"
+#import "HDHexaButton.h"
 #import <Foundation/Foundation.h>
 
 @interface HDLevel : NSObject <NSCoding>

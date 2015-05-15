@@ -14,127 +14,251 @@
 #import "UIColor+ColorAdditions.h"
 #import "HDTutorialViewController.h"
 #import "HDSoundManager.h"
-#import "HDHintsView.h"
 
 @interface HDTutorialViewController ()<HDSceneDelegate>
-@property (nonatomic, strong) UILabel *descriptorLabel;
-@property (nonatomic, strong) HDHintsView *infoView;
 @property (nonatomic, strong) HDGridManager *gridManager;
 @property (nonatomic, strong) HDTutorialScene *scene;
 @end
 
 @implementation HDTutorialViewController {
     __weak SKView *_container;
+    UILabel *_titleLbl;
+    UILabel *_descriptionLbl;
+    UIImageView *_imageView;
+}
+
+- (instancetype)init {
+    if (self = [super init]) {
+        self.gridManager = [[HDGridManager alloc] initWithLevelIndex:1000];
+    }
+    return self;
 }
 
 - (void)loadView {
-    self.view = [[SKView alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
+    
+    CGRect bounds = [[UIScreen mainScreen] bounds];
+    self.view = [[SKView alloc] initWithFrame:bounds];
+    self.view.backgroundColor = [UIColor flatSTDarkBlueColor];
     _container = (SKView *)self.view;
+    
+    _imageView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"IconForIntro"]];
+    _imageView.center = self.view.center;
+    _imageView.transform = IS_IPAD ? CGAffineTransformIdentity : CGAffineTransformMakeScale(TRANSFORM_SCALE_X, TRANSFORM_SCALE_X);
+    [_container addSubview:_imageView];
 }
 
 - (void)viewDidLoad {
-    
     [super viewDidLoad];
-    self.gridManager = [[HDGridManager alloc] initWithLevelIndex:1000];
-    _container.backgroundColor = [SKColor flatMidnightBlueColor];
 }
 
 - (void)viewWillLayoutSubviews {
     
     [super viewWillLayoutSubviews];
     if (!_container.scene) {
-        
         self.scene = [HDTutorialScene sceneWithSize:self.view.bounds.size];
         self.scene.myDelegate = self;
         self.scene.gridManager = self.gridManager;
-        self.scene.partyAtTheEnd = NO;
+        self.scene.dismissAfterCompletion = NO;
         [_container presentScene:self.scene];
-        
-        [self.scene layoutNodesWithGrid:[self.gridManager hexagons] completion:nil];
     }
+}
+
+- (void)viewDidAppear:(BOOL)animated {
+    [super viewDidAppear:animated];
+    
+    [UIView animateWithDuration:.3f animations:^{
+        _imageView.alpha = 0;
+    } completion:^(BOOL finished) {
+        _imageView = nil;
+        [_imageView removeFromSuperview];
+        [self.scene layoutNodesWithGrid:[self.gridManager hexagons] completion:^{
+            if (!_descriptionLbl) {
+                _descriptionLbl = [self _descriptionLblWithString:@"TAP THE WHITE TILE, THEN MOVE TO A VALID TILE BORDERING ITS EDGES."];
+                [self.view addSubview:_descriptionLbl];
+                
+                [self updateLabel:_descriptionLbl
+                            alpha:1.0f
+                         duration:.3f
+                            delay:0.0f
+                       completion:nil];
+            }
+        }];
+
+    }];
 }
 
 #pragma mark - <HDSceneDelegate>
 
 - (void)scene:(HDTutorialScene *)scene gameEndedWithCompletion:(BOOL)completion {
     
+    NSLog(completion ? @"YES" : @"NO");
     [[HDSoundManager sharedManager] playSound:HDCompletionZing];
+    
     if (completion) {
         
+        [self updateLabel:_descriptionLbl
+                    alpha:0.0f
+                 duration:.3f
+                    delay:0.0f
+               completion:nil];
+
         [scene performExitAnimationsWithCompletion:^{
             
-            self.descriptorLabel = [self _descriptionLabelWithText:NSLocalizedString(@"beautiful", nil)];
-            [self.view addSubview:self.descriptorLabel];
-            [UIView animateWithDuration:.3f animations:^{
-                self.descriptorLabel.alpha = 1;
-            } completion:^(BOOL finished) {
-                [UIView animateWithDuration:.3f
-                                      delay:1.5f
-                                    options:0
-                                 animations:^{
-                                     self.descriptorLabel.alpha = 0;
-                                 } completion:^(BOOL finished) {
-                                     self.descriptorLabel = [self _descriptionLabelWithText:NSLocalizedString(@"welcome", nil)];
-                                     [self.view addSubview:self.descriptorLabel];
-                                     [UIView animateWithDuration:.3f animations:^{
-                                         self.descriptorLabel.alpha = 1;
-                                     } completion:^(BOOL finished) {
-                                         [UIView animateWithDuration:.3f
-                                                               delay:1.5f
-                                                             options:0
-                                                          animations:^{
-                                                              self.descriptorLabel.alpha = 0;
-                                                          } completion:^(BOOL finished) {
-                                                              [self.presentingViewController dismissViewControllerAnimated:NO
-                                                                                                                completion:nil];
-                                                          }];
-                                     }];
-                                 }];
-            }];
-        }];
-        
-    } else {
-        
-        [scene performExitAnimationsWithCompletion:^{
+            _titleLbl.text = NSLocalizedString(@"beautiful", nil);
+            [_titleLbl sizeToFit];
+            _titleLbl.center = self.view.center;
+            _titleLbl.frame = CGRectIntegral(_titleLbl.frame);
             
-            [scene nextLevel];
-            scene.partyAtTheEnd = YES;
-            self.descriptorLabel = [self _descriptionLabelWithText:NSLocalizedString(@"amazing!", nil)];
-            [self.view addSubview:self.descriptorLabel];
-            
-            [UIView animateWithDuration:.3f animations:^{
-                self.descriptorLabel.alpha = 1;
-            } completion:^(BOOL finished) {
-                [UIView animateWithDuration:.3f
-                                      delay:2.0f
-                                    options:0
-                                 animations:^{
-                                     self.descriptorLabel.alpha = 0;
-                                 } completion:^(BOOL finished) {
-                                     self.gridManager = [[HDGridManager alloc] initWithLevelIndex:1001];
-                                     [self.scene layoutNodesWithGrid:[self.gridManager hexagons] completion:nil];
-                                 }];
-            }];
-        }];
+            [self updateLabel:_titleLbl
+                        alpha:1.0f
+                     duration:0.3f
+                        delay:0.0f
+                   completion:^{
+                                       
+            [self updateLabel:_titleLbl
+                        alpha:0.0f
+                     duration:0.3f
+                        delay:1.5f
+                    completion:^{
+                     
+            _titleLbl.text = NSLocalizedString(@"welcome", nil);
+            [_titleLbl sizeToFit];
+            _titleLbl.center = self.view.center;
+            _titleLbl.frame = CGRectIntegral(_titleLbl.frame);
+                                       
+            [self updateLabel:_titleLbl
+                        alpha:1.0f
+                     duration:0.3f
+                        delay:0.0f
+                   completion:^{
+                                       
+            [self updateLabel:_titleLbl
+                        alpha:0.0f
+                     duration:0.3f
+                        delay:1.5f
+                   completion:^{
+                                   
+                    [self.presentingViewController dismissViewControllerAnimated:NO
+                                                                      completion:nil];
+                                       
+                                  }];
+                                }];
+                              }];
+                            }];
+                          }];
+        return;
     }
+    
+    if (!_titleLbl) {
+        _titleLbl = [self _titleLblWithString:NSLocalizedString(@"amazing!", nil)];
+        [self.view addSubview:_titleLbl];
+    }
+    
+    [self updateLabel:_descriptionLbl
+                alpha:0.0f
+             duration:.3f
+                delay:0.0f
+           completion:nil];
+    
+    [scene performExitAnimationsWithCompletion:^{
+    [scene updateDataForNextLevel];
+            
+    [self updateLabel:_titleLbl
+                alpha:1.0f
+             duration:0.3f
+                delay:0.0f
+           completion:^{
+               
+    [self updateLabel:_titleLbl
+                alpha:0.0f
+             duration:.3f
+                delay:2.0f
+           completion:^{
+
+    self.scene.dismissAfterCompletion = YES;
+                                       
+    self.gridManager = [[HDGridManager alloc] initWithLevelIndex:1001];
+                               
+    [self.scene layoutNodesWithGrid:[self.gridManager hexagons] completion:^{
+        
+         _descriptionLbl.text = @"ONE MORE TIME.";
+        [_descriptionLbl sizeToFit];
+        _descriptionLbl.center = CGPointMake(CGRectGetMidX(self.view.bounds),
+                                             CGRectGetHeight(self.view.bounds) - CGRectGetMidY(_descriptionLbl.bounds) - 5.0f);
+        _descriptionLbl.frame = CGRectIntegral(_descriptionLbl.frame);
+        
+        [self updateLabel:_descriptionLbl
+                    alpha:1.0f
+                 duration:.3f
+                    delay:0.0f
+               completion:nil];
+    }];
+               
+                                     }];
+                                   }];
+                                 }];
 }
 
-- (UILabel *)_descriptionLabelWithText:(NSString *)text {
+- (void)updateLabel:(UILabel *)label
+              alpha:(CGFloat)alpha
+           duration:(NSTimeInterval)duration
+              delay:(NSTimeInterval)delay
+         completion:(dispatch_block_t)completion {
     
-    const CGFloat scale = IS_IPAD ? 12.0f : 10.0f;
+    if (!label) {
+        return;
+    }
     
-    UILabel *label = [[UILabel alloc] init];
-    label.font = GILLSANS_LIGHT(CGRectGetWidth(self.view.bounds)/ scale);
-    label.textAlignment = NSTextAlignmentCenter;
-    label.textColor = [UIColor whiteColor];
-    label.numberOfLines = 1;
-    label.text = text;
-    label.alpha = 0;
-    [label sizeToFit];
-    label.center = self.view.center;
-    label.frame = CGRectIntegral(label.frame);
+    [UIView animateWithDuration:duration
+                          delay:delay
+                        options:UIViewAnimationOptionCurveEaseOut
+                     animations:^{
+                         label.alpha = alpha;
+                     } completion:^(BOOL finished) {
+                         if (completion) {
+                             completion();
+                         }
+                     }];
+}
+
+#pragma mark - Convenince Labels
+
+- (UILabel *)_descriptionLblWithString:(NSString *)text {
     
-    return label;
+    const CGFloat scale = IS_IPAD ? 24.0f : 22.0f;
+    
+    CGRect bounds = CGRectMake(0.0f, 0.0f, CGRectGetWidth(CGRectInset(self.view.bounds, 40.0f, 0.0f)), 0.0);
+    UILabel *descriptionLbl = [[UILabel alloc] initWithFrame:bounds];
+    descriptionLbl.font = GAME_FONT_WITH_SIZE(CGRectGetWidth(self.view.bounds)/ scale);
+    descriptionLbl.textAlignment = NSTextAlignmentCenter;
+    descriptionLbl.textColor = [UIColor whiteColor];
+    descriptionLbl.numberOfLines = 2;
+    descriptionLbl.alpha = 0.0f;
+    descriptionLbl.text = text;
+    [descriptionLbl sizeToFit];
+    descriptionLbl.center = CGPointMake(CGRectGetMidX(self.view.bounds),
+                                        CGRectGetHeight(self.view.bounds) - CGRectGetMidY(descriptionLbl.bounds) - 5.0f);
+    descriptionLbl.frame = CGRectIntegral(descriptionLbl.frame);
+    
+    return descriptionLbl;
+}
+
+- (UILabel *)_titleLblWithString:(NSString *)text {
+    
+    const CGFloat scale = IS_IPAD ? 14.0f : 12.0f;
+    
+    UILabel *titleLbl = [[UILabel alloc] init];
+    titleLbl.font = GAME_FONT_WITH_SIZE(CGRectGetWidth(self.view.bounds)/ scale);
+    titleLbl.textAlignment = NSTextAlignmentCenter;
+    titleLbl.textColor = [UIColor whiteColor];
+    titleLbl.numberOfLines = 1;
+    titleLbl.text = text;
+    titleLbl.alpha = 0.0f;
+    [titleLbl sizeToFit];
+    titleLbl.center = self.view.center;
+    titleLbl.frame = CGRectIntegral(titleLbl.frame);
+    
+    return titleLbl;
 }
 
 @end

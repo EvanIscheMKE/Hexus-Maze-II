@@ -8,12 +8,12 @@
 
 #import <Foundation/Foundation.h>
 
-@class HDHexagon;
+@class HDHexaObject;
 @interface HDGridManager : NSObject
 
 @property (nonatomic, readonly) NSArray *hexagons;
 
-- (HDHexagon *)hexagonAtRow:(NSInteger)row column:(NSInteger)column;
+- (HDHexaObject *)hexagonAtRow:(NSInteger)row column:(NSInteger)column;
 - (NSInteger)hexagonTypeAtRow:(NSInteger)row column:(NSInteger)column;
 
 - (instancetype)initWithLevelIndex:(NSInteger)index;

@@ -34,6 +34,14 @@
      return [UIColor colorWithRed:(254/255.0f) green:(253/255.0f) blue:(238/255.0f) alpha:1];
 }
 
++ (UIColor *)flatLCOrangeColor {
+    return [UIColor colorWithRed:(224/255.0f) green:(147/255.0f) blue:(45/255.0f) alpha:1];
+}
+
++ (UIColor *)flatLCTanColor {
+    return [UIColor colorWithRed:(97/255.0f) green:(213/255.0f) blue:(195/255.0f) alpha:1];
+}
+
 + (UIColor *)flatSTTanColor {
      return [UIColor colorWithRed:(230/255.0f) green:(226/255.0f) blue:(214/255.0f) alpha:1];
 }

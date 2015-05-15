@@ -7,7 +7,7 @@
 //
 
 #import "HDLevel.h"
-#import "HDHexagonButton.h"
+#import "HDHexaButton.h"
 #import "HDGridScrollView.h"
 #import "NSMutableArray+UniqueAdditions.h"
 #import "UIColor+ColorAdditions.h"
@@ -81,7 +81,7 @@
     }
     NSUInteger numberOfPages = pages.count;
     self.numberOfPages = numberOfPages;
-    [self setContentSize:CGSizeMake(CGRectGetWidth(self.bounds)*numberOfPages, CGRectGetHeight(self.bounds))];
+    self.contentSize = CGSizeMake(CGRectGetWidth(self.bounds)*numberOfPages, CGRectGetHeight(self.bounds));
         
     NSUInteger pageIndex = 0;
     for (UIView *page in pages) {
@@ -91,7 +91,6 @@
                                            self.bounds.size.height);
         page.frame = containerFrame;
         [self addSubview:page];
-
         pageIndex++;
     }
 }

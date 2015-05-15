@@ -6,8 +6,12 @@
 //  Copyright (c) 2015 Evan William Ische. All rights reserved.
 //
 
+@import QuartzCore;
+
 #import "HDHelper.h"
 #import "HDButton.h"
+#import "HDGameButton.h"
+#import "HDHexaButton.h"
 #import "HDCompletionView.h"
 #import "UIColor+ColorAdditions.h"
 
@@ -16,129 +20,225 @@ NSString * const HDShareKey   = @"share";
 NSString * const HDRestartKey = @"restart";
 NSString * const HDRateKey    = @"rate";
 
-static const CGFloat kIphonePadding = 5.0f;
-static const CGFloat kIpadPadding   = 10.0f;
-static const CGFloat kCornerRadius  = 15.0f;
-@interface HDCompletionView ()
-@property (nonatomic, strong) UILabel *titleLabel;
-@end
-
+static const NSUInteger numberOfColumns = 4;
 @implementation HDCompletionView {
-    NSString *_timeString;
+    NSString *_title;
 }
 
-#pragma mark - Layer Class
-
-+ (Class)layerClass {
-    return [CAShapeLayer class];
-}
-
-- (CAShapeLayer *)shapeLayer {
-    return (CAShapeLayer *)self.layer;
-}
-
-#pragma mark - Initalizer
-
-- (instancetype)initWithFrame:(CGRect)frame time:(NSString *)timeString {
-    if (self = [super initWithFrame:frame]) {
-        _timeString = timeString;
-        [self _setup];
+- (instancetype)initWithTitle:(NSString *)title {
+    if (self = [super init]) {
+        _title = title;
+       [self _setup];
     }
     return self;
-}
-
-#pragma mark - Setters
-
-- (void)setBackgroundColor:(UIColor *)backgroundColor {
-    self.shapeLayer.fillColor = backgroundColor.CGColor;
 }
 
 #pragma mark - Private
 
 - (void)_setup {
     
-    self.backgroundColor = [UIColor flatSTDarkNavyColor];
+    const CGFloat padding = 9.0f;
+    const CGSize vertButtonSize = CGSizeMake(CGRectGetWidth(self.bounds)/1.25f, CGRectGetHeight(self.bounds)/13.5f);
+    const CGSize horiButtonSize = CGSizeMake(vertButtonSize.width/2 - padding/2, vertButtonSize.height);
     
-    const CGFloat scale = IS_IPAD ? 1.5f : TRANSFORM_SCALE;
+    CGRect containerBounds = CGRectMake(0.0f, 0.0f, vertButtonSize.width + padding*2, vertButtonSize.height * 8.35f);
+    self.container.frame = containerBounds;
+
+    CGRect initialRect = CGRectMake(padding,
+                                    CGRectGetHeight(self.container.bounds) - vertButtonSize.height*2 - padding*2,
+                                    vertButtonSize.width,
+                                    vertButtonSize.height);
     
-    CGAffineTransform scaleTransform = CGAffineTransformMakeScale(scale, scale);
-    
-    const CGFloat kPadding = IS_IPAD ? kIpadPadding : kIphonePadding;
-    
-    self.shapeLayer.lineWidth = 0;
-    self.shapeLayer.path = [[UIBezierPath bezierPathWithRoundedRect:self.bounds
-                                                  byRoundingCorners:UIRectCornerTopLeft|UIRectCornerTopRight
-                                                        cornerRadii:CGSizeMake(kCornerRadius, kCornerRadius)] CGPath];
-    
-    self.titleLabel = [[UILabel alloc] init];
-    self.titleLabel.transform = scaleTransform;
-    self.titleLabel.textColor = [UIColor whiteColor];
-    self.titleLabel.textAlignment = NSTextAlignmentCenter;
-    self.titleLabel.font = GILLSANS(20.0f);
-    self.titleLabel.text = _timeString;
-    [self.titleLabel sizeToFit];
-    self.titleLabel.center = CGPointMake(CGRectGetMidX(self.bounds), CGRectGetMidY(self.titleLabel.bounds) + kPadding);
-    self.titleLabel.frame = CGRectIntegral(self.titleLabel.frame);
-    [self addSubview:self.titleLabel];
-    
-    NSString *text = nil;
-    UIImage *image = nil;
-    
-    const NSUInteger numberOfColumns = 4;
-    const CGFloat kSpacing = CGRectGetWidth(self.bounds)/5 + kPadding;
-    for (NSUInteger i = 0; i < numberOfColumns; i++) {
-        switch (i) {
-            case 0:
-                text = NSLocalizedString(HDNextKey, nil);
-                image = [UIImage imageNamed:@"Selected-Count"];
-                break;
-            case 1:
-                text = NSLocalizedString(HDRestartKey, nil);
-                image = [UIImage imageNamed:@"Selected-OneTap"];
-                break;
-            case 2:
-                text = NSLocalizedString(HDRateKey, nil);
-                image = [UIImage imageNamed:@"Selected-End"];
-                break;
-            case 3:
-                text = NSLocalizedString(HDShareKey, nil);
-                image = [UIImage imageNamed:@"Selected-Triple"];
-                break;
-        }
+    CGRect previousRect = CGRectZero;
+    for (NSUInteger i = 0; i < numberOfColumns/2; i++) {
+        CGRect currentRect = previousRect;
         
-        CGRect imageRect = CGRectMake(0.0f, 0.0f, image.size.width, image.size.height);
-        HDButton *imageView = [[HDButton alloc] initWithFrame:imageRect];
-        imageView.adjustsImageWhenDisabled    = NO;
-        imageView.adjustsImageWhenHighlighted = NO;
-        imageView.transform = IS_IPAD ? CGAffineTransformIdentity : CGAffineTransformMakeScale(TRANSFORM_SCALE, TRANSFORM_SCALE);
-        [imageView setTitle:text forState:UIControlStateNormal];
-        [imageView setTitleColor:[UIColor clearColor] forState:UIControlStateNormal];
-        [imageView addSoundNamed:@"menuClicked.wav"
-                 forControlEvent:UIControlEventTouchUpInside];
-        [imageView addTarget:self action:@selector(_performActivity:) forControlEvents:UIControlEventTouchUpInside];
-        imageView.center = CGPointMake((CGRectGetMidX(self.bounds) - ((numberOfColumns-1)/2.0f * kSpacing)) + (kSpacing * i),
-                                       CGRectGetHeight(self.bounds)/1.85f);
-        [imageView setBackgroundImage:image forState:UIControlStateNormal];
-        [self addSubview:imageView];
-    
-        UILabel *description = [[UILabel alloc] init];
-        description.transform = scaleTransform;
-        description.textColor = [UIColor whiteColor];
-        description.textAlignment = NSTextAlignmentCenter;
-        description.font = GILLSANS_LIGHT(14.0f);
-        description.text = text;
-        [description sizeToFit];
-        description.center = CGPointMake((CGRectGetMidX(self.bounds) - ((numberOfColumns-1)/2.0f * kSpacing)) + (kSpacing * i),
-                                         CGRectGetHeight(self.bounds) - CGRectGetMidY(description.bounds) - kPadding);
-        description.frame = CGRectIntegral(description.frame);
-        [self addSubview:description];
+        if (i == 0) {
+            currentRect = initialRect;
+        } else {
+            currentRect.origin.y += (vertButtonSize.height + padding);
+        }
+
+        HDGameButton *vertBtn = [[HDGameButton alloc] initWithFrame:currentRect];
+        vertBtn.buttonColor = (i == 0) ? [UIColor flatSTEmeraldColor]
+                                       : [UIColor flatSTLightBlueColor];
+        [vertBtn setTitle:[self _stringFromIdx:i] forState:UIControlStateNormal];
+        [self.container addSubview:vertBtn];
+        
+        CGRect horiFrame = CGRectMake((i == 0) ? padding : padding*2 + horiButtonSize.width,
+                                      CGRectGetMinY(initialRect) - horiButtonSize.height - padding,
+                                      horiButtonSize.width,
+                                      horiButtonSize.height);
+        HDGameButton *horiBtn = [[HDGameButton alloc] initWithFrame:horiFrame];
+        horiBtn.buttonColor = (i == 0) ? [UIColor flatSTRedColor]
+                                       : [UIColor flatSTLightBlueColor];
+        [horiBtn setTitle:[self _stringFromIdx:2 + i] forState:UIControlStateNormal];
+        [self.container addSubview:horiBtn];
+        
+        previousRect = currentRect;
     }
     
+    self.titleLbl.font = GAME_FONT_WITH_SIZE(CGRectGetHeight(self.container.bounds)/24.0f);
+    self.titleLbl.text = [_title uppercaseString];
+    [self.titleLbl sizeToFit];
+    self.titleLbl.center = CGPointMake(CGRectGetMidX(self.container.bounds), CGRectGetMidY(self.titleLbl.bounds) + padding*2.f);
+    self.titleLbl.frame = CGRectIntegral(self.titleLbl.frame);
+    
+    CGRect dbounds = CGRectMake(0.0f, 0.0f, CGRectGetWidth(self.container.bounds) - padding*4, 0.0f);
+    self.descriptionLbl.frame = dbounds;
+    self.descriptionLbl.font = GAME_FONT_WITH_SIZE(CGRectGetHeight(self.container.bounds)/27.0f);
+    self.descriptionLbl.text = @"WOW, THAT WAS GREAT!";
+    [self.descriptionLbl sizeToFit];
+    self.descriptionLbl.center = CGPointMake(CGRectGetMidX(self.container.bounds),
+                                             CGRectGetMinY(initialRect) - horiButtonSize.height -  CGRectGetMidY(self.titleLbl.bounds) - padding*1.5f);
+    self.descriptionLbl.frame = CGRectIntegral(self.descriptionLbl.frame);
+    
+    for (HDGameButton *btn in self.container.subviews) {
+        if ([btn isKindOfClass:[HDGameButton class]]) {
+            btn.selected = YES;
+            btn.titleLabel.textAlignment = NSTextAlignmentCenter;
+            btn.titleLabel.font = GAME_FONT_WITH_SIZE(CGRectGetMidY(btn.bounds)/1.25f);
+            [btn setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
+            [btn addTarget:self action:@selector(_performActivity:) forControlEvents:UIControlEventTouchUpInside];
+        }
+    }
+    
+    UIImage *image = [UIImage imageNamed:@"3D-Star"];
+    CGFloat imageSize = MAX(image.size.width, image.size.height) * .95;
+    CGFloat startPositionX = floorf(CGRectGetMidX(self.container.bounds) - imageSize);
+    CGFloat basePositionY = floorf(CGRectGetHeight(self.container.bounds)/3.0f);
+    
+    for (NSUInteger i = 0; i < 3; i++) {
+        UIImageView *imageView = [[UIImageView alloc] initWithImage:image];
+        [self.container addSubview:imageView];
+        
+        CGFloat posY = 0.0f;
+        
+        CGFloat posX = startPositionX + (i * imageSize);
+        
+        CGAffineTransform transform = CGAffineTransformIdentity;
+        
+        switch (i) {
+            case 0:
+            case 2:
+                posY = basePositionY;
+                break;
+            default:
+                posY = basePositionY - image.size.height/3;
+                transform = CGAffineTransformMakeScale(1.3f, 1.3f);
+                break;
+        }
+        imageView.transform = transform;
+        imageView.center = CGPointMake(posX, posY);
+    }
 }
 
-- (void)_performActivity:(HDButton *)sender {
+- (void)dismiss {
+    
+    UIWindow *keyWindow = [UIApplication sharedApplication].keyWindow;
+    
+    [CATransaction begin]; {
+        [CATransaction setAnimationDuration:.03f];
+        [CATransaction setCompletionBlock:^{
+            
+             self.retainSelf = nil;
+            [self.container.layer removeAllAnimations];
+            [self removeFromSuperview];
+            
+            if (self.completionBlock) {
+                self.completionBlock();
+            }
+        }];
+        
+        CAKeyframeAnimation *keyFrameAnimation = [CAKeyframeAnimation animationWithKeyPath:@"position.y"];
+        keyFrameAnimation.duration = defaultAnimationDuration;
+        keyFrameAnimation.values = @[@(self.container.center.y),
+                                     @(self.container.center.y - 10.0f),
+                                     @(CGRectGetHeight(self.bounds) + CGRectGetMidY(self.container.bounds))];
+        keyFrameAnimation.keyTimes = @[@0.0f, @0.8f, @1.0f];
+        
+        self.container.layer.position = CGPointMake(CGRectGetMidX(self.bounds), [[keyFrameAnimation.values lastObject] floatValue]);
+        [self.container.layer addAnimation:keyFrameAnimation forKey:keyFrameAnimation.keyPath];
+        
+    } [CATransaction commit];
+    
+    keyWindow.tintAdjustmentMode = UIViewTintAdjustmentModeAutomatic;
+    [UIView animateWithDuration:defaultAnimationDuration animations:^{
+        [keyWindow tintColorDidChange];
+        self.bgView.alpha = 0;
+    }];
+}
+
+- (void)show {
+    
+    UIWindow *keyWindow = [UIApplication sharedApplication].keyWindow;
+    [keyWindow addSubview:self];
+    
+    [CATransaction begin]; {
+        [CATransaction setAnimationDuration:.05f];
+        [CATransaction setCompletionBlock:^{
+            
+            [self.container.layer removeAllAnimations];
+            [CATransaction begin]; {
+                [CATransaction setAnimationDuration:.05f];
+                [CATransaction setCompletionBlock:^{
+                    
+                    for (UIView *btn in self.container.subviews) {
+                        if ([btn isKindOfClass:[HDGameButton class]]) {
+                            HDGameButton *gameBtn = (HDGameButton *)btn;
+                            gameBtn.selected = NO;
+                        }
+                    }
+                    
+                    for (UIView *view in [self.container subviews]) {
+                        if ([view isKindOfClass:[UIImageView class]]) {
+                            CAKeyframeAnimation *jiggle = [self jiggleAnimationWithDuration:defaultAnimationDuration repeatCount:1];
+                            [view.layer addAnimation:jiggle forKey:jiggle.keyPath];
+                        }
+                    }
+                }];
+                
+                CAKeyframeAnimation *keyFrameAnimation = [self jiggleAnimationWithDuration:defaultAnimationDuration/2 repeatCount:1];
+                [self.container.layer addAnimation:keyFrameAnimation forKey:keyFrameAnimation.keyPath];
+                
+            } [CATransaction commit];
+        }];
+        
+        CAKeyframeAnimation *keyFrameAnimation = [CAKeyframeAnimation animationWithKeyPath:@"position.y"];
+        keyFrameAnimation.duration = defaultAnimationDuration;
+        keyFrameAnimation.values = @[@(self.container.center.y),
+                                     @(CGRectGetMidY(self.bounds) + 20.0f),
+                                     @(CGRectGetMidY(self.bounds))];
+        keyFrameAnimation.keyTimes = @[@0.0f, @0.2f, @1.0f];
+        
+        self.container.layer.position = CGPointMake(CGRectGetMidX(self.bounds), [[keyFrameAnimation.values lastObject] floatValue]);
+        [self.container.layer addAnimation:keyFrameAnimation forKey:keyFrameAnimation.keyPath];
+        
+    } [CATransaction commit];
+    
+    [UIView animateWithDuration:defaultAnimationDuration animations:^{
+        self.bgView.alpha = 1.0f;
+    }];
+}
+
+- (NSString *)_stringFromIdx:(NSUInteger)idx {
+    NSArray *strings = @[NSLocalizedString(HDNextKey, nil),
+                         NSLocalizedString(HDRestartKey, nil),
+                         NSLocalizedString(HDRateKey, nil),
+                         NSLocalizedString(HDShareKey, nil)];
+    return [strings objectAtIndex:idx];
+}
+
+- (void)_performActivity:(HDGameButton *)sender {
+    
+    NSString *buttonTitle = sender.titleLabel.text;
+    if (![buttonTitle isEqualToString:NSLocalizedString(HDRateKey,  nil)] &&
+        ![buttonTitle isEqualToString:NSLocalizedString(HDShareKey, nil)]) {
+         [self dismiss];
+    }
+    
     if (self.delegate && [self.delegate respondsToSelector:@selector(completionView:selectedButtonWithTitle:)]) {
-        [self.delegate completionView:self selectedButtonWithTitle:sender.titleLabel.text];
+        [self.delegate completionView:self selectedButtonWithTitle:buttonTitle];
     }
 }
 

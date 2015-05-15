@@ -25,10 +25,12 @@
         
         CGRect contentBounds = CGRectMake(0.0f, 0.0f, CGRectGetWidth(self.bounds), CGRectGetHeight(self.bounds)*.9f);
         
-        self.cornerRadius = 4.0f;
+        self.adjustsImageWhenHighlighted = NO;
+        self.adjustsImageWhenDisabled    = NO;
         
+        self.bottom = [UIButton buttonWithType:UIButtonTypeCustom];
         self.content = [UIButton buttonWithType:UIButtonTypeCustom];
-        self.bottom  = [UIButton buttonWithType:UIButtonTypeCustom];
+        self.content.titleLabel.textAlignment = NSTextAlignmentCenter;
         
         NSUInteger index = 0;
         for (UIButton *button  in @[self.bottom,self.content]) {
@@ -54,10 +56,7 @@
             index++;
         }
         
-        self.content.titleLabel.textAlignment = NSTextAlignmentCenter;
-        
-        self.adjustsImageWhenHighlighted = NO;
-        self.adjustsImageWhenDisabled    = NO;
+        self.cornerRadius = 4.0f;
         
         [self setTitleColor:[UIColor whiteColor]
                    forState:UIControlStateNormal];
@@ -67,8 +66,16 @@
        forControlEvents:UIControlEventTouchDown];
         
         [self addTarget:self
-                 action:@selector(_touchUpInside:)
+                 action:@selector(_animateTouchUpInside:)
        forControlEvents:UIControlEventTouchUpInside];
+        
+        [self addTarget:self
+                 action:@selector(_animateTouchUpInside:)
+       forControlEvents:UIControlEventTouchCancel];
+        
+        [self addTarget:self
+                 action:@selector(_animateTouchUpInside:)
+       forControlEvents:UIControlEventTouchDragExit];
     }
     return self;
 }
@@ -80,7 +87,7 @@
         return;
     }
     
-    CGRect contentBounds = CGRectMake(0.0f, 0.0f, CGRectGetWidth(self.bounds), CGRectGetHeight(self.bounds)*.875f);
+    CGRect contentBounds = CGRectMake(0.0f, 0.0f, CGRectGetWidth(self.bounds), CGRectGetHeight(self.bounds)*.9f);
     
     NSUInteger index = 0;
     for (UIButton *button in @[self.bottom, self.content]) {
@@ -98,7 +105,6 @@
             default:
                 break;
         }
-        
         button.center = position;
         
         index++;
@@ -112,7 +118,6 @@
         return;
     }
     
-     _cornerRadius = cornerRadius;
     for (UIButton *button in @[self.bottom, self.content]) {
         button.layer.cornerRadius = _cornerRadius;
     }
@@ -140,6 +145,24 @@
     position.y = CGRectGetMidY(self.content.bounds);
     self.content.center = position;
     _animating = NO;
+}
+
+- (IBAction)_animateTouchUpInside:(id)sender {
+    
+    [UIView animateWithDuration:.3f
+                          delay:0.0f
+         usingSpringWithDamping:.4f
+          initialSpringVelocity:.3f
+                        options:0
+                     animations:^{
+                         
+                         CGPoint position = self.content.center;
+                         position.y = CGRectGetMidY(self.content.bounds);
+                         self.content.center = position;
+                         
+                     } completion:^(BOOL finished) {
+                         _animating = NO;
+                     }];
 }
 
 #pragma mark - Override Getters
@@ -181,8 +204,12 @@
 }
 
 - (void)setSelected:(BOOL)selected {
-    [super setSelected:selected];
-    [self.content setSelected:selected];
+    
+    if (selected) {
+        [self _touchDown:nil];
+    } else {
+        [self _animateTouchUpInside:nil];
+    }
 }
 
 - (void)setEnabled:(BOOL)enabled {
