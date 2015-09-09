@@ -10,7 +10,6 @@
 #import "HDSoundManager.h"
 #import "HDGameViewController.h"
 #import "UIColor+ColorAdditions.h"
-#import "HDHexagon.h"
 #import "HDHelper.h"
 #import "HDConstants.h"
 

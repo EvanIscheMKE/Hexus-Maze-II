@@ -88,7 +88,6 @@
 		38C0A8441A07251700C552F1 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 38C0A8431A07251700C552F1 /* main.m */; };
 		38C0A8471A07251700C552F1 /* HDAppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 38C0A8461A07251700C552F1 /* HDAppDelegate.m */; };
 		38C0A84A1A07251700C552F1 /* HDGameViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 38C0A8491A07251700C552F1 /* HDGameViewController.m */; };
-		38C0A84F1A07251700C552F1 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 38C0A84E1A07251700C552F1 /* Images.xcassets */; };
 		38C0A85E1A07251700C552F1 /* HexitSpriteKitTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 38C0A85D1A07251700C552F1 /* HexitSpriteKitTests.m */; };
 		38C0A86B1A0726A300C552F1 /* SpriteKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 38C0A86A1A0726A300C552F1 /* SpriteKit.framework */; };
 		38C0A8751A0758AC00C552F1 /* HDGridManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 38C0A8741A0758AC00C552F1 /* HDGridManager.m */; };
@@ -170,6 +169,7 @@
 		38D4249B1A4F6C1A00FD21A2 /* D3.m4a in Resources */ = {isa = PBXBuildFile; fileRef = 38D424781A4F6C1A00FD21A2 /* D3.m4a */; };
 		38D4249C1A4F6C1A00FD21A2 /* C3.m4a in Resources */ = {isa = PBXBuildFile; fileRef = 38D424791A4F6C1A00FD21A2 /* C3.m4a */; };
 		38D7B5471B9FDEC6008225AB /* HDContainerViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 38D7B5461B9FDEC6008225AB /* HDContainerViewController.m */; };
+		38D7B54B1B9FE294008225AB /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 38D7B54A1B9FE294008225AB /* Images.xcassets */; };
 		38DDE4C11AA16C58004045E1 /* Grid-91.json in Resources */ = {isa = PBXBuildFile; fileRef = 38DDE4C01AA16C58004045E1 /* Grid-91.json */; };
 		38DDE4C31AA16C69004045E1 /* Grid-92.json in Resources */ = {isa = PBXBuildFile; fileRef = 38DDE4C21AA16C69004045E1 /* Grid-92.json */; };
 		38DDE4C51AA16C70004045E1 /* Grid-93.json in Resources */ = {isa = PBXBuildFile; fileRef = 38DDE4C41AA16C70004045E1 /* Grid-93.json */; };
@@ -391,7 +391,6 @@
 		38C0A8461A07251700C552F1 /* HDAppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HDAppDelegate.m; sourceTree = "<group>"; };
 		38C0A8481A07251700C552F1 /* HDGameViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HDGameViewController.h; sourceTree = "<group>"; };
 		38C0A8491A07251700C552F1 /* HDGameViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HDGameViewController.m; sourceTree = "<group>"; };
-		38C0A84E1A07251700C552F1 /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
 		38C0A8571A07251700C552F1 /* HexitSpriteKitTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = HexitSpriteKitTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		38C0A85C1A07251700C552F1 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		38C0A85D1A07251700C552F1 /* HexitSpriteKitTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HexitSpriteKitTests.m; sourceTree = "<group>"; };
@@ -487,6 +486,7 @@
 		38D424791A4F6C1A00FD21A2 /* C3.m4a */ = {isa = PBXFileReference; lastKnownFileType = file; path = C3.m4a; sourceTree = "<group>"; };
 		38D7B5451B9FDEC6008225AB /* HDContainerViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HDContainerViewController.h; sourceTree = "<group>"; };
 		38D7B5461B9FDEC6008225AB /* HDContainerViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HDContainerViewController.m; sourceTree = "<group>"; };
+		38D7B54A1B9FE294008225AB /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
 		38DDE4C01AA16C58004045E1 /* Grid-91.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = "Grid-91.json"; sourceTree = "<group>"; };
 		38DDE4C21AA16C69004045E1 /* Grid-92.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = "Grid-92.json"; sourceTree = "<group>"; };
 		38DDE4C41AA16C70004045E1 /* Grid-93.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = "Grid-93.json"; sourceTree = "<group>"; };
@@ -1097,7 +1097,7 @@
 				38C0A8461A07251700C552F1 /* HDAppDelegate.m */,
 				38C67CE61A0ABF0E0038526C /* HDConstants.h */,
 				38C67CE71A0ABF0E0038526C /* HDConstants.m */,
-				38C0A84E1A07251700C552F1 /* Images.xcassets */,
+				38D7B54A1B9FE294008225AB /* Images.xcassets */,
 				38C0A8411A07251700C552F1 /* Supporting Files */,
 				38C67CD11A0A29D80038526C /* Controller */,
 				38C67CD21A0A29E70038526C /* Views/Nodes/Scene */,
@@ -1621,7 +1621,6 @@
 				38DDE4C71AA16C78004045E1 /* Grid-94.json in Resources */,
 				38ECCBC41A9723C70053615D /* Grid-77.json in Resources */,
 				38ECCB7A1A9722B80053615D /* Grid-121.json in Resources */,
-				38C0A84F1A07251700C552F1 /* Images.xcassets in Resources */,
 				38ECCB7E1A9722B80053615D /* Grid-125.json in Resources */,
 				38ECCB7C1A9722B80053615D /* Grid-123.json in Resources */,
 				38DDE4EB1AA16D29004045E1 /* Grid-112.json in Resources */,
@@ -1641,6 +1640,7 @@
 				38ECCB881A9722B80053615D /* Grid-135.json in Resources */,
 				38DDE4E11AA16CFA004045E1 /* Grid-107.json in Resources */,
 				38D4249B1A4F6C1A00FD21A2 /* D3.m4a in Resources */,
+				38D7B54B1B9FE294008225AB /* Images.xcassets in Resources */,
 				38ECCBCB1A9723C70053615D /* Grid-84.json in Resources */,
 				38ECCBB81A9723C70053615D /* Grid-65.json in Resources */,
 				38ECCBC21A9723C70053615D /* Grid-75.json in Resources */,
