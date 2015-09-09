@@ -17,14 +17,16 @@
 
 @implementation HDTextureManager
 
-- (instancetype)init {
+- (instancetype)init
+{
     if (self = [super init]) {
         _textures = [NSDictionary dictionary];
     }
     return self;
 }
 
-+ (HDTextureManager *)sharedManager {
++ (HDTextureManager *)sharedManager
+{
     static HDTextureManager *manager = nil;
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
@@ -33,8 +35,8 @@
     return manager;
 }
 
-- (void)preloadTexturesWithCompletion:(dispatch_block_t)completion {
-    
+- (void)preloadTexturesWithCompletion:(dispatch_block_t)completion
+{
     if ([_textures allKeys].count) {
         return;
     }
@@ -61,7 +63,8 @@
     }];
 }
 
-- (SKTexture *)textureForKeyPath:(NSString *)keyPath {
+- (SKTexture *)textureForKeyPath:(NSString *)keyPath
+{
     if (self.textures[keyPath]) {
        return self.textures[keyPath];
     }

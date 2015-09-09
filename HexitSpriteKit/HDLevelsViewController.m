@@ -25,12 +25,13 @@ static const CGFloat kTileHeightInsetMultiplier = .855f;
 
 @implementation HDLevelsView
 
-- (HDLevelsContainerView *)containerView {
+- (HDLevelsContainerView *)containerView
+{
     return self.subviews.firstObject;
 }
 
-- (void)performIntroAnimationWithCompletion:(dispatch_block_t)completion {
-    
+- (void)performIntroAnimationWithCompletion:(dispatch_block_t)completion
+{
     [CATransaction begin];
     [CATransaction setCompletionBlock:completion];
     
@@ -56,8 +57,8 @@ static const CGFloat kTileHeightInsetMultiplier = .855f;
     [CATransaction commit];
 }
 
-- (void)performOutroAnimationWithCompletion:(dispatch_block_t)completion {
-    
+- (void)performOutroAnimationWithCompletion:(dispatch_block_t)completion
+{
     [CATransaction begin];
     [CATransaction setCompletionBlock:completion];
     
@@ -86,20 +87,14 @@ static const CGFloat kTileHeightInsetMultiplier = .855f;
 
 @end
 
-@implementation HDLevelsViewController {
+@implementation HDLevelsViewController
+{
     HDLevelsContainerView *_containerView;
     __weak HDLevelsView *_levelsView;
 }
 
-- (HDLevelsContainerView *)levelsContainerView {
-    return (HDLevelsContainerView *)self.view;
-}
-
-- (HDLevelsView *)levelsView {
-    return (HDLevelsView *)self.view;
-}
-
-- (void)loadView {
+- (void)loadView
+{
     self.view = [HDLevelsView new];
     _levelsView = (HDLevelsView *)self.view;
     
@@ -113,8 +108,8 @@ static const CGFloat kTileHeightInsetMultiplier = .855f;
     [_levelsView addSubview:_containerView];
 }
 
-- (void)viewDidLoad {
-    
+- (void)viewDidLoad
+{
     [super viewDidLoad];
     
     NSUInteger tagIndex = self.levelRange.location + 1;
@@ -139,13 +134,17 @@ static const CGFloat kTileHeightInsetMultiplier = .855f;
     }
 }
 
-- (void)viewWillAppear:(BOOL)animated {
+- (void)viewWillAppear:(BOOL)animated
+{
     [self updateLevelsForIAP];
     [super viewWillAppear:animated];
     _containerView.center = CGPointMake(CGRectGetMidX(_levelsView.bounds), CGRectGetMidY(_levelsView.bounds));
+    
+
 }
 
-- (void)updateLevelsForIAP {
+- (void)updateLevelsForIAP
+{
     NSUInteger tagIndex = self.levelRange.location + 1;
     for (HDHexaButton *subView in _containerView.subviews) {
         HDLevel *level = [[HDMapManager sharedManager] levelAtIndex:tagIndex - 1];
@@ -156,13 +155,15 @@ static const CGFloat kTileHeightInsetMultiplier = .855f;
 
 #pragma mark - Private
 
-- (void)_beginGame:(HDHexaButton *)sender {
+- (IBAction)_beginGame:(HDHexaButton *)sender
+{
     if (self.delegate && [self.delegate respondsToSelector:@selector(levelsViewController:didSelectLevel:)]) {
          [self.delegate levelsViewController:self didSelectLevel:sender.tag];
     }
 }
 
-- (CGPoint)_pointForColumn:(NSInteger)column row:(NSInteger)row {
+- (CGPoint)_pointForColumn:(NSInteger)column row:(NSInteger)row
+{
     const CGFloat kOriginY = self.tileSize/2 + ((row * (self.tileSize * kTileHeightInsetMultiplier)) );
     const CGFloat kOriginX = self.tileSize/2 + self.tileSize/4 + ((column * self.tileSize));
     const CGFloat kAlternateOffset = (row % 2 == 0) ? self.tileSize/2 : 0.0f;
@@ -171,8 +172,9 @@ static const CGFloat kTileHeightInsetMultiplier = .855f;
 
 #pragma mark - Getter
 
-- (CGFloat)tileSize {
-    return (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad) ? kHexaSizeiPad : kHexaSize;
+- (CGFloat)tileSize
+{
+    return IS_IPAD ? kHexaSizeiPad : kHexaSize;
 }
 
 @end

@@ -11,7 +11,8 @@
 
 @implementation NSMutableArray (ArrayAdditions)
 
-- (NSMutableArray *)shuffle {
+- (NSMutableArray *)shuffle
+{
     for (int i = 0; i < [self count]; ++i) {
         [self exchangeObjectAtIndex:i withObjectAtIndex:arc4random_uniform(i + 1)];
     }

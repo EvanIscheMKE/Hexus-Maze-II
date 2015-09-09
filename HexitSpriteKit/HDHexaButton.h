@@ -7,8 +7,9 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "HDButton.h"
 
-@interface HDHexaButton : UIButton
+@interface HDHexaButton : HDButton
 @property (nonatomic, assign) HDLevelState levelState;
 @property (nonatomic, assign) NSInteger row;
 - (instancetype)initWithLevelState:(HDLevelState)levelState;

@@ -10,6 +10,10 @@
 
 @implementation UIColor (FlatColors)
 
++ (UIColor *)flatSTTripleColor {
+    return [UIColor colorWithRed:(62/255.0f) green:(96/255.0f) blue:(112/255.0f) alpha:1];
+}
+
 + (UIColor *)flatSTButtonColor {
     return [UIColor colorWithRed:(60/255.0f) green:(68/255.0f) blue:(77/255.0f) alpha:1];
 }
@@ -36,6 +40,10 @@
 
 + (UIColor *)flatLCOrangeColor {
     return [UIColor colorWithRed:(224/255.0f) green:(147/255.0f) blue:(45/255.0f) alpha:1];
+}
+
++ (UIColor *)flatLCDoubleColor {
+    return [UIColor colorWithRed:(145/255.0f) green:(170/255.0f) blue:(157/255.0f) alpha:1];
 }
 
 + (UIColor *)flatLCTanColor {

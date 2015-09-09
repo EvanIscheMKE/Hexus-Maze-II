@@ -1,8 +1,6 @@
-"bested" = "Bested Yourself";
-"sign" = "Uudet tasot Tulossa ..";
-"tap" = "hana";
+
 "share" = "Osuus";
-"leaderboard" = "Leaderboard";
+"leaderboard" = "Ranking";
 "achievements" = "Saavutukset";
 "removeAds" = "Poista mainokset";
 "Restore" = "Palauttaa";
@@ -16,13 +14,21 @@
 "back" = "Takaisin karttaan";
 "welcome" = "Tervetuloa.";
 "beautiful" = "Kaunis!";
-"ohNo" = "Oh No!";
 "nextTime" = "Parempi onni ensi kerralla!";
-"tips" = "Vinkkejä";
 "tip1" = "Varo miinoja!";
 "tip2" = "Vain koskettamalla sitä kahdesti!";
 "tip3" = "Etsi lukitsematon ensin!";
 "tip4" = "Kosketa vain kolme kertaa!";
-"tip5" = "Aina päättyy punainen hex!";
+"tip5" = "Tästä se PÄÄTTYY!";
 "tip6" = "Sinulla tämä!";
 "tip7" = "On enemmän kuin yksi syy";
+"level" = "TASO";
+"play" = "PELETA";
+"dismiss" = "IRTISANOMISEKSI";
+"wow" = "Wow, Se oli hienoa!";
+"nextTime" = "Parempaa onnea ensi kerralla!";
+"tut1" = "Koskettaa valkoinen kaakeli, sitten siirtyä voimassa tile reunustaville sen reunoja.";
+"tut2" = "vielä kerran.";
+"purchase" = "osto";
+"IAPremove" = "osto 'poistaa kaikki mainokset'?";
+"IAPunlock" = "osto 'avata kaikki lukitut tasot'?";

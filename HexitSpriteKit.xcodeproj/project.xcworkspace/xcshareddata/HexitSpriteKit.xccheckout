@@ -7,14 +7,14 @@
 	<key>IDESourceControlProjectIdentifier</key>
 	<string>56E8C092-9494-49C3-9FAD-0168116C41FD</string>
 	<key>IDESourceControlProjectName</key>
-	<string>project</string>
+	<string>HexitSpriteKit</string>
 	<key>IDESourceControlProjectOriginsDictionary</key>
 	<dict>
 		<key>55FAC256CB647DA678AFCCE2C9BEB29AFE830A88</key>
 		<string>https://bitbucket.org/EvanIsche/hexus.git</string>
 	</dict>
 	<key>IDESourceControlProjectPath</key>
-	<string>HexitSpriteKit.xcodeproj/project.xcworkspace</string>
+	<string>HexitSpriteKit.xcodeproj</string>
 	<key>IDESourceControlProjectRelativeInstallPathDictionary</key>
 	<dict>
 		<key>55FAC256CB647DA678AFCCE2C9BEB29AFE830A88</key>

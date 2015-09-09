@@ -16,8 +16,8 @@ NSString * const HDLockedKey = @"locked";
 NSString * const HDIndicatorKey = @"Indicator";
 @implementation HDHexaNode
 
-- (void)setLocked:(BOOL)locked {
-    
+- (void)setLocked:(BOOL)locked
+{
     _locked = locked;
     if (locked) {
         SKSpriteNode *lock = [SKSpriteNode spriteNodeWithImageNamed:@"Locked-Node"];
@@ -31,13 +31,12 @@ NSString * const HDIndicatorKey = @"Indicator";
 
 - (void)displayNextMoveIndicatorWithColor:(UIColor *)color
                                 direction:(HDTileDirection)direction
-                                 animated:(BOOL)animated {
-    
-    UIImage *image = [UIImage tileFromSize:self.size
-                                     color:color
-                                 direction:direction];
+                                 animated:(BOOL)animated
+{
+    UIImage *image = [UIImage tileFromSize:self.size color:color direction:direction];
     SKTexture *texture = [SKTexture textureWithImage:image];
     SKSpriteNode *sprite = [SKSpriteNode spriteNodeWithTexture:texture];
+    sprite.scale = PREIOS8_SCALE;
     sprite.position = CGPointMake(0.0f, 1.0f);
     sprite.name = HDIndicatorKey;
     [self addChild:sprite];
@@ -49,8 +48,8 @@ NSString * const HDIndicatorKey = @"Indicator";
     }
 }
 
-- (void)setDisplayNextMoveIndicator:(BOOL)displayNextMoveIndicator {
-    
+- (void)setDisplayNextMoveIndicator:(BOOL)displayNextMoveIndicator
+{    
     _displayNextMoveIndicator = displayNextMoveIndicator;
     if (!_displayNextMoveIndicator) {
         [[self childNodeWithName:HDIndicatorKey] removeFromParent];

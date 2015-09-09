@@ -18,21 +18,24 @@ static const CGFloat inset = 20.0f;
 @property (nonatomic, strong) HDGameButton *activityButton;
 @end
 
-@implementation HDNavigationBar{
+@implementation HDNavigationBar
+{
     NSDictionary *_views;
     NSDictionary *_metrics;
 }
 
 #pragma mark - Custom Initalizers
 
-+ (instancetype)menuBarWithActivityImage:(UIImage *)activityImage {
++ (instancetype)menuBarWithActivityImage:(UIImage *)activityImage
+{
     return [[HDNavigationBar alloc] initWithActivityImage:activityImage];
 }
 
-- (instancetype)initWithActivityImage:(UIImage *)activityImage {
+- (instancetype)initWithActivityImage:(UIImage *)activityImage
+{
     if (self = [super init]) {
         
-        self.activityImage = activityImage;
+        _activityImage = activityImage;
         
         self.backgroundColor = [UIColor clearColor];
         
@@ -55,14 +58,14 @@ static const CGFloat inset = 20.0f;
 
 #pragma mark - Private
 
-- (void)_layoutSubviews {
-    
+- (void)_layoutSubviews
+{
     UIButton *toggle = self.navigationButton;
     UIButton *share  = self.activityButton;
     
     _views = NSDictionaryOfVariableBindings(toggle, share);
     _metrics = @{ @"buttonHeight": @(IS_IPAD ? 75.0f : 44.0f),
-                  @"inset":        @(IS_IPAD ? inset*1.5f : inset) };
+                  @"inset":        @(IS_IPAD ? inset*1.5f : inset*TRANSFORM_SCALE_X) };
     
 
     NSArray *toggleHorizontalConstraint = [NSLayoutConstraint constraintsWithVisualFormat:@"H:|-inset-[toggle(buttonHeight)]"
@@ -90,13 +93,14 @@ static const CGFloat inset = 20.0f;
     [self addConstraints:shareVerticalConstraint];
     
     if (!IS_IPAD) {
-        for (UIButton *subView in self.subviews) {
+        for (HDGameButton *subView in self.subviews) {
             subView.transform = CGAffineTransformMakeScale(TRANSFORM_SCALE_X, TRANSFORM_SCALE_X);
         }
     }
 }
 
-- (void)willMoveToSuperview:(UIView *)newSuperview {
+- (void)willMoveToSuperview:(UIView *)newSuperview
+{
     [super willMoveToSuperview:newSuperview];
     if (newSuperview) {
         [self _layoutSubviews];
@@ -105,7 +109,8 @@ static const CGFloat inset = 20.0f;
 
 #pragma mark - Setters
 
-- (void)setActivityImage:(UIImage *)activityImage {
+- (void)setActivityImage:(UIImage *)activityImage
+{
     _activityImage = activityImage;
     if (self.activityButton) {
         [self.activityButton setImage:activityImage forState:UIControlStateNormal];

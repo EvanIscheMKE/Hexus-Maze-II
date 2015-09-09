@@ -16,7 +16,8 @@ CGFloat degreesToRadians(CGFloat degrees) {
 #import "HDHexaNode.h"
 #import "UIColor+ColorAdditions.h"
 
-CGFloat angleForDirection(HDTileDirection direction) {
+CGFloat angleForDirection(HDTileDirection direction)
+{
     switch (direction) {
         case HDTileDirectionLeft:
             return M_PI;
@@ -35,7 +36,8 @@ CGFloat angleForDirection(HDTileDirection direction) {
     }
 }
 
-NSString *descriptionForLevelIdx(NSUInteger levelIdx){
+NSString *descriptionForLevelIdx(NSUInteger levelIdx)
+{
     switch (levelIdx) {
         case HDLevelTipOne:
             return NSLocalizedString(@"tip1", nil);
@@ -58,7 +60,8 @@ NSString *descriptionForLevelIdx(NSUInteger levelIdx){
 
 @implementation HDHelper
 
-+ (NSString *)imageURLFromType:(HDHexagonType)type {
++ (NSString *)imageURLFromType:(HDHexagonType)type
+{
     switch (type) {
         case HDHexagonTypeRegular:
             return @"Default-OneTap";
@@ -77,7 +80,8 @@ NSString *descriptionForLevelIdx(NSUInteger levelIdx){
     }
 }
 
-+ (UIColor *)colorFromType:(HDHexagonType)type touchCount:(NSUInteger)touchCount {
++ (UIColor *)colorFromType:(HDHexagonType)type touchCount:(NSUInteger)touchCount
+{
     switch (type) {
         case HDHexagonTypeRegular:
             return [UIColor flatSTLightBlueColor];
@@ -86,21 +90,21 @@ NSString *descriptionForLevelIdx(NSUInteger levelIdx){
         case HDHexagonTypeDouble:
             switch (touchCount) {
                 case 0:
-                    return [UIColor flatSTEmeraldColor];
+                    return [UIColor flatLCDoubleColor];
                 default:
                     return [UIColor flatSTLightBlueColor];
             }
         case HDHexagonTypeTriple:
             switch (touchCount) {
                 case 0:
-                    return [UIColor flatLCOrangeColor];
+                    return [UIColor flatSTTripleColor];
                 case 1:
-                    return [UIColor flatSTEmeraldColor];
+                    return [UIColor flatLCDoubleColor];
                 default:
                     return [UIColor flatSTLightBlueColor];
             }
         case HDHexagonTypeEnd:
-            return [UIColor flatSTRedColor];
+            return [UIColor flatSTEmeraldColor];
         case HDHexagonTypeFive:
         case HDHexagonTypeFour:
         case HDHexagonTypeThree:
@@ -112,8 +116,8 @@ NSString *descriptionForLevelIdx(NSUInteger levelIdx){
     }
 }
 
-+ (UIImage *)imageFromLevelIdx:(NSUInteger)levelIdx {
-    
++ (UIImage *)imageFromLevelIdx:(NSUInteger)levelIdx
+{
     switch (levelIdx) {
         case HDLevelTipOne:
             return [UIImage imageNamed:@"Alert-Mine"];
@@ -132,8 +136,8 @@ NSString *descriptionForLevelIdx(NSUInteger levelIdx){
     }
 }
 
-+ (void)entranceAnimationWithTiles:(NSArray *)tiles completion:(dispatch_block_t)completion {
-    
++ (void)entranceAnimationWithTiles:(NSArray *)tiles completion:(dispatch_block_t)completion
+{
     if (tiles.count == 0) {
         if (completion) {
             completion();
@@ -169,13 +173,12 @@ NSString *descriptionForLevelIdx(NSUInteger levelIdx){
                 
                 [dealTheseTiles removeObjectIdenticalTo:hexagon];
                 
-                SKAction *wait          = [SKAction waitForDuration:row * .15f];
-                SKAction *dropPositionY = [SKAction moveTo:hexagon.node.defaultPosition duration:.25f];
-                SKAction *sequence      = [SKAction sequence:@[wait, dropPositionY]];
+                SKAction *wait = [SKAction waitForDuration:row * .1f];
+                SKAction *dropPositionY = [SKAction moveTo:hexagon.node.defaultPosition duration:.2f];
+                SKAction *sequence = [SKAction sequence:@[wait, dropPositionY]];
                 
                 CGPoint position = CGPointMake(hexagon.node.position.x,
                                                CGRectGetHeight([[UIScreen mainScreen] bounds]) + CGRectGetHeight(hexagon.node.frame)/2 + 5.0f);
-                
                 hexagon.node.hidden = NO;
                 hexagon.node.position = position;
                 [hexagon.node runAction:sequence completion:^{
@@ -191,8 +194,8 @@ NSString *descriptionForLevelIdx(NSUInteger levelIdx){
     }
 }
 
-+ (void)completionAnimationWithTiles:(NSArray *)tiles completion:(dispatch_block_t)completion {
-    
++ (void)completionAnimationWithTiles:(NSArray *)tiles completion:(dispatch_block_t)completion
+{
     if (tiles.count == 0) {
         if (completion) {
             completion();
@@ -203,27 +206,26 @@ NSString *descriptionForLevelIdx(NSUInteger levelIdx){
     NSUInteger countTo = tiles.count -1;
     
     // Scale to zero
-    SKAction *scaleDown = [SKAction scaleTo:0.0f duration:.3f];
+    SKAction *scaleDown = [SKAction scaleTo:0 duration:.2f];
     
     // Loop through tiles and scale to zilch
-    __block NSInteger index = 0;
+    __block NSUInteger index = 0;
     for (HDHexaObject *tile in tiles) {
-        [[tile.node children] makeObjectsPerformSelector:@selector(removeFromParent)];
-        [tile.node runAction:[SKAction sequence:@[scaleDown,[SKAction hide]]]
+        [tile.node runAction:scaleDown
                   completion:^{
-                        [tile restoreToInitialState];
-                                     if (index == countTo) {
-                                         if (completion) {
-                                             completion();
-                                         }
-                                     }
-                                     index++;
-                                 }];
+                      [tile restoreToInitialState];
+                      if (index == countTo) {
+                          if (completion) {
+                              completion();
+                          }
+                      }
+    index++;
+                  }];
     }
 }
 
-+ (NSArray *)possibleMovesFromMine:(HDHexaObject *)obj containedIn:(NSArray *)array{
-    
++ (NSArray *)possibleMovesFromMine:(HDHexaObject *)obj containedIn:(NSArray *)array
+{
     NSMutableArray *hexaObjects = [NSMutableArray array];
     
     NSInteger hexaRow[6];
@@ -255,8 +257,8 @@ NSString *descriptionForLevelIdx(NSUInteger levelIdx){
     return hexaObjects;
 }
 
-+ (NSArray *)possibleMovesForHexagon:(HDHexaObject *)hexagon inArray:(NSArray *)array {
-    
++ (NSArray *)possibleMovesForHexagon:(HDHexaObject *)hexagon inArray:(NSArray *)array
+{
     NSMutableArray *hexaObjects = [NSMutableArray array];
     
     NSInteger hexagonRow[6];
@@ -288,7 +290,8 @@ NSString *descriptionForLevelIdx(NSUInteger levelIdx){
     return hexaObjects;
 }
 
-+ (HDTileDirection)oppositeForDirection:(HDTileDirection)direction {
++ (HDTileDirection)oppositeForDirection:(HDTileDirection)direction
+{
     switch (direction) {
         case HDTileDirectionLeft:
             return HDTileDirectionRight;
@@ -313,8 +316,8 @@ NSString *descriptionForLevelIdx(NSUInteger levelIdx){
     }
 }
 
-+ (HDTileDirection)tileDirectionsToTile:(HDHexaObject *)toHexagon fromTile:(HDHexaObject *)fromHexagon {
-    
++ (HDTileDirection)tileDirectionsToTile:(HDHexaObject *)toHexagon fromTile:(HDHexaObject *)fromHexagon
+{
     if (toHexagon.row == fromHexagon.row && toHexagon.column == fromHexagon.column + 1) {
         return HDTileDirectionRight;
     }

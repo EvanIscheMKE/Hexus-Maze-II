@@ -15,7 +15,8 @@
 
 @implementation HDTileManager
 
-+ (HDTileManager *)sharedManager {
++ (HDTileManager *)sharedManager
+{
     static HDTileManager *manager;
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
@@ -24,26 +25,31 @@
     return manager;
 }
 
-- (instancetype)init {
+- (instancetype)init
+{
     if (self = [super init]) {
         self.selectedTileBank = [NSMutableArray array];
     }
     return self;
 }
 
-- (void)clear {
+- (void)clear
+{
     [self.selectedTileBank removeAllObjects];
 }
 
-- (HDHexaObject *)lastHexagonObject {
+- (HDHexaObject *)lastHexagonObject
+{
     return self.selectedTileBank.lastObject;
 }
 
-- (void)addHexagon:(HDHexaObject *)hexagon {
+- (void)addHexagon:(HDHexaObject *)hexagon
+{
     [self.selectedTileBank addObject:hexagon];
 }
 
-- (BOOL)isEmpty {
+- (BOOL)isEmpty
+{
     return self.selectedTileBank.count == 0;
 }
 

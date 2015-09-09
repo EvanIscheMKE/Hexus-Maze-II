@@ -11,16 +11,15 @@
 NSString * const HDHexGridKey = @"grid";
 
 /** NSUserDefault Keys **/
-NSString * const HDParallaxBackgroundKey = @"parallaxbackground";
 NSString * const HDLastCompletedLevelKey = @"HDLastLevelCompletedKey";
-NSString * const HDDefaultLevelKey   = @"defaultLevels";
-NSString * const HDFirstRunKey       = @"FRKey";
-NSString * const HDSoundkey          = @"soundKey";
-NSString * const HDMusickey          = @"musicKey";
+NSString * const HDDefaultLevelKey = @"defaultLevels";
+NSString * const HDFirstRunKey = @"FRKey";
+NSString * const HDSoundkey = @"soundKey";
+NSString * const HDMusickey = @"musicKey";
 
 /** Sound Keys **/
-NSString * const HDGameOverKey    = @"GameOver.wav";
+NSString * const HDGameOverKey = @"GameOver.wav";
 NSString * const HDCompletionZing = @"win.mp3";
-NSString * const HDSoundLoopKey   = @"Mellowtron.mp3";
-NSString * const HDButtonSound    = @"menuClicked.wav";
-NSString * const HDSwipeSound     = @"Swooshed.mp3";
+NSString * const HDSoundLoopKey = @"Mellowtron.mp3";
+NSString * const HDButtonSound = @"menuClicked.wav";
+NSString * const HDSwipeSound = @"Swooshed.mp3";

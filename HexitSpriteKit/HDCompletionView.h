@@ -8,11 +8,6 @@
 
 @import UIKit;
 
-extern NSString * const HDNextKey;
-extern NSString * const HDShareKey;
-extern NSString * const HDRestartKey;
-extern NSString * const HDRateKey;
-
 #import "HDLayoverView.h"
 
 @protocol HDCompletionViewDelegate;
@@ -23,5 +18,5 @@ extern NSString * const HDRateKey;
 
 @protocol HDCompletionViewDelegate <NSObject>
 @required
-- (void)completionView:(HDCompletionView *)completionView selectedButtonWithTitle:(NSString *)title;
+- (void)completionView:(HDCompletionView *)completionView selectedButtonWithTag:(NSInteger)tag;
 @end

@@ -6,11 +6,13 @@
 //  Copyright (c) 2015 Evan William Ische. All rights reserved.
 //
 
+#import "HDLabel.h"
 #import "HDLayoverView.h"
 
 @implementation HDLayoverView
 
-- (instancetype)init {
+- (instancetype)init
+{
     if (self = [super init]) {
         
         self.retainSelf = self;
@@ -33,17 +35,17 @@
             [self addSubview:subView];
         }
         
-        self.titleLbl = [[UILabel alloc] init];
+        self.titleLbl = [[HDLabel alloc] init];
         self.titleLbl.textColor = [UIColor whiteColor];
         self.titleLbl.font = GAME_FONT_WITH_SIZE(19.0f);
         
-        self.descriptionLbl = [[UILabel alloc] init];
+        self.descriptionLbl = [[HDLabel alloc] init];
         self.descriptionLbl.textColor = [UIColor whiteColor];
         self.descriptionLbl.font = GAME_FONT_WITH_SIZE(14.0f);
         self.descriptionLbl.lineBreakMode = NSLineBreakByWordWrapping;
         self.descriptionLbl.numberOfLines = 0;
         
-        for (UILabel *subViews in @[self.titleLbl, self.descriptionLbl]) {
+        for (HDLabel *subViews in @[self.titleLbl, self.descriptionLbl]) {
             subViews.textAlignment = NSTextAlignmentCenter;
             [self.container addSubview:subViews];
         }
@@ -52,7 +54,8 @@
     return self;
 }
 
-- (CAKeyframeAnimation *)jiggleAnimationWithDuration:(NSTimeInterval)duration repeatCount:(CGFloat)count {
+- (CAKeyframeAnimation *)jiggleAnimationWithDuration:(NSTimeInterval)duration repeatCount:(CGFloat)count
+{
     CAKeyframeAnimation *keyFrameAnimation = [CAKeyframeAnimation animationWithKeyPath:@"transform.rotation.z"];
     keyFrameAnimation.duration = defaultAnimationDuration/2;
     keyFrameAnimation.repeatCount = count;
@@ -61,11 +64,44 @@
     return keyFrameAnimation;
 }
 
-- (void)dismiss {
-    NSAssert(NO, @" '%@' must be overridden in a subclass",NSStringFromSelector(_cmd));
+- (void)dismiss
+{
+    UIWindow *keyWindow = [UIApplication sharedApplication].keyWindow;
+    
+    [CATransaction begin]; {
+        [CATransaction setAnimationDuration:.03f];
+        [CATransaction setCompletionBlock:^{
+            
+            [self.container.layer removeAllAnimations];
+            [self removeFromSuperview];
+            
+            self.retainSelf = nil;
+            if (self.completionBlock) {
+                self.completionBlock();
+            }
+        }];
+        
+        CAKeyframeAnimation *keyFrameAnimation = [CAKeyframeAnimation animationWithKeyPath:@"position.y"];
+        keyFrameAnimation.duration = defaultAnimationDuration;
+        keyFrameAnimation.values = @[@(self.container.center.y),
+                                     @(self.container.center.y - 10.0f),
+                                     @(CGRectGetHeight(self.bounds) + CGRectGetMidY(self.container.bounds))];
+        keyFrameAnimation.keyTimes = @[@0.0f, @0.8f, @1.0f];
+        
+        self.container.layer.position = CGPointMake(CGRectGetMidX(self.bounds), [[keyFrameAnimation.values lastObject] floatValue]);
+        [self.container.layer addAnimation:keyFrameAnimation forKey:keyFrameAnimation.keyPath];
+        
+    } [CATransaction commit];
+    
+    keyWindow.tintAdjustmentMode = UIViewTintAdjustmentModeAutomatic;
+    [UIView animateWithDuration:defaultAnimationDuration animations:^{
+        [keyWindow tintColorDidChange];
+        self.bgView.alpha = 0;
+    }];
 }
 
-- (void)show {
+- (void)show
+{
     NSAssert(NO, @" '%@' must be overridden in a subclass",NSStringFromSelector(_cmd));
 }
 

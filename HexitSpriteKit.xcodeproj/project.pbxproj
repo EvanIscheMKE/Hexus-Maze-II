@@ -8,7 +8,6 @@
 
 /* Begin PBXBuildFile section */
 		3828E9741AF3DF29007A4273 /* HDTextureManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 3828E9731AF3DF29007A4273 /* HDTextureManager.m */; };
-		383199F61A785828004CF3E2 /* HDContainerViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 383199F41A785828004CF3E2 /* HDContainerViewController.m */; };
 		383199FC1A785875004CF3E2 /* HDRearViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 383199FB1A785875004CF3E2 /* HDRearViewController.m */; };
 		385207031AC35A4C000142F6 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 385207011AC35A4C000142F6 /* Localizable.strings */; };
 		385207061AC35A74000142F6 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 385207041AC35A74000142F6 /* Localizable.strings */; };
@@ -37,9 +36,11 @@
 		386CF6291A3982BA006A8381 /* SKEmitterNode+EmitterAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 386CF6281A3982BA006A8381 /* SKEmitterNode+EmitterAdditions.m */; };
 		386CF62D1A3A250D006A8381 /* Mellowtron.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 386CF62C1A3A250D006A8381 /* Mellowtron.mp3 */; };
 		386CF62F1A3B6FA5006A8381 /* win.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 386CF62E1A3B6FA5006A8381 /* win.mp3 */; };
+		3871461F1B0BE0B4008A8395 /* HDLabel.m in Sources */ = {isa = PBXBuildFile; fileRef = 3871461E1B0BE0B4008A8395 /* HDLabel.m */; };
 		387459F41A84B1BD00EAEEFE /* StoreKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 387459F31A84B1BD00EAEEFE /* StoreKit.framework */; };
 		387459F71A84B1EA00EAEEFE /* HDIAdHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = 387459F61A84B1EA00EAEEFE /* HDIAdHelper.m */; };
 		387459FA1A84B5B700EAEEFE /* HDHexusIAdHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = 387459F91A84B5B700EAEEFE /* HDHexusIAdHelper.m */; };
+		387800EE1B0C314600949F3A /* HDIAPView.m in Sources */ = {isa = PBXBuildFile; fileRef = 387800ED1B0C314600949F3A /* HDIAPView.m */; };
 		38913C141AB3DE9C00EAF397 /* HDIntroViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 38913C131AB3DE9C00EAF397 /* HDIntroViewController.m */; };
 		389E94F01A44A2F000F2DF05 /* HDGridScrollView.m in Sources */ = {isa = PBXBuildFile; fileRef = 389E94EF1A44A2F000F2DF05 /* HDGridScrollView.m */; };
 		389E94F61A47DE7F00F2DF05 /* CoreMotion.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 389E94F51A47DE7F00F2DF05 /* CoreMotion.framework */; };
@@ -168,6 +169,7 @@
 		38D4249A1A4F6C1A00FD21A2 /* E3.m4a in Resources */ = {isa = PBXBuildFile; fileRef = 38D424771A4F6C1A00FD21A2 /* E3.m4a */; };
 		38D4249B1A4F6C1A00FD21A2 /* D3.m4a in Resources */ = {isa = PBXBuildFile; fileRef = 38D424781A4F6C1A00FD21A2 /* D3.m4a */; };
 		38D4249C1A4F6C1A00FD21A2 /* C3.m4a in Resources */ = {isa = PBXBuildFile; fileRef = 38D424791A4F6C1A00FD21A2 /* C3.m4a */; };
+		38D7B5471B9FDEC6008225AB /* HDContainerViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 38D7B5461B9FDEC6008225AB /* HDContainerViewController.m */; };
 		38DDE4C11AA16C58004045E1 /* Grid-91.json in Resources */ = {isa = PBXBuildFile; fileRef = 38DDE4C01AA16C58004045E1 /* Grid-91.json */; };
 		38DDE4C31AA16C69004045E1 /* Grid-92.json in Resources */ = {isa = PBXBuildFile; fileRef = 38DDE4C21AA16C69004045E1 /* Grid-92.json */; };
 		38DDE4C51AA16C70004045E1 /* Grid-93.json in Resources */ = {isa = PBXBuildFile; fileRef = 38DDE4C41AA16C70004045E1 /* Grid-93.json */; };
@@ -195,8 +197,6 @@
 		38E3E6031AEDFA0100693724 /* SKColor+ColorAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 38E3E6001AEDFA0100693724 /* SKColor+ColorAdditions.m */; };
 		38E3E6041AEDFA0100693724 /* UIColor+ColorAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 38E3E6021AEDFA0100693724 /* UIColor+ColorAdditions.m */; };
 		38E3E6071AEF142A00693724 /* HDButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 38E3E6061AEF142A00693724 /* HDButton.m */; };
-		38E7614C1B0649380095F79F /* HDShapeView.m in Sources */ = {isa = PBXBuildFile; fileRef = 38E7614B1B0649380095F79F /* HDShapeView.m */; };
-		38E7614F1B064A750095F79F /* HDBarGraphView.m in Sources */ = {isa = PBXBuildFile; fileRef = 38E7614E1B064A750095F79F /* HDBarGraphView.m */; };
 		38ECCB721A9722B80053615D /* Grid-113.json in Resources */ = {isa = PBXBuildFile; fileRef = 38ECCB561A9722B80053615D /* Grid-113.json */; };
 		38ECCB731A9722B80053615D /* Grid-114.json in Resources */ = {isa = PBXBuildFile; fileRef = 38ECCB571A9722B80053615D /* Grid-114.json */; };
 		38ECCB741A9722B80053615D /* Grid-115.json in Resources */ = {isa = PBXBuildFile; fileRef = 38ECCB581A9722B80053615D /* Grid-115.json */; };
@@ -270,6 +270,7 @@
 		38F5A6B61A076B960036750A /* HDLevel.m in Sources */ = {isa = PBXBuildFile; fileRef = 38F5A6B51A076B960036750A /* HDLevel.m */; };
 		38F5A6B91A07F2FA0036750A /* Grid-1.json in Resources */ = {isa = PBXBuildFile; fileRef = 38F5A6B71A07F2FA0036750A /* Grid-1.json */; };
 		38F5A6BD1A08014F0036750A /* HDHexaObject.m in Sources */ = {isa = PBXBuildFile; fileRef = 38F5A6BC1A08014F0036750A /* HDHexaObject.m */; };
+		38F807871B0E7F520009E4F9 /* NeonMansion.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 38F807861B0E7F520009E4F9 /* NeonMansion.mp3 */; };
 		38F919251A37BF6A00249361 /* iAd.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 38F919241A37BF6A00249361 /* iAd.framework */; };
 		38FDF9B51A1BEF1F005CCFE1 /* HDSettingsManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 38FDF9B41A1BEF1F005CCFE1 /* HDSettingsManager.m */; };
 /* End PBXBuildFile section */
@@ -287,8 +288,6 @@
 /* Begin PBXFileReference section */
 		3828E9721AF3DF29007A4273 /* HDTextureManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HDTextureManager.h; sourceTree = "<group>"; };
 		3828E9731AF3DF29007A4273 /* HDTextureManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HDTextureManager.m; sourceTree = "<group>"; };
-		383199F41A785828004CF3E2 /* HDContainerViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HDContainerViewController.m; sourceTree = "<group>"; };
-		383199F51A785828004CF3E2 /* HDContainerViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HDContainerViewController.h; sourceTree = "<group>"; };
 		383199FA1A785875004CF3E2 /* HDRearViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HDRearViewController.h; sourceTree = "<group>"; };
 		383199FB1A785875004CF3E2 /* HDRearViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HDRearViewController.m; sourceTree = "<group>"; };
 		385207021AC35A4C000142F6 /* it */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = it; path = HexitSpriteKit/Base.lproj/it.lproj/Localizable.strings; sourceTree = SOURCE_ROOT; };
@@ -320,11 +319,15 @@
 		386CF6281A3982BA006A8381 /* SKEmitterNode+EmitterAdditions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "SKEmitterNode+EmitterAdditions.m"; sourceTree = "<group>"; };
 		386CF62C1A3A250D006A8381 /* Mellowtron.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = Mellowtron.mp3; sourceTree = "<group>"; };
 		386CF62E1A3B6FA5006A8381 /* win.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = win.mp3; sourceTree = "<group>"; };
+		3871461D1B0BE0B4008A8395 /* HDLabel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HDLabel.h; sourceTree = "<group>"; };
+		3871461E1B0BE0B4008A8395 /* HDLabel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HDLabel.m; sourceTree = "<group>"; };
 		387459F31A84B1BD00EAEEFE /* StoreKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = StoreKit.framework; path = System/Library/Frameworks/StoreKit.framework; sourceTree = SDKROOT; };
 		387459F51A84B1EA00EAEEFE /* HDIAdHelper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HDIAdHelper.h; sourceTree = "<group>"; };
 		387459F61A84B1EA00EAEEFE /* HDIAdHelper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HDIAdHelper.m; sourceTree = "<group>"; };
 		387459F81A84B5B700EAEEFE /* HDHexusIAdHelper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HDHexusIAdHelper.h; sourceTree = "<group>"; };
 		387459F91A84B5B700EAEEFE /* HDHexusIAdHelper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HDHexusIAdHelper.m; sourceTree = "<group>"; };
+		387800EC1B0C314600949F3A /* HDIAPView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HDIAPView.h; sourceTree = "<group>"; };
+		387800ED1B0C314600949F3A /* HDIAPView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HDIAPView.m; sourceTree = "<group>"; };
 		38913C121AB3DE9C00EAF397 /* HDIntroViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HDIntroViewController.h; sourceTree = "<group>"; };
 		38913C131AB3DE9C00EAF397 /* HDIntroViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HDIntroViewController.m; sourceTree = "<group>"; };
 		389E94EE1A44A2F000F2DF05 /* HDGridScrollView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HDGridScrollView.h; sourceTree = "<group>"; };
@@ -482,6 +485,8 @@
 		38D424771A4F6C1A00FD21A2 /* E3.m4a */ = {isa = PBXFileReference; lastKnownFileType = file; path = E3.m4a; sourceTree = "<group>"; };
 		38D424781A4F6C1A00FD21A2 /* D3.m4a */ = {isa = PBXFileReference; lastKnownFileType = file; path = D3.m4a; sourceTree = "<group>"; };
 		38D424791A4F6C1A00FD21A2 /* C3.m4a */ = {isa = PBXFileReference; lastKnownFileType = file; path = C3.m4a; sourceTree = "<group>"; };
+		38D7B5451B9FDEC6008225AB /* HDContainerViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HDContainerViewController.h; sourceTree = "<group>"; };
+		38D7B5461B9FDEC6008225AB /* HDContainerViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HDContainerViewController.m; sourceTree = "<group>"; };
 		38DDE4C01AA16C58004045E1 /* Grid-91.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = "Grid-91.json"; sourceTree = "<group>"; };
 		38DDE4C21AA16C69004045E1 /* Grid-92.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = "Grid-92.json"; sourceTree = "<group>"; };
 		38DDE4C41AA16C70004045E1 /* Grid-93.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = "Grid-93.json"; sourceTree = "<group>"; };
@@ -514,10 +519,6 @@
 		38E3E6021AEDFA0100693724 /* UIColor+ColorAdditions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIColor+ColorAdditions.m"; sourceTree = "<group>"; };
 		38E3E6051AEF142A00693724 /* HDButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HDButton.h; sourceTree = "<group>"; };
 		38E3E6061AEF142A00693724 /* HDButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HDButton.m; sourceTree = "<group>"; };
-		38E7614A1B0649380095F79F /* HDShapeView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HDShapeView.h; sourceTree = "<group>"; };
-		38E7614B1B0649380095F79F /* HDShapeView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HDShapeView.m; sourceTree = "<group>"; };
-		38E7614D1B064A750095F79F /* HDBarGraphView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HDBarGraphView.h; sourceTree = "<group>"; };
-		38E7614E1B064A750095F79F /* HDBarGraphView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HDBarGraphView.m; sourceTree = "<group>"; };
 		38ECCB561A9722B80053615D /* Grid-113.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = "Grid-113.json"; sourceTree = "<group>"; };
 		38ECCB571A9722B80053615D /* Grid-114.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = "Grid-114.json"; sourceTree = "<group>"; };
 		38ECCB581A9722B80053615D /* Grid-115.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = "Grid-115.json"; sourceTree = "<group>"; };
@@ -598,6 +599,7 @@
 		38F5A6B71A07F2FA0036750A /* Grid-1.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = "Grid-1.json"; sourceTree = "<group>"; };
 		38F5A6BB1A08014F0036750A /* HDHexaObject.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HDHexaObject.h; sourceTree = "<group>"; };
 		38F5A6BC1A08014F0036750A /* HDHexaObject.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HDHexaObject.m; sourceTree = "<group>"; };
+		38F807861B0E7F520009E4F9 /* NeonMansion.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = NeonMansion.mp3; sourceTree = "<group>"; };
 		38F919241A37BF6A00249361 /* iAd.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = iAd.framework; path = System/Library/Frameworks/iAd.framework; sourceTree = SDKROOT; };
 		38FDF9B31A1BEF1F005CCFE1 /* HDSettingsManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HDSettingsManager.h; sourceTree = "<group>"; };
 		38FDF9B41A1BEF1F005CCFE1 /* HDSettingsManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HDSettingsManager.m; sourceTree = "<group>"; };
@@ -920,10 +922,10 @@
 				38913C131AB3DE9C00EAF397 /* HDIntroViewController.m */,
 				383199FA1A785875004CF3E2 /* HDRearViewController.h */,
 				383199FB1A785875004CF3E2 /* HDRearViewController.m */,
-				383199F51A785828004CF3E2 /* HDContainerViewController.h */,
-				383199F41A785828004CF3E2 /* HDContainerViewController.m */,
 				38BAF53F1A1FFC64004D5660 /* HDGridViewController.h */,
 				38BAF5401A1FFC64004D5660 /* HDGridViewController.m */,
+				38D7B5451B9FDEC6008225AB /* HDContainerViewController.h */,
+				38D7B5461B9FDEC6008225AB /* HDContainerViewController.m */,
 				38C0A8481A07251700C552F1 /* HDGameViewController.h */,
 				38C0A8491A07251700C552F1 /* HDGameViewController.m */,
 				38BE19D51A93C73400E67CD7 /* HDTutorialViewController.h */,
@@ -970,6 +972,7 @@
 		38BDDCE71A20FACE005035EE /* Sounds */ = {
 			isa = PBXGroup;
 			children = (
+				38F807861B0E7F520009E4F9 /* NeonMansion.mp3 */,
 				38B15E541ABA75DB00296CA3 /* GameOver.wav */,
 				38D424571A4F6C1A00FD21A2 /* B2.m4a */,
 				38D424581A4F6C1A00FD21A2 /* A2.m4a */,
@@ -1296,12 +1299,12 @@
 				38A2CBE81A907C0B00C687E2 /* HDCompletionView.m */,
 				38A7B9D51AFC72AB00CB71E4 /* HDLayoverView.h */,
 				38A7B9D61AFC72AB00CB71E4 /* HDLayoverView.m */,
+				387800EC1B0C314600949F3A /* HDIAPView.h */,
+				387800ED1B0C314600949F3A /* HDIAPView.m */,
 				38E3C9C91AF80C6D00656A86 /* HDAlertView.h */,
 				38E3C9CA1AF80C6D00656A86 /* HDAlertView.m */,
-				38E7614A1B0649380095F79F /* HDShapeView.h */,
-				38E7614B1B0649380095F79F /* HDShapeView.m */,
-				38E7614D1B064A750095F79F /* HDBarGraphView.h */,
-				38E7614E1B064A750095F79F /* HDBarGraphView.m */,
+				3871461D1B0BE0B4008A8395 /* HDLabel.h */,
+				3871461E1B0BE0B4008A8395 /* HDLabel.m */,
 			);
 			name = Views;
 			sourceTree = "<group>";
@@ -1518,6 +1521,7 @@
 				38C67D0B1A0AE3890038526C /* Grid-17.json in Resources */,
 				38BDDCE51A20FA50005035EE /* Grid-50.json in Resources */,
 				38ECCBC31A9723C70053615D /* Grid-76.json in Resources */,
+				38F807871B0E7F520009E4F9 /* NeonMansion.mp3 in Resources */,
 				38BE19E61A9542B500E67CD7 /* Grid-1001.json in Resources */,
 				38C67CFF1A0ACE4D0038526C /* Grid-11.json in Resources */,
 				38C67D1F1A0AE3F30038526C /* Grid-27.json in Resources */,
@@ -1698,14 +1702,12 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				38D7B5471B9FDEC6008225AB /* HDContainerViewController.m in Sources */,
 				383199FC1A785875004CF3E2 /* HDRearViewController.m in Sources */,
 				38F5A6B61A076B960036750A /* HDLevel.m in Sources */,
-				38E7614C1B0649380095F79F /* HDShapeView.m in Sources */,
-				38E7614F1B064A750095F79F /* HDBarGraphView.m in Sources */,
 				385207541AC3B9F6000142F6 /* SkNode+NodeAdditions.m in Sources */,
 				38BAF5411A1FFC64004D5660 /* HDGridViewController.m in Sources */,
 				38C0A84A1A07251700C552F1 /* HDGameViewController.m in Sources */,
-				383199F61A785828004CF3E2 /* HDContainerViewController.m in Sources */,
 				386CF5DB1A383AFC006A8381 /* HDScene.m in Sources */,
 				38ECCBEE1A9EFB360053615D /* HDSwitch.m in Sources */,
 				38E3C9CB1AF80C6D00656A86 /* HDAlertView.m in Sources */,
@@ -1713,6 +1715,7 @@
 				38E3E6041AEDFA0100693724 /* UIColor+ColorAdditions.m in Sources */,
 				387459FA1A84B5B700EAEEFE /* HDHexusIAdHelper.m in Sources */,
 				38E3E5F81AEDF53F00693724 /* HDGameButton.m in Sources */,
+				3871461F1B0BE0B4008A8395 /* HDLabel.m in Sources */,
 				38C7D1151A8C0439009CDD0B /* HDTileManager.m in Sources */,
 				38ECCBD91A972EF90053615D /* NSData+Base64.m in Sources */,
 				38C0A8471A07251700C552F1 /* HDAppDelegate.m in Sources */,
@@ -1720,6 +1723,7 @@
 				389E95441A4A128100F2DF05 /* HDLevelsViewController.m in Sources */,
 				38BE19DA1A93D07B00E67CD7 /* HDGameScene.m in Sources */,
 				38C0A8751A0758AC00C552F1 /* HDGridManager.m in Sources */,
+				387800EE1B0C314600949F3A /* HDIAPView.m in Sources */,
 				38913C141AB3DE9C00EAF397 /* HDIntroViewController.m in Sources */,
 				38FDF9B51A1BEF1F005CCFE1 /* HDSettingsManager.m in Sources */,
 				38ABD5F71A420A3500C4321D /* HDHexaControl.m in Sources */,
@@ -2022,7 +2026,7 @@
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				GCC_PREFIX_HEADER = "HexitSpriteKit/Hexit-Prefix.pch";
 				INFOPLIST_FILE = HexitSpriteKit/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
@@ -2044,7 +2048,7 @@
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				GCC_PREFIX_HEADER = "HexitSpriteKit/Hexit-Prefix.pch";
 				INFOPLIST_FILE = HexitSpriteKit/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",

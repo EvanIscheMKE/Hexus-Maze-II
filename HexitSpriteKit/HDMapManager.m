@@ -14,7 +14,8 @@
 @property (nonatomic, readonly) NSArray *levels;
 @end
 
-@implementation HDMapManager{
+@implementation HDMapManager
+{
     NSUInteger _numberOfLevels;
     NSMutableArray *_levels;
 }
@@ -30,8 +31,8 @@
     return self;
 }
 
-+ (HDMapManager *)sharedManager {
-    
++ (HDMapManager *)sharedManager
+{
     static HDMapManager *_manager;
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
@@ -40,8 +41,8 @@
     return _manager;
 }
 
-- (NSArray *)levels {
-    
+- (NSArray *)levels
+{
     if (_levels) {
         return _levels;
     }
@@ -66,18 +67,21 @@
     return _levels;
 }
 
-- (HDLevel *)levelAtIndex:(NSInteger)index {
+- (HDLevel *)levelAtIndex:(NSInteger)index
+{
     if (index >= _numberOfLevels) {
         return nil;
     }
     return [self.levels objectAtIndex:index];
 }
 
-- (NSUInteger)numberOfLevels {
+- (NSUInteger)numberOfLevels
+{
     return _numberOfLevels;
 }
 
-- (NSInteger)indexOfCurrentLevel {
+- (NSInteger)indexOfCurrentLevel
+{
     for (HDLevel *level in self.levels) {
         if (!level.completed && level.unlocked) {
             return level.levelIndex + 1;
@@ -86,8 +90,8 @@
     return 1;
 }
 
-- (void)completedLevelAtIndex:(NSInteger)index {
-    
+- (void)completedLevelAtIndex:(NSInteger)index
+{
     [[HDGameCenterManager sharedManager] reportLevelCompletion:index + 1];
     [[NSUserDefaults standardUserDefaults] setInteger:index + 1 forKey:HDLastCompletedLevelKey];
     
@@ -103,8 +107,8 @@
     [self _saveState];
 }
 
-- (void)_saveState {
-    
+- (void)_saveState
+{
     NSMutableArray *levels = [NSMutableArray array];
     for (HDLevel *level in self.levels) {
         NSData *levelData = [NSKeyedArchiver archivedDataWithRootObject:level];
@@ -113,8 +117,8 @@
     [[NSUserDefaults standardUserDefaults] setObject:levels forKey:HDDefaultLevelKey];
 }
 
-- (void)unlockAllLevels {
-    
+- (void)unlockAllLevels
+{
     NSMutableArray *allLevels = [NSMutableArray array];
     for (HDLevel *level in [self levels]) {
         if (!level.completed && !level.unlocked) {
@@ -126,8 +130,8 @@
     [[NSUserDefaults standardUserDefaults] setObject:allLevels forKey:HDDefaultLevelKey];
 }
 
-- (void)_verifyNumberOfLevels {
-    
+- (void)_verifyNumberOfLevels
+{
     NSArray *levelsIKnowAbout = [self levels]?:@[];
     if (levelsIKnowAbout.count >= _numberOfLevels) {
         return; //Nothing to do.

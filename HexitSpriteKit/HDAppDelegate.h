@@ -17,7 +17,7 @@
 - (void)presentTutorialViewControllerForFirstRun;
 - (void)presentActivityViewController;
 - (void)beginGameWithLevel:(NSInteger)level;
-- (void)rateHEXUS;
+- (void)rate;
 
 - (IBAction)presentLevelViewController:(id)sender;
 - (IBAction)openAcheivementsController:(id)sender;

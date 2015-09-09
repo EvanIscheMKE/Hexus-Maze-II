@@ -19,8 +19,8 @@ static const CGFloat paddingSmall = 4.0f;
     HDLevelState _state;
 }
 
-- (instancetype)initWithLevelState:(HDLevelState)levelState {
-    
+- (instancetype)initWithLevelState:(HDLevelState)levelState
+{
     _levelState = _state;
     
     NSString *_contentImagePath;
@@ -44,8 +44,8 @@ static const CGFloat paddingSmall = 4.0f;
 }
 
 - (instancetype)initWithImage:(UIImage *)image
-                  shadowImage:(UIImage *)shadowImage {
-    
+                  shadowImage:(UIImage *)shadowImage
+{
     const CGFloat padding = IS_IPAD ? paddingLarge : paddingSmall;
     if (self = [super initWithFrame:CGRectMake(0.0f, 0.0f, image.size.width, image.size.height + padding)]) {
         
@@ -89,8 +89,8 @@ static const CGFloat paddingSmall = 4.0f;
     return self;
 }
 
-- (void)setSelected:(BOOL)selected {
-    
+- (void)setSelected:(BOOL)selected
+{
     if (selected) {
         [self _touchDown:nil];
     } else {
@@ -100,18 +100,20 @@ static const CGFloat paddingSmall = 4.0f;
 
 #pragma mark - Actions
 
-- (IBAction)_touchDown:(id)sender {
+- (IBAction)_touchDown:(id)sender
+{
     _contentImageView.center = _shadowImageView.center;
 }
 
-- (IBAction)_touchUpInside:(id)sender {
+- (IBAction)_touchUpInside:(id)sender
+{
     CGPoint position = _contentImageView.center;
     position.y = CGRectGetMidY(_contentImageView.bounds);
     _contentImageView.center = position;
 }
 
-- (IBAction)_animateTouchUpInside:(id)sender {
-    
+- (IBAction)_animateTouchUpInside:(id)sender
+{
     [UIView animateWithDuration:.3f
                           delay:0.0f
          usingSpringWithDamping:.4f
@@ -128,7 +130,8 @@ static const CGFloat paddingSmall = 4.0f;
 
 #pragma mark - Helper
 
-- (UIImage *)imageForLevelState:(HDLevelState)state {
+- (UIImage *)imageForLevelState:(HDLevelState)state
+{
     switch (state) {
         case HDLevelStateCompleted:
             return [UIImage imageNamed:@"Star-Grid"];
@@ -142,8 +145,8 @@ static const CGFloat paddingSmall = 4.0f;
 
 #pragma mark - Setter
 
-- (void)setLevelState:(HDLevelState)levelState {
-    
+- (void)setLevelState:(HDLevelState)levelState
+{
     _levelState = levelState;
     
     NSString *_contentImagePath;
@@ -163,15 +166,13 @@ static const CGFloat paddingSmall = 4.0f;
     }
     
     [self _touchDown:nil];
-    
     [_contentImageView setImage:[self imageForLevelState:levelState]
                        forState:UIControlStateNormal];
     [_contentImageView setBackgroundImage:[UIImage imageNamed:_contentImagePath]
                                  forState:UIControlStateNormal];
-    
     _shadowImageView.image = [UIImage imageNamed:_shadowImagePath];
     
-    [self performSelector:@selector(_animateTouchUpInside:) withObject:nil afterDelay:.05f];
+    [self performSelector:@selector(_animateTouchUpInside:) withObject:nil afterDelay:.15f];
 }
 
 @end

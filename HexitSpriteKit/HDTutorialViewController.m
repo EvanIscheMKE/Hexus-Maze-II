@@ -7,7 +7,9 @@
 //
 
 @import SpriteKit;
+@import Social;
 
+#import "HDLabel.h"
 #import "HDHelper.h"
 #import "HDTutorialScene.h"
 #import "HDGridManager.h"
@@ -20,22 +22,24 @@
 @property (nonatomic, strong) HDTutorialScene *scene;
 @end
 
-@implementation HDTutorialViewController {
+@implementation HDTutorialViewController
+{
     __weak SKView *_container;
-    UILabel *_titleLbl;
-    UILabel *_descriptionLbl;
+    HDLabel *_titleLbl;
+    HDLabel *_descriptionLbl;
     UIImageView *_imageView;
 }
 
-- (instancetype)init {
+- (instancetype)init
+{
     if (self = [super init]) {
         self.gridManager = [[HDGridManager alloc] initWithLevelIndex:1000];
     }
     return self;
 }
 
-- (void)loadView {
-    
+- (void)loadView
+{
     CGRect bounds = [[UIScreen mainScreen] bounds];
     self.view = [[SKView alloc] initWithFrame:bounds];
     self.view.backgroundColor = [UIColor flatSTDarkBlueColor];
@@ -51,8 +55,8 @@
     [super viewDidLoad];
 }
 
-- (void)viewWillLayoutSubviews {
-    
+- (void)viewWillLayoutSubviews
+{
     [super viewWillLayoutSubviews];
     if (!_container.scene) {
         self.scene = [HDTutorialScene sceneWithSize:self.view.bounds.size];
@@ -63,9 +67,9 @@
     }
 }
 
-- (void)viewDidAppear:(BOOL)animated {
+- (void)viewDidAppear:(BOOL)animated
+{
     [super viewDidAppear:animated];
-    
     [UIView animateWithDuration:.3f animations:^{
         _imageView.alpha = 0;
     } completion:^(BOOL finished) {
@@ -73,7 +77,7 @@
         [_imageView removeFromSuperview];
         [self.scene layoutNodesWithGrid:[self.gridManager hexagons] completion:^{
             if (!_descriptionLbl) {
-                _descriptionLbl = [self _descriptionLblWithString:@"TAP THE WHITE TILE, THEN MOVE TO A VALID TILE BORDERING ITS EDGES."];
+                _descriptionLbl = [self _descriptionLblWithString:NSLocalizedString(@"tut1", nil)];
                 [self.view addSubview:_descriptionLbl];
                 
                 [self updateLabel:_descriptionLbl
@@ -83,17 +87,14 @@
                        completion:nil];
             }
         }];
-
     }];
 }
 
 #pragma mark - <HDSceneDelegate>
 
-- (void)scene:(HDTutorialScene *)scene gameEndedWithCompletion:(BOOL)completion {
-    
-    NSLog(completion ? @"YES" : @"NO");
+- (void)scene:(HDTutorialScene *)scene gameEndedWithCompletion:(BOOL)completion
+{
     [[HDSoundManager sharedManager] playSound:HDCompletionZing];
-    
     if (completion) {
         
         [self updateLabel:_descriptionLbl
@@ -138,8 +139,7 @@
                         delay:1.5f
                    completion:^{
                                    
-                    [self.presentingViewController dismissViewControllerAnimated:NO
-                                                                      completion:nil];
+                    [self.presentingViewController dismissViewControllerAnimated:NO completion:nil];
                                        
                                   }];
                                 }];
@@ -181,7 +181,7 @@
                                
     [self.scene layoutNodesWithGrid:[self.gridManager hexagons] completion:^{
         
-         _descriptionLbl.text = @"ONE MORE TIME.";
+         _descriptionLbl.text = NSLocalizedString(@"tut2", nil);
         [_descriptionLbl sizeToFit];
         _descriptionLbl.center = CGPointMake(CGRectGetMidX(self.view.bounds),
                                              CGRectGetHeight(self.view.bounds) - CGRectGetMidY(_descriptionLbl.bounds) - 5.0f);
@@ -199,12 +199,12 @@
                                  }];
 }
 
-- (void)updateLabel:(UILabel *)label
+- (void)updateLabel:(HDLabel *)label
               alpha:(CGFloat)alpha
            duration:(NSTimeInterval)duration
               delay:(NSTimeInterval)delay
-         completion:(dispatch_block_t)completion {
-    
+         completion:(dispatch_block_t)completion
+{
     if (!label) {
         return;
     }
@@ -223,13 +223,13 @@
 
 #pragma mark - Convenince Labels
 
-- (UILabel *)_descriptionLblWithString:(NSString *)text {
-    
+- (HDLabel *)_descriptionLblWithString:(NSString *)text
+{
     const CGFloat scale = IS_IPAD ? 24.0f : 22.0f;
     
     CGRect bounds = CGRectMake(0.0f, 0.0f, CGRectGetWidth(CGRectInset(self.view.bounds, 40.0f, 0.0f)), 0.0);
-    UILabel *descriptionLbl = [[UILabel alloc] initWithFrame:bounds];
-    descriptionLbl.font = GAME_FONT_WITH_SIZE(CGRectGetWidth(self.view.bounds)/ scale);
+    HDLabel *descriptionLbl = [[HDLabel alloc] initWithFrame:bounds];
+    descriptionLbl.font = GAME_FONT_WITH_SIZE(CGRectGetWidth(self.view.bounds) / scale);
     descriptionLbl.textAlignment = NSTextAlignmentCenter;
     descriptionLbl.textColor = [UIColor whiteColor];
     descriptionLbl.numberOfLines = 2;
@@ -243,11 +243,11 @@
     return descriptionLbl;
 }
 
-- (UILabel *)_titleLblWithString:(NSString *)text {
-    
+- (HDLabel *)_titleLblWithString:(NSString *)text
+{
     const CGFloat scale = IS_IPAD ? 14.0f : 12.0f;
     
-    UILabel *titleLbl = [[UILabel alloc] init];
+    HDLabel *titleLbl = [[HDLabel alloc] init];
     titleLbl.font = GAME_FONT_WITH_SIZE(CGRectGetWidth(self.view.bounds)/ scale);
     titleLbl.textAlignment = NSTextAlignmentCenter;
     titleLbl.textColor = [UIColor whiteColor];

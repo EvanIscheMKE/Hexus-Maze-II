@@ -8,6 +8,7 @@
 
 #import "HDLevel.h"
 #import "HDHelper.h"
+#import "HDIAPView.h"
 #import "HDMapManager.h"
 #import "HDHexaControl.h"
 #import "HDSoundManager.h"
@@ -23,23 +24,25 @@
 
 static const NSUInteger kNumberOfLevelsPerPage = 28;
 static const CGFloat defaultPageControlHeight = 50.0f;
-@interface HDGridViewController () <UIScrollViewDelegate,
-                                    HDGridScrollViewDelegate,
-                                    HDLevelsViewControllerDelegate,
-                                    HDGridScrollViewDatasource,
-                                    HDHexaControlDelegate>
+@interface HDGridViewController () < UIScrollViewDelegate,
+                                     HDGridScrollViewDelegate,
+                                     HDLevelsViewControllerDelegate,
+                                     HDGridScrollViewDatasource,
+                                     HDHexaControlDelegate >
 @property (nonatomic, getter=isNavigationBarHidden, assign) BOOL navigationBarHidden;
 @property (nonatomic, strong) HDGridScrollView *scrollView;
 @property (nonatomic, strong) HDHexaControl *control;
 @property (nonatomic, strong) HDNavigationBar *menuBar;
 @end
 
-@implementation HDGridViewController {
+@implementation HDGridViewController
+{
     NSMutableArray *_pageViews;
     NSInteger _previousPage;
 }
 
-- (void)viewDidLoad {
+- (void)viewDidLoad
+{
     self.view.backgroundColor = [UIColor flatSTDarkBlueColor];
     self.view.layer.masksToBounds = YES;
     self.view.clipsToBounds = YES;
@@ -49,7 +52,8 @@ static const CGFloat defaultPageControlHeight = 50.0f;
 
 #pragma mark - Public
 
-- (void)performExitAnimationWithCompletion:(dispatch_block_t)completion {
+- (void)performExitAnimationWithCompletion:(dispatch_block_t)completion
+{
     self.navigationBarHidden = YES;
     [self.scrollView performOutroAnimationWithCompletion:^{
         if (completion) {
@@ -58,22 +62,21 @@ static const CGFloat defaultPageControlHeight = 50.0f;
     }];
 }
 
-- (void)levelsViewController:(HDLevelsViewController *)viewController didSelectLevel:(NSUInteger)level {
-    [self beginLevel:level];
+- (void)levelsViewController:(HDLevelsViewController *)viewController didSelectLevel:(NSUInteger)level
+{
+    HDLevel *gamelevel = [[HDMapManager sharedManager] levelAtIndex:level - 1];
+    //    if (gamelevel.isUnlocked) {
+    self.navigationBarHidden = YES;
+    [self.scrollView performOutroAnimationWithCompletion:^{
+        [[HDAppDelegate sharedDelegate] beginGameWithLevel:level];
+    }];
+    //    } else {
+    //        [self _presentIAPLayover:nil];
+    //    }
 }
 
-- (void)beginLevel:(NSUInteger)levelIdx {
-    
-    HDLevel *gamelevel = [[HDMapManager sharedManager] levelAtIndex:(NSInteger)levelIdx - 1];
-   // if (gamelevel.isUnlocked) {
-        self.navigationBarHidden = YES;
-        [self.scrollView performOutroAnimationWithCompletion:^{
-            [[HDAppDelegate sharedDelegate] beginGameWithLevel:levelIdx];
-        }];
-   // }
-}
-
-- (void)setNavigationBarHidden:(BOOL)navigationBarHidden {
+- (void)setNavigationBarHidden:(BOOL)navigationBarHidden
+{
     _navigationBarHidden = navigationBarHidden;
     if (_navigationBarHidden) {
         [self _hideAnimated:YES];
@@ -84,8 +87,8 @@ static const CGFloat defaultPageControlHeight = 50.0f;
 
 #pragma mark - Private
 
-- (void)_setup {
-    
+- (void)_setup
+{
     (void)[self pageViewsForGridScrollView:self.scrollView].count;
     
     HDContainerViewController *container = self.containerViewController;
@@ -97,14 +100,13 @@ static const CGFloat defaultPageControlHeight = 50.0f;
     self.scrollView.clipsToBounds = NO;
     [self.view addSubview:self.scrollView];
     
-    CGPoint position = CGPointMake(CGRectGetMidX(self.view.bounds),
-                                   CGRectGetHeight(self.view.bounds) + CGRectGetMidY(self.control.bounds));
     CGRect controlRect = CGRectMake(0.0f, 0.0f, CGRectGetWidth(self.view.bounds), defaultPageControlHeight);
     self.control = [[HDHexaControl alloc] initWithFrame:controlRect];
     self.control.delegate = self;
     self.control.numberOfPages = self.scrollView.numberOfPages;
     self.control.currentPage = 0;
-    self.control.center = position;
+    self.control.center = CGPointMake(CGRectGetMidX(self.view.bounds),
+                                      CGRectGetHeight(self.view.bounds) + CGRectGetMidY(self.control.bounds));
     self.control.frame = CGRectIntegral(self.control.frame);
     [self.view addSubview:self.control];
     
@@ -112,8 +114,8 @@ static const CGFloat defaultPageControlHeight = 50.0f;
     CGRect menuBarFrame = CGRectMake(0.0f, -menuBarHeight, CGRectGetWidth(self.view.bounds), menuBarHeight);
     self.menuBar = [HDNavigationBar menuBarWithActivityImage:[UIImage imageNamed:@"Grid-Unlock"]];
     self.menuBar.frame = menuBarFrame;
-    [self.menuBar.navigationButton addTarget:container action:@selector(toggleMenuViewController)forControlEvents:UIControlEventTouchUpInside];
-    [self.menuBar.activityButton addTarget:self action:@selector(_purchaseIADUnlockedLevel:) forControlEvents:UIControlEventTouchUpInside];
+    [self.menuBar.navigationButton addTarget:container action:@selector(toggleMenuViewController) forControlEvents:UIControlEventTouchUpInside];
+    [self.menuBar.activityButton addTarget:self action:@selector(_presentIAPLayover:) forControlEvents:UIControlEventTouchUpInside];
     [self.view addSubview:self.menuBar];
     
     [[NSNotificationCenter defaultCenter] addObserver:self
@@ -122,45 +124,59 @@ static const CGFloat defaultPageControlHeight = 50.0f;
                                                object:nil];
 }
 
-- (void)_unlockAllLevel:(NSNotification *)notification {
+- (IBAction)_presentIAPLayover:(id)sender
+{
+    NSString *message = NSLocalizedString(@"IAPunlock", nil);
+    HDIAPView *layover = [[HDIAPView alloc] initWithMessage:message];
+    layover.completionBlock = [self _purchaseIADUnlockedLevel];
+    [layover show];
+}
+
+- (void)_unlockAllLevel:(NSNotification *)notification
+{
     [[HDMapManager sharedManager] unlockAllLevels];
     for (HDLevelsViewController *controller in [self childViewControllers]) {
         [controller updateLevelsForIAP];
     }
 }
 
-- (IBAction)_purchaseIADUnlockedLevel:(id)sender {
-    
-    [[HDHexusIAdHelper sharedHelper] requestProductsWithCompletionHandler:^(BOOL success, NSArray *products) {
-        if (success && products.count) {
-            
-            SKProduct *unlockAllLevelSKProduct = nil;
-            for (SKProduct *product in products) {
-                if ([product.productIdentifier isEqualToString:IAPUnlockAllLevelsProductIdentifier]) {
-                    unlockAllLevelSKProduct = product;
-                    break;
+- (dispatch_block_t)_purchaseIADUnlockedLevel
+{
+    dispatch_block_t completion = ^{
+        [[HDHexusIAdHelper sharedHelper] requestProductsWithCompletionHandler:^(BOOL success, NSArray *products) {
+            if (success && products.count) {
+                
+                SKProduct *unlockAllLevelSKProduct = nil;
+                for (SKProduct *product in products) {
+                    if ([product.productIdentifier isEqualToString:IAPUnlockAllLevelsProductIdentifier]) {
+                        unlockAllLevelSKProduct = product;
+                        break;
+                    }
+                }
+                
+                if (!unlockAllLevelSKProduct) {
+                    return;
+                }
+                
+                BOOL purchased = [[HDHexusIAdHelper sharedHelper] productPurchased:unlockAllLevelSKProduct.productIdentifier];
+                if (!purchased) {
+                    [[HDHexusIAdHelper sharedHelper] buyProduct:unlockAllLevelSKProduct];
                 }
             }
-            
-            if (!unlockAllLevelSKProduct) {
-                return;
-            }
-            
-            BOOL purchased = [[HDHexusIAdHelper sharedHelper] productPurchased:unlockAllLevelSKProduct.productIdentifier];
-            if (!purchased) {
-                [[HDHexusIAdHelper sharedHelper] buyProduct:unlockAllLevelSKProduct];
-            }
-        }
-    }];
+        }];
+    };
+    return completion;
 }
 
-- (void)viewDidAppear:(BOOL)animated {
+- (void)viewDidAppear:(BOOL)animated
+{
     self.navigationBarHidden = NO;
     [super viewDidAppear:animated];
     [self.scrollView performIntroAnimationWithCompletion:nil];
 }
 
-- (void)_hideAnimated:(BOOL)animated {
+- (void)_hideAnimated:(BOOL)animated
+{
     dispatch_block_t animate = ^{
         CGRect rect = self.menuBar.frame;
         rect.origin.y = -CGRectGetHeight(self.menuBar.bounds);
@@ -178,14 +194,15 @@ static const CGFloat defaultPageControlHeight = 50.0f;
     }
 }
 
-- (void)_showAnimated:(BOOL)animated {
+- (void)_showAnimated:(BOOL)animated
+{
     dispatch_block_t animate = ^{
         CGRect rect = self.menuBar.frame;
         rect.origin.y = 0.0f;
         self.menuBar.frame = rect;
         
         CGPoint center = self.control.center;
-        center.y = CGRectGetHeight(self.view.bounds) - CGRectGetHeight(self.control.bounds);
+        center.y = CGRectGetHeight(self.view.bounds) - CGRectGetHeight(self.control.bounds)/1.35f;
         self.control.center = center;
     };
     
@@ -198,8 +215,8 @@ static const CGFloat defaultPageControlHeight = 50.0f;
 
 #pragma mark - <HDGridScrollViewDelegate>
 
-- (NSArray *)pageViewsForGridScrollView:(HDGridScrollView *)gridScrollView {
-    
+- (NSArray *)pageViewsForGridScrollView:(HDGridScrollView *)gridScrollView
+{
     if (_pageViews) {
         return _pageViews;
     }
@@ -209,11 +226,11 @@ static const CGFloat defaultPageControlHeight = 50.0f;
     HDMapManager *mapManager = [HDMapManager sharedManager];
     const NSUInteger numberOfLevels = mapManager.numberOfLevels;
     const NSUInteger numberOfLevelsPerPage = kNumberOfLevelsPerPage;
-    const NSUInteger numberOfPages = ceilf((float)numberOfLevels / (float)numberOfLevelsPerPage) + 1;
+    const NSUInteger numberOfPages = ceilf((float)numberOfLevels / (float)numberOfLevelsPerPage);
     
     NSUInteger displayedLevels = 0;
     NSUInteger remainingNumberOfLevels = numberOfLevels;
-    for (NSUInteger i = 0; i < numberOfPages - 1; i++) {
+    for (NSUInteger i = 0; i < numberOfPages; i++) {
         NSRange levelRange = NSMakeRange(displayedLevels, numberOfLevelsPerPage);
         
         HDLevelsViewController *viewController = [[HDLevelsViewController alloc] init];
@@ -237,20 +254,20 @@ static const CGFloat defaultPageControlHeight = 50.0f;
 
 #pragma mark - <UIScrollViewDelegate>
 
-- (void)scrollViewDidScroll:(HDGridScrollView *)scrollView {
-    
+- (void)scrollViewDidScroll:(HDGridScrollView *)scrollView
+{
     NSInteger page = 0;
     if (scrollView.isDragging || scrollView.isDecelerating){
         page = floor((self.scrollView.contentOffset.x - CGRectGetWidth(scrollView.bounds) / 2) / CGRectGetWidth(scrollView.bounds)) + 1;
-    }
-    
-    if (page != _previousPage) {
-        self.control.currentPage = MIN(page, scrollView.numberOfPages - 1);
-        _previousPage = page;
+        if (page != _previousPage) {
+            self.control.currentPage = MIN(page, scrollView.numberOfPages - 1);
+            _previousPage = page;
+        }
     }
 }
 
-- (void)scrollViewDidEndDecelerating:(UIScrollView *)scrollView {
+- (void)scrollViewDidEndDecelerating:(UIScrollView *)scrollView
+{
     for (UIView *subview in scrollView.subviews) {
         if (!subview.userInteractionEnabled) {
              subview.userInteractionEnabled = YES;
@@ -258,8 +275,8 @@ static const CGFloat defaultPageControlHeight = 50.0f;
     }
 }
 
-- (void)scrollViewWillBeginDragging:(UIScrollView *)scrollView {
-    
+- (void)scrollViewWillBeginDragging:(UIScrollView *)scrollView
+{
     for (UIView *subview in scrollView.subviews) {
         if (subview.userInteractionEnabled) {
             subview.userInteractionEnabled = NO;
@@ -267,17 +284,17 @@ static const CGFloat defaultPageControlHeight = 50.0f;
     }
     
     dispatch_async(dispatch_get_main_queue(), ^{
-        if (scrollView.contentOffset.x >= 0) {
-            [[HDSoundManager sharedManager] playSound:HDSwipeSound];
-        }
+        [[NSNotificationCenter defaultCenter] postNotificationName:@"notiname" object:nil];
     });
 }
 
 #pragma mark <HDHexaControlDelegate>
 
-- (void)hexaControl:(HDHexaControl *)hexaControl pageIndexWasSelected:(NSUInteger)pageIndex {
+- (void)hexaControl:(HDHexaControl *)hexaControl pageIndexWasSelected:(NSUInteger)pageIndex
+{
     CGPoint offset = CGPointMake(CGRectGetWidth(self.scrollView.bounds) * pageIndex, 0);
     [self.scrollView setContentOffset:offset animated:YES];
+    [[HDSoundManager sharedManager] playSound:HDSwipeSound];
 }
 
 @end

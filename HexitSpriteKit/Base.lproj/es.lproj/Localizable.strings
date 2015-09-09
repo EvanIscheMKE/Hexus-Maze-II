@@ -1,8 +1,6 @@
-"bested" = "Usted mismo Bested";
-"sign" = "Nuevos niveles Muy Pronto ..";
-"tap" = "grifo";
+
 "share" = "Cuota";
-"leaderboard" = "Leaderboard";
+"leaderboard" = "Clasificación";
 "achievements" = "Logros";
 "removeAds" = "Eliminar anuncios";
 "Restore" = "Restaurar";
@@ -16,13 +14,21 @@
 "back" = "Volver al mapa";
 "welcome" = "Bienvenido.";
 "beautiful" = "Hermoso!";
-"ohNo" = "¡Oh no!";
-"nextTime" = "Mejor suerte la próxima vez!";
 "tips" = "Consejos";
 "tip1" = "Cuidado con las minas!";
 "tip2" = "Sólo tienes que pulsar dos veces!";
 "tip3" = "Buscar el uno desbloqueado primero!";
 "tip4" = "Sólo tienes que pulsar tres veces!";
-"tip5" = "Siempre finalice en el hexágono rojo!";
+"tip5" = "Aquí es donde termina!";
 "tip6" = "Tienes que esto!";
 "tip7" = "Hay más de una por una razón";
+"level" = "Nivel";
+"play" = "JUEGO";
+"dismiss" = "DESESTIMAR";
+"wow" = "Wow, eso fue genial!";
+"nextTime" = "mejor suerte la proxima vez!";
+"tut1" = "Tocar el azulejo blanco, luego pasar a un azulejo valido bordeando sus bordes.";
+"tut2" = "una vez mas.";
+"purchase" = "compra";
+"IAPremove" = "compra 'eliminar todos los anuncios'?";
+"IAPunlock" = "compra 'desbloquear todos los niveles bloqueados'?";

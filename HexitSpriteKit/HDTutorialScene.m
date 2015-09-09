@@ -17,8 +17,8 @@
 
 @implementation HDTutorialScene
 
-- (void)checkGameStateForTile:(HDHexaObject *)tile {
-    
+- (void)checkGameStateForTile:(HDHexaObject *)tile
+{    
     SKAction *rotation = [SKAction rotateByAngle:(M_PI * 2) duration:.300f];
     [tile.node runAction:rotation completion:^{
         tile.node.zRotation = 0.0f;
@@ -31,12 +31,24 @@
     }
 }
 
-- (void)performExitAnimationsWithCompletion:(dispatch_block_t)completion {
+- (void)performExitAnimationsWithCompletion:(dispatch_block_t)completion
+{
     [HDHelper completionAnimationWithTiles:self.hexaObjects completion:completion];
 }
 
-- (void)touchesMoved:(NSSet *)touches withEvent:(UIEvent *)event {
-    
+- (HDHexaObject *)findHexagonContainingPoint:(CGPoint)point
+{
+    const CGFloat inset = CGRectGetWidth([[[self.hexaObjects firstObject] node] frame])/6;
+    for (HDHexaObject *tile in self.hexaObjects) {
+        if (CGRectContainsPoint(CGRectInset(tile.node.frame, inset, inset), point)) {
+            return tile;
+        }
+    }
+    return nil;
+}
+
+- (void)touchesMoved:(NSSet *)touches withEvent:(UIEvent *)event
+{
     UITouch *touch   = [touches anyObject];
     CGPoint location = [touch locationInNode:self];
     
@@ -53,7 +65,8 @@
     }
 }
 
-- (void)initialLayoutCompletion {
+- (void)initialLayoutCompletion
+{
     self.userInteractionEnabled = NO;
     [self centerTileGrid];
     [HDHelper entranceAnimationWithTiles:self.hexaObjects completion:^{
@@ -64,7 +77,8 @@
     }];
 }
 
-- (void)updateDataForNextLevel {
+- (void)updateDataForNextLevel
+{
     self.countDownSoundIndex = NO;
     [self.gameLayer removeAllChildren];
     [[HDTileManager sharedManager] clear];

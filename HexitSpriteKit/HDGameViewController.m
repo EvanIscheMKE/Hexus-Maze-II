@@ -37,8 +37,8 @@
     NSUInteger _levelIdx;
 }
 
-- (void)dealloc {
-    
+- (void)dealloc
+{
     NSNotificationCenter *notificationCenter = [NSNotificationCenter defaultCenter];
     [notificationCenter removeObserver:self
                                   name:IAPHelperProductPurchasedNotification
@@ -51,7 +51,8 @@
                                 object:nil];
 }
 
-- (instancetype)initWithLevel:(NSInteger)level {
+- (instancetype)initWithLevel:(NSInteger)level
+{
     if (self = [super init]) {
         _levelIdx = level;
         self.gridManager = [[HDGridManager alloc] initWithLevelIndex:_levelIdx];
@@ -59,32 +60,44 @@
     return self;
 }
 
-- (void)loadView {
+- (void)loadView
+{
     CGRect bounds = [[UIScreen mainScreen] bounds];
     SKView *skView = [[SKView alloc] initWithFrame:bounds];
     self.view = skView;
 }
 
-- (void)viewDidLoad {
-    
+- (void)viewDidLoad
+{
     [super viewDidLoad];
     
-    self.view.backgroundColor = [UIColor flatWetAsphaltColor];
-    
-    HDContainerViewController *container = self.containerViewController;
-    
-    const CGFloat menuBarHeight = CGRectGetHeight(self.view.bounds)/8;
-    CGRect menuBarFrame = CGRectMake(0.0f, -menuBarHeight, CGRectGetWidth(self.view.bounds), menuBarHeight);
-    self.menuBar = [HDNavigationBar menuBarWithActivityImage:[UIImage imageNamed:@"Restart"]];
-    self.menuBar.frame = menuBarFrame;
-    [self.menuBar.navigationButton addTarget:container
+    CGRect menuBarFrame = CGRectMake(0.0f, 0.0f, CGRectGetWidth(self.view.bounds), CGRectGetHeight(self.view.bounds)/8);
+    _menuBar = [HDNavigationBar menuBarWithActivityImage:[UIImage imageNamed:@"Restart"]];
+    _menuBar.frame = menuBarFrame;
+    _menuBar.center = CGPointMake(CGRectGetMidX(self.view.bounds), -CGRectGetMidY(_menuBar.bounds));
+    [_menuBar.navigationButton addTarget:self.containerViewController
                                       action:@selector(toggleMenuViewController)
                             forControlEvents:UIControlEventTouchUpInside];
-    [self.menuBar.activityButton addTarget:self
+    [_menuBar.activityButton addTarget:self
                                     action:@selector(restart:)
                           forControlEvents:UIControlEventTouchUpInside];
-    [self.view addSubview:self.menuBar];
+    [self.view addSubview:_menuBar];
     
+    BOOL bannersRemoved = [[NSUserDefaults standardUserDefaults] boolForKey:IAPremoveAdsProductIdentifier];
+    if (!bannersRemoved) {
+        
+        self.interstitialPresentationPolicy = ADInterstitialPresentationPolicyManual;
+        [UIViewController prepareInterstitialAds];
+        
+        self.bannerView = [[ADBannerView alloc] init];
+        self.bannerView.delegate = self;
+        [self.view addSubview:self.bannerView];
+        
+        CGRect bannerFrame = self.bannerView.frame;
+        bannerFrame.origin.y = CGRectGetHeight(self.view.bounds);
+        self.bannerView.frame = bannerFrame;
+    }
+
     NSNotificationCenter *notificationCenter = [NSNotificationCenter defaultCenter];
     [notificationCenter addObserver:self
                            selector:@selector(_removeAdsWasPurchased:)
@@ -102,8 +115,8 @@
 
 #pragma mark - Public
 
-- (void)setNavigationBarHidden:(BOOL)navigationBarHidden {
-    
+- (void)setNavigationBarHidden:(BOOL)navigationBarHidden
+{
     _navigationBarHidden = navigationBarHidden;
     if (_navigationBarHidden) {
         [self _hideAnimated:YES];
@@ -112,8 +125,8 @@
     }
 }
 
-- (void)viewWillLayoutSubviews {
-    
+- (void)viewWillLayoutSubviews
+{
     SKView * skView = (SKView *)self.view;
     
     [super viewWillLayoutSubviews];
@@ -125,37 +138,21 @@
         self.scene.gridManager = self.gridManager;
         [skView presentScene:self.scene];
         [self _beginGame];
-        
-        BOOL bannersRemoved = [[NSUserDefaults standardUserDefaults] boolForKey:IAPremoveAdsProductIdentifier];
-        if (!self.bannerView) {
-            if (!bannersRemoved) {
-                
-                self.interstitialPresentationPolicy = ADInterstitialPresentationPolicyManual;
-                [UIViewController prepareInterstitialAds];
-                
-                self.bannerView = [[ADBannerView alloc] init];
-                self.bannerView.delegate = self;
-                [self.view addSubview:self.bannerView];
-                
-                CGRect bannerFrame = self.bannerView.frame;
-                bannerFrame.origin.y = CGRectGetHeight(self.view.bounds);
-                self.bannerView.frame = bannerFrame;
-            }
-        }
     }
 }
 
 #pragma mark - Private
 
-- (void)_displayInterstitialAd {
+- (void)_displayInterstitialAd
+{
     BOOL bannersRemoved = [[NSUserDefaults standardUserDefaults] boolForKey:IAPremoveAdsProductIdentifier];
     if (!bannersRemoved) {
         [self requestInterstitialAdPresentation];
     }
 }
 
-- (void)_beginGame {
-    
+- (void)_beginGame
+{
     [self.scene layoutNodesWithGrid:[self.gridManager hexagons] completion:nil];
     
     NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
@@ -163,9 +160,10 @@
         
         NSString *key = [NSString stringWithFormat:@"%zd",_levelIdx];
         if (![defaults boolForKey:key]) {
-            HDAlertView *alertView = [[HDAlertView alloc] initWithTitle:[NSString stringWithFormat:@"Level %tu",_levelIdx]
+            NSString *titleString = [NSString stringWithFormat:@"%@ %tu",NSLocalizedString(@"level", nil),_levelIdx];
+            HDAlertView *alertView = [[HDAlertView alloc] initWithTitle:titleString
                                                             description:descriptionForLevelIdx(_levelIdx)
-                                                            buttonTitle:@"PLAY"
+                                                            buttonTitle:NSLocalizedString(@"play", nil)
                                                                   image:[HDHelper imageFromLevelIdx:_levelIdx]];
             [alertView show];
             [defaults setBool:YES forKey:key];
@@ -173,8 +171,8 @@
     }
 }
 
-- (void)_hideAnimated:(BOOL)animated {
-    
+- (void)_hideAnimated:(BOOL)animated
+{
     dispatch_block_t animate = ^{
         CGRect rect = self.menuBar.frame;
         rect.origin.y = -CGRectGetHeight(self.menuBar.bounds);
@@ -184,12 +182,12 @@
     if (!animated) {
         animate();
     } else {
-        [UIView animateWithDuration:.300f animations:animate];
+        [UIView animateWithDuration:.200f animations:animate];
     }
 }
 
-- (void)_showAnimated:(BOOL)animated {
-    
+- (void)_showAnimated:(BOOL)animated
+{
     dispatch_block_t animate = ^{
         CGRect rect = self.menuBar.frame;
         rect.origin.y = 0.0f;
@@ -199,28 +197,30 @@
     if (!animated) {
         animate();
     } else {
-        [UIView animateWithDuration:.300f animations:animate];
+        [UIView animateWithDuration:.200f animations:animate];
     }
 }
 
 #pragma mark - Selectors
 
-- (IBAction)restart:(id)sender {
+- (IBAction)restart:(id)sender
+{
     [self.scene restartWithAlert:@(YES)];
     self.scene.userInteractionEnabled = YES;
 }
 
-- (void)_restartWithAlert:(BOOL)alert {
+- (void)_restartWithAlert:(BOOL)alert
+{
     [self _displayInterstitialAd];
     [self.scene restartWithAlert:@(alert)];
 }
 
-- (void)performExitAnimationWithCompletion:(dispatch_block_t)completion {
+- (void)performExitAnimationWithCompletion:(dispatch_block_t)completion
+{
+    self.navigationBarHidden = YES;
 
     NSError *error = nil;
     [self bannerView:self.bannerView didFailToReceiveAdWithError:error];
-    
-    self.navigationBarHidden = YES;
     [self.scene performExitAnimationsWithCompletion:^{
         if (completion) {
             completion();
@@ -230,25 +230,28 @@
 
 #pragma mark - Notifications
 
-- (void)_applicationDidBecomeActive:(NSNotification *)notification {
+- (void)_applicationDidBecomeActive:(NSNotification *)notification
+{
     self.pauseGame = NO;
     self.scene.view.paused = self.pauseGame;
 }
 
-- (void)_applicationWillResignActive:(NSNotification *)notification {
+- (void)_applicationWillResignActive:(NSNotification *)notification
+{
     self.pauseGame = YES;
     self.scene.view.paused = self.pauseGame;
 }
 
 #pragma mark - <HDSceneDelegate>
 
-- (void)gameRestartedInScene:(HDScene *)scene alert:(BOOL)alert {
-    
+- (void)gameRestartedInScene:(HDScene *)scene alert:(BOOL)alert
+{
     [[HDSoundManager sharedManager] playSound:HDGameOverKey];
     if (alert) {
-        HDAlertView *alertView = [[HDAlertView alloc] initWithTitle:[NSString stringWithFormat:@"Level %tu",_levelIdx]
+        NSString *titleString = [NSString stringWithFormat:@"%@ %tu",NSLocalizedString(@"level", nil),_levelIdx];
+        HDAlertView *alertView = [[HDAlertView alloc] initWithTitle:titleString
                                                         description:NSLocalizedString(@"nextTime", nil)
-                                                        buttonTitle:@"DISMISS"
+                                                        buttonTitle:NSLocalizedString(@"dismiss", nil)
                                                               image:[UIImage imageNamed:@"Alert-Mine"]];
         alertView.completionBlock = ^{
             [self _displayInterstitialAd];
@@ -257,20 +260,23 @@
     }
 }
 
-- (void)scene:(HDScene *)scene proceededToLevel:(NSUInteger)level {
+- (void)scene:(HDScene *)scene proceededToLevel:(NSUInteger)level
+{
     _levelIdx += 1;
     self.gridManager = [[HDGridManager alloc] initWithLevelIndex:level];
     self.scene.gridManager = self.gridManager;
     [self _beginGame];
 }
 
-- (void)scene:(HDScene *)scene gameEndedWithCompletion:(BOOL)completion {
-    
+- (void)scene:(HDScene *)scene gameEndedWithCompletion:(BOOL)completion
+{
     if (completion) {
         self.navigationBarHidden = YES;
         
         [[HDSoundManager sharedManager] playSound:HDCompletionZing];
-        HDCompletionView *completionView = [[HDCompletionView alloc] initWithTitle:[NSString stringWithFormat:@"Level %tu",_levelIdx]];
+        
+        NSString *title = [NSString stringWithFormat:@"%@ %tu",NSLocalizedString(@"level", nil),_levelIdx];
+        HDCompletionView *completionView = [[HDCompletionView alloc] initWithTitle:title];
         completionView.delegate = self;
         [completionView show];
         return;
@@ -278,14 +284,15 @@
     [self performSelector:@selector(restart:) withObject:nil afterDelay:.300f];
 }
 
-- (void)gameWillResetInScene:(HDScene *)scene {
+- (void)gameWillResetInScene:(HDScene *)scene
+{
     self.navigationBarHidden = NO;
 }
 
 #pragma mark - <ADBannerViewDelegate>
 
-- (void)_removeAdsWasPurchased:(NSNotification *)notification {
-
+- (void)_removeAdsWasPurchased:(NSNotification *)notification
+{
     NSString *productIdentifier = notification.object;
     if (![productIdentifier isEqualToString:IAPremoveAdsProductIdentifier]) {
         return;
@@ -301,10 +308,10 @@
     }];
 }
 
-- (void)bannerViewDidLoadAd:(ADBannerView *)banner {
-    
+- (void)bannerViewDidLoadAd:(ADBannerView *)banner
+{
     if (!_isBannerVisible) {
-        [UIView animateWithDuration:.300f animations:^{
+        [UIView animateWithDuration:.200f animations:^{
             CGRect bannerFrame = self.bannerView.frame;
             bannerFrame.origin.y = CGRectGetHeight(self.view.bounds) - CGRectGetHeight(self.bannerView.bounds);
             self.bannerView.frame = bannerFrame;
@@ -313,10 +320,10 @@
     }
 }
 
-- (void)bannerView:(ADBannerView *)banner didFailToReceiveAdWithError:(NSError *)error {
-    
+- (void)bannerView:(ADBannerView *)banner didFailToReceiveAdWithError:(NSError *)error
+{
     if (_isBannerVisible) {
-        [UIView animateWithDuration:.300f animations:^{
+        [UIView animateWithDuration:.200f animations:^{
             CGRect bannerFrame = self.bannerView.frame;
             bannerFrame.origin.y = CGRectGetHeight(self.view.bounds);
             self.bannerView.frame = bannerFrame;
@@ -327,16 +334,16 @@
 
 #pragma mark - <HDCompletionViewDelegate>
 
-- (void)completionView:(HDCompletionView *)completionView selectedButtonWithTitle:(NSString *)title {
-    
-    if ([title isEqualToString:NSLocalizedString(HDNextKey, nil)]) {
-        [self.scene updateDataForNextLevel];
-    } else if ([title isEqualToString:NSLocalizedString(HDRestartKey, nil)]) {
+- (void)completionView:(HDCompletionView *)completionView selectedButtonWithTag:(NSInteger)tag
+{    
+    if (tag == 0) {
         self.navigationBarHidden = NO;
         [self _restartWithAlert:NO];
-    } else if ([title isEqualToString:NSLocalizedString(HDRateKey, nil)]) {
-        [[HDAppDelegate sharedDelegate] rateHEXUS];
-    } else if ([title isEqualToString:NSLocalizedString(HDShareKey, nil)]) {
+    } else if (tag == 1) {
+        [[HDAppDelegate sharedDelegate] rate];
+    } else if (tag == 2) {
+        [self.scene updateDataForNextLevel];
+    } else if (tag == 3) {
         [[HDAppDelegate sharedDelegate] presentActivityViewController];
     }
 }

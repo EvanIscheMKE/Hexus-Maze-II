@@ -8,11 +8,13 @@
 
 @import QuartzCore;
 
+#import "HDLabel.h"
 #import "HDAlertView.h"
 #import "HDGameButton.h"
 #import "UIColor+ColorAdditions.h"
 
-@implementation HDAlertView {
+@implementation HDAlertView
+{
     UIImageView *_imageView;
     HDGameButton *_resumeBtn;
 }
@@ -20,8 +22,8 @@
 - (instancetype)initWithTitle:(NSString *)title
                   description:(NSString *)description
                   buttonTitle:(NSString *)buttonTitle
-                        image:(UIImage *)image {
-    
+                        image:(UIImage *)image
+{
     if (self = [super init]) {
         
         CGRect containerBounds = CGRectInset(self.bounds, CGRectGetWidth(self.bounds)/7.0f, CGRectGetHeight(self.bounds)/3.0f);
@@ -48,20 +50,18 @@
         [_resumeBtn addTarget:self action:@selector(dismiss) forControlEvents:UIControlEventTouchUpInside];
         [self.container addSubview:_resumeBtn];
         
-        CGFloat imageSize = MAX(image.size.width, image.size.height) * 1.25f;
-        CGFloat startPositionX = floorf(CGRectGetMidX(self.container.bounds) - imageSize);
-        CGFloat basePositionY = floorf(CGRectGetHeight(self.container.bounds)/2.625f);
-        
+        const CGFloat scale = IS_IPAD ? 1.0f : TRANSFORM_SCALE_X;
+        const CGFloat imageSize = (MAX(image.size.width, image.size.height) * 1.25f)*scale;
+        const CGFloat startPositionX = floorf(CGRectGetMidX(self.container.bounds) - imageSize);
+        const CGFloat basePositionY = floorf(CGRectGetHeight(self.container.bounds)/2.625f);
         for (NSUInteger i = 0; i < 3; i++) {
            UIImageView *imageView = [[UIImageView alloc] initWithImage:image];
            [self.container addSubview:imageView];
             
             CGFloat posY = 0.0f;
-            
             CGFloat posX = startPositionX + (i * imageSize);
             
-            CGAffineTransform transform = CGAffineTransformIdentity;
-            
+            CGAffineTransform transform = CGAffineTransformMakeScale(scale, scale);
             switch (i) {
                 case 0:
                 case 2:
@@ -69,7 +69,7 @@
                     break;
                 default:
                     posY = basePositionY;
-                    transform = CGAffineTransformMakeScale(1.25f, 1.25f);
+                    transform = CGAffineTransformMakeScale(scale + .25f, scale + .25f);
                     break;
             }
             imageView.transform = transform;
@@ -95,44 +95,8 @@
     return self;
 }
 
-- (void)dismiss {
-    
-    UIWindow *keyWindow = [UIApplication sharedApplication].keyWindow;
-    
-    [CATransaction begin]; {
-        [CATransaction setAnimationDuration:.03f];
-        [CATransaction setCompletionBlock:^{
-            
-            [self.container.layer removeAllAnimations];
-            [self removeFromSuperview];
-            
-            self.retainSelf = nil;
-            if (self.completionBlock) {
-                self.completionBlock();
-            }
-        }];
-        
-        CAKeyframeAnimation *keyFrameAnimation = [CAKeyframeAnimation animationWithKeyPath:@"position.y"];
-        keyFrameAnimation.duration = defaultAnimationDuration;
-        keyFrameAnimation.values = @[@(self.container.center.y),
-                                     @(self.container.center.y - 10.0f),
-                                     @(CGRectGetHeight(self.bounds) + CGRectGetMidY(self.container.bounds))];
-        keyFrameAnimation.keyTimes = @[@0.0f, @0.8f, @1.0f];
-        
-        self.container.layer.position = CGPointMake(CGRectGetMidX(self.bounds), [[keyFrameAnimation.values lastObject] floatValue]);
-        [self.container.layer addAnimation:keyFrameAnimation forKey:keyFrameAnimation.keyPath];
-        
-    } [CATransaction commit];
-    
-    keyWindow.tintAdjustmentMode = UIViewTintAdjustmentModeAutomatic;
-    [UIView animateWithDuration:defaultAnimationDuration animations:^{
-        [keyWindow tintColorDidChange];
-        self.bgView.alpha = 0;
-    }];
-}
-
-- (void)show {
-    
+- (void)show
+{
     UIWindow *keyWindow = [UIApplication sharedApplication].keyWindow;
     [keyWindow addSubview:self];
     
@@ -179,7 +143,8 @@
     }];
 }
 
-- (CGFloat)padding {
+- (CGFloat)padding
+{
     return 10.0f;
 }
 

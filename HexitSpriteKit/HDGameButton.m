@@ -15,12 +15,13 @@
 @property (nonatomic, strong) UIButton *bottom;
 @end
 
-@implementation HDGameButton {
+@implementation HDGameButton
+{
     BOOL _animating;
 }
 
-- (instancetype)initWithFrame:(CGRect)frame {
-    
+- (instancetype)initWithFrame:(CGRect)frame
+{
     if (self = [super initWithFrame:frame]) {
         
         CGRect contentBounds = CGRectMake(0.0f, 0.0f, CGRectGetWidth(self.bounds), CGRectGetHeight(self.bounds)*.9f);
@@ -50,7 +51,6 @@
             button.userInteractionEnabled = NO;
             button.frame = contentBounds;
             button.center = position;
-            button.layer.cornerRadius = self.cornerRadius;
             [self addSubview:button];
             
             index++;
@@ -80,7 +80,8 @@
     return self;
 }
 
-- (void)layoutSubviews {
+- (void)layoutSubviews
+{
     [super layoutSubviews];
     
     if (_animating) {
@@ -111,8 +112,8 @@
     }
 }
 
-- (void)setCornerRadius:(CGFloat)cornerRadius {
-   
+- (void)setCornerRadius:(CGFloat)cornerRadius
+{
     _cornerRadius = cornerRadius;
     if (!self.bottom) {
         return;
@@ -123,11 +124,13 @@
     }
 }
 
-- (UIColor *)buttonBaseColor {
+- (UIColor *)buttonBaseColor
+{
     return [self.bottom backgroundColor];
 }
 
-- (void)setButtonColor:(UIColor *)buttonColor {
+- (void)setButtonColor:(UIColor *)buttonColor
+{
     _buttonColor = buttonColor;
     [self.content setBackgroundColor:buttonColor];
     [self.bottom setBackgroundColor:[buttonColor colorWithAlphaComponent:.7f]];
@@ -135,20 +138,22 @@
 
 #pragma mark - Actions
 
-- (IBAction)_touchDown:(id)sender {
+- (IBAction)_touchDown:(id)sender
+{
     _animating = YES;
     self.content.center = self.bottom.center;
 }
 
-- (IBAction)_touchUpInside:(id)sender {
+- (IBAction)_touchUpInside:(id)sender
+{
     CGPoint position = self.content.center;
     position.y = CGRectGetMidY(self.content.bounds);
     self.content.center = position;
     _animating = NO;
 }
 
-- (IBAction)_animateTouchUpInside:(id)sender {
-    
+- (IBAction)_animateTouchUpInside:(id)sender
+{
     [UIView animateWithDuration:.3f
                           delay:0.0f
          usingSpringWithDamping:.4f
@@ -167,44 +172,52 @@
 
 #pragma mark - Override Getters
 
-- (UILabel *)titleLabel {
+- (UILabel *)titleLabel
+{
     return self.content.titleLabel;
 }
 
 #pragma mark - Override Setters
 
-- (void)setBackgroundColor:(UIColor *)backgroundColor {
+- (void)setBackgroundColor:(UIColor *)backgroundColor
+{
     NSAssert(NO, @"Method '%@' does nothing!", NSStringFromSelector(_cmd));
 }
 
-- (void)setAdjustsImageWhenDisabled:(BOOL)adjustsImageWhenDisabled {
+- (void)setAdjustsImageWhenDisabled:(BOOL)adjustsImageWhenDisabled
+{
     [super setAdjustsImageWhenDisabled:adjustsImageWhenDisabled];
     [self.content setAdjustsImageWhenDisabled:adjustsImageWhenDisabled];
 }
 
-- (void)setAdjustsImageWhenHighlighted:(BOOL)adjustsImageWhenHighlighted {
+- (void)setAdjustsImageWhenHighlighted:(BOOL)adjustsImageWhenHighlighted
+{
     [super setAdjustsImageWhenHighlighted:adjustsImageWhenHighlighted];
     [self.content setAdjustsImageWhenHighlighted:adjustsImageWhenHighlighted];
 }
 
-- (void)setBackgroundImage:(UIImage *)image forState:(UIControlState)state {
+- (void)setBackgroundImage:(UIImage *)image forState:(UIControlState)state
+{
     [self.content setBackgroundImage:image forState:state];
 }
 
-- (void)setImage:(UIImage *)image forState:(UIControlState)state {
+- (void)setImage:(UIImage *)image forState:(UIControlState)state
+{
     [self.content setImage:image forState:state];
 }
 
-- (void)setTitleColor:(UIColor *)color forState:(UIControlState)state {
+- (void)setTitleColor:(UIColor *)color forState:(UIControlState)state
+{
     [self.content setTitleColor:color forState:state];
 }
 
-- (void)setTitle:(NSString *)title forState:(UIControlState)state {
-    [self.content setTitle:title forState:state];
+- (void)setTitle:(NSString *)title forState:(UIControlState)state
+{
+    [self.content setTitle:[title uppercaseString] forState:state];
 }
 
-- (void)setSelected:(BOOL)selected {
-    
+- (void)setSelected:(BOOL)selected
+{
     if (selected) {
         [self _touchDown:nil];
     } else {
@@ -212,7 +225,8 @@
     }
 }
 
-- (void)setEnabled:(BOOL)enabled {
+- (void)setEnabled:(BOOL)enabled
+{
     [super setEnabled:enabled];
     [self.content setEnabled:enabled];
 }

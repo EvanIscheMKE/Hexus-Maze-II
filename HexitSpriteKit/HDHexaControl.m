@@ -18,7 +18,8 @@ static const CGFloat scaleAddition = .25f;
 
 @implementation HDHexaControl
 
-- (instancetype)initWithFrame:(CGRect)frame {
+- (instancetype)initWithFrame:(CGRect)frame
+{
     CGRect bounds = CGRectMake(0.0f, 0.0f, CGRectGetWidth(frame), CGRectGetHeight(frame));
     if (self = [super initWithFrame:bounds]) {
         self.backgroundColor = [UIColor clearColor];
@@ -29,8 +30,8 @@ static const CGFloat scaleAddition = .25f;
     return self;
 }
 
-- (void)_setup {
-    
+- (void)_setup
+{
     if (self.numberOfPages == 0) {
         return;
     }
@@ -48,8 +49,8 @@ static const CGFloat scaleAddition = .25f;
     }
 }
 
-- (void)_update {
-    
+- (void)_update
+{
     CGAffineTransform currentScale = CGAffineTransformMakeScale(self.scale + scaleAddition, self.scale + scaleAddition);
     CGAffineTransform scale = IS_IPAD ? CGAffineTransformIdentity : CGAffineTransformMakeScale(TRANSFORM_SCALE_X, TRANSFORM_SCALE_X);
     
@@ -62,25 +63,28 @@ static const CGFloat scaleAddition = .25f;
     }
 }
 
-- (void)setCurrentPage:(NSUInteger)currentPage {
+- (void)setCurrentPage:(NSUInteger)currentPage
+{
     _currentPage = MIN(currentPage, self.numberOfPages - 1);
     [self _update];
 }
 
-- (void)setNumberOfPages:(NSUInteger)numberOfPages {
+- (void)setNumberOfPages:(NSUInteger)numberOfPages
+{
     _numberOfPages = numberOfPages;
     [self _setup];
     self.currentPage = MIN(self.currentPage, numberOfPages - 1);
 }
 
-- (CGFloat)scale {
+- (CGFloat)scale
+{
     return (IS_IPAD ? 1.0f : TRANSFORM_SCALE_X);
 }
 
 #pragma mark - UIResponder 
 
-- (void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event {
-    
+- (void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event
+{
     UITouch *touch = [touches anyObject];
     CGPoint position = [touch locationInView:self];
     

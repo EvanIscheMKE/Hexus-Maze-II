@@ -10,19 +10,19 @@
 #import "UIImage+ImageAdditions.h"
 #import "UIColor+ColorAdditions.h"
 
-@implementation UIImage (ImageAdditions)
+@implementation UIImage (ImageAdditions)\
 
 + (UIImage *)tileFromSize:(CGSize)size
                     color:(UIColor *)color
-                direction:(HDTileDirection)direction {
-    
+                direction:(HDTileDirection)direction
+{
     UIGraphicsBeginImageContextWithOptions(size, NO, 0);
     
     const CGFloat radius = ((size.width/3.95f)/2);
     
     CGPoint position = [[self class] centerFromSize:size direction:direction];
     UIBezierPath *path = [UIBezierPath bezierPath];
-    path.lineWidth = 5.0f;
+    path.lineWidth = IS_IPAD ? 9.0f : (5.0f * TRANSFORM_SCALE_X);
     path.lineCapStyle = kCGLineCapRound;
     [path moveToPoint:[[self class] pointFromAngle:angleForDirection([HDHelper oppositeForDirection:direction])
                                             center:position
@@ -52,8 +52,8 @@
 }
 
 + (CGPoint)shadowCenterFromSize:(CGSize)size
-                      direction:(HDTileDirection)direction {
-    
+                      direction:(HDTileDirection)direction
+{    
     CGPoint centerPoint = CGPointMake(size.width/2, size.height/2);
     switch (direction) {
         case HDTileDirectionLeft:
@@ -75,8 +75,8 @@
 }
 
 + (CGPoint)centerFromSize:(CGSize)size
-                direction:(HDTileDirection)direction {
-    
+                direction:(HDTileDirection)direction
+{
     CGPoint centerPoint = CGPointMake(size.width/2, size.height/2);
     switch (direction) {
         case HDTileDirectionLeft:
@@ -97,7 +97,8 @@
     return centerPoint;
 }
 
-+ (CGPoint)pointFromAngle:(CGFloat)angle center:(CGPoint)center radius:(CGFloat)radius {
++ (CGPoint)pointFromAngle:(CGFloat)angle center:(CGPoint)center radius:(CGFloat)radius
+{
     return CGPointMake(radius * cos(angle) + center.x, radius * sin(angle) + center.y);
 }
 

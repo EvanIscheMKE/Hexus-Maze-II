@@ -13,8 +13,8 @@
 
 @implementation SKEmitterNode (EmitterAdditions)
 
-+ (SKEmitterNode *)explosionNode {
-    
++ (SKEmitterNode *)explosionNode
+{    
     SKEmitterNode *explosion = [[SKEmitterNode alloc] init];
     explosion.particleTexture = [[HDTextureManager sharedManager] textureForKeyPath:@"ExplosionTexture"];
     explosion.numParticlesToEmit = 180;
@@ -22,9 +22,9 @@
     explosion.particleLifetime   = 1.5f;
     explosion.emissionAngleRange = M_PI*2;
     explosion.particleRotationRange = M_PI*2;
-    explosion.particleSpeed      = 100.0f;
+    explosion.particleSpeed = 100.0f;
     explosion.particleSpeedRange = 50.0f;
-    explosion.particleScale      = .9f;
+    explosion.particleScale = .9f;
     explosion.particleScaleSpeed = -.6f;
     [explosion advanceSimulationTime:.925f];
     explosion.particleColorBlendFactor = 1.0f;

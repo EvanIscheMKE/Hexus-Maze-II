@@ -10,8 +10,8 @@
 
 @implementation SKNode (NodeAdditions)
 
-- (BOOL)isEqual:(id)object {
-    
+- (BOOL)isEqual:(id)object
+{    
     if (object == self) {
         return YES;
     }

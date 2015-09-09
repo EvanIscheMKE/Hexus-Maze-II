@@ -12,6 +12,7 @@
 #import "HDSoundManager.h"
 #import "HDSettingsManager.h"
 #import "HDGameButton.h"
+#import "HDLabel.h"
 #import "HDSwitch.h"
 #import "HDHelper.h"
 
@@ -20,19 +21,21 @@
 @property (nonatomic, strong) UIButton *bottom;
 @end
 
-@implementation HDRearViewController {
+@implementation HDRearViewController
+{
     UIView *_container;
 }
 
-- (void)viewDidLoad {
+- (void)viewDidLoad
+{
     [super viewDidLoad];
     [self _setup];
 }
 
 #pragma mark - Public
 
-- (void)setGameInterfaceHidden:(BOOL)gameInterfaceHidden {
-    
+- (void)setGameInterfaceHidden:(BOOL)gameInterfaceHidden
+{
     _gameInterfaceHidden = gameInterfaceHidden;
     if (gameInterfaceHidden) {
         [self _hideGameInterface];
@@ -41,31 +44,20 @@
     }
 }
 
-- (void)setButtonsSelected:(BOOL)buttonsSelected {
-    
+- (void)setButtonsSelected:(BOOL)buttonsSelected
+{
     _buttonsSelected = buttonsSelected;
-    if (_buttonsSelected) {
-        
-        for (UIView *subView in [_container subviews]) {
-            if ([subView isKindOfClass:[HDGameButton class]]) {
-                [(HDGameButton *)subView setSelected:YES];
-            }
-        }
-        
-    } else {
-        
-        for (UIView *subView in [_container subviews]) {
-            if ([subView isKindOfClass:[HDGameButton class]]) {
-                [(HDGameButton *)subView setSelected:NO];
-            }
+    for (UIView *subView in [_container subviews]) {
+        if ([subView isKindOfClass:[HDGameButton class]]) {
+            [(HDGameButton *)subView setSelected:buttonsSelected];
         }
     }
 }
 
 #pragma mark - Private
 
-- (void)_setup {
-    
+- (void)_setup
+{
     self.view.backgroundColor = [UIColor flatSTDarkNavyColor];
     
     CGRect containerBounds = CGRectMake(0.0f, 0.0f, CGRectGetWidth(self.view.bounds)/1.25f, CGRectGetHeight(self.view.bounds));
@@ -76,15 +68,15 @@
     _container = [[UIView alloc] initWithFrame:containerBounds];
     [self.view addSubview:_container];
     
-    const CGFloat buttonHeight = IS_IPAD ? CGRectGetHeight(self.view.bounds)/15   : CGRectGetHeight(self.view.bounds)/14;
-    const CGFloat buttonWidth  = IS_IPAD ? CGRectGetWidth(_container.bounds)/1.2f : CGRectGetWidth(_container.bounds)/1.5f;
+    const CGFloat buttonHeight = IS_IPAD ? CGRectGetHeight(self.view.bounds)/15   : CGRectGetHeight(self.view.bounds)/13.5f;
+    const CGFloat buttonWidth  = IS_IPAD ? CGRectGetWidth(_container.bounds)/1.2f : CGRectGetWidth(_container.bounds)/1.35f;
     
     CGRect defaultFrame;
     defaultFrame.size = CGSizeMake(buttonWidth, buttonHeight);
     defaultFrame.origin.x = CGRectGetMidX(containerBounds) - buttonWidth/2;
     defaultFrame.origin.y = CGRectGetHeight(self.view.bounds)/6;
     
-    const CGFloat kPadding = 15.0f * (IS_IPAD ? 1.0f : TRANSFORM_SCALE_X);
+    const CGFloat kPadding = 13.0f * (IS_IPAD ? 1.0f : TRANSFORM_SCALE_X);
     CGRect previousFrame = CGRectZero;
     for (NSUInteger row = 0; row < 4; row++) {
         
@@ -147,27 +139,23 @@
     
     const CGFloat toggleHeight = 38.0f * (IS_IPAD ? 1.5f : TRANSFORM_SCALE_X);
     const CGFloat toggleWidth  = 70.0f * (IS_IPAD ? 1.5f : TRANSFORM_SCALE_X);
-    CGFloat originY = CGRectGetMidY(containerBounds) + CGRectGetHeight(containerBounds)/(IS_IPAD ? 18.0f : 12.0f);
+    CGFloat originY = CGRectGetMidY(containerBounds) + CGRectGetHeight(containerBounds)/(IS_IPAD ? 100.0f : 14.0f);
     for (NSUInteger i = 0; i < 2; i++) {
         
         originY +=  (i* (toggleHeight + kPadding));
         
-        CGRect imageViewFrame = CGRectMake(CGRectGetMidX(_container.bounds) - buttonWidth/1.65f, originY, toggleHeight, toggleHeight);
-        if (IS_IPAD) {
-            imageViewFrame.origin.x = CGRectGetMidX(_container.bounds) - buttonWidth/2.0f;
-        }
-        
+        CGRect imageViewFrame = CGRectMake(CGRectGetMidX(_container.bounds) - buttonWidth/2.0f + 4.0f, originY, toggleHeight, toggleHeight);
         UIImageView *imageView = [[UIImageView alloc] initWithFrame:imageViewFrame];
         [_container addSubview:imageView];
         
         CGRect titleLabelFrame = CGRectMake(CGRectGetMaxX(imageViewFrame) + kPadding, originY, buttonWidth/1.5f, toggleHeight);
-        UILabel *titleLabel = [[UILabel alloc] initWithFrame:titleLabelFrame];
+        HDLabel *titleLabel = [[HDLabel alloc] initWithFrame:titleLabelFrame];
         titleLabel.textAlignment = NSTextAlignmentLeft;
         titleLabel.font = GAME_FONT_WITH_SIZE(toggleHeight/1.5f);
         titleLabel.textColor = [UIColor whiteColor];
         [_container addSubview:titleLabel];
         
-        CGRect toggleFrame = CGRectMake(CGRectGetMidX(containerBounds) + buttonWidth/2 - toggleWidth,
+        CGRect toggleFrame = CGRectMake(CGRectGetMidX(containerBounds) + buttonWidth/2 - toggleWidth - 4.0f,
                                         titleLabel.frame.origin.y,
                                         toggleWidth,
                                         toggleHeight);
@@ -195,18 +183,22 @@
     }
 }
 
-- (IBAction)_toggleSound:(HDSwitch *)sender {
+- (IBAction)_toggleSound:(HDSwitch *)sender
+{
     [[HDSettingsManager sharedManager] setSound:![[HDSettingsManager sharedManager] sound]];
+    [[HDSoundManager sharedManager] playSound:HDButtonSound];
 }
 
-- (IBAction)_toggleMusic:(HDSwitch *)sender {
+- (IBAction)_toggleMusic:(HDSwitch *)sender
+{
     BOOL music = [[HDSettingsManager sharedManager] music];
     [[HDSettingsManager sharedManager] setMusic:!music];
     [[HDSoundManager sharedManager] setPlayLoop:!music];
+    [[HDSoundManager sharedManager] playSound:HDButtonSound];
 }
 
-- (void)_hideGameInterface {
-    
+- (void)_hideGameInterface
+{
     [self.top setTitle:NSLocalizedString(@"leaderboard", nil)
               forState:UIControlStateNormal];
     
@@ -230,8 +222,8 @@
           forControlEvents:UIControlEventTouchUpInside];
 }
 
-- (void)_showGameInterface {
-    
+- (void)_showGameInterface
+{
     [self.top setTitle:NSLocalizedString(@"restart", nil)
               forState:UIControlStateNormal];
     

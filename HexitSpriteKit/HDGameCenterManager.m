@@ -15,7 +15,8 @@ const NSUInteger completion = 100;
 const CGFloat levelsPerSection = 28;
 @implementation HDGameCenterManager
 
-+ (HDGameCenterManager *)sharedManager {
++ (HDGameCenterManager *)sharedManager
+{
     static HDGameCenterManager *_manager = nil;
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
@@ -24,8 +25,8 @@ const CGFloat levelsPerSection = 28;
     return _manager;
 }
 
-- (void)authenticateGameCenter {
-    
+- (void)authenticateGameCenter
+{
     if ([GKLocalPlayer localPlayer].isAuthenticated) {
         return;
     };
@@ -35,8 +36,8 @@ const CGFloat levelsPerSection = 28;
     };
 }
 
-- (void)reportLevelCompletion:(int64_t)level {
-    
+- (void)reportLevelCompletion:(int64_t)level
+{
     if (level == 1) {
         [self submitAchievementWithIdenifier:@"Achievement"
                             completionBanner:YES
@@ -56,14 +57,16 @@ const CGFloat levelsPerSection = 28;
     }
 }
 
-- (void)submitAchievementForLevel:(int64_t)level {
+- (void)submitAchievementForLevel:(int64_t)level
+{
     NSUInteger percentComplete = [self _completionPercentageFromLevel:level];
     [self submitAchievementWithIdenifier:[NSString stringWithFormat:@"Round%zd",ceilf(level/levelsPerSection)]
                         completionBanner:(percentComplete == completion)
                          percentComplete:percentComplete];
 }
 
-- (void)submitAchievementWithIdenifier:(NSString *)identifier completionBanner:(BOOL)banner percentComplete:(NSUInteger)percentCompleted {
+- (void)submitAchievementWithIdenifier:(NSString *)identifier completionBanner:(BOOL)banner percentComplete:(NSUInteger)percentCompleted
+{
     GKAchievement *scoreAchievement = [[GKAchievement alloc] initWithIdentifier:identifier];
     scoreAchievement.showsCompletionBanner = (percentCompleted == completion);
     scoreAchievement.percentComplete = percentCompleted;
@@ -76,7 +79,8 @@ const CGFloat levelsPerSection = 28;
 
 #pragma mark - Private
 
-- (NSInteger)_completionPercentageFromLevel:(int64_t)level {
+- (NSInteger)_completionPercentageFromLevel:(int64_t)level
+{
     NSInteger percentCompleted = ceilf((level % (NSUInteger)levelsPerSection) / levelsPerSection * completion);
     if (percentCompleted == 0) {
         return completion;

@@ -12,6 +12,8 @@
 /*! www.flatuicolors.com !*/
 
 /*STD*/
++ (UIColor *)flatSTTripleColor;
++ (UIColor *)flatLCDoubleColor;
 + (UIColor *)flatSTButtonColor;
 + (UIColor *)flatSTBackgroundColor;
 + (UIColor *)flatSTAccentColor;

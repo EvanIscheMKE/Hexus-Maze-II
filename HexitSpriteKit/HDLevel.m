@@ -13,12 +13,13 @@ NSString * const HDUnlockedKey   = @"unlocked";
 NSString * const HDLevelIndexKey = @"levelIndex";
 @implementation HDLevel
 
-+ (instancetype)levelUnlocked:(BOOL)unlocked index:(NSUInteger)index completed:(BOOL)completed {
-    HDLevel *level = [[self alloc] initUnlocked:unlocked index:index completed:completed];
-    return level;
++ (instancetype)levelUnlocked:(BOOL)unlocked index:(NSUInteger)index completed:(BOOL)completed
+{
+    return [[self alloc] initUnlocked:unlocked index:index completed:completed];
 }
 
-- (instancetype)initUnlocked:(BOOL)unlocked index:(NSUInteger)index completed:(BOOL)completed {
+- (instancetype)initUnlocked:(BOOL)unlocked index:(NSUInteger)index completed:(BOOL)completed
+{
     if (self = [super init]) {
         self.unlocked   = unlocked;
         self.levelIndex = index;
@@ -29,13 +30,15 @@ NSString * const HDLevelIndexKey = @"levelIndex";
 
 #pragma mark - NSCoding Protocol
 
-- (void)encodeWithCoder:(NSCoder *)encoder {
+- (void)encodeWithCoder:(NSCoder *)encoder
+{
     [encoder encodeBool:self.unlocked      forKey:HDUnlockedKey];
     [encoder encodeBool:self.completed     forKey:HDCompletedKey];
     [encoder encodeInteger:self.levelIndex forKey:HDLevelIndexKey];
 }
 
-- (id)initWithCoder:(NSCoder *)decoder {
+- (id)initWithCoder:(NSCoder *)decoder
+{
     if (self = [super init]) {
         self.unlocked   =  [decoder decodeBoolForKey:HDUnlockedKey];
         self.completed  = [decoder decodeBoolForKey:HDCompletedKey];
@@ -46,8 +49,8 @@ NSString * const HDLevelIndexKey = @"levelIndex";
 
 #pragma mark - Getter
 
-- (HDLevelState)state {
-    
+- (HDLevelState)state
+{
     if (self.completed) {
         return HDLevelStateCompleted;
     } else if (!self.completed && self.isUnlocked) {
@@ -59,7 +62,8 @@ NSString * const HDLevelIndexKey = @"levelIndex";
 
 #pragma mark - Description
 
-- (NSString *)titleFromState:(HDLevelState)state {
+- (NSString *)titleFromState:(HDLevelState)state
+{
     switch (state) {
         case HDLevelStateCompleted:
             return @"Completed";
@@ -67,14 +71,10 @@ NSString * const HDLevelIndexKey = @"levelIndex";
             return @"Unlocked";
         case HDLevelStateLocked:
             return @"Locked";
+        default:
+            break;
     }
     return nil;
-}
-
-- (NSString *)description {
-    NSString *completed = self.completed ? @"YES" : @"NO";
-    NSString *unlocked = self.unlocked ? @"YES" : @"NO";
-    return [NSString stringWithFormat:@" Completed:%@ Unlocked:%@ State:%@",completed,unlocked,[self titleFromState:self.state]];
 }
 
 @end

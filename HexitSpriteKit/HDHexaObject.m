@@ -20,11 +20,13 @@
 
 @implementation HDHexaObject
 
-- (instancetype)init {
+- (instancetype)init
+{
     return [self initWithRow:0 column:0 type:HDHexagonTypeRegular];
 }
 
-- (instancetype)initWithRow:(NSInteger)row column:(NSInteger)column type:(HDHexagonType)type {
+- (instancetype)initWithRow:(NSInteger)row column:(NSInteger)column type:(HDHexagonType)type
+{
     NSParameterAssert(row);
     NSParameterAssert(type);
     if (self = [super init]) {
@@ -39,15 +41,16 @@
 
 #pragma mark - Setter
 
-- (void)setNode:(HDHexaNode *)node {
+- (void)setNode:(HDHexaNode *)node
+{
     _node = node;
     [self _setup];
 }
 
 #pragma mark - Public
 
-- (BOOL)selectedAfterRecievingTouches {
-    
+- (BOOL)selectedAfterRecievingTouches
+{
     if (self.isSelected) {
         return YES;
     };
@@ -82,8 +85,8 @@
     return self.selected;
 }
 
-- (void)setSelected:(BOOL)selected {
-    
+- (void)setSelected:(BOOL)selected
+{
     _selected = selected;
     if ([self selectedImagePath]) {
         self.node.texture = [[HDTextureManager sharedManager] textureForKeyPath:[self selectedImagePath]];
@@ -98,7 +101,8 @@
     }
 }
 
-- (void)setLocked:(BOOL)locked {
+- (void)setLocked:(BOOL)locked
+{
     _locked = locked;
     if (!locked) {
         self.state = HDHexagonStateEnabled;
@@ -106,7 +110,8 @@
     }
 }
 
-- (NSString *)defaultImagePath {
+- (NSString *)defaultImagePath
+{
     switch (self.type) {
         case HDHexagonTypeRegular:
             return @"Default-OneTap";
@@ -126,14 +131,18 @@
     return nil;
 }
 
-- (NSString *)selectedImagePath {
+- (NSString *)selectedImagePath
+{
     if (self.type == HDHexagonTypeNone) {
         return @"Default-Mine";
     }
     return @"Selected-Tile";
 }
 
-- (void)restoreToInitialState {
+- (void)restoreToInitialState
+{
+    [[self.node children] makeObjectsPerformSelector:@selector(removeFromParent)];
+    
     self.node.locked  = NO;
     self.touchesCount = 0;
     self.selected     = NO;
@@ -144,13 +153,15 @@
 
 #pragma mark - Private
 
-- (void)_disableTile {
+- (void)_disableTile
+{
     self.state       = HDHexagonStateDisabled;
     self.countTile   = YES;
     self.node.locked = YES;
 }
 
-- (void)_setup {
+- (void)_setup
+{
     switch (self.type) {
         case HDHexagonTypeEnd:
             self.state = HDHexagonStateDisabled;

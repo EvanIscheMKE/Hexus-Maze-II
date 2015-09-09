@@ -110,11 +110,9 @@ NSString * const IAPHelperProductPurchasedNotification = @"purchaseNotification"
 
 - (void)failedTransaction:(SKPaymentTransaction *)transaction {
 
-#if DEBUG
     if (transaction.error.code != SKErrorPaymentCancelled) {
         NSLog(@"Transaction error: %@", transaction.error.localizedDescription);
     }
-#endif
     [[SKPaymentQueue defaultQueue] finishTransaction: transaction];
 }
 

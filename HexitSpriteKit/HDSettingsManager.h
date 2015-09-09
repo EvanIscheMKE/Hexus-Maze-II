@@ -11,7 +11,6 @@
 @interface HDSettingsManager : NSObject
 @property (nonatomic, assign) BOOL sound;
 @property (nonatomic, assign) BOOL music;
-@property (nonatomic, assign) BOOL parallaxBackground;
 + (HDSettingsManager *)sharedManager;
 - (void)configureSettingsForFirstRun;
 @end

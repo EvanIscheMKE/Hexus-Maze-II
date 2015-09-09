@@ -11,7 +11,8 @@
 #import "HDHexaObject.h"
 #import <Foundation/Foundation.h>
 
-typedef NS_OPTIONS(NSUInteger, HDLevelTip){
+typedef NS_OPTIONS(NSUInteger, HDLevelTip)
+{
     HDLevelTipOne   = 1,
     HDLevelTipTwo   = 29,
     HDLevelTipThree = 57,
@@ -20,7 +21,8 @@ typedef NS_OPTIONS(NSUInteger, HDLevelTip){
     HDLevelTipSix   = 141,
 };
 
-typedef NS_OPTIONS(NSUInteger, HDTileDirection){
+typedef NS_OPTIONS(NSUInteger, HDTileDirection)
+{
     HDTileDirectionTopRight    = 0x0,
     HDTileDirectionTopLeft     = 0x1 << 0,
     HDTileDirectionRight       = 0x1 << 1,
@@ -34,7 +36,6 @@ NSString *descriptionForLevelIdx(NSUInteger levelIdx);
 
 @class HDHexaObject;
 @interface HDHelper : NSObject
-+ (UIColor *)shadowColorFromType:(HDHexagonType)type;
 + (UIColor *)colorFromType:(HDHexagonType)type touchCount:(NSUInteger)touchCount;
 + (NSString *)imageURLFromType:(HDHexagonType)type;
 + (UIImage *)imageFromLevelIdx:(NSUInteger)levelIdx;
@@ -43,6 +44,5 @@ NSString *descriptionForLevelIdx(NSUInteger levelIdx);
 + (NSArray *)possibleMovesForHexagon:(HDHexaObject *)hexagon inArray:(NSArray *)array;
 + (HDTileDirection)tileDirectionsToTile:(HDHexaObject *)toHexagon fromTile:(HDHexaObject *)fromHexagon;
 + (HDTileDirection)oppositeForDirection:(HDTileDirection)direction;
-+ (NSArray *)possibleMovesFromMine:(HDHexaObject *)obj
-                       containedIn:(NSArray *)array;
++ (NSArray *)possibleMovesFromMine:(HDHexaObject *)obj containedIn:(NSArray *)array;
 @end

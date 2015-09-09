@@ -9,5 +9,6 @@
 #import <UIKit/UIKit.h>
 
 @interface HDButton : UIButton
+@property (nonatomic, assign) NSUInteger index;
 - (void)addSoundNamed:(NSString *)name forControlEvent:(UIControlEvents)controlEvent;
 @end

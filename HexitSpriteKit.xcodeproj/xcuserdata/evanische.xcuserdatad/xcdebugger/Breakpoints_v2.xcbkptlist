@@ -107,17 +107,6 @@
             continueAfterRunningActions = "No"
             symbolName = "[NSException raise]"
             moduleName = "">
-            <Locations>
-               <Location
-                  shouldBeEnabled = "Yes"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "-[NSException raise]"
-                  moduleName = "CoreFoundation"
-                  usesParentBreakpointCondition = "Yes"
-                  offsetFromSymbolStart = "0">
-               </Location>
-            </Locations>
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -127,11 +116,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "HexitSpriteKit/HDHelper.m"
-            timestampString = "453327252.777"
+            timestampString = "454301280.494245"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "182"
-            endingLineNumber = "182"
+            startingLineNumber = "185"
+            endingLineNumber = "185"
             landmarkName = "+entranceAnimationWithTiles:completion:"
             landmarkType = "5">
          </BreakpointContent>

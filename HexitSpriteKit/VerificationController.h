@@ -17,11 +17,5 @@ typedef void (^VerifyCompletionHandler)(BOOL success);
 
 @interface VerificationController : NSObject 
 + (VerificationController *) sharedInstance;
-
-
-// Checking the results of this is not enough.
-// The final verification happens in the connection:didReceiveData: callback within
-// this class.  So ensure IAP feaures are unlocked from there.
 - (void)verifyPurchase:(SKPaymentTransaction *)transaction completionHandler:(VerifyCompletionHandler)completionHandler;
-
 @end

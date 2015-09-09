@@ -8,6 +8,8 @@
 
 @import SpriteKit;
 
+extern NSString * const HDSoundActionKey;
+
 @class HDHexaObject;
 @class HDGridManager;
 
@@ -23,8 +25,8 @@
 @property (nonatomic, copy) dispatch_block_t layoutCompletion;
 @property (nonatomic, weak) id<HDSceneDelegate> myDelegate;
 @property (nonatomic, readonly) SKNode *gameLayer;
-- (BOOL)unlockLastTile;
-- (BOOL)isGameOverAfterPlacingTile:(HDHexaObject *)hexagon;
+@property (nonatomic, readonly) SKAction *explosion;
+- (void)displayPossibleMovesFromHexaObject:(HDHexaObject *)fromObj;
 - (HDHexaObject *)findHexagonContainingPoint:(CGPoint)point;
 - (void)checkGameStateForTile:(HDHexaObject *)tile;
 - (BOOL)validateNextMoveToHexagon:(HDHexaObject *)toHexagon fromHexagon:(HDHexaObject *)fromHexagon;

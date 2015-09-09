@@ -16,19 +16,21 @@ static const CGFloat kPadding = 5.0f;
 @property (nonatomic, strong) UIView *slidingView;
 @end
 
-@implementation HDSwitch {
+@implementation HDSwitch
+{
     UIColor *_onColor;
     UIColor *_offColor;
     BOOL _animating;
     BOOL _toggleValue;
 }
 
-- (instancetype)initWithOnColor:(UIColor *)onColor offColor:(UIColor *)offColor {
+- (instancetype)initWithOnColor:(UIColor *)onColor offColor:(UIColor *)offColor
+{
     return [self initWithFrame:CGRectZero onColor:onColor offColor:offColor];
 }
 
-- (instancetype)initWithFrame:(CGRect)frame onColor:(UIColor *)onColor offColor:(UIColor *)offColor {
-
+- (instancetype)initWithFrame:(CGRect)frame onColor:(UIColor *)onColor offColor:(UIColor *)offColor
+{
     if (self = [super initWithFrame:frame]) {
         _onColor  = onColor;
         _offColor = offColor;
@@ -37,9 +39,10 @@ static const CGFloat kPadding = 5.0f;
     return self;
 }
 
-- (void)_setup {
+- (void)_setup
+{
     
-    self.on = YES;
+    _toggleValue = YES;
     
     self.layer.cornerRadius = CGRectGetMidY(self.bounds);
     self.layer.borderColor  = _onColor.CGColor;
@@ -58,12 +61,12 @@ static const CGFloat kPadding = 5.0f;
     [self addSubview:self.slidingView];
 }
 
-- (BOOL)beginTrackingWithTouch:(UITouch *)touch withEvent:(UIEvent *)event {
-    
+- (BOOL)beginTrackingWithTouch:(UITouch *)touch withEvent:(UIEvent *)event
+{
     BOOL wasPreviouslyOn = self.isON;
     if (self.isON) {
         [self setOn:NO animated:YES];
-    } else if (!self.isON) {
+    } else {
         [self setOn:YES animated:YES];
     }
     
@@ -74,16 +77,18 @@ static const CGFloat kPadding = 5.0f;
     return YES;
 }
 
-- (void)setOn:(BOOL)on {
+- (void)setOn:(BOOL)on
+{
     [self setOn:on animated:NO];
 }
 
-- (BOOL)isON {
+- (BOOL)isON
+{
     return _toggleValue;
 }
 
-- (void)setOn:(BOOL)flag animated:(BOOL)animated {
-    
+- (void)setOn:(BOOL)flag animated:(BOOL)animated
+{
     _toggleValue = flag;
     if (flag) {
         [self showOnAnimated:animated];
@@ -92,8 +97,8 @@ static const CGFloat kPadding = 5.0f;
     }
 }
 
-- (void)showOnAnimated:(BOOL)animated {
-    
+- (void)showOnAnimated:(BOOL)animated
+{
     dispatch_block_t animationBlock = ^{
         self.slidingView.center = CGPointMake(CGRectGetWidth(self.bounds) - CGRectGetMidX(self.slidingView.bounds) - kPadding,
                                               CGRectGetMidY(self.bounds));
@@ -112,8 +117,8 @@ static const CGFloat kPadding = 5.0f;
     }
 }
 
-- (void)showOffAnimated:(BOOL)animated {
-    
+- (void)showOffAnimated:(BOOL)animated
+{    
     dispatch_block_t animationBlock = ^{
         self.slidingView.center = CGPointMake(CGRectGetMidX(self.slidingView.bounds) + kPadding, CGRectGetMidY(self.bounds));
         self.slidingView.transform = CGAffineTransformMakeScale(.4f,.4f);

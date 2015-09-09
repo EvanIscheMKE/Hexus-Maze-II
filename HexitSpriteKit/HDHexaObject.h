@@ -11,24 +11,26 @@
 
 @class HDHexaNode;
 
-typedef NS_ENUM(NSUInteger, HDHexagonType) {
+typedef NS_ENUM(NSUInteger, HDHexagonType)
+{
     HDHexagonTypeRegular = 1,
-    HDHexagonTypeDouble  = 2,
-    HDHexagonTypeTriple  = 3,
-    HDHexagonTypeOne     = 4,
-    HDHexagonTypeTwo     = 5,
-    HDHexagonTypeThree   = 6,
-    HDHexagonTypeFour    = 7,
-    HDHexagonTypeFive    = 8,
+    HDHexagonTypeDouble = 2,
+    HDHexagonTypeTriple = 3,
+    HDHexagonTypeOne = 4,
+    HDHexagonTypeTwo = 5,
+    HDHexagonTypeThree = 6,
+    HDHexagonTypeFour = 7,
+    HDHexagonTypeFive = 8,
     HDHexagonTypeStarter = 9,
-    HDHexagonTypeNone    = 10,
-    HDHexagonTypeEnd     = 11,
+    HDHexagonTypeNone = 10,
+    HDHexagonTypeEnd = 11,
 };
 
-typedef NS_ENUM(NSUInteger, HDHexagonState) {
-    HDHexagonStateEnabled  = 1,
+typedef NS_ENUM(NSUInteger, HDHexagonState)
+{
+    HDHexagonStateEnabled = 1,
     HDHexagonStateDisabled = 2,
-    HDHexagonStateNone     = 0
+    HDHexagonStateNone = 0
 };
 
 static const NSInteger NumberOfRows    = 18;
